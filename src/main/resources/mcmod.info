@@ -1,0 +1,12 @@
+[{
+  "modid": "techworks",
+  "name": "Techworks",
+  "description": "Minecraft tech mod",
+  "version": "1.0.0.0",
+  "mcversion": "1.12.2",
+  "logoFile": "assets/techworks/textures/logo.png",
+  "url": "https://ramboxeu.github.io/projects/techworks ",
+  "updateJSON": "",
+  "authorList": ["Rambox"],
+  "credits": ""
+}]
