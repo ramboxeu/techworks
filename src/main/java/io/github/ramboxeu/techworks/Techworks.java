@@ -1,5 +1,6 @@
 package io.github.ramboxeu.techworks;
 
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -14,11 +15,14 @@ public class Techworks {
     public static final Logger LOGGER = LogManager.getLogger("Techworks");
 
     @SidedProxy(serverSide = "io.github.ramboxeu.techworks.common.ServerProxy", clientSide = "io.github.ramboxeu.techworks.client.ClientProxy")
-    public static IProxy proxy;
+    public static CommonProxy proxy;
+
+    public static final CreativeTabs CREATIVE_TAB = new CreativeTabTechworks();
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         LOGGER.info("PreInitialization phase");
+        LOGGER.info(proxy);
         proxy.preInit(event);
     }
 
