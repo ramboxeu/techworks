@@ -1,20 +1,28 @@
 package io.github.ramboxeu.techworks.common.block;
 
+import io.github.ramboxeu.techworks.Techworks;
 import net.minecraft.block.Block;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.ObjectHolder;
 
-import java.util.HashSet;
-
+@ObjectHolder(Techworks.MOD_ID)
 public class TechworksBlocks {
-    static final HashSet<Block> BLOCKS = new HashSet<>();
-    static final HashSet<Item> ITEM_BLOCKS = new HashSet<>();
+    private static final Block[] blocks = { };
+
+    @ObjectHolder("test_block")
+    public static final Block test_block = null;
 
     public static void registerBlocks(IForgeRegistry<Block> registry) {
-        registry.registerAll((Block[]) BLOCKS.toArray());
+        for (Block block : blocks) {
+            registry.register(block);
+        }
     }
 
     public static void registerItemBlocks(IForgeRegistry<Item> registry) {
-        registry.registerAll((Item[]) ITEM_BLOCKS.toArray());
+        for (Block block : blocks) {
+            registry.register(new BlockItem(block, new Item.Properties()).setRegistryName(block.getRegistryName()));
+        }
     }
 }

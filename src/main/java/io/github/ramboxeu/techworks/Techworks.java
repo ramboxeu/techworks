@@ -1,40 +1,18 @@
 package io.github.ramboxeu.techworks;
 
-import net.minecraft.creativetab.CreativeTabs;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@Mod(modid = Techworks.MOD_ID)
+@Mod(Techworks.MOD_ID)
 public class Techworks {
     public static final String MOD_ID = "techworks";
     public static final Logger LOGGER = LogManager.getLogger("Techworks");
 
-    @SidedProxy(serverSide = "io.github.ramboxeu.techworks.common.ServerProxy", clientSide = "io.github.ramboxeu.techworks.client.ClientProxy")
-    public static CommonProxy proxy;
-
-    public static final CreativeTabs CREATIVE_TAB = new CreativeTabTechworks();
-
-    @Mod.EventHandler
-    public void preInit(FMLPreInitializationEvent event) {
-        LOGGER.info("PreInitialization phase");
-        LOGGER.info(proxy);
-        proxy.preInit(event);
-    }
-
-    @Mod.EventHandler
-    public void init(FMLInitializationEvent event) {
-        LOGGER.info("Initialization phase");
-        proxy.init(event);
-    }
-
-    @Mod.EventHandler
-    public void postInit(FMLPostInitializationEvent event) {
-        LOGGER.info("PostInitialization phase");
-        proxy.postInit(event);
+    @SubscribeEvent
+    public static void setup(final FMLCommonSetupEvent event) {
+        LOGGER.info("Setting up");
     }
 }
