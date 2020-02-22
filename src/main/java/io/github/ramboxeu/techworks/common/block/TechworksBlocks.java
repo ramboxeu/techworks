@@ -9,10 +9,12 @@ import net.minecraftforge.registries.ObjectHolder;
 
 @ObjectHolder(Techworks.MOD_ID)
 public class TechworksBlocks {
-    private static final Block[] blocks = { };
+    private static final Block[] blocks = {
+            new BoilerBlock()
+    };
 
-    @ObjectHolder("test_block")
-    public static final Block test_block = null;
+    @ObjectHolder("boiler")
+    public static final Block boiler = null;
 
     public static void registerBlocks(IForgeRegistry<Block> registry) {
         for (Block block : blocks) {
@@ -22,7 +24,7 @@ public class TechworksBlocks {
 
     public static void registerItemBlocks(IForgeRegistry<Item> registry) {
         for (Block block : blocks) {
-            registry.register(new BlockItem(block, new Item.Properties()).setRegistryName(block.getRegistryName()));
+            registry.register(new BlockItem(block, new Item.Properties().group(Techworks.ITEM_GROUP)).setRegistryName(block.getRegistryName()));
         }
     }
 }
