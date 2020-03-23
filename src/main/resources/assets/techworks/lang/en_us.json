@@ -1,5 +1,7 @@
 {
   "itemGroup.techworks": "Techworks",
 
-  "block.techworks.boiler": "Boiler"
+  "block.techworks.boiler": "Boiler",
+
+  "container.techworks.boiler": "Boiler"
 }
