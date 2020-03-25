@@ -3,24 +3,16 @@ package io.github.ramboxeu.techworks.client.screen;
 import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.client.container.BoilerContainer;
-import io.github.ramboxeu.techworks.common.tile.BoilerTile;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
 public class BoilerScreen extends ContainerScreen<BoilerContainer> {
-    public final ResourceLocation BOILER_GUI_TEXTURE = new ResourceLocation(Techworks.MOD_ID, "textures/gui/container/boiler.png");
-
-    private final BoilerTile boilerTile;
+    public static final ResourceLocation BOILER_GUI_TEXTURE = new ResourceLocation(Techworks.MOD_ID, "textures/gui/container/boiler.png");
 
     public BoilerScreen(BoilerContainer boilerContainer, PlayerInventory playerInventory, ITextComponent title) {
         super(boilerContainer, playerInventory, title);
-
-        boilerTile = boilerContainer.boilerTile;
     }
 
     @Override
@@ -42,7 +34,7 @@ public class BoilerScreen extends ContainerScreen<BoilerContainer> {
 
     @Override
     protected void drawGuiContainerForegroundLayer(int p_146979_1_, int p_146979_2_) {
-        this.font.drawString(this.title.getFormattedText(), (float) ((this.xSize / 2) - 3) , 6.0F, 4210752);
+        this.font.drawString(this.title.getFormattedText(), (float) ((this.xSize / 2) - (this.font.getStringWidth(this.title.getString()) / 2)) , 6.0F, 4210752);
         this.font.drawString(this.playerInventory.getDisplayName().getFormattedText(), 8.0F, (float)(this.ySize - 96 + 2), 4210752);
     }
 
