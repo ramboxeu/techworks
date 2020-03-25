@@ -22,9 +22,7 @@ public class BoilerTile extends AbstractMachineTile {
     }
 
     @Override
-    void run() {
-        Techworks.LOGGER.info("Ran BoilerTile!");
-    }
+    void run() { }
 
     @Override
     public CompoundNBT write(CompoundNBT compound) {

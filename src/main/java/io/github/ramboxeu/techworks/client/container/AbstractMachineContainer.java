@@ -2,6 +2,7 @@ package io.github.ramboxeu.techworks.client.container;
 
 import io.github.ramboxeu.techworks.api.gas.IGasHandler;
 import io.github.ramboxeu.techworks.common.tile.AbstractMachineTile;
+import io.github.ramboxeu.techworks.common.util.inventory.InventoryBuilder;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -21,6 +22,7 @@ public abstract class AbstractMachineContainer extends Container {
     protected LazyOptional<IItemHandler> inventory;
     protected LazyOptional<IEnergyStorage> energyStorage;
     protected LazyOptional<IGasHandler> gasHandler;
+    private InventoryBuilder builder;
 
     protected AbstractMachineContainer(@Nullable ContainerType<?> containerType, int id, PlayerInventory playerInventory, AbstractMachineTile machineTile) {
         super(containerType, id);
@@ -30,9 +32,16 @@ public abstract class AbstractMachineContainer extends Container {
         this.energyStorage = machineTile.getCapability(CapabilityEnergy.ENERGY);
         // TODO: Implement gas
 
+        this.builder = new InventoryBuilder();
+
         this.layoutPlayerSlots();
 
-        this.inventory.ifPresent(this::layoutSlots);
+        this.inventory.ifPresent(itemHandler ->  {
+            this.layoutSlots(this.builder);
+            for (SlotItemHandler slot : this.builder.build(itemHandler)) {
+                this.addSlot(slot);
+            }
+        });
     }
 
     @Override
@@ -50,5 +59,5 @@ public abstract class AbstractMachineContainer extends Container {
         }
     }
 
-    protected void layoutSlots(IItemHandler handler) {}
+    protected void layoutSlots(InventoryBuilder builder) {}
 }

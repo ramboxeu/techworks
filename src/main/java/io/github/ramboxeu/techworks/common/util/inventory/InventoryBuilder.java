@@ -1,28 +1,30 @@
 package io.github.ramboxeu.techworks.common.util.inventory;
 
+import net.minecraft.inventory.container.Container;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: Implement
 public class InventoryBuilder {
-    private final IItemHandler inventory;
-    private final List<SlotItemHandler> slots = new ArrayList<>();
-    private int slotIndex;
+    private final List<SlotBuilder> slots = new ArrayList<>();
 
-    public InventoryBuilder(IItemHandler inventory) {
-        this.inventory = inventory;
-    }
+    public InventoryBuilder() {}
 
-    public InventoryBuilder addSlot(int x, int y, SlotType type) {
+    public InventoryBuilder addSlot(SlotBuilder builder) {
+        slots.add(builder);
         return this;
     }
 
-    public enum SlotType {
-        NORMAL,
-        OUTPUT,
-        INPUT
+    public SlotItemHandler[] build(IItemHandler itemHandler) {
+        ArrayList<SlotItemHandler> slotItemHandlers = new ArrayList<>();
+
+        for (int i = 0; i < slots.size(); i++) {
+            SlotBuilder builder = slots.get(i);
+            slotItemHandlers.add(builder.build(itemHandler, i));
+        }
+
+        return slotItemHandlers.toArray(new SlotItemHandler[] {});
     }
 }
