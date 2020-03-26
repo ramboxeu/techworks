@@ -6,11 +6,14 @@ import io.github.ramboxeu.techworks.client.container.BoilerContainer;
 import io.github.ramboxeu.techworks.common.registration.Registration;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
@@ -51,8 +54,6 @@ public class BoilerTile extends AbstractMachineTile {
         return null;
     }
 
-
-
     @Nullable
     @Override
     protected IGasHandler createGasHandler() {
@@ -62,6 +63,12 @@ public class BoilerTile extends AbstractMachineTile {
                 markDirty();
             }
         };
+    }
+
+    @Nullable
+    @Override
+    protected IFluidHandler createFluidHandler() {
+        return new FluidTank(1000, fluidStack -> fluidStack.getFluid().equals(Fluids.WATER));
     }
 
     @Override

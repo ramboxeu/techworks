@@ -13,6 +13,8 @@ import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
@@ -26,6 +28,12 @@ public abstract class AbstractMachineTile extends TileEntity implements ITickabl
     protected LazyOptional<IItemHandler> inventory = LazyOptional.of(this::createItemHandler);
     protected LazyOptional<IEnergyStorage> energyStorage = LazyOptional.of(this::createEnergyStorage);
     protected LazyOptional<IGasHandler> gasHandler = LazyOptional.of(this::createGasHandler);
+    protected LazyOptional<IFluidHandler> fluidHandler = LazyOptional.of(this::createFluidHandler);
+
+    private boolean[] itemHandlerSides   = {false, false, false, false, false, false};
+    private boolean[] energyHandlerSides = {false, false, false, false, false, false};
+    private boolean[] gasHandlerSides    = {false, false, false, false, false, false};
+    private boolean[] fluidHandlerSides  = {false, false, false, false, false, false};
 
     public AbstractMachineTile(TileEntityType<?> tileEntityType, int cooldown) {
         super(tileEntityType);
@@ -54,6 +62,9 @@ public abstract class AbstractMachineTile extends TileEntity implements ITickabl
     @Nullable
     protected abstract IGasHandler createGasHandler();
 
+    @Nullable
+    protected abstract IFluidHandler createFluidHandler();
+
 
     @Override
     public void read(CompoundNBT compound) {
@@ -77,13 +88,21 @@ public abstract class AbstractMachineTile extends TileEntity implements ITickabl
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
         if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            return inventory.cast();
+            if (side == null || itemHandlerSides[side.getIndex()])
+                return inventory.cast();
         }
         if (cap == CapabilityEnergy.ENERGY) {
-            return energyStorage.cast();
+            if (side == null || energyHandlerSides[side.getIndex()])
+                return energyStorage.cast();
         }
         if (cap == CapabilityGas.GAS) {
-            return gasHandler.cast();
+            if (side == null || gasHandlerSides[side.getIndex()])
+                return gasHandler.cast();
+        }
+        if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+            if (side == null || fluidHandlerSides[side.getIndex()]) {
+                return fluidHandler.cast();
+            }
         }
         return super.getCapability(cap, side);
     }
