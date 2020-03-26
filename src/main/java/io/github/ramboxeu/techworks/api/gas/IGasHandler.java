@@ -1,7 +1,5 @@
 package io.github.ramboxeu.techworks.api.gas;
 
-import net.minecraft.util.Direction;
-
 public interface IGasHandler {
     /*
         Returns what gas given side handles
