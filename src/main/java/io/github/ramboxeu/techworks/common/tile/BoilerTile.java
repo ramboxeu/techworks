@@ -1,6 +1,6 @@
 package io.github.ramboxeu.techworks.common.tile;
 
-import io.github.ramboxeu.techworks.Techworks;
+import io.github.ramboxeu.techworks.api.gas.GasHandler;
 import io.github.ramboxeu.techworks.api.gas.IGasHandler;
 import io.github.ramboxeu.techworks.client.container.BoilerContainer;
 import io.github.ramboxeu.techworks.common.registration.Registration;
@@ -22,7 +22,7 @@ public class BoilerTile extends AbstractMachineTile {
     }
 
     @Override
-    void run() { }
+    void run() {}
 
     @Override
     public CompoundNBT write(CompoundNBT compound) {
@@ -51,10 +51,17 @@ public class BoilerTile extends AbstractMachineTile {
         return null;
     }
 
+
+
     @Nullable
     @Override
     protected IGasHandler createGasHandler() {
-        return null;
+        return new GasHandler(Registration.STEAM_GAS.get(), 100, 1000) {
+            @Override
+            public void onContentsChanged() {
+                markDirty();
+            }
+        };
     }
 
     @Override

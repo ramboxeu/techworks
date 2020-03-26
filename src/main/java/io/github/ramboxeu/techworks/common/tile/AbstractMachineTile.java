@@ -1,5 +1,6 @@
 package io.github.ramboxeu.techworks.common.tile;
 
+import io.github.ramboxeu.techworks.api.gas.CapabilityGas;
 import io.github.ramboxeu.techworks.api.gas.IGasHandler;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.nbt.CompoundNBT;
@@ -34,11 +35,10 @@ public abstract class AbstractMachineTile extends TileEntity implements ITickabl
 
     @Override
     public void tick() {
-        if (cooldownCounter <= 0) {
+        if (cooldownCounter == 0) {
             cooldownCounter = cooldown;
+            this.run();
         }
-
-        run();
 
         cooldownCounter--;
     }
@@ -59,6 +59,7 @@ public abstract class AbstractMachineTile extends TileEntity implements ITickabl
     public void read(CompoundNBT compound) {
         this.inventory.ifPresent(itemHandler -> ((INBTSerializable<CompoundNBT>) itemHandler).deserializeNBT(compound.getCompound("Inventory")));
         this.energyStorage.ifPresent(energyStorage -> ((INBTSerializable<CompoundNBT>) energyStorage).deserializeNBT(compound.getCompound("Energy")));
+        this.gasHandler.ifPresent(gasHandler -> CapabilityGas.GAS.readNBT(gasHandler, null, compound.getCompound("GasHandler")));
 
         super.read(compound);
     }
@@ -67,6 +68,7 @@ public abstract class AbstractMachineTile extends TileEntity implements ITickabl
     public CompoundNBT write(CompoundNBT compound) {
         this.inventory.ifPresent(itemHandler -> compound.put("Inventory", ((INBTSerializable<CompoundNBT>) itemHandler).serializeNBT()));
         this.energyStorage.ifPresent(energyStorage -> compound.put("Energy", ((INBTSerializable<CompoundNBT>) energyStorage).serializeNBT()));
+        this.gasHandler.ifPresent(gasHandler -> compound.put("GasHandler", CapabilityGas.GAS.writeNBT(gasHandler, null)));
 
         return super.write(compound);
     }
@@ -79,6 +81,9 @@ public abstract class AbstractMachineTile extends TileEntity implements ITickabl
         }
         if (cap == CapabilityEnergy.ENERGY) {
             return energyStorage.cast();
+        }
+        if (cap == CapabilityGas.GAS) {
+            return gasHandler.cast();
         }
         return super.getCapability(cap, side);
     }

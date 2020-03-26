@@ -1,10 +1,12 @@
 package io.github.ramboxeu.techworks.common.registration;
 
 import io.github.ramboxeu.techworks.Techworks;
+import io.github.ramboxeu.techworks.api.gas.EmptyGas;
 import io.github.ramboxeu.techworks.api.gas.Gas;
 import io.github.ramboxeu.techworks.client.container.BoilerContainer;
 import io.github.ramboxeu.techworks.client.screen.BoilerScreen;
 import io.github.ramboxeu.techworks.common.block.BoilerBlock;
+import io.github.ramboxeu.techworks.common.gas.SteamGas;
 import io.github.ramboxeu.techworks.common.tile.AbstractMachineTile;
 import io.github.ramboxeu.techworks.common.tile.BoilerTile;
 import net.minecraft.block.Block;
@@ -14,7 +16,6 @@ import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.extensions.IForgeContainerType;
@@ -24,8 +25,6 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
-
-import java.util.function.Supplier;
 
 import static io.github.ramboxeu.techworks.Techworks.MOD_ID;
 
@@ -51,6 +50,9 @@ public class Registration {
     public static final RegistryObject<TileEntityType<BoilerTile>> BOILER_TILE = TILES.register("boiler", () -> TileEntityType.Builder.create(BoilerTile::new, BOILER_BLOCK.get()).build(null));
     public static final RegistryObject<ContainerType<BoilerContainer>> BOILER_CONTAINER = CONTAINERS.register("boiler", () -> IForgeContainerType.create((id, playerInventory, buf) -> new BoilerContainer(id, playerInventory, getTileFromPacketBuffer(buf))));
 
+    public static final RegistryObject<EmptyGas> EMPTY_GAS = GASES.register("empty", EmptyGas::new);
+    public static final RegistryObject<SteamGas> STEAM_GAS = GASES.register("steam", SteamGas::new);
+
     // TODO: Make this NullPointerException safe
     private static AbstractMachineTile getTileFromPacketBuffer(PacketBuffer buffer) {
         return (AbstractMachineTile) Minecraft.getInstance().world.getTileEntity(buffer.readBlockPos());
@@ -58,5 +60,9 @@ public class Registration {
 
     public static void registerScreens(){
         ScreenManager.registerFactory(BOILER_CONTAINER.get(), BoilerScreen::new);
+    }
+
+    public static Gas getGasByString(String name) {
+        return GAS_REGISTRY.getValue(new ResourceLocation(name));
     }
 }
