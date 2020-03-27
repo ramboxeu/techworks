@@ -2,6 +2,9 @@ package io.github.ramboxeu.techworks.common.tile;
 
 import io.github.ramboxeu.techworks.api.gas.CapabilityGas;
 import io.github.ramboxeu.techworks.api.gas.IGasHandler;
+import io.github.ramboxeu.techworks.common.machine.io.IOManager;
+import io.github.ramboxeu.techworks.common.machine.io.Mode;
+import io.github.ramboxeu.techworks.common.util.capability.ModeInventoryWrapper;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
@@ -11,12 +14,10 @@ import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -25,20 +26,18 @@ public abstract class AbstractMachineTile extends TileEntity implements ITickabl
     private int cooldown;
     private int cooldownCounter = 0;
 
-    protected LazyOptional<IItemHandler> inventory = LazyOptional.of(this::createItemHandler);
+    protected LazyOptional<IItemHandlerModifiable> inventory = LazyOptional.of(this::createItemHandler);
     protected LazyOptional<IEnergyStorage> energyStorage = LazyOptional.of(this::createEnergyStorage);
     protected LazyOptional<IGasHandler> gasHandler = LazyOptional.of(this::createGasHandler);
     protected LazyOptional<IFluidHandler> fluidHandler = LazyOptional.of(this::createFluidHandler);
 
-    private boolean[] itemHandlerSides   = {false, false, false, false, false, false};
-    private boolean[] energyHandlerSides = {false, false, false, false, false, false};
-    private boolean[] gasHandlerSides    = {false, false, false, false, false, false};
-    private boolean[] fluidHandlerSides  = {false, false, false, false, false, false};
+    private IOManager manager;
 
     public AbstractMachineTile(TileEntityType<?> tileEntityType, int cooldown) {
         super(tileEntityType);
         this.cooldown = cooldown;
         this.cooldownCounter = cooldown;
+        this.manager = new IOManager();
     }
 
     @Override
@@ -54,7 +53,7 @@ public abstract class AbstractMachineTile extends TileEntity implements ITickabl
     abstract void run();
 
     @Nullable
-    protected abstract IItemHandler createItemHandler();
+    protected abstract IItemHandlerModifiable createItemHandler();
 
     @Nullable
     protected abstract IEnergyStorage createEnergyStorage();
@@ -87,23 +86,35 @@ public abstract class AbstractMachineTile extends TileEntity implements ITickabl
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            if (side == null || itemHandlerSides[side.getIndex()])
+        return this.getCapability(cap, side, null);
+    }
+
+    /*
+        Null mode assumes that capability is requested for Vanilla-like behaviour and will be wrapped to prevent unwanted behaviour, eg. inputting to output
+    */
+    @Nonnull
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, @Nullable Direction side, @Nullable Mode mode) {
+        if (mode == Mode.NONE)
+            return LazyOptional.empty();
+
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            Mode m = manager.getItemHandlerMode(side);
+            if (side == null)
+                return inventory.cast();
+            if (mode == null)
+                return LazyOptional.of(() -> new ModeInventoryWrapper(this.inventory.orElse(null), canInsert(m), canExtract(m))).cast();
+            if (mode == m)
                 return inventory.cast();
         }
-        if (cap == CapabilityEnergy.ENERGY) {
-            if (side == null || energyHandlerSides[side.getIndex()])
-                return energyStorage.cast();
-        }
-        if (cap == CapabilityGas.GAS) {
-            if (side == null || gasHandlerSides[side.getIndex()])
-                return gasHandler.cast();
-        }
-        if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-            if (side == null || fluidHandlerSides[side.getIndex()]) {
-                return fluidHandler.cast();
-            }
-        }
-        return super.getCapability(cap, side);
+
+        return super.getCapability(capability, side);
+    }
+
+    private boolean canInsert(Mode mode) {
+        return mode == Mode.INPUT || mode == Mode.BOTH;
+    }
+
+    private boolean canExtract(Mode mode) {
+        return mode == Mode.OUTPUT || mode == Mode.BOTH;
     }
 }

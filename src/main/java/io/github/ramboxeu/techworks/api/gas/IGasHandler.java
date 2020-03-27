@@ -1,32 +1,31 @@
 package io.github.ramboxeu.techworks.api.gas;
 
-public interface IGasHandler {
+import io.github.ramboxeu.techworks.common.gas.Gas;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraftforge.common.util.INBTSerializable;
+
+public interface IGasHandler extends INBTSerializable<CompoundNBT> {
     /*
-        Returns what gas given side handles
+        Returns what gas capability handles
+        @return gas handled
     */
     Gas getGas();
 
-    /*
-        Extracts gas from handler
-        @return amount of gas that was extracted or would have been if simulated
-    */
+    int insertGas(Gas gas, int amount, boolean simulate);
+
     int extractGas(Gas gas, int amount, boolean simulate);
 
     /*
-        Inserts gas to handler
-        @return amount of gas that was inserted or would have been if simulated
-    */
-    int insertGas(Gas gas, int amount, boolean simulate);
-
-    /*
-        Gets maximum capacity of handler for given side
+        Gets maximum capacity of handler
+        @return max amount of cas that can be stored
      */
     int getMaxStorage();
 
     /*
-        Gets amount of gas stored in handler for given side
+        Gets amount of gas stored in handler
+        @return amount of gas stored
     */
-    int getStorage();
+    int getAmountStored();
 
     boolean canExtract();
     boolean canInsert();

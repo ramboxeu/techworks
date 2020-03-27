@@ -1,5 +1,6 @@
 package io.github.ramboxeu.techworks.api.gas;
 
+import io.github.ramboxeu.techworks.common.gas.Gas;
 import io.github.ramboxeu.techworks.common.registration.Registration;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -74,7 +75,7 @@ public class GasHandler implements IGasHandler, INBTSerializable<CompoundNBT> {
     }
 
     @Override
-    public int getStorage() {
+    public int getAmountStored() {
         return amountStored;
     }
 

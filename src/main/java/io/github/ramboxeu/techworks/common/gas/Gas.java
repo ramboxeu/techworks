@@ -1,4 +1,4 @@
-package io.github.ramboxeu.techworks.api.gas;
+package io.github.ramboxeu.techworks.common.gas;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistryEntry;

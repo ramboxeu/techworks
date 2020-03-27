@@ -21,7 +21,7 @@ public class CapabilityGas {
             public INBT writeNBT(Capability<IGasHandler> capability, IGasHandler instance, Direction side) {
                 CompoundNBT nbt = new CompoundNBT();
                 nbt.putString("Gas", instance.getGas().getRegistryName().toString());
-                nbt.putInt("Amount", instance.getStorage());
+                nbt.putInt("Amount", instance.getAmountStored());
 
                 return nbt;
             }
@@ -36,6 +36,6 @@ public class CapabilityGas {
                 handler.amountStored = compound.getInt("Amount");
                 handler.gas = Registration.getGasByString(compound.getString("Gas"));
             }
-        }, () -> new GasHandler(Registration.EMPTY_GAS.get(), 1000, 1000));
+        }, GasHandler::new);
     }
 }

@@ -1,8 +1,8 @@
 package io.github.ramboxeu.techworks.common.registration;
 
 import io.github.ramboxeu.techworks.Techworks;
-import io.github.ramboxeu.techworks.api.gas.EmptyGas;
-import io.github.ramboxeu.techworks.api.gas.Gas;
+import io.github.ramboxeu.techworks.common.gas.EmptyGas;
+import io.github.ramboxeu.techworks.common.gas.Gas;
 import io.github.ramboxeu.techworks.client.container.BoilerContainer;
 import io.github.ramboxeu.techworks.client.screen.BoilerScreen;
 import io.github.ramboxeu.techworks.common.block.BoilerBlock;

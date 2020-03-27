@@ -1,4 +1,4 @@
-package io.github.ramboxeu.techworks.api.gas;
+package io.github.ramboxeu.techworks.common.gas;
 
 public class EmptyGas extends Gas {
     public EmptyGas() {

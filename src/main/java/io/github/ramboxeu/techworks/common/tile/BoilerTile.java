@@ -14,7 +14,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
-import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nullable;
@@ -39,7 +39,7 @@ public class BoilerTile extends AbstractMachineTile {
 
     @Nullable
     @Override
-    protected IItemHandler createItemHandler() {
+    protected IItemHandlerModifiable createItemHandler() {
         return new ItemStackHandler(5) {
             @Override
             protected void onContentsChanged(int slot) {
