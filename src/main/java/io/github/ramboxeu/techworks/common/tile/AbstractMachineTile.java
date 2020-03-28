@@ -4,7 +4,9 @@ import io.github.ramboxeu.techworks.api.gas.CapabilityGas;
 import io.github.ramboxeu.techworks.api.gas.IGasHandler;
 import io.github.ramboxeu.techworks.common.machine.io.IOManager;
 import io.github.ramboxeu.techworks.common.machine.io.Mode;
-import io.github.ramboxeu.techworks.common.util.capability.ModeInventoryWrapper;
+import io.github.ramboxeu.techworks.common.util.capability.EnergyWrapper;
+import io.github.ramboxeu.techworks.common.util.capability.FluidWrapper;
+import io.github.ramboxeu.techworks.common.util.capability.InventoryWrapper;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
@@ -14,10 +16,13 @@ import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
+import org.jline.utils.InfoCmp;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -97,14 +102,40 @@ public abstract class AbstractMachineTile extends TileEntity implements ITickabl
         if (mode == Mode.NONE)
             return LazyOptional.empty();
 
-        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && inventory.isPresent()) {
             Mode m = manager.getItemHandlerMode(side);
             if (side == null)
                 return inventory.cast();
             if (mode == null)
-                return LazyOptional.of(() -> new ModeInventoryWrapper(this.inventory.orElse(null), canInsert(m), canExtract(m))).cast();
+                return LazyOptional.of(() -> new InventoryWrapper(this.inventory.orElse(null    ), canInsert(m), canExtract(m))).cast();
             if (mode == m)
                 return inventory.cast();
+        }
+
+        if (capability == CapabilityEnergy.ENERGY && energyStorage.isPresent()) {
+            Mode m = manager.getEnergyHandlerMode(side);
+            if (side == null)
+                return energyStorage.cast();
+            if (mode == null)
+                return LazyOptional.of(() -> new EnergyWrapper(this.energyStorage.orElse(null), canInsert(m), canExtract(m))).cast();
+            if (mode == m)
+                return energyStorage.cast();
+        }
+
+        if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && fluidHandler.isPresent()) {
+            Mode m = manager.getFluidHandlerMode(side);
+            if (side == null)
+                return fluidHandler.cast();
+            if (mode == null)
+                return LazyOptional.of(() -> new FluidWrapper(this.fluidHandler.orElse(null), canInsert(m), canExtract(m))).cast();
+            if (mode == m)
+                return fluidHandler.cast();
+        }
+
+        if (capability == CapabilityGas.GAS && gasHandler.isPresent()) {
+            Mode m = manager.getGasHandlerMode(side);
+            if (side == null || mode == m)
+                return gasHandler.cast();
         }
 
         return super.getCapability(capability, side);

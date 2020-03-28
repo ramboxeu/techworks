@@ -1,7 +1,9 @@
 package io.github.ramboxeu.techworks.common.machine.io;
 
 import net.minecraft.util.Direction;
-
+/*
+    This is somewhat temporary, but must do it for now
+ */
 public class IOManager {
     // 0 - item, 1 - energy, 3 - gas, 4 - fluid
     private Mode[][] modes;
@@ -19,12 +21,14 @@ public class IOManager {
         };
     }
 
-    public IOManager(Mode[] item , Mode[] energy, Mode[] gas, Mode[] fluid) {
+    public IOManager(Mode[] up , Mode[] down, Mode[] north, Mode[] south, Mode[] east, Mode[] west) {
         modes = new Mode[][] {
-                item,
-                energy,
-                gas,
-                fluid,
+                up,
+                down,
+                north,
+                south,
+                east,
+                west
         };
     }
 

@@ -5,12 +5,12 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
 
-public class ModeInventoryWrapper implements IItemHandlerModifiable {
+public class InventoryWrapper implements IItemHandlerModifiable {
     private IItemHandlerModifiable handler;
     private boolean canInsert;
     private boolean canExtract;
 
-    public ModeInventoryWrapper(IItemHandlerModifiable handler, boolean canInsert, boolean canExtract) {
+    public InventoryWrapper(IItemHandlerModifiable handler, boolean canInsert, boolean canExtract) {
         this.handler = handler;
         this.canInsert = canInsert;
         this.canExtract = canExtract;
