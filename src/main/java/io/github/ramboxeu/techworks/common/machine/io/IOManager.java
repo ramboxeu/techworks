@@ -21,14 +21,14 @@ public class IOManager {
         };
     }
 
-    public IOManager(Mode[] up , Mode[] down, Mode[] north, Mode[] south, Mode[] east, Mode[] west) {
+    public IOManager(Mode[] down , Mode[] up, Mode[] north, Mode[] south, Mode[] west, Mode[] east) {
         modes = new Mode[][] {
-                up,
                 down,
+                up,
                 north,
                 south,
-                east,
-                west
+                west,
+                east
         };
     }
 

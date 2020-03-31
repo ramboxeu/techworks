@@ -3,12 +3,13 @@ package io.github.ramboxeu.techworks.common.tile;
 import io.github.ramboxeu.techworks.api.gas.GasHandler;
 import io.github.ramboxeu.techworks.api.gas.IGasHandler;
 import io.github.ramboxeu.techworks.client.container.BoilerContainer;
-import io.github.ramboxeu.techworks.common.block.BoilerBlock;
 import io.github.ramboxeu.techworks.common.registration.Registration;
+import io.github.ramboxeu.techworks.common.util.PredicateUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -18,6 +19,7 @@ import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class BoilerTile extends AbstractMachineTile {
@@ -51,6 +53,30 @@ public class BoilerTile extends AbstractMachineTile {
             protected void onContentsChanged(int slot) {
                 markDirty();
             }
+
+            @Override
+            public int getSlotLimit(int slot) {
+                switch (slot) {
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 4:
+                        return 1;
+                    default:
+                        return 64;
+                }
+            }
+
+            @Override
+            public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
+                switch (slot) {
+                    case 0: return PredicateUtils.isFuel(stack);
+                    case 1:
+                    case 2:
+                        return PredicateUtils.isFluidHandler(stack);
+                    default: return false;
+                }
+            }
         };
     }
 
@@ -74,7 +100,12 @@ public class BoilerTile extends AbstractMachineTile {
     @Nullable
     @Override
     protected IFluidHandler createFluidHandler() {
-        return new FluidTank(1000, fluidStack -> fluidStack.getFluid().equals(Fluids.WATER));
+        return new FluidTank(10000, fluidStack -> fluidStack.getFluid().equals(Fluids.WATER)) {
+            @Override
+            protected void onContentsChanged() {
+                markDirty();
+            }
+        };
     }
 
     @Override

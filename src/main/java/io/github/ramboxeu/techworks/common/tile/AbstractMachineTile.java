@@ -42,7 +42,7 @@ public abstract class AbstractMachineTile extends TileEntity implements ITickabl
         super(tileEntityType);
         this.cooldown = cooldown;
         this.cooldownCounter = cooldown;
-        this.manager = new IOManager();
+        this.manager = new IOManager(IOManager.DEFAULT, new Mode[] {Mode.INPUT, Mode.NONE, Mode.NONE, Mode.NONE}, IOManager.DEFAULT, IOManager.DEFAULT, IOManager.DEFAULT, IOManager.DEFAULT);
     }
 
     @Override
