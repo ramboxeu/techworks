@@ -4,6 +4,7 @@ import io.github.ramboxeu.techworks.api.gas.CapabilityGas;
 import io.github.ramboxeu.techworks.api.gas.IGasHandler;
 import io.github.ramboxeu.techworks.common.machine.io.IOManager;
 import io.github.ramboxeu.techworks.common.machine.io.Mode;
+import io.github.ramboxeu.techworks.common.property.TechworksBlockStateProperties;
 import io.github.ramboxeu.techworks.common.util.capability.EnergyWrapper;
 import io.github.ramboxeu.techworks.common.util.capability.FluidWrapper;
 import io.github.ramboxeu.techworks.common.util.capability.InventoryWrapper;
@@ -22,7 +23,6 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
-import org.jline.utils.InfoCmp;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -50,6 +50,10 @@ public abstract class AbstractMachineTile extends TileEntity implements ITickabl
         if (cooldownCounter == 0) {
             cooldownCounter = cooldown;
             this.run();
+        }
+
+        if (this.isWorking()) {
+            this.world.setBlockState(this.pos, this.getBlockState().with(TechworksBlockStateProperties.RUNNING, true));
         }
 
         cooldownCounter--;
@@ -103,38 +107,43 @@ public abstract class AbstractMachineTile extends TileEntity implements ITickabl
             return LazyOptional.empty();
 
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && inventory.isPresent()) {
-            Mode m = manager.getItemHandlerMode(side);
             if (side == null)
                 return inventory.cast();
-            if (mode == null)
-                return LazyOptional.of(() -> new InventoryWrapper(this.inventory.orElse(null    ), canInsert(m), canExtract(m))).cast();
-            if (mode == m)
-                return inventory.cast();
+            else {
+                Mode m = manager.getItemHandlerMode(side);
+                if (mode == null)
+                    return LazyOptional.of(() -> new InventoryWrapper(this.inventory.orElse(null), canInsert(m), canExtract(m))).cast();
+                if (mode == m)
+                    return inventory.cast();
+            }
         }
 
         if (capability == CapabilityEnergy.ENERGY && energyStorage.isPresent()) {
-            Mode m = manager.getEnergyHandlerMode(side);
             if (side == null)
                 return energyStorage.cast();
-            if (mode == null)
-                return LazyOptional.of(() -> new EnergyWrapper(this.energyStorage.orElse(null), canInsert(m), canExtract(m))).cast();
-            if (mode == m)
-                return energyStorage.cast();
+            else {
+                Mode m = manager.getEnergyHandlerMode(side);
+                if (mode == null)
+                    return LazyOptional.of(() -> new EnergyWrapper(this.energyStorage.orElse(null), canInsert(m), canExtract(m))).cast();
+                if (mode == m)
+                    return energyStorage.cast();
+            }
         }
 
         if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && fluidHandler.isPresent()) {
-            Mode m = manager.getFluidHandlerMode(side);
             if (side == null)
                 return fluidHandler.cast();
-            if (mode == null)
-                return LazyOptional.of(() -> new FluidWrapper(this.fluidHandler.orElse(null), canInsert(m), canExtract(m))).cast();
-            if (mode == m)
-                return fluidHandler.cast();
+            else {
+                Mode m = manager.getFluidHandlerMode(side);
+                if (mode == null)
+                    return LazyOptional.of(() -> new FluidWrapper(this.fluidHandler.orElse(null), canInsert(m), canExtract(m))).cast();
+                if (mode == m)
+                    return fluidHandler.cast();
+            }
         }
 
         if (capability == CapabilityGas.GAS && gasHandler.isPresent()) {
-            Mode m = manager.getGasHandlerMode(side);
-            if (side == null || mode == m)
+            if (side == null || mode == manager.getGasHandlerMode(side))
                 return gasHandler.cast();
         }
 
@@ -148,4 +157,6 @@ public abstract class AbstractMachineTile extends TileEntity implements ITickabl
     private boolean canExtract(Mode mode) {
         return mode == Mode.OUTPUT || mode == Mode.BOTH;
     }
+
+    abstract boolean isWorking();
 }

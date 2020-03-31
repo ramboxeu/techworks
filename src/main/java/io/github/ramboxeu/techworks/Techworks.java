@@ -1,7 +1,6 @@
 package io.github.ramboxeu.techworks;
 
 import io.github.ramboxeu.techworks.api.gas.CapabilityGas;
-import io.github.ramboxeu.techworks.api.gas.GasHandler;
 import io.github.ramboxeu.techworks.common.TechworksItemGroup;
 import io.github.ramboxeu.techworks.common.registration.Registration;
 import net.minecraft.item.ItemGroup;

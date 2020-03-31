@@ -3,6 +3,7 @@ package io.github.ramboxeu.techworks.common.tile;
 import io.github.ramboxeu.techworks.api.gas.GasHandler;
 import io.github.ramboxeu.techworks.api.gas.IGasHandler;
 import io.github.ramboxeu.techworks.client.container.BoilerContainer;
+import io.github.ramboxeu.techworks.common.block.BoilerBlock;
 import io.github.ramboxeu.techworks.common.registration.Registration;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -30,6 +31,11 @@ public class BoilerTile extends AbstractMachineTile {
     @Override
     public CompoundNBT write(CompoundNBT compound) {
         return super.write(compound);
+    }
+
+    @Override
+    boolean isWorking() {
+        return false;
     }
 
     @Override
