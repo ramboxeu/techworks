@@ -75,18 +75,22 @@ public abstract class AbstractMachineTile extends TileEntity implements ITickabl
 
 
     @Override
+    @SuppressWarnings("unchecked")
     public void read(CompoundNBT compound) {
         this.inventory.ifPresent(itemHandler -> ((INBTSerializable<CompoundNBT>) itemHandler).deserializeNBT(compound.getCompound("Inventory")));
         this.energyStorage.ifPresent(energyStorage -> ((INBTSerializable<CompoundNBT>) energyStorage).deserializeNBT(compound.getCompound("Energy")));
+        this.fluidHandler.ifPresent(fluidHandler -> CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.readNBT(fluidHandler, null, compound.getCompound("FluidTank")));
         this.gasHandler.ifPresent(gasHandler -> CapabilityGas.GAS.readNBT(gasHandler, null, compound.getCompound("GasHandler")));
 
         super.read(compound);
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public CompoundNBT write(CompoundNBT compound) {
         this.inventory.ifPresent(itemHandler -> compound.put("Inventory", ((INBTSerializable<CompoundNBT>) itemHandler).serializeNBT()));
         this.energyStorage.ifPresent(energyStorage -> compound.put("Energy", ((INBTSerializable<CompoundNBT>) energyStorage).serializeNBT()));
+        this.fluidHandler.ifPresent(fluidHandler -> compound.put("FluidTank", CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.writeNBT(fluidHandler, null)));
         this.gasHandler.ifPresent(gasHandler -> compound.put("GasHandler", CapabilityGas.GAS.writeNBT(gasHandler, null)));
 
         return super.write(compound);

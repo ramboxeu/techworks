@@ -29,6 +29,7 @@ public abstract class AbstractMachineContainer extends Container {
     protected LazyOptional<IEnergyStorage> energyStorage;
     protected LazyOptional<IGasHandler> gasHandler;
     private InventoryBuilder builder;
+    protected AbstractMachineTile machineTile;
 
     protected AbstractMachineContainer(@Nullable ContainerType<?> containerType, int id, PlayerInventory playerInventory, AbstractMachineTile machineTile) {
         super(containerType, id);
@@ -41,6 +42,8 @@ public abstract class AbstractMachineContainer extends Container {
         this.builder = new InventoryBuilder();
 
         this.layoutPlayerSlots();
+
+        this.machineTile = machineTile;
 
         this.inventory.ifPresent(itemHandler ->  {
             this.layoutSlots(this.builder);

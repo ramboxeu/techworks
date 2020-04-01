@@ -1,8 +1,8 @@
 package io.github.ramboxeu.techworks.client.container;
 
-import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.common.registration.Registration;
 import io.github.ramboxeu.techworks.common.tile.AbstractMachineTile;
+import io.github.ramboxeu.techworks.common.tile.BoilerTile;
 import io.github.ramboxeu.techworks.common.util.PredicateUtils;
 import io.github.ramboxeu.techworks.common.util.inventory.InventoryBuilder;
 import io.github.ramboxeu.techworks.common.util.inventory.SlotBuilder;
@@ -14,6 +14,7 @@ import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
 public class BoilerContainer extends AbstractMachineContainer {
+
     public BoilerContainer(int id, PlayerInventory playerInventory, AbstractMachineTile tile) {
         super(Registration.BOILER_CONTAINER.get(), id, playerInventory, tile);
     }
@@ -27,8 +28,14 @@ public class BoilerContainer extends AbstractMachineContainer {
     protected void layoutSlots(InventoryBuilder builder) {
         builder
             .addSlot(new SlotBuilder(80, 54).predicate(PredicateUtils::isFuel))
-            .addSlot(new SlotBuilder(27, 16).limit(1).predicate(PredicateUtils::isFluidHandler))
-            .addSlot(new SlotBuilder(27, 54).limit(1).predicate(PredicateUtils::isFluidHandler))
+            .addSlot(new SlotBuilder(27, 16).limit(1).predicate(PredicateUtils::isFluidHandler).onChanged((stack, slot) -> {
+                ((BoilerTile) machineTile).handleFluidHandlerInput(stack, slot);
+                this.detectAndSendChanges();
+            }))
+            .addSlot(new SlotBuilder(27, 54).limit(1).predicate(PredicateUtils::isFluidHandler).onChanged((slot, stack) -> {
+                ((BoilerTile) machineTile).handleFluidHandlerOutput(slot, stack);
+                this.detectAndSendChanges();
+            }))
             .addSlot(new SlotBuilder(133, 16).limit(1).predicate(itemStack -> false))
             .addSlot(new SlotBuilder(133, 54).limit(1).predicate(itemStack -> false));
     }
@@ -82,4 +89,5 @@ public class BoilerContainer extends AbstractMachineContainer {
 
         return itemStack;
     }
+
 }
