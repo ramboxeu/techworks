@@ -4,11 +4,11 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.client.container.BoilerContainer;
 import io.github.ramboxeu.techworks.common.util.inventory.RenderUtils;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
 public class BoilerScreen extends ContainerScreen<BoilerContainer> {
     public static final ResourceLocation BOILER_GUI_TEXTURE = new ResourceLocation(Techworks.MOD_ID, "textures/gui/container/boiler.png");
@@ -31,7 +31,7 @@ public class BoilerScreen extends ContainerScreen<BoilerContainer> {
     }
 
     private void renderTanks() {
-        RenderUtils.drawFluid(this.guiLeft + 50,this.guiTop + 16, boilerContainer.getFluid(), 16, 54, 10000);
+        RenderUtils.drawFluidInTank(this.guiLeft + 50,this.guiTop + 16, boilerContainer.getFluid(), 16, 54, 10000);
     }
 
     @Override
@@ -58,11 +58,19 @@ public class BoilerScreen extends ContainerScreen<BoilerContainer> {
         int y = mouseY - this.guiTop;
 
         if (x >= 50 && x <= 65 && y >= 15 && y <= 68) {
-            this.renderTooltip(String.format("Water %d m\u00B3", boilerContainer.getFluid().getAmount()), mouseX, mouseY);
+            if (Screen.hasShiftDown()) {
+                this.renderTooltip(String.format("Water %db", boilerContainer.getFluid().getAmount() / 1000), mouseX, mouseY);
+            } else {
+                this.renderTooltip(String.format("Water %dmb", boilerContainer.getFluid().getAmount()), mouseX, mouseY);
+            }
         }
 
         if (x >= 100 && x <= 125 && y >= 15 && y <= 68) {
-            this.renderTooltip(String.format("Steam %s m\u00B3", 0), mouseX, mouseY);
+            if (Screen.hasShiftDown()) {
+                this.renderTooltip(String.format("Steam %sb", 0), mouseX, mouseY);
+            } else {
+                this.renderTooltip(String.format("Steam %smb", 0), mouseX, mouseY);
+            }
         }
 
         super.renderHoveredToolTip(mouseX, mouseY);
