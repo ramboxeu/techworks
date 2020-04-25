@@ -26,12 +26,26 @@ public class BoilerScreen extends ContainerScreen<BoilerContainer> {
         this.renderBackground();
         //this.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
         super.render(mouseX, mouseY, partialTicks);
+        this.renderProgressBars();
         this.renderTanks();
         this.renderHoveredToolTip(mouseX, mouseY);
     }
 
     private void renderTanks() {
         RenderUtils.drawFluidInTank(this.guiLeft + 50,this.guiTop + 16, boilerContainer.getFluid(), 16, 54, 10000);
+    }
+
+    private void renderProgressBars() {
+        // Render fuel burning
+        this.minecraft.getTextureManager().bindTexture(BOILER_GUI_TEXTURE);
+        int burnTime = this.boilerContainer.getBurnTime();
+        if (burnTime > 0) {
+            int cookTime = this.boilerContainer.getCookTime();
+
+            int progress = (int) (14 * ((float) cookTime / burnTime));
+
+            this.blit(80 + this.guiLeft, 37 + this.guiTop + progress, 176, progress, 14, 14);
+        }
     }
 
     @Override
@@ -67,10 +81,14 @@ public class BoilerScreen extends ContainerScreen<BoilerContainer> {
 
         if (x >= 100 && x <= 125 && y >= 15 && y <= 68) {
             if (Screen.hasShiftDown()) {
-                this.renderTooltip(String.format("Steam %sb", 0), mouseX, mouseY);
+                this.renderTooltip(String.format("Steam %sb", boilerContainer.getGas() / 1000), mouseX, mouseY);
             } else {
-                this.renderTooltip(String.format("Steam %smb", 0), mouseX, mouseY);
+                this.renderTooltip(String.format("Steam %smb", boilerContainer.getGas()), mouseX, mouseY);
             }
+        }
+
+        if (x >= 80 && x <= 93 && y >= 37 && y <= 50) {
+            this.renderTooltip(this.boilerContainer.getCookTime() + "/" + this.boilerContainer.getBurnTime(), mouseX, mouseY);
         }
 
         super.renderHoveredToolTip(mouseX, mouseY);

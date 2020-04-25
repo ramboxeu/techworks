@@ -1,6 +1,5 @@
 package io.github.ramboxeu.techworks.common.tile;
 
-import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.api.gas.GasHandler;
 import io.github.ramboxeu.techworks.api.gas.IGasHandler;
 import io.github.ramboxeu.techworks.client.container.BoilerContainer;
@@ -10,12 +9,11 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.container.Container;
-import net.minecraft.item.BucketItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -29,12 +27,42 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class BoilerTile extends AbstractMachineTile {
+    private int cookTime = 0;
+    private int counter = 0;
+    private boolean isWorking = true;
+
     public BoilerTile() {
-        super(Registration.BOILER_TILE.get(), 10);
+        super(Registration.BOILER_TILE.get(), 1);
     }
 
     @Override
-    void run() {}
+    void run() {
+        this.inventory.ifPresent(inventory -> {
+            this.gasHandler.ifPresent(gas -> {
+                this.fluidHandler.ifPresent(fluid -> {
+                    int burnTime = ForgeHooks.getBurnTime(inventory.getStackInSlot(0));
+
+                    if (!inventory.extractItem(0, 1, true).isEmpty()
+                            && fluid.drain(400, IFluidHandler.FluidAction.SIMULATE).getAmount() >= 400) {
+                        if (cookTime == burnTime) {
+                            inventory.extractItem(0, 1, false);
+                            cookTime = 0;
+                        } else {
+                            cookTime++;
+                        }
+
+                        if (counter == 200) {
+                            this.gasHandler.ifPresent(tank -> tank.insertGas(Registration.STEAM_GAS.get(), 400, false));
+                            this.fluidHandler.ifPresent(tank -> tank.drain(400, IFluidHandler.FluidAction.EXECUTE));
+                            counter = 0;
+                        } else {
+                            counter++;
+                        }
+                    }
+                });
+            });
+        });
+    }
 
     @Override
     public CompoundNBT write(CompoundNBT compound) {
@@ -42,8 +70,8 @@ public class BoilerTile extends AbstractMachineTile {
     }
 
     @Override
-    boolean isWorking() {
-        return false;
+    boolean canWork() {
+        return this.isWorking;
     }
 
     @Override
@@ -95,7 +123,7 @@ public class BoilerTile extends AbstractMachineTile {
     @Nullable
     @Override
     protected IGasHandler createGasHandler() {
-        return new GasHandler(Registration.STEAM_GAS.get(), 100, 1000) {
+        return new GasHandler(Registration.STEAM_GAS.get(), 400, 10000) {
             @Override
             public void onContentsChanged() {
                 markDirty();
@@ -155,5 +183,13 @@ public class BoilerTile extends AbstractMachineTile {
                 });
             }
         });
+    }
+
+    public int getCookTime() {
+        return this.cookTime;
+    }
+
+    public int getBurnTime() {
+        return ForgeHooks.getBurnTime(this.inventory.map(inventory -> inventory.getStackInSlot(0)).orElse(ItemStack.EMPTY));
     }
 }

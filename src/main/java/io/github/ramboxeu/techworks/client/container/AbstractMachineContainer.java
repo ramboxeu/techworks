@@ -1,7 +1,5 @@
 package io.github.ramboxeu.techworks.client.container;
 
-import com.google.gson.internal.$Gson$Preconditions;
-import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.api.gas.CapabilityGas;
 import io.github.ramboxeu.techworks.api.gas.GasHandler;
 import io.github.ramboxeu.techworks.api.gas.IGasHandler;
@@ -9,20 +7,15 @@ import io.github.ramboxeu.techworks.common.tile.AbstractMachineTile;
 import io.github.ramboxeu.techworks.common.util.inventory.InventoryBuilder;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.IntReferenceHolder;
-import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -53,6 +46,20 @@ public abstract class AbstractMachineContainer extends Container {
             public void set(int amount) {
                 machineTile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).ifPresent(fluidHandler -> {
                     ((FluidTank)fluidHandler).setFluid(new FluidStack(Fluids.WATER, amount));
+                });
+            }
+        });
+
+        this.trackInt(new IntReferenceHolder() {
+            @Override
+            public int get() {
+                return getGas();
+            }
+
+            @Override
+            public void set(int amount) {
+                machineTile.getCapability(CapabilityGas.GAS).ifPresent(gasHandler -> {
+                    ((GasHandler)gasHandler).setAmountStored(amount);
                 });
             }
         });

@@ -10,13 +10,28 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IntReferenceHolder;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
 public class BoilerContainer extends AbstractMachineContainer {
 
+    private int cookTime;
+
     public BoilerContainer(int id, PlayerInventory playerInventory, AbstractMachineTile tile) {
         super(Registration.BOILER_CONTAINER.get(), id, playerInventory, tile);
+
+        this.trackInt(new IntReferenceHolder() {
+            @Override
+            public int get() {
+                return ((BoilerTile) machineTile).getCookTime();
+            }
+
+            @Override
+            public void set(int value) {
+                cookTime = value;
+            }
+        });
     }
 
     @Override
@@ -90,4 +105,11 @@ public class BoilerContainer extends AbstractMachineContainer {
         return itemStack;
     }
 
+    public int getCookTime() {
+        return cookTime;
+    }
+
+    public int getBurnTime() {
+        return ((BoilerTile) machineTile).getBurnTime();
+    }
 }

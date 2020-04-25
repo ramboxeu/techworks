@@ -91,6 +91,10 @@ public class GasHandler implements IGasHandler, INBTSerializable<CompoundNBT> {
 
     public void onContentsChanged(){}
 
+    public void setAmountStored(int amountStored) {
+        this.amountStored = amountStored;
+    }
+
     @Override
     public CompoundNBT serializeNBT() {
         return (CompoundNBT) CapabilityGas.GAS.writeNBT(this, null);

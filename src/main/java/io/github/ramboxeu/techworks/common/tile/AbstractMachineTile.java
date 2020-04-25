@@ -1,5 +1,6 @@
 package io.github.ramboxeu.techworks.common.tile;
 
+import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.api.gas.CapabilityGas;
 import io.github.ramboxeu.techworks.api.gas.IGasHandler;
 import io.github.ramboxeu.techworks.common.machine.io.IOManager;
@@ -28,38 +29,50 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public abstract class AbstractMachineTile extends TileEntity implements ITickableTileEntity, INamedContainerProvider {
-    private int cooldown;
-    private int cooldownCounter = 0;
+    private int operationTime;
+    private int timeCounter = 0;
 
     protected LazyOptional<IItemHandlerModifiable> inventory = LazyOptional.of(this::createItemHandler);
     protected LazyOptional<IEnergyStorage> energyStorage = LazyOptional.of(this::createEnergyStorage);
     protected LazyOptional<IGasHandler> gasHandler = LazyOptional.of(this::createGasHandler);
     protected LazyOptional<IFluidHandler> fluidHandler = LazyOptional.of(this::createFluidHandler);
+    protected int speedMultiplier = 1;
 
     private IOManager manager;
 
-    public AbstractMachineTile(TileEntityType<?> tileEntityType, int cooldown) {
+    public AbstractMachineTile(TileEntityType<?> tileEntityType, int operationTime) {
         super(tileEntityType);
-        this.cooldown = cooldown;
-        this.cooldownCounter = cooldown;
+        this.operationTime = operationTime;
         this.manager = new IOManager(IOManager.DEFAULT, new Mode[] {Mode.INPUT, Mode.NONE, Mode.NONE, Mode.NONE}, IOManager.DEFAULT, IOManager.DEFAULT, IOManager.DEFAULT, IOManager.DEFAULT);
     }
 
     @Override
     public void tick() {
-        if (cooldownCounter == 0) {
-            cooldownCounter = cooldown;
-            this.run();
+        if (this.canWork()) {
+            this.timeCounter++;
+        } else {
+            timeCounter = 0;
         }
 
-        if (this.isWorking()) {
-            this.world.setBlockState(this.pos, this.getBlockState().with(TechworksBlockStateProperties.RUNNING, true));
-        }
+        if (!this.world.isRemote) {
+            if (this.canWork()) {
+                this.world.setBlockState(this.pos, this.getBlockState().with(TechworksBlockStateProperties.RUNNING, Boolean.valueOf(true)));
+            } else {
+                this.world.setBlockState(this.pos, this.getBlockState().with(TechworksBlockStateProperties.RUNNING, Boolean.valueOf(false)));
+            }
 
-        cooldownCounter--;
+            if (this.timeCounter == this.operationTime) {
+                this.run();
+                this.timeCounter = 0;
+            }
+        }
     }
 
     abstract void run();
+
+    protected void setOperationTime(int operationTime){
+        this.operationTime = operationTime / speedMultiplier;
+    }
 
     @Nullable
     protected abstract IItemHandlerModifiable createItemHandler();
@@ -162,5 +175,5 @@ public abstract class AbstractMachineTile extends TileEntity implements ITickabl
         return mode == Mode.OUTPUT || mode == Mode.BOTH;
     }
 
-    abstract boolean isWorking();
+    abstract boolean canWork();
 }
