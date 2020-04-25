@@ -39,9 +39,9 @@ public class BoilerScreen extends ContainerScreen<BoilerContainer> {
         // Render fuel burning
         this.minecraft.getTextureManager().bindTexture(BOILER_GUI_TEXTURE);
         int burnTime = this.boilerContainer.getBurnTime();
-        if (burnTime > 0) {
-            int cookTime = this.boilerContainer.getCookTime();
+        int cookTime = this.boilerContainer.getCookTime();
 
+        if (burnTime > 0 && cookTime > 0) {
             int progress = (int) (14 * ((float) cookTime / burnTime));
 
             this.blit(80 + this.guiLeft, 37 + this.guiTop + progress, 176, progress, 14, 14);

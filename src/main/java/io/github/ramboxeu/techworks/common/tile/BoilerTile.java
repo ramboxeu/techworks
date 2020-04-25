@@ -1,8 +1,10 @@
 package io.github.ramboxeu.techworks.common.tile;
 
+import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.api.gas.GasHandler;
 import io.github.ramboxeu.techworks.api.gas.IGasHandler;
 import io.github.ramboxeu.techworks.client.container.BoilerContainer;
+import io.github.ramboxeu.techworks.common.property.TechworksBlockStateProperties;
 import io.github.ramboxeu.techworks.common.registration.Registration;
 import io.github.ramboxeu.techworks.common.util.PredicateUtils;
 import net.minecraft.entity.player.PlayerEntity;
@@ -28,8 +30,9 @@ import javax.annotation.Nullable;
 
 public class BoilerTile extends AbstractMachineTile {
     private int cookTime = 0;
+    private int cachedBurnTime = 0;
     private int counter = 0;
-    private boolean isWorking = true;
+    private boolean isBurning;
 
     public BoilerTile() {
         super(Registration.BOILER_TILE.get(), 1);
@@ -42,22 +45,42 @@ public class BoilerTile extends AbstractMachineTile {
                 this.fluidHandler.ifPresent(fluid -> {
                     int burnTime = ForgeHooks.getBurnTime(inventory.getStackInSlot(0));
 
-                    if (!inventory.extractItem(0, 1, true).isEmpty()
-                            && fluid.drain(400, IFluidHandler.FluidAction.SIMULATE).getAmount() >= 400) {
-                        if (cookTime == burnTime) {
-                            inventory.extractItem(0, 1, false);
+                    int fluidAmount = fluid.getFluidInTank(0).getAmount();
+                    int gasAmount = gas.getAmountStored();
+
+                    if (!isBurning && burnTime > 0 && fluidAmount >= 400 && gasAmount <= gas.getMaxStorage() - 400 && !inventory.extractItem(0, 1, true).isEmpty()) {
+                        inventory.extractItem(0, 1, false);
+                        isBurning = true;
+                        cachedBurnTime = burnTime;
+                        this.getBlockState().with(TechworksBlockStateProperties.RUNNING, true);
+                    }
+
+                    if (isBurning) {
+                        if (cookTime == cachedBurnTime) {
                             cookTime = 0;
+                            cachedBurnTime = 0;
+                            isBurning = false;
+                            if (burnTime == 0) {
+                                counter = 0;
+                            }
+                            this.getBlockState().with(TechworksBlockStateProperties.RUNNING, false);
                         } else {
                             cookTime++;
                         }
 
                         if (counter == 200) {
-                            this.gasHandler.ifPresent(tank -> tank.insertGas(Registration.STEAM_GAS.get(), 400, false));
-                            this.fluidHandler.ifPresent(tank -> tank.drain(400, IFluidHandler.FluidAction.EXECUTE));
+                            if (gas.insertGas(Registration.STEAM_GAS.get(), 400, true) == 400
+                                    && fluid.drain(400, IFluidHandler.FluidAction.SIMULATE).getAmount() == 400)
+                            {
+                                gas.insertGas(Registration.STEAM_GAS.get(), 400, false);
+                                fluid.drain(400, IFluidHandler.FluidAction.EXECUTE);
+                            }
                             counter = 0;
                         } else {
                             counter++;
                         }
+                    } else {
+                        this.getBlockState().with(TechworksBlockStateProperties.RUNNING, false);
                     }
                 });
             });
@@ -66,16 +89,26 @@ public class BoilerTile extends AbstractMachineTile {
 
     @Override
     public CompoundNBT write(CompoundNBT compound) {
+        compound.putInt("counter", counter);
+        compound.putInt("cookTime", cookTime);
+        compound.putInt("cachedBurnTime", cachedBurnTime);
+        compound.putBoolean("isBurning", isBurning);
+
         return super.write(compound);
     }
 
     @Override
     boolean canWork() {
-        return this.isWorking;
+        return true;
     }
 
     @Override
     public void read(CompoundNBT compound) {
+        counter = compound.getInt("counter");
+        cookTime = compound.getInt("cookTime");
+        cachedBurnTime = compound.getInt("cachedBurnTime");
+        isBurning = compound.getBoolean("isBurning");
+
         super.read(compound);
     }
 
@@ -186,10 +219,10 @@ public class BoilerTile extends AbstractMachineTile {
     }
 
     public int getCookTime() {
-        return this.cookTime;
+        return cookTime;
     }
 
     public int getBurnTime() {
-        return ForgeHooks.getBurnTime(this.inventory.map(inventory -> inventory.getStackInSlot(0)).orElse(ItemStack.EMPTY));
+        return cachedBurnTime;
     }
 }
