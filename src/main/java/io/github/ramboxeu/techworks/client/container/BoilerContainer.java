@@ -44,6 +44,7 @@ public class BoilerContainer extends AbstractMachineContainer {
                 burnTime = value;
             }
         });
+
     }
 
     @Override

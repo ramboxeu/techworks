@@ -1,5 +1,6 @@
 package io.github.ramboxeu.techworks.common.util.inventory;
 
+import io.github.ramboxeu.techworks.Techworks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
@@ -25,6 +26,21 @@ public class RenderUtils {
         int y = (tankY + tankHeight) - height;
 
         drawColoredSpriteTiled(findAndBindBlockTexture(texture), tankX, y, color, tankWidth, height);
+        GL11.glPopMatrix();
+    }
+
+    public static void drawGasInTank(int tankX, int tankY, int amount, Color color, int tankWidth, int tankHeight, int capacity) {
+        if (amount <= 0)
+            return;
+
+        GL11.glPushMatrix();
+
+        int height = (int) (((float) amount / capacity) * tankHeight);
+        int y = (tankY + tankHeight) - height;
+
+        Minecraft.getInstance().textureManager.bindTexture(new ResourceLocation(Techworks.MOD_ID, "textures/gas/gas.png"));
+
+        drawTiledTexture(tankX, y, color, tankWidth, height, 0,0, 16, 16);
         GL11.glPopMatrix();
     }
 
@@ -83,6 +99,56 @@ public class RenderUtils {
 
         // Draw corner leftover
         spriteVertex(spriteX + spriteWidth, spriteY + spriteHeight, partialSpriteWidth, partialSpriteHeight, minU, partialMaxU, minV, partialMaxV, red, green, blue, alpha);
+    }
+
+    private static void drawTiledTexture(double x, double y, Color color, int width, int height, int textureX, int textureY, int textureWidth, int textureHeight) {
+        int fullHeights = Math.floorDiv(height, textureHeight);
+        int fullWidths = Math.floorDiv(width, textureWidth);
+
+        int red = color.getRed();
+        int green = color.getGreen();
+        int blue = color.getBlue();
+        int alpha = color.getAlpha();
+
+        double spriteX = x - textureWidth;
+        double spriteY = y - textureHeight;
+
+        int minU = textureWidth;
+        int maxU = textureWidth + textureX;
+        int minV = textureHeight;
+        int maxV = textureHeight + textureY;
+
+        // Draw full sized sprites
+        for (int i = 0; i < fullHeights; i++) {
+            for (int j = 0; j < fullWidths; j++) {
+                spriteX = x + j * textureWidth;
+                spriteY = y + i * textureHeight;
+                spriteVertex(spriteX, spriteY, textureWidth, textureHeight, minU, maxU, minV, maxV, red, green, blue, alpha);
+            }
+        }
+
+        // Draw leftovers on the bottom
+        int partialSpriteHeight = height - (fullHeights * textureHeight);
+
+        float partialMaxV = maxV - partialSpriteHeight;
+
+        for (int i = 0; i < fullWidths; i++) {
+            spriteX = x + i * textureWidth;
+            spriteVertex(spriteX, spriteY + textureHeight, textureWidth, partialSpriteHeight, minU, maxU, minV, partialMaxV, red, green, blue, alpha);
+        }
+
+        // Draw leftovers on the left
+        int partialSpriteWidth = width - (fullWidths * textureWidth);
+
+        float partialMaxU = maxU - partialSpriteWidth;
+
+        for (int i = 0; i < fullHeights; i++) {
+            spriteY = y + i * textureHeight;
+            spriteVertex(spriteX + textureWidth, spriteY, partialSpriteWidth, textureHeight, minU, partialMaxU, minV, maxV, red, green, blue, alpha);
+        }
+
+        // Draw corner leftover
+        spriteVertex(spriteX + textureWidth, spriteY + textureHeight, partialSpriteWidth, partialSpriteHeight, minU, partialMaxU, minV, partialMaxV, red, green, blue, alpha);
     }
 
     private static void spriteVertex(double x, double y, int width, int height, float minU, float maxU, float minV, float maxV, int red, int green, int blue, int alpha) {

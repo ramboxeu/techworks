@@ -10,6 +10,8 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
+import java.awt.*;
+
 public class BoilerScreen extends ContainerScreen<BoilerContainer> {
     public static final ResourceLocation BOILER_GUI_TEXTURE = new ResourceLocation(Techworks.MOD_ID, "textures/gui/container/boiler.png");
 
@@ -33,6 +35,7 @@ public class BoilerScreen extends ContainerScreen<BoilerContainer> {
 
     private void renderTanks() {
         RenderUtils.drawFluidInTank(this.guiLeft + 50,this.guiTop + 16, boilerContainer.getFluid(), 16, 54, 10000);
+        RenderUtils.drawGasInTank(this.guiLeft + 110,this.guiTop + 16, boilerContainer.getGas(), new Color(195, 195, 195, 255), 16, 54, 10000);
     }
 
     private void renderProgressBars() {
