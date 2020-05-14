@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "techworks:block/gas_pipe_basic" }
+  }
+}

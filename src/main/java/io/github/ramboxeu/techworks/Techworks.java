@@ -1,9 +1,15 @@
 package io.github.ramboxeu.techworks;
 
 import io.github.ramboxeu.techworks.api.gas.CapabilityGas;
+import io.github.ramboxeu.techworks.client.model.CableModelLoader;
 import io.github.ramboxeu.techworks.common.TechworksItemGroup;
+import io.github.ramboxeu.techworks.common.network.TechworkPacketHandler;
 import io.github.ramboxeu.techworks.common.registration.Registration;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.model.ModelLoaderRegistry;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -29,9 +35,11 @@ public class Techworks {
 
     public void setup(FMLCommonSetupEvent event) {
         CapabilityGas.register();
+        TechworkPacketHandler.register();
     }
 
     public void clientSetup(FMLClientSetupEvent event) {
         Registration.registerScreens();
+        ModelLoaderRegistry.registerLoader(new ResourceLocation("techworks:cable"), new CableModelLoader());
     }
 }

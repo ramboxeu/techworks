@@ -1,6 +1,7 @@
 package io.github.ramboxeu.techworks.common.registration;
 
 import io.github.ramboxeu.techworks.Techworks;
+import io.github.ramboxeu.techworks.common.block.cable.BasicGasPipeBlock;
 import io.github.ramboxeu.techworks.common.gas.EmptyGas;
 import io.github.ramboxeu.techworks.common.gas.Gas;
 import io.github.ramboxeu.techworks.client.container.BoilerContainer;
@@ -9,6 +10,7 @@ import io.github.ramboxeu.techworks.common.block.BoilerBlock;
 import io.github.ramboxeu.techworks.common.gas.SteamGas;
 import io.github.ramboxeu.techworks.common.tile.AbstractMachineTile;
 import io.github.ramboxeu.techworks.common.tile.BoilerTile;
+import io.github.ramboxeu.techworks.common.tile.cable.BasicGasPipeTile;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
@@ -46,8 +48,14 @@ public class Registration {
     }
 
     public static final RegistryObject<BoilerBlock> BOILER_BLOCK = BLOCKS.register("boiler", BoilerBlock::new);
+    public static final RegistryObject<BasicGasPipeBlock> GAS_PIPE_BASIC_BLOCK = BLOCKS.register("gas_pipe_basic", BasicGasPipeBlock::new);
+
     public static final RegistryObject<Item> BOILER_ITEM =  ITEMS.register("boiler", () -> new BlockItem(BOILER_BLOCK.get(), new Item.Properties().group(Techworks.ITEM_GROUP)));
+    public static final RegistryObject<Item> GAS_PIPE_BASIC_ITEM = ITEMS.register("gas_pipe_basic", () -> new BlockItem(GAS_PIPE_BASIC_BLOCK.get(), new Item.Properties().group(Techworks.ITEM_GROUP)));
+
     public static final RegistryObject<TileEntityType<BoilerTile>> BOILER_TILE = TILES.register("boiler", () -> TileEntityType.Builder.create(BoilerTile::new, BOILER_BLOCK.get()).build(null));
+    public static final RegistryObject<TileEntityType<BasicGasPipeTile>> GAS_PIPE_BASIC_TILE = TILES.register("gas_pipe_basic", () ->  TileEntityType.Builder.create(BasicGasPipeTile::new, GAS_PIPE_BASIC_BLOCK.get()).build(null));
+
     public static final RegistryObject<ContainerType<BoilerContainer>> BOILER_CONTAINER = CONTAINERS.register("boiler", () -> IForgeContainerType.create((id, playerInventory, buf) -> new BoilerContainer(id, playerInventory, getTileFromPacketBuffer(buf))));
 
     public static final RegistryObject<EmptyGas> EMPTY_GAS = GASES.register("empty", EmptyGas::new);
