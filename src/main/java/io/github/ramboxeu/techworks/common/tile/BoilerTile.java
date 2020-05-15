@@ -1,6 +1,7 @@
 package io.github.ramboxeu.techworks.common.tile;
 
 import io.github.ramboxeu.techworks.Techworks;
+import io.github.ramboxeu.techworks.api.gas.CapabilityGas;
 import io.github.ramboxeu.techworks.api.gas.GasHandler;
 import io.github.ramboxeu.techworks.api.gas.IGasHandler;
 import io.github.ramboxeu.techworks.client.container.BoilerContainer;
@@ -13,6 +14,8 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.ForgeHooks;
@@ -27,6 +30,7 @@ import net.minecraftforge.items.SlotItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 
 public class BoilerTile extends AbstractMachineTile {
     private int cookTime = 0;
@@ -82,6 +86,15 @@ public class BoilerTile extends AbstractMachineTile {
                     } else {
                         this.getBlockState().with(TechworksBlockStateProperties.RUNNING, false);
                     }
+
+                    for (Direction direction : Direction.values()) {
+                        TileEntity te = world.getTileEntity(pos.offset(direction));
+                        if (te != null) {
+                            te.getCapability(CapabilityGas.GAS, direction.getOpposite()).ifPresent(h -> {
+                                h.insertGas(Registration.STEAM_GAS.get(), 400, false);
+                            });
+                        }
+                    }
                 });
             });
         });
@@ -110,6 +123,21 @@ public class BoilerTile extends AbstractMachineTile {
         isBurning = compound.getBoolean("isBurning");
 
         super.read(compound);
+    }
+
+    @Override
+    public boolean hasItemHandler() {
+        return true;
+    }
+
+    @Override
+    public boolean hasFluidHandler() {
+        return true;
+    }
+
+    @Override
+    public boolean hasGasHandler() {
+        return true;
     }
 
     @Nullable
@@ -147,13 +175,6 @@ public class BoilerTile extends AbstractMachineTile {
         };
     }
 
-    @Nullable
-    @Override
-    protected IEnergyStorage createEnergyStorage() {
-        return null;
-    }
-
-    @Nullable
     @Override
     protected IGasHandler createGasHandler() {
         return new GasHandler(Registration.STEAM_GAS.get(), 400, 10000) {
@@ -164,7 +185,6 @@ public class BoilerTile extends AbstractMachineTile {
         };
     }
 
-    @Nullable
     @Override
     protected IFluidHandler createFluidHandler() {
         return new FluidTank(10000, fluidStack -> fluidStack.getFluid().equals(Fluids.WATER)) {

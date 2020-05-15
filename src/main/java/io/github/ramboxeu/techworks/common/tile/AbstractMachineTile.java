@@ -1,12 +1,10 @@
 package io.github.ramboxeu.techworks.common.tile;
 
-import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.api.gas.CapabilityGas;
 import io.github.ramboxeu.techworks.api.gas.IGasHandler;
 import io.github.ramboxeu.techworks.common.machine.io.IOManager;
 import io.github.ramboxeu.techworks.common.machine.io.Mode;
 import io.github.ramboxeu.techworks.common.property.TechworksBlockStateProperties;
-import io.github.ramboxeu.techworks.common.registration.Registration;
 import io.github.ramboxeu.techworks.common.util.capability.EnergyWrapper;
 import io.github.ramboxeu.techworks.common.util.capability.FluidWrapper;
 import io.github.ramboxeu.techworks.common.util.capability.GasWrapper;
@@ -34,10 +32,10 @@ public abstract class AbstractMachineTile extends TileEntity implements ITickabl
     private int operationTime;
     private int timeCounter = 0;
 
-    protected LazyOptional<IItemHandlerModifiable> inventory = LazyOptional.of(this::createItemHandler);
-    protected LazyOptional<IEnergyStorage> energyStorage = LazyOptional.of(this::createEnergyStorage);
-    protected LazyOptional<IGasHandler> gasHandler = LazyOptional.of(this::createGasHandler);
-    protected LazyOptional<IFluidHandler> fluidHandler = LazyOptional.of(this::createFluidHandler);
+    protected LazyOptional<IItemHandlerModifiable> inventory;
+    protected LazyOptional<IEnergyStorage> energyStorage;
+    protected LazyOptional<IGasHandler> gasHandler;
+    protected LazyOptional<IFluidHandler> fluidHandler;
     protected int speedMultiplier = 1;
 
     private IOManager manager;
@@ -45,7 +43,37 @@ public abstract class AbstractMachineTile extends TileEntity implements ITickabl
     public AbstractMachineTile(TileEntityType<?> tileEntityType, int operationTime) {
         super(tileEntityType);
         this.operationTime = operationTime;
-        this.manager = new IOManager(IOManager.DEFAULT, new Mode[] {Mode.INPUT, Mode.NONE, Mode.BOTH, Mode.NONE}, IOManager.DEFAULT, IOManager.DEFAULT, IOManager.DEFAULT, IOManager.DEFAULT);
+        this.manager = new IOManager(
+                new Mode[] {Mode.BOTH, Mode.BOTH, Mode.BOTH, Mode.BOTH},
+                new Mode[] {Mode.BOTH, Mode.BOTH, Mode.BOTH, Mode.BOTH},
+                new Mode[] {Mode.BOTH, Mode.BOTH, Mode.BOTH, Mode.BOTH},
+                new Mode[] {Mode.BOTH, Mode.BOTH, Mode.BOTH, Mode.BOTH},
+                new Mode[] {Mode.BOTH, Mode.BOTH, Mode.BOTH, Mode.BOTH},
+                new Mode[] {Mode.BOTH, Mode.BOTH, Mode.BOTH, Mode.BOTH});
+
+        if (hasItemHandler()) {
+            inventory = LazyOptional.of(this::createItemHandler);
+        } else {
+            inventory = LazyOptional.empty();
+        }
+
+        if (hasEnergyStorage()) {
+            energyStorage = LazyOptional.of(this::createEnergyStorage);
+        } else {
+            energyStorage = LazyOptional.empty();
+        }
+
+        if (hasGasHandler()) {
+            gasHandler = LazyOptional.of(this::createGasHandler);
+        } else {
+            gasHandler = LazyOptional.empty();
+        }
+
+        if (hasFluidHandler()) {
+            fluidHandler = LazyOptional.of(this::createFluidHandler);
+        } else {
+            fluidHandler = LazyOptional.empty();
+        }
     }
 
     @Override
@@ -67,16 +95,6 @@ public abstract class AbstractMachineTile extends TileEntity implements ITickabl
                 this.run();
                 this.timeCounter = 0;
             }
-
-            for (int i = 0; i < 6; i++) {
-                Direction direction = Direction.byIndex(i);
-                TileEntity te = world.getTileEntity(pos.offset(direction));
-                if (te != null) {
-                    te.getCapability(CapabilityGas.GAS, direction.getOpposite()).ifPresent(h -> {
-                        h.insertGas(Registration.STEAM_GAS.get(), 400, false);
-                    });
-                }
-            }
         }
     }
 
@@ -86,26 +104,46 @@ public abstract class AbstractMachineTile extends TileEntity implements ITickabl
         this.operationTime = operationTime / speedMultiplier;
     }
 
-    @Nullable
-    protected abstract IItemHandlerModifiable createItemHandler();
+    protected IItemHandlerModifiable createItemHandler() {
+        return null;
+    }
 
-    @Nullable
-    protected abstract IEnergyStorage createEnergyStorage();
+    protected IEnergyStorage createEnergyStorage() {
+        return null;
+    }
 
-    @Nullable
-    protected abstract IGasHandler createGasHandler();
+    protected IGasHandler createGasHandler() {
+        return null;
+    }
 
-    @Nullable
-    protected abstract IFluidHandler createFluidHandler();
+    protected IFluidHandler createFluidHandler() {
+        return null;
+    }
 
+    public boolean hasItemHandler() {
+        return false;
+    }
+
+    public boolean hasEnergyStorage() {
+        return false;
+    }
+
+    public boolean hasGasHandler() {
+        return false;
+    }
+
+    public boolean hasFluidHandler() {
+        return false;
+    }
 
     @Override
     @SuppressWarnings("unchecked")
     public void read(CompoundNBT compound) {
         this.inventory.ifPresent(itemHandler -> ((INBTSerializable<CompoundNBT>) itemHandler).deserializeNBT(compound.getCompound("Inventory")));
-        this.energyStorage.ifPresent(energyStorage -> ((INBTSerializable<CompoundNBT>) energyStorage).deserializeNBT(compound.getCompound("Energy")));
+        this.energyStorage.ifPresent(energyStorage -> CapabilityEnergy.ENERGY.readNBT(energyStorage, null, compound.get("Energy")));
         this.fluidHandler.ifPresent(fluidHandler -> CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.readNBT(fluidHandler, null, compound.getCompound("FluidTank")));
         this.gasHandler.ifPresent(gasHandler -> CapabilityGas.GAS.readNBT(gasHandler, null, compound.getCompound("GasHandler")));
+        this.timeCounter = compound.getInt("counter");
 
         super.read(compound);
     }
@@ -114,9 +152,10 @@ public abstract class AbstractMachineTile extends TileEntity implements ITickabl
     @SuppressWarnings("unchecked")
     public CompoundNBT write(CompoundNBT compound) {
         this.inventory.ifPresent(itemHandler -> compound.put("Inventory", ((INBTSerializable<CompoundNBT>) itemHandler).serializeNBT()));
-        this.energyStorage.ifPresent(energyStorage -> compound.put("Energy", ((INBTSerializable<CompoundNBT>) energyStorage).serializeNBT()));
+        this.energyStorage.ifPresent(energyStorage -> compound.put("Energy", CapabilityEnergy.ENERGY.writeNBT(energyStorage, null)));
         this.fluidHandler.ifPresent(fluidHandler -> compound.put("FluidTank", CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.writeNBT(fluidHandler, null)));
         this.gasHandler.ifPresent(gasHandler -> compound.put("GasHandler", CapabilityGas.GAS.writeNBT(gasHandler, null)));
+        compound.putInt("counter", timeCounter);
 
         return super.write(compound);
     }
