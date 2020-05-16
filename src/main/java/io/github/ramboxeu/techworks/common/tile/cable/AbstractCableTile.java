@@ -1,5 +1,7 @@
 package io.github.ramboxeu.techworks.common.tile.cable;
 
+import io.github.ramboxeu.techworks.common.debug.DebugInfoBuilder;
+import io.github.ramboxeu.techworks.common.debug.IDebuggable;
 import io.github.ramboxeu.techworks.common.model.TechworksModelData;
 import io.github.ramboxeu.techworks.common.network.CableRequestSyncShapePacket;
 import io.github.ramboxeu.techworks.common.network.CableSyncShapePacket;
@@ -24,12 +26,13 @@ import net.minecraftforge.common.util.LazyOptional;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public abstract class AbstractCableTile<THandler> extends TileEntity implements ITickableTileEntity {
+public abstract class AbstractCableTile<THandler> extends TileEntity implements ITickableTileEntity, IDebuggable {
     private CableConnections connections;
     private CableConnections disabled;
-    private LazyOptional<THandler> handler;
+    protected LazyOptional<THandler> handler;
     private Capability<THandler> capability;
     private boolean synced = false;
     private List<Direction> inputs = new ArrayList<>();
@@ -142,5 +145,17 @@ public abstract class AbstractCableTile<THandler> extends TileEntity implements 
 
     public CableConnections getConnections() {
         return connections;
+    }
+
+    @Override
+    public void addDebugInfo(DebugInfoBuilder builder) {
+        DebugInfoBuilder.Section connections = new DebugInfoBuilder.Section("Connections");
+
+        this.connections.getAsMap().forEach((direction, value) -> connections.line(direction.getName() + ": " + value));
+        builder.addSection(connections);
+
+        DebugInfoBuilder.Section inputs = new DebugInfoBuilder.Section("Inputs");
+        inputs.line(Arrays.toString(this.inputs.toArray(new Direction[0])));
+        builder.addSection(inputs);
     }
 }

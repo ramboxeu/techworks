@@ -3,6 +3,7 @@ package io.github.ramboxeu.techworks.common.tile.cable;
 import io.github.ramboxeu.techworks.api.gas.CapabilityGas;
 import io.github.ramboxeu.techworks.api.gas.GasHandler;
 import io.github.ramboxeu.techworks.api.gas.IGasHandler;
+import io.github.ramboxeu.techworks.common.debug.DebugInfoBuilder;
 import io.github.ramboxeu.techworks.common.gas.Gas;
 import io.github.ramboxeu.techworks.common.registration.Registration;
 import net.minecraft.util.Direction;
@@ -56,5 +57,12 @@ public class BasicGasPipeTile extends AbstractCableTile<IGasHandler> {
         }
 
         return true;
+    }
+
+    @Override
+    public void addDebugInfo(DebugInfoBuilder builder) {
+        super.addDebugInfo(builder);
+
+        builder.addSection(new DebugInfoBuilder.Section("GasHandler").line(Integer.toString(this.handler.orElse(new GasHandler()).getAmountStored())));
     }
 }

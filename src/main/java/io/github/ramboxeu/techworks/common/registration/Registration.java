@@ -8,6 +8,7 @@ import io.github.ramboxeu.techworks.client.screen.SteamEngineScreen;
 import io.github.ramboxeu.techworks.common.block.BoilerBlock;
 import io.github.ramboxeu.techworks.common.block.SteamEngineBlock;
 import io.github.ramboxeu.techworks.common.block.cable.BasicGasPipeBlock;
+import io.github.ramboxeu.techworks.common.debug.DebuggerItem;
 import io.github.ramboxeu.techworks.common.gas.EmptyGas;
 import io.github.ramboxeu.techworks.common.gas.Gas;
 import io.github.ramboxeu.techworks.common.gas.SteamGas;
@@ -58,6 +59,7 @@ public class Registration {
     public static final RegistryObject<Item> BOILER_ITEM =  ITEMS.register("boiler", () -> new BlockItem(BOILER_BLOCK.get(), new Item.Properties().group(Techworks.ITEM_GROUP)));
     public static final RegistryObject<Item> STEAM_ENGINE_ITEM = ITEMS.register("steam_engine", () -> new BlockItem(STEAM_ENGINE_BLOCK.get(), new Item.Properties().group(Techworks.ITEM_GROUP)));
     public static final RegistryObject<Item> GAS_PIPE_BASIC_ITEM = ITEMS.register("gas_pipe_basic", () -> new BlockItem(GAS_PIPE_BASIC_BLOCK.get(), new Item.Properties().group(Techworks.ITEM_GROUP)));
+    public static final RegistryObject<DebuggerItem> DEBUGGER_ITEM = ITEMS.register("debugger", DebuggerItem::new);
 
     public static final RegistryObject<TileEntityType<BoilerTile>> BOILER_TILE = TILES.register("boiler", () -> TileEntityType.Builder.create(BoilerTile::new, BOILER_BLOCK.get()).build(null));
     public static final RegistryObject<TileEntityType<SteamEngineTile>> STEAM_ENGINE_TILE = TILES.register("steam_engine", () -> TileEntityType.Builder.create(SteamEngineTile::new, STEAM_ENGINE_BLOCK.get()).build(null));
