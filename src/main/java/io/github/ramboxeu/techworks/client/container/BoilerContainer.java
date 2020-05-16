@@ -115,7 +115,7 @@ public class BoilerContainer extends AbstractMachineContainer {
 
         slot.putStack(itemStack);
 
-        return itemStack;
+        return ItemStack.EMPTY;
     }
 
     public int getCookTime() {

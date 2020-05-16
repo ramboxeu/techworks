@@ -1,14 +1,15 @@
 package io.github.ramboxeu.techworks.common.registration;
 
 import io.github.ramboxeu.techworks.Techworks;
+import io.github.ramboxeu.techworks.client.container.BoilerContainer;
 import io.github.ramboxeu.techworks.client.container.SteamEngineContainer;
+import io.github.ramboxeu.techworks.client.screen.BoilerScreen;
+import io.github.ramboxeu.techworks.client.screen.SteamEngineScreen;
+import io.github.ramboxeu.techworks.common.block.BoilerBlock;
 import io.github.ramboxeu.techworks.common.block.SteamEngineBlock;
 import io.github.ramboxeu.techworks.common.block.cable.BasicGasPipeBlock;
 import io.github.ramboxeu.techworks.common.gas.EmptyGas;
 import io.github.ramboxeu.techworks.common.gas.Gas;
-import io.github.ramboxeu.techworks.client.container.BoilerContainer;
-import io.github.ramboxeu.techworks.client.screen.BoilerScreen;
-import io.github.ramboxeu.techworks.common.block.BoilerBlock;
 import io.github.ramboxeu.techworks.common.gas.SteamGas;
 import io.github.ramboxeu.techworks.common.tile.AbstractMachineTile;
 import io.github.ramboxeu.techworks.common.tile.BoilerTile;
@@ -19,7 +20,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
-import net.minecraft.item.BlockNamedItem;
 import net.minecraft.item.Item;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntityType;
@@ -76,6 +76,7 @@ public class Registration {
 
     public static void registerScreens(){
         ScreenManager.registerFactory(BOILER_CONTAINER.get(), BoilerScreen::new);
+        ScreenManager.registerFactory(STEAM_ENGINE_CONTAINER.get(), SteamEngineScreen::new);
     }
 
     public static Gas getGasByString(String name) {

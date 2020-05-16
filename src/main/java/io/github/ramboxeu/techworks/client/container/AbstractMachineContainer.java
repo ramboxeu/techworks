@@ -29,6 +29,7 @@ public abstract class AbstractMachineContainer extends Container {
     private LazyOptional<IItemHandler> inventory;
     private InventoryBuilder builder;
     protected AbstractMachineTile machineTile;
+    private int energy;
 
     protected AbstractMachineContainer(@Nullable ContainerType<?> containerType, int id, PlayerInventory playerInventory, AbstractMachineTile machineTile) {
         super(containerType, id);
@@ -36,33 +37,52 @@ public abstract class AbstractMachineContainer extends Container {
         this.playerInventory = new InvWrapper(playerInventory);
         this.inventory = machineTile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
 
-        this.trackInt(new IntReferenceHolder() {
-            @Override
-            public int get() {
-                return getFluid().getAmount();
-            }
+        if (machineTile.hasFluidHandler()) {
+            this.trackInt(new IntReferenceHolder() {
+                @Override
+                public int get() {
+                    return getFluid().getAmount();
+                }
 
-            @Override
-            public void set(int amount) {
-                machineTile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).ifPresent(fluidHandler -> {
-                    ((FluidTank)fluidHandler).setFluid(new FluidStack(Fluids.WATER, amount));
-                });
-            }
-        });
+                @Override
+                public void set(int amount) {
+                    machineTile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).ifPresent(fluidHandler -> {
+                        ((FluidTank) fluidHandler).setFluid(new FluidStack(Fluids.WATER, amount));
+                    });
+                }
+            });
+        }
 
-        this.trackInt(new IntReferenceHolder() {
-            @Override
-            public int get() {
-                return getGas();
-            }
+        if (machineTile.hasGasHandler()) {
+            this.trackInt(new IntReferenceHolder() {
+                @Override
+                public int get() {
+                    return getGas();
+                }
 
-            @Override
-            public void set(int amount) {
-                machineTile.getCapability(CapabilityGas.GAS).ifPresent(gasHandler -> {
-                    ((GasHandler)gasHandler).setAmountStored(amount);
-                });
-            }
-        });
+                @Override
+                public void set(int amount) {
+                    machineTile.getCapability(CapabilityGas.GAS).ifPresent(gasHandler -> {
+                        ((GasHandler) gasHandler).setAmountStored(amount);
+                    });
+                }
+            });
+        }
+
+        if (machineTile.hasEnergyStorage()) {
+            this.trackInt(new IntReferenceHolder() {
+                @Override
+                public int get() {
+                    energy = machineTile.getCapability(CapabilityEnergy.ENERGY).map(IEnergyStorage::getEnergyStored).orElse(0);
+                    return energy;
+                }
+
+                @Override
+                public void set(int e) {
+                    energy = e;
+                }
+            });
+        }
 
         this.builder = new InventoryBuilder();
 
@@ -100,7 +120,7 @@ public abstract class AbstractMachineContainer extends Container {
     }
 
     public int getEnergy() {
-        return this.machineTile.getCapability(CapabilityEnergy.ENERGY).map(IEnergyStorage::getEnergyStored).orElse(0);
+        return this.energy;
     }
 
     public FluidStack getFluid() {

@@ -2,6 +2,9 @@
   "itemGroup.techworks": "Techworks",
 
   "block.techworks.boiler": "Boiler",
+  "block.techworks.steam_engine": "Steam Engine",
+  "block.techworks.gas_pipe_basic": "Basic Gas Pipe",
 
-  "container.techworks.boiler": "Boiler"
+  "container.techworks.boiler": "Boiler",
+  "container.techworks.steam_engine": "Steam Engine"
 }

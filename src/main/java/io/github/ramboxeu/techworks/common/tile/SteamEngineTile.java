@@ -1,18 +1,22 @@
 package io.github.ramboxeu.techworks.common.tile;
 
-import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.api.gas.GasHandler;
 import io.github.ramboxeu.techworks.api.gas.IGasHandler;
 import io.github.ramboxeu.techworks.client.container.SteamEngineContainer;
 import io.github.ramboxeu.techworks.common.registration.Registration;
+import io.github.ramboxeu.techworks.common.util.PredicateUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.ItemStackHandler;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class SteamEngineTile extends AbstractMachineTile {
@@ -42,6 +46,11 @@ public class SteamEngineTile extends AbstractMachineTile {
     }
 
     @Override
+    public boolean hasItemHandler() {
+        return true;
+    }
+
+    @Override
     protected IEnergyStorage createEnergyStorage() {
         return new EnergyStorage(1000, 100);
     }
@@ -52,6 +61,30 @@ public class SteamEngineTile extends AbstractMachineTile {
             @Override
             public void onContentsChanged() {
                 markDirty();
+            }
+        };
+    }
+
+    @Override
+    protected IItemHandlerModifiable createItemHandler() {
+        return new ItemStackHandler(3) {
+            @Override
+            protected void onContentsChanged(int slot) {
+                markDirty();
+            }
+
+            @Override
+            public int getSlotLimit(int slot) {
+                return 1;
+            }
+
+            @Override
+            public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
+                switch (slot) {
+                    case 2:
+                        return PredicateUtils.isEnergyStorage(stack);
+                    default: return false;
+                }
             }
         };
     }

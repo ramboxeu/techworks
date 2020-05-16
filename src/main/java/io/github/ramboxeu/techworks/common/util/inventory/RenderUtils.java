@@ -44,6 +44,19 @@ public class RenderUtils {
         GL11.glPopMatrix();
     }
 
+    public static void drawEnergyInStorage(int tankX, int tankY, int amount, int tankWidth, int tankHeight, int capacity) {
+        if (amount <= 0)
+            return;
+
+        GL11.glPushMatrix();
+
+        int height = (int) (((float) amount / capacity) * tankHeight);
+        int y = (tankY + tankHeight) - height;
+
+        colorVertex(tankX, y, tankWidth, height, 181, 25, 27, 255);
+        GL11.glPopMatrix();
+    }
+
     private static TextureAtlasSprite findAndBindBlockTexture(ResourceLocation location) {
         Minecraft.getInstance().textureManager.bindTexture(new ResourceLocation("textures/atlas/blocks.png"));
         return Minecraft.getInstance().getModelManager().getAtlasTexture(new ResourceLocation("textures/atlas/blocks.png")).getSprite(location);
@@ -158,6 +171,16 @@ public class RenderUtils {
         buffer.pos(x + width, y + height, 5).color(red, green, blue, alpha).tex(maxU, maxV).endVertex();
         buffer.pos(x + width, y , 5).color(red, green, blue, alpha).tex(maxU, minV).endVertex();
         buffer.pos(x, y, 5).color(red, green, blue, alpha).tex(minU, minV).endVertex();
+        Tessellator.getInstance().draw();
+    }
+
+    private static void colorVertex(double x, double y, int width, int height, int red, int green, int blue, int alpha) {
+        BufferBuilder buffer = Tessellator.getInstance().getBuffer();
+        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+        buffer.pos(x, y + height, 5).color(red, green, blue, alpha).endVertex();
+        buffer.pos(x + width, y + height, 5).color(red, green, blue, alpha).endVertex();
+        buffer.pos(x + width, y, 5).color(red, green, blue, alpha).endVertex();
+        buffer.pos(x, y, 5).color(red, green, blue, alpha).endVertex();
         Tessellator.getInstance().draw();
     }
 }
