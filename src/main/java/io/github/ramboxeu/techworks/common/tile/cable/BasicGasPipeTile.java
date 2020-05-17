@@ -11,6 +11,8 @@ import net.minecraft.util.Direction;
 import java.util.List;
 
 public class BasicGasPipeTile extends AbstractCableTile<IGasHandler> {
+    private int maxTransfer;
+    private int transferred = 0;
 
     public BasicGasPipeTile() {
         super(Registration.GAS_PIPE_BASIC_TILE.get(), CapabilityGas.GAS);
@@ -54,6 +56,8 @@ public class BasicGasPipeTile extends AbstractCableTile<IGasHandler> {
         for (int i = 0; i < transferees.size(); i++) {
             int transferred = transferees.get(i).insertGas(Registration.STEAM_GAS.get(), pipe.extractGas(Registration.STEAM_GAS.get(), maxTransfer, false), false);
             maxTransfer = pipe.getAmountStored() / transferees.size() - i + 1;
+            this.maxTransfer = maxTransfer;
+            this.transferred = transferred;
         }
 
         return true;
@@ -64,5 +68,6 @@ public class BasicGasPipeTile extends AbstractCableTile<IGasHandler> {
         super.addDebugInfo(builder);
 
         builder.addSection(new DebugInfoBuilder.Section("GasHandler").line(Integer.toString(this.handler.orElse(new GasHandler()).getAmountStored())));
+        builder.addSection(new DebugInfoBuilder.Section("Transfer").line("Max: " + maxTransfer).line("Transferred: " + transferred));
     }
 }

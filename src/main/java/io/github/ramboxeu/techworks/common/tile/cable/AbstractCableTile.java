@@ -36,6 +36,7 @@ public abstract class AbstractCableTile<THandler> extends TileEntity implements 
     private Capability<THandler> capability;
     private boolean synced = false;
     private List<Direction> inputs = new ArrayList<>();
+    private Direction transferringTo;
 
     public AbstractCableTile(TileEntityType<?> tileEntityType, Capability<THandler> capability) {
         super(tileEntityType);
@@ -72,6 +73,7 @@ public abstract class AbstractCableTile<THandler> extends TileEntity implements 
                 Direction direction = Direction.byIndex(i);
                 TileEntity te = world.getTileEntity(pos.offset(direction));
                 if (te != null && !inputs.contains(direction)) {
+                    this.transferringTo = direction;
                     te.getCapability(capability, direction.getOpposite()).ifPresent(handlers::add);
                 }
             }
@@ -81,6 +83,7 @@ public abstract class AbstractCableTile<THandler> extends TileEntity implements 
             }
 
             inputs.clear();
+            transferringTo = null;
         });
     }
 
@@ -157,5 +160,6 @@ public abstract class AbstractCableTile<THandler> extends TileEntity implements 
         DebugInfoBuilder.Section inputs = new DebugInfoBuilder.Section("Inputs");
         inputs.line(Arrays.toString(this.inputs.toArray(new Direction[0])));
         builder.addSection(inputs);
+        builder.addSection(new DebugInfoBuilder.Section("Transferring to:").line(transferringTo == null ? "" : transferringTo.toString()));
     }
 }

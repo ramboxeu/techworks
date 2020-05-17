@@ -1,6 +1,7 @@
 package io.github.ramboxeu.techworks.common.network;
 
 import io.github.ramboxeu.techworks.Techworks;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fml.network.NetworkRegistry;
@@ -20,6 +21,8 @@ public class TechworkPacketHandler {
         int id = 0;
         CHANNEL.registerMessage(id++, CableSyncShapePacket.class, CableSyncShapePacket::encode, CableSyncShapePacket::decode, CableSyncShapePacket.Handler::handle);
         CHANNEL.registerMessage(id++, CableRequestSyncShapePacket.class, CableRequestSyncShapePacket::encode, CableRequestSyncShapePacket::decode, CableRequestSyncShapePacket.Handler::handle);
+        CHANNEL.registerMessage(id++, DebugRequestPacket.class, DebugRequestPacket::encode, DebugRequestPacket::decode, DebugRequestPacket.Handler::handle);
+        CHANNEL.registerMessage(id++, DebugResponsePacket.class, DebugResponsePacket::encode, DebugResponsePacket::decode, DebugResponsePacket.Handler::handle);
     }
 
     public static void sendCableSyncPacket(Chunk chunk, CableSyncShapePacket packet) {
@@ -28,5 +31,13 @@ public class TechworkPacketHandler {
 
     public static void sendRequestCableSyncPacket(CableRequestSyncShapePacket packet) {
         CHANNEL.sendToServer(packet);
+    }
+
+    public static void sentDebugRequestPacket(DebugRequestPacket packet) {
+        CHANNEL.sendToServer(packet);
+    }
+
+    public static void sendDebugResponsePacket(ServerPlayerEntity playerEntity, DebugResponsePacket packet) {
+        CHANNEL.send(PacketDistributor.PLAYER.with(() -> playerEntity), packet);
     }
 }
