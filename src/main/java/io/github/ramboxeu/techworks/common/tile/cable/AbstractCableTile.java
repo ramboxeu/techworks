@@ -33,10 +33,13 @@ public abstract class AbstractCableTile<THandler> extends TileEntity implements 
     private CableConnections connections;
     private CableConnections disabled;
     protected LazyOptional<THandler> handler;
+    protected boolean inserted;
+    private boolean flag;
     private Capability<THandler> capability;
     private boolean synced = false;
     private List<Direction> inputs = new ArrayList<>();
     private Direction transferringTo;
+    private int counter;
 
     public AbstractCableTile(TileEntityType<?> tileEntityType, Capability<THandler> capability) {
         super(tileEntityType);
@@ -51,6 +54,8 @@ public abstract class AbstractCableTile<THandler> extends TileEntity implements 
     protected abstract boolean transfer(THandler pipe, List<THandler> transferees);
 
     protected abstract THandler createCapability(Direction side, THandler handler, List<Direction> inputs);
+
+    protected abstract boolean handlerHasContents();
 
     // This is a complete GARBAGE, too bad
     @Nonnull
@@ -67,24 +72,29 @@ public abstract class AbstractCableTile<THandler> extends TileEntity implements 
 
     @Override
     public void tick() {
-        handler.ifPresent(handler -> {
-            ArrayList<THandler> handlers = new ArrayList<>();
-            for (int i = 0; i < 6; i++) {
-                Direction direction = Direction.byIndex(i);
-                TileEntity te = world.getTileEntity(pos.offset(direction));
-                if (te != null && !inputs.contains(direction)) {
-                    this.transferringTo = direction;
-                    te.getCapability(capability, direction.getOpposite()).ifPresent(handlers::add);
-                }
-            }
+        if (inserted) {
+            inserted = false;
+            if (handlerHasContents()) {
+                handler.ifPresent(handler -> {
+                    ArrayList<THandler> handlers = new ArrayList<>();
+                    for (int i = 0; i < 6; i++) {
+                        Direction direction = Direction.byIndex(i);
+                        TileEntity te = world.getTileEntity(pos.offset(direction));
+                        if (te != null && !inputs.contains(direction)) {
+                            this.transferringTo = direction;
+                            te.getCapability(capability, direction.getOpposite()).ifPresent(handlers::add);
+                        }
+                    }
 
-            if (handlers.size() > 0) {
-                transfer(handler, handlers);
-            }
+                    if (handlers.size() > 0) {
+                        transfer(handler, handlers);
+                    }
 
-            inputs.clear();
-            transferringTo = null;
-        });
+                    inputs.clear();
+                    transferringTo = null;
+                });
+            }
+        }
     }
 
     @Override
@@ -161,5 +171,6 @@ public abstract class AbstractCableTile<THandler> extends TileEntity implements 
         inputs.line(Arrays.toString(this.inputs.toArray(new Direction[0])));
         builder.addSection(inputs);
         builder.addSection(new DebugInfoBuilder.Section("Transferring to:").line(transferringTo == null ? "" : transferringTo.toString()));
+        builder.addSection(new DebugInfoBuilder.Section("Counter:").line(Integer.toString(counter)));
     }
 }

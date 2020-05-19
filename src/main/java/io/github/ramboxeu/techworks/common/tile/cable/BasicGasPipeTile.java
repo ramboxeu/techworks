@@ -33,7 +33,12 @@ public class BasicGasPipeTile extends AbstractCableTile<IGasHandler> {
         return new GasHandler(Registration.STEAM_GAS.get(), 400, 400) {
             @Override
             public int insertGas(Gas gas, int amount, boolean simulate) {
-                inputs.add(side);
+                if (!simulate) {
+                    if (!inputs.contains(side)) {
+                        inputs.add(side);
+                    }
+                    inserted = true;
+                }
                 return iGasHandler.insertGas(gas, amount, simulate);
             }
 
@@ -50,14 +55,28 @@ public class BasicGasPipeTile extends AbstractCableTile<IGasHandler> {
     }
 
     @Override
-    protected boolean transfer(IGasHandler pipe, List<IGasHandler> transferees) {
-        int maxTransfer = pipe.getAmountStored() / transferees.size();
+    protected boolean handlerHasContents() {
+        return handler.orElse(new GasHandler()).getAmountStored() > 0;
+    }
 
-        for (int i = 0; i < transferees.size(); i++) {
-            int transferred = transferees.get(i).insertGas(Registration.STEAM_GAS.get(), pipe.extractGas(Registration.STEAM_GAS.get(), maxTransfer, false), false);
-            maxTransfer = pipe.getAmountStored() / transferees.size() - i + 1;
-            this.maxTransfer = maxTransfer;
-            this.transferred = transferred;
+    @Override
+    protected boolean transfer(IGasHandler pipe, List<IGasHandler> transferees) {
+        int validTransferees = 0;
+
+        for (IGasHandler handler : transferees) {
+            if (handler.getAmountStored() != handler.getMaxStorage()) {
+                validTransferees += 1;
+            }
+        }
+
+        if (validTransferees > 0) {
+            maxTransfer = pipe.getAmountStored() / validTransferees;
+
+            for (IGasHandler handler : transferees) {
+                transferred = handler.insertGas(Registration.STEAM_GAS.get(), pipe.extractGas(Registration.STEAM_GAS.get(), maxTransfer, false), false);
+                maxTransfer = pipe.getAmountStored() / validTransferees;
+                //validTransferees -= 1;
+            }
         }
 
         return true;

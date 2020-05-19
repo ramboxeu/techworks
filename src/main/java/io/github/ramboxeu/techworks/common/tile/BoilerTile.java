@@ -1,6 +1,5 @@
 package io.github.ramboxeu.techworks.common.tile;
 
-import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.api.gas.CapabilityGas;
 import io.github.ramboxeu.techworks.api.gas.GasHandler;
 import io.github.ramboxeu.techworks.api.gas.IGasHandler;
@@ -19,7 +18,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -31,6 +29,7 @@ import net.minecraftforge.items.SlotItemHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.List;
 
 public class BoilerTile extends AbstractMachineTile {
     private int cookTime = 0;
@@ -87,13 +86,16 @@ public class BoilerTile extends AbstractMachineTile {
                         this.getBlockState().with(TechworksBlockStateProperties.RUNNING, false);
                     }
 
+                    List<IGasHandler> handlers = new ArrayList<>();
                     for (Direction direction : Direction.values()) {
                         TileEntity te = world.getTileEntity(pos.offset(direction));
                         if (te != null) {
-                            te.getCapability(CapabilityGas.GAS, direction.getOpposite()).ifPresent(h -> {
-                                h.insertGas(Registration.STEAM_GAS.get(), 400, false);
-                            });
+                            te.getCapability(CapabilityGas.GAS, direction.getOpposite()).ifPresent(handlers::add);
                         }
+                    }
+
+                    for (int i = handlers.size(); i > 0; i--) {
+                        handlers.get(i - 1).insertGas(Registration.STEAM_GAS.get(), gas.extractGas(Registration.STEAM_GAS.get(), gas.getAmountStored() / i, false), false);
                     }
                 });
             });
