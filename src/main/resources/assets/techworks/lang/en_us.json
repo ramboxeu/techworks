@@ -3,8 +3,10 @@
 
   "block.techworks.boiler": "Boiler",
   "block.techworks.steam_engine": "Steam Engine",
+  "block.techworks.electric_grinder": "Electric Grinder",
   "block.techworks.gas_pipe_basic": "Basic Gas Pipe",
 
   "container.techworks.boiler": "Boiler",
-  "container.techworks.steam_engine": "Steam Engine"
+  "container.techworks.steam_engine": "Steam Engine",
+  "container.techworks.electric_grinder": "Electric Grinder"
 }

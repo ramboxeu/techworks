@@ -234,4 +234,12 @@ public abstract class AbstractMachineTile extends TileEntity implements ITickabl
     }
 
     abstract boolean canWork();
+
+    public int getOperationTime() {
+        return this.operationTime;
+    }
+
+    public int getTimeCounter() {
+        return this.timeCounter;
+    }
 }

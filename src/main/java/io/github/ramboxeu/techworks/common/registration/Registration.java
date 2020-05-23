@@ -2,8 +2,10 @@ package io.github.ramboxeu.techworks.common.registration;
 
 import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.client.container.BoilerContainer;
+import io.github.ramboxeu.techworks.client.container.ElectricGrinderContainer;
 import io.github.ramboxeu.techworks.client.container.SteamEngineContainer;
 import io.github.ramboxeu.techworks.client.screen.BoilerScreen;
+import io.github.ramboxeu.techworks.client.screen.ElectricGrinderScreen;
 import io.github.ramboxeu.techworks.client.screen.SteamEngineScreen;
 import io.github.ramboxeu.techworks.common.block.BoilerBlock;
 import io.github.ramboxeu.techworks.common.block.ElectricGrinderBlock;
@@ -75,6 +77,7 @@ public class Registration {
 
     public static final RegistryObject<ContainerType<BoilerContainer>> BOILER_CONTAINER = CONTAINERS.register("boiler", () -> IForgeContainerType.create((id, playerInventory, buf) -> new BoilerContainer(id, playerInventory, getTileFromPacketBuffer(buf))));
     public static final RegistryObject<ContainerType<SteamEngineContainer>> STEAM_ENGINE_CONTAINER = CONTAINERS.register("steam_engine", () -> IForgeContainerType.create((id, inventory, buf) -> new SteamEngineContainer(id, inventory, getTileFromPacketBuffer(buf))));
+    public static final RegistryObject<ContainerType<ElectricGrinderContainer>> ELECTRIC_GRINDER_CONTAINER = CONTAINERS.register("electric_grinder", () -> IForgeContainerType.create((id, inventory, buf) -> new ElectricGrinderContainer(id, inventory, getTileFromPacketBuffer(buf))));
 
     public static final RegistryObject<EmptyGas> EMPTY_GAS = GASES.register("empty", EmptyGas::new);
     public static final RegistryObject<SteamGas> STEAM_GAS = GASES.register("steam", SteamGas::new);
@@ -90,6 +93,7 @@ public class Registration {
     public static void registerScreens(){
         ScreenManager.registerFactory(BOILER_CONTAINER.get(), BoilerScreen::new);
         ScreenManager.registerFactory(STEAM_ENGINE_CONTAINER.get(), SteamEngineScreen::new);
+        ScreenManager.registerFactory(ELECTRIC_GRINDER_CONTAINER.get(), ElectricGrinderScreen::new);
     }
 
     public static Gas getGasByString(String name) {

@@ -121,6 +121,7 @@ public class InventoryItemStackHandler implements IInventoryItemStackHandler {
     public void setStackInSlot(int slot, @Nonnull ItemStack stack) {
         if (stacks.size() > slot) {
             stacks.set(slot, stack);
+            onContentsChanged(slot);
         }
     }
 
@@ -158,6 +159,10 @@ public class InventoryItemStackHandler implements IInventoryItemStackHandler {
         return true;
     }
 
+    @Override
+    public boolean isItemValidForSlot(int index, ItemStack stack) {
+        return isItemValid(index, stack);
+    }
 
     @Override
     public void clear() {
