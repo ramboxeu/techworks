@@ -3,6 +3,8 @@ package io.github.ramboxeu.techworks.common.tile;
 import io.github.ramboxeu.techworks.api.gas.GasHandler;
 import io.github.ramboxeu.techworks.api.gas.IGasHandler;
 import io.github.ramboxeu.techworks.client.container.SteamEngineContainer;
+import io.github.ramboxeu.techworks.common.capability.InventoryItemStackHandler;
+import io.github.ramboxeu.techworks.common.capability.extensions.IInventoryItemStackHandler;
 import io.github.ramboxeu.techworks.common.registration.Registration;
 import io.github.ramboxeu.techworks.common.util.PredicateUtils;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,8 +15,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -66,8 +66,8 @@ public class SteamEngineTile extends AbstractMachineTile {
     }
 
     @Override
-    protected IItemHandlerModifiable createItemHandler() {
-        return new ItemStackHandler(3) {
+    protected IInventoryItemStackHandler createItemHandler() {
+        return new InventoryItemStackHandler(3) {
             @Override
             protected void onContentsChanged(int slot) {
                 markDirty();

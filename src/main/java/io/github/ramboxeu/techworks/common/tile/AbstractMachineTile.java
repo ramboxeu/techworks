@@ -2,6 +2,7 @@ package io.github.ramboxeu.techworks.common.tile;
 
 import io.github.ramboxeu.techworks.api.gas.CapabilityGas;
 import io.github.ramboxeu.techworks.api.gas.IGasHandler;
+import io.github.ramboxeu.techworks.common.capability.extensions.IInventoryItemStackHandler;
 import io.github.ramboxeu.techworks.common.machine.io.IOManager;
 import io.github.ramboxeu.techworks.common.machine.io.Mode;
 import io.github.ramboxeu.techworks.common.property.TechworksBlockStateProperties;
@@ -23,7 +24,6 @@ import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -32,7 +32,7 @@ public abstract class AbstractMachineTile extends TileEntity implements ITickabl
     private int operationTime;
     private int timeCounter = 0;
 
-    protected LazyOptional<IItemHandlerModifiable> inventory;
+    protected LazyOptional<IInventoryItemStackHandler> inventory;
     protected LazyOptional<IEnergyStorage> energyStorage;
     protected LazyOptional<IGasHandler> gasHandler;
     protected LazyOptional<IFluidHandler> fluidHandler;
@@ -104,7 +104,7 @@ public abstract class AbstractMachineTile extends TileEntity implements ITickabl
         this.operationTime = operationTime / speedMultiplier;
     }
 
-    protected IItemHandlerModifiable createItemHandler() {
+    protected IInventoryItemStackHandler createItemHandler() {
         return null;
     }
 

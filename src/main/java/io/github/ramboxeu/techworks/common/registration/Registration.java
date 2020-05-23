@@ -6,14 +6,17 @@ import io.github.ramboxeu.techworks.client.container.SteamEngineContainer;
 import io.github.ramboxeu.techworks.client.screen.BoilerScreen;
 import io.github.ramboxeu.techworks.client.screen.SteamEngineScreen;
 import io.github.ramboxeu.techworks.common.block.BoilerBlock;
+import io.github.ramboxeu.techworks.common.block.ElectricGrinderBlock;
 import io.github.ramboxeu.techworks.common.block.SteamEngineBlock;
 import io.github.ramboxeu.techworks.common.block.cable.BasicGasPipeBlock;
 import io.github.ramboxeu.techworks.common.debug.DebuggerItem;
 import io.github.ramboxeu.techworks.common.gas.EmptyGas;
 import io.github.ramboxeu.techworks.common.gas.Gas;
 import io.github.ramboxeu.techworks.common.gas.SteamGas;
+import io.github.ramboxeu.techworks.common.recipe.ElectricGrinderRecipe;
 import io.github.ramboxeu.techworks.common.tile.AbstractMachineTile;
 import io.github.ramboxeu.techworks.common.tile.BoilerTile;
+import io.github.ramboxeu.techworks.common.tile.ElectricGrinderTile;
 import io.github.ramboxeu.techworks.common.tile.SteamEngineTile;
 import io.github.ramboxeu.techworks.common.tile.cable.BasicGasPipeTile;
 import net.minecraft.block.Block;
@@ -22,6 +25,8 @@ import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
@@ -54,15 +59,18 @@ public class Registration {
 
     public static final RegistryObject<BoilerBlock> BOILER_BLOCK = BLOCKS.register("boiler", BoilerBlock::new);
     public static final RegistryObject<SteamEngineBlock> STEAM_ENGINE_BLOCK = BLOCKS.register("steam_engine", SteamEngineBlock::new);
+    public static final RegistryObject<ElectricGrinderBlock> ELECTRIC_GRINDER_BLOCK = BLOCKS.register("electric_grinder", ElectricGrinderBlock::new);
     public static final RegistryObject<BasicGasPipeBlock> GAS_PIPE_BASIC_BLOCK = BLOCKS.register("gas_pipe_basic", BasicGasPipeBlock::new);
 
     public static final RegistryObject<Item> BOILER_ITEM =  ITEMS.register("boiler", () -> new BlockItem(BOILER_BLOCK.get(), new Item.Properties().group(Techworks.ITEM_GROUP)));
     public static final RegistryObject<Item> STEAM_ENGINE_ITEM = ITEMS.register("steam_engine", () -> new BlockItem(STEAM_ENGINE_BLOCK.get(), new Item.Properties().group(Techworks.ITEM_GROUP)));
+    public static final RegistryObject<Item> ELECTRIC_GRINDER_ITEM = ITEMS.register("electric_grinder", () -> new BlockItem(ELECTRIC_GRINDER_BLOCK.get(), new Item.Properties().group(Techworks.ITEM_GROUP)));
     public static final RegistryObject<Item> GAS_PIPE_BASIC_ITEM = ITEMS.register("gas_pipe_basic", () -> new BlockItem(GAS_PIPE_BASIC_BLOCK.get(), new Item.Properties().group(Techworks.ITEM_GROUP)));
     public static final RegistryObject<DebuggerItem> DEBUGGER_ITEM = ITEMS.register("debugger", DebuggerItem::new);
 
     public static final RegistryObject<TileEntityType<BoilerTile>> BOILER_TILE = TILES.register("boiler", () -> TileEntityType.Builder.create(BoilerTile::new, BOILER_BLOCK.get()).build(null));
     public static final RegistryObject<TileEntityType<SteamEngineTile>> STEAM_ENGINE_TILE = TILES.register("steam_engine", () -> TileEntityType.Builder.create(SteamEngineTile::new, STEAM_ENGINE_BLOCK.get()).build(null));
+    public static final RegistryObject<TileEntityType<ElectricGrinderTile>> ELECTRIC_GRINDER_TILE = TILES.register("electric_grinder", () -> TileEntityType.Builder.create(ElectricGrinderTile::new, ELECTRIC_GRINDER_BLOCK.get()).build(null));
     public static final RegistryObject<TileEntityType<BasicGasPipeTile>> GAS_PIPE_BASIC_TILE = TILES.register("gas_pipe_basic", () ->  TileEntityType.Builder.create(BasicGasPipeTile::new, GAS_PIPE_BASIC_BLOCK.get()).build(null));
 
     public static final RegistryObject<ContainerType<BoilerContainer>> BOILER_CONTAINER = CONTAINERS.register("boiler", () -> IForgeContainerType.create((id, playerInventory, buf) -> new BoilerContainer(id, playerInventory, getTileFromPacketBuffer(buf))));
@@ -70,6 +78,9 @@ public class Registration {
 
     public static final RegistryObject<EmptyGas> EMPTY_GAS = GASES.register("empty", EmptyGas::new);
     public static final RegistryObject<SteamGas> STEAM_GAS = GASES.register("steam", SteamGas::new);
+
+    public static final IRecipeType<ElectricGrinderRecipe> GRINDING_RECIPE = IRecipeType.register("techworks:grinding");
+    public static final IRecipeSerializer<ElectricGrinderRecipe> GRINDING_RECIPE_SERIALIZER = IRecipeSerializer.register("techworks:grinding", new ElectricGrinderRecipe.Serializer());
 
     // TODO: Make this NullPointerException safe
     private static AbstractMachineTile getTileFromPacketBuffer(PacketBuffer buffer) {

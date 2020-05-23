@@ -4,6 +4,8 @@ import io.github.ramboxeu.techworks.api.gas.CapabilityGas;
 import io.github.ramboxeu.techworks.api.gas.GasHandler;
 import io.github.ramboxeu.techworks.api.gas.IGasHandler;
 import io.github.ramboxeu.techworks.client.container.BoilerContainer;
+import io.github.ramboxeu.techworks.common.capability.InventoryItemStackHandler;
+import io.github.ramboxeu.techworks.common.capability.extensions.IInventoryItemStackHandler;
 import io.github.ramboxeu.techworks.common.property.TechworksBlockStateProperties;
 import io.github.ramboxeu.techworks.common.registration.Registration;
 import io.github.ramboxeu.techworks.common.util.PredicateUtils;
@@ -22,8 +24,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
 import javax.annotation.Nonnull;
@@ -144,8 +144,8 @@ public class BoilerTile extends AbstractMachineTile {
 
     @Nullable
     @Override
-    protected IItemHandlerModifiable createItemHandler() {
-        return new ItemStackHandler(5) {
+    protected IInventoryItemStackHandler createItemHandler() {
+        return new InventoryItemStackHandler(5) {
             @Override
             protected void onContentsChanged(int slot) {
                 markDirty();
