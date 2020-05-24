@@ -6,6 +6,9 @@
   "block.techworks.electric_grinder": "Electric Grinder",
   "block.techworks.gas_pipe_basic": "Basic Gas Pipe",
 
+  "item.techworks.ground_iron": "Ground Iron",
+  "item.techworks.ground_gold": "Ground Gold",
+
   "container.techworks.boiler": "Boiler",
   "container.techworks.steam_engine": "Steam Engine",
   "container.techworks.electric_grinder": "Electric Grinder"

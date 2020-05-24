@@ -1,0 +1,10 @@
+{
+  "type": "techworks:grinding",
+  "ingredient": {
+    "tag": "forge:ores/gold"
+  },
+  "result": {
+    "item": "techworks:ground_gold",
+    "count": 2
+  }
+}

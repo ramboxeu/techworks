@@ -34,7 +34,7 @@ public class ElectricGrinderScreen extends ContainerScreen<ElectricGrinderContai
         if (workTime > 0 && workCounter > 0) {
             int progress = (int) (24 * ((float) workCounter / workTime));
 
-            this.blit(85 + this.guiLeft, 34 + this.guiTop, 176, 0, progress, 17);
+            this.blit(80 + this.guiLeft, 34 + this.guiTop, 176, 0, progress, 17);
         }
     }
 

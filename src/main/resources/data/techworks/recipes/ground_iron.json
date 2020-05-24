@@ -1,0 +1,7 @@
+{
+  "type": "techworks:grinding",
+  "ingredient": {
+    "tag": "forge:ingots/iron"
+  },
+  "result": "techworks:ground_iron"
+}

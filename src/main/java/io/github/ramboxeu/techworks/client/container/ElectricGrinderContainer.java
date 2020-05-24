@@ -45,9 +45,9 @@ public class ElectricGrinderContainer extends AbstractMachineContainer {
 
     @Override
     protected void layoutSlots(InventoryBuilder builder) {
-        builder.addSlot(new SlotBuilder(62, 35))
+        builder.addSlot(new SlotBuilder(56, 35))
                 .addSlot(new SlotBuilder(32, 53).predicate(PredicateUtils::isEnergyStorage))
-                .addSlot(new SlotBuilder(122, 35).output(true).limit(0));
+                .addSlot(new SlotBuilder(116, 35).output(true).limit(0));
     }
 
     @Override

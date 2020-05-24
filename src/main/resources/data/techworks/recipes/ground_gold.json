@@ -1,0 +1,7 @@
+{
+  "type": "techworks:grinding",
+  "ingredient": {
+    "tag": "forge:ingots/gold"
+  },
+  "result": "techworks:ground_gold"
+}
