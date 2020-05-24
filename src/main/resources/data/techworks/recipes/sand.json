@@ -1,0 +1,7 @@
+{
+  "type": "techworks:grinding",
+  "ingredient": {
+    "item": "minecraft:gravel"
+  },
+  "result": "minecraft:sand"
+}

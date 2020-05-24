@@ -3,6 +3,7 @@ package io.github.ramboxeu.techworks.client.screen;
 import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.client.container.ElectricGrinderContainer;
+import io.github.ramboxeu.techworks.common.util.inventory.RenderUtils;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
@@ -20,8 +21,8 @@ public class ElectricGrinderScreen extends ContainerScreen<ElectricGrinderContai
     public void render(int mouseX, int mouseY, float partialTicks) {
         this.renderBackground();
         super.render(mouseX, mouseY, partialTicks);
-        this.renderProgressBars();
         this.renderTanks();
+        this.renderProgressBars();
         this.renderHoveredToolTip(mouseX, mouseY);
     }
 
@@ -31,14 +32,14 @@ public class ElectricGrinderScreen extends ContainerScreen<ElectricGrinderContai
         int workCounter = container.getWorkCounter();
 
         if (workTime > 0 && workCounter > 0) {
-            int progress = (int) (14 * ((float) workCounter / workTime));
+            int progress = (int) (24 * ((float) workCounter / workTime));
 
-            this.blit(85 + this.guiLeft, 34 + this.guiTop + progress, 176, progress, 24, 17);
+            this.blit(85 + this.guiLeft, 34 + this.guiTop, 176, 0, progress, 17);
         }
     }
 
     private void renderTanks() {
-
+        RenderUtils.drawEnergyInStorage(this.guiLeft + 9, this.guiTop + 15, container.getEnergy(), 16, 54, 5000);
     }
 
     @Override

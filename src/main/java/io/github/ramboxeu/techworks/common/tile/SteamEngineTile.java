@@ -11,13 +11,18 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.energy.IEnergyStorage;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SteamEngineTile extends AbstractMachineTile {
     public SteamEngineTile() {
@@ -30,6 +35,18 @@ public class SteamEngineTile extends AbstractMachineTile {
             this.energyStorage.ifPresent(energy -> {
                 if (gas.extractGas(Registration.STEAM_GAS.get(), 100, false) == 100) {
                     energy.receiveEnergy(100, false);
+                }
+
+                List<IEnergyStorage> handlers = new ArrayList<>();
+                for (Direction direction : Direction.values()) {
+                    TileEntity te = world.getTileEntity(pos.offset(direction));
+                    if (te != null) {
+                        te.getCapability(CapabilityEnergy.ENERGY, direction.getOpposite()).ifPresent(handlers::add);
+                    }
+                }
+
+                for (int i = handlers.size(); i > 0; i--) {
+                    handlers.get(i - 1).receiveEnergy(energy.extractEnergy(energy.getEnergyStored() / i, false), false);
                 }
             });
         });

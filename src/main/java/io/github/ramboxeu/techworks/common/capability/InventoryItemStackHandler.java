@@ -102,7 +102,7 @@ public class InventoryItemStackHandler implements IInventoryItemStackHandler {
             onContentsChanged(slot);
         }
 
-        return ItemHandlerHelper.copyStackWithSize(existing, existing.getCount() - extract);
+        return ItemHandlerHelper.copyStackWithSize(existing, extract);
     }
 
     @Override
