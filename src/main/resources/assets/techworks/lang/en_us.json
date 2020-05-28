@@ -4,6 +4,7 @@
   "block.techworks.boiler": "Boiler",
   "block.techworks.steam_engine": "Steam Engine",
   "block.techworks.electric_grinder": "Electric Grinder",
+  "block.techworks.electric_furnace": "Electric Furnace",
   "block.techworks.gas_pipe_basic": "Basic Gas Pipe",
 
   "item.techworks.ground_iron": "Ground Iron",
@@ -11,5 +12,6 @@
 
   "container.techworks.boiler": "Boiler",
   "container.techworks.steam_engine": "Steam Engine",
-  "container.techworks.electric_grinder": "Electric Grinder"
+  "container.techworks.electric_grinder": "Electric Grinder",
+  "container.techworks.electric_furnace": "Electric Furnace"
 }
