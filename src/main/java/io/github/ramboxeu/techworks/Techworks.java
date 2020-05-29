@@ -1,7 +1,9 @@
-package io.github.ramboxeu.fabricworks;
+package io.github.ramboxeu.techworks;
 
-import io.github.ramboxeu.fabricworks.common.registry.TechworksBlocks;
-import io.github.ramboxeu.fabricworks.common.registry.TechworksItems;
+import io.github.ramboxeu.techworks.common.registry.TechworksBlockEntities;
+import io.github.ramboxeu.techworks.common.registry.TechworksBlocks;
+import io.github.ramboxeu.techworks.common.registry.TechworksContainers;
+import io.github.ramboxeu.techworks.common.registry.TechworksItems;
 import net.fabricmc.api.ModInitializer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,5 +17,7 @@ public class Techworks implements ModInitializer {
         LOG.info("Initializing Techworks for Fabric!");
         TechworksBlocks.registerAll();
         TechworksItems.registerAll();
+        TechworksBlockEntities.registerAll();
+        TechworksContainers.registerAll();
     }
 }

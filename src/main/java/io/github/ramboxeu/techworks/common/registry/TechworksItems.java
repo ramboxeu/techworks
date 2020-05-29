@@ -1,6 +1,7 @@
-package io.github.ramboxeu.fabricworks.common.registry;
+package io.github.ramboxeu.techworks.common.registry;
 
-import io.github.ramboxeu.fabricworks.Techworks;
+
+import io.github.ramboxeu.techworks.Techworks;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;

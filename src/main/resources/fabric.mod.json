@@ -19,7 +19,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "io.github.ramboxeu.techworks.Fabricworks"
+      "io.github.ramboxeu.techworks.Techworks"
     ]
   },
   "mixins": [

@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "particle": "techworks:block/machine_side",
+    "up": "techworks:block/machine_top",
+    "down": "techworks:block/machine_bottom",
+    "north": "techworks:block/boiler_front_on",
+    "south": "techworks:block/machine_side",
+    "east": "techworks:block/machine_side",
+    "west": "techworks:block/machine_side"
+  }
+}
