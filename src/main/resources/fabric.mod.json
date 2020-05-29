@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "fabricworks",
+  "version": "${version}",
+
+  "name": "Fabricworks",
+  "description": "Minecraft tech mod",
+  "authors": [
+    "Rambox"
+  ],
+  "contact": {
+    "homepage": "https://ramboxeu.github.io/projects/fabricworks",
+    "sources": "https://github.com/ramboxeu/fabricworks"
+  },
+
+  "license": "MIT",
+  "icon": "",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "io.github.ramboxeu.fabricworks.Fabricworks"
+    ]
+  },
+  "mixins": [
+    "fabricworks.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.7.4",
+    "fabric": "*",
+    "minecraft": "1.15.x"
+  },
+  "suggests": {
+    "flamingo": "*"
+  }
+}
