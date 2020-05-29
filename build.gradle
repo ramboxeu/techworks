@@ -21,6 +21,9 @@ dependencies {
 
 	// PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
 	// You may need to force-disable transitiveness on them.
+
+	// Can't put into run/mods directly, because it's not an obfuscated environment
+	modRuntime "io.github.prospector:modmenu:1.10+"
 }
 
 processResources {

@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "id": "fabricworks",
+  "id": "techworks",
   "version": "${version}",
 
-  "name": "Fabricworks",
+  "name": "Techworks",
   "description": "Minecraft tech mod",
   "authors": [
     "Rambox"
@@ -19,11 +19,11 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "io.github.ramboxeu.fabricworks.Fabricworks"
+      "io.github.ramboxeu.techworks.Fabricworks"
     ]
   },
   "mixins": [
-    "fabricworks.mixins.json"
+    "techworks.mixins.json"
   ],
 
   "depends": {
