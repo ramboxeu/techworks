@@ -6,6 +6,7 @@ import net.minecraft.world.BlockView;
 
 public class BoilerBlock extends AbstractMachineBlock {
     public BoilerBlock() {
+        super();
     }
 
     @Override

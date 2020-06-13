@@ -11,16 +11,24 @@ public interface IComponent {
     ComponentType getType();
 
     /**
-     * Gets level og this component. This is used to determine how advanced component is (higher is better).
+     * Provides a pointer to provider of this component. This is used to for example keep
+     * components in {@link ComponentInventory} in sync with their item providers
+     * @return pointer to provider of this component
+     */
+    IComponentProvider getProvider();
+
+    /**
+     * Gets level of this component. This is used to determine how advanced component is (higher is better).
      * @return level of this component
      */
     int getLevel();
 
-    /**
-     * Sets list this component belongs to
-     * @param list list this component is in
-     */
-    void setList(@NotNull IComponentList<?> list);
+//    /**
+//     * Sets list this component belongs to
+//     * @param list list this component is in
+//     * @param <T> type of this lists container
+//     */
+//    void setList(@NotNull IComponentList list);
 
     /**
      * Ticks the component

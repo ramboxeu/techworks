@@ -1,9 +1,13 @@
 package io.github.ramboxeu.techworks.common.api.component;
 
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.DefaultedList;
+
+import java.util.Iterator;
 
 /**
  * Stores both ItemStacks of IComponent Items and IComponents itself
@@ -12,10 +16,11 @@ import net.minecraft.util.DefaultedList;
 public class ComponentInventory<T> implements IComponentList<T>, Inventory {
     private T container;
     private DefaultedList<Entry> entries;
+    private final Entry EMPTY = new Entry();
 
     public ComponentInventory(T container, int capacity) {
         this.container = container;
-        this.entries = DefaultedList.ofSize(capacity, Entry.EMPTY);
+        this.entries = DefaultedList.ofSize(capacity, EMPTY);
     }
 
     // IComponentList
@@ -26,7 +31,14 @@ public class ComponentInventory<T> implements IComponentList<T>, Inventory {
             return false;
         }
 
-        return entries.add(new Entry(component));
+        int index = firstEmptySlot();
+
+        if (index >= 0) {
+            entries.set(index, new Entry(component));
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -91,7 +103,7 @@ public class ComponentInventory<T> implements IComponentList<T>, Inventory {
         ItemStack itemStack = entries.get(slot).itemStack.split(amount);
 
         if (itemStack.isEmpty()) {
-            entries.set(slot, Entry.EMPTY);
+            entries.set(slot, EMPTY);
         } else {
             this.markDirty();
         }
@@ -110,7 +122,7 @@ public class ComponentInventory<T> implements IComponentList<T>, Inventory {
         if (itemStack.isEmpty()) {
             return ItemStack.EMPTY;
         } else {
-            entries.set(slot, Entry.EMPTY);
+            entries.set(slot, EMPTY);
             return itemStack;
         }
     }
@@ -166,12 +178,32 @@ public class ComponentInventory<T> implements IComponentList<T>, Inventory {
         return null;
     }
 
-    private static class Entry {
-        private ItemStack itemStack;
+    private int firstEmptySlot() {
+        for (int i = 0; i < entries.size(); i++) {
+            if (entries.get(i).equals(EMPTY)) {
+                return i;
+            }
+        }
+
+        return - 1;
+    }
+
+    public CompoundTag toTag() {
+        CompoundTag tag = new CompoundTag();
+
+        for (Entry entry : this.entries) {
+            CompoundTag entryTag = new CompoundTag();
+            entryTag.put("ItemStack", entry.itemStack.toTag(new CompoundTag()));
+            entryTag.putString("Component", entry.component.toString());
+        }
+
+        return tag;
+    }
+
+    private class Entry {
+        private final ItemStack itemStack;
         private final ComponentType type;
         private final IComponent component;
-
-        private static Entry EMPTY = new Entry(null, null, null);
 
         public Entry(ItemStack itemStack, ComponentType type, IComponent component) {
             this.itemStack = itemStack;
@@ -179,21 +211,23 @@ public class ComponentInventory<T> implements IComponentList<T>, Inventory {
             this.component = component;
         }
 
+        public Entry() {
+            this(ItemStack.EMPTY, null, EmptyComponent.INSTANCE);
+        }
+
         public Entry(IComponent component) {
-            this.itemStack = ItemStack.EMPTY;
-            this.type = component.getType();
-            this.component = component;
+            this(ItemStack.EMPTY, component.getType(), component);
         }
 
         public Entry(ItemStack stack) {
             this.itemStack = stack;
-            if (itemStack.getItem() instanceof IComponent) {
-                IComponent c = (IComponent) itemStack.getItem();
-                this.type = c.getType();
-                this.component = c;
+            if (itemStack.getItem() instanceof IComponentProvider) {
+                IComponent component = ((IComponentProvider) itemStack.getItem()).create(ComponentInventory.this);
+                this.component = component;
+                this.type = component.getType();
             } else {
-                this.type = null;
-                this.component = null;
+                this.component = EmptyComponent.INSTANCE;
+                this.type = EmptyComponent.INSTANCE.getType();
             }
         }
     }

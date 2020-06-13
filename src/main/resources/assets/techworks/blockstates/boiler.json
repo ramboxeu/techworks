@@ -1,13 +1,7 @@
 {
   "variants": {
-    "running=false,facing=north": {"model":  "techworks:block/boiler_off"},
-    "running=false,facing=south": {"model":  "techworks:block/boiler_off", "y":  180},
-    "running=false,facing=west": {"model":  "techworks:block/boiler_off", "y":  270},
-    "running=false,facing=east": {"model":  "techworks:block/boiler_off", "y":  90},
-
-    "running=true,facing=north": {"model":  "techworks:block/boiler_on"},
-    "running=true,facing=south": {"model":  "techworks:block/boiler_on", "y":  180},
-    "running=true,facing=west": {"model":  "techworks:block/boiler_on", "y":  270},
-    "running=true,facing=east": {"model":  "techworks:block/boiler_on", "y":  90}
+    "": {
+      "model": "techworks:block/boiler"
+    }
   }
 }

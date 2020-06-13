@@ -16,6 +16,6 @@ public class TechworksBlockEntities {
     }
 
     public static void registerAll() {
-        BOILER = register("boiler", new BoilerBlockEntity());
+        BOILER = register("boiler", new BoilerBlockEntity(), TechworksBlocks.BOILER);
     }
 }

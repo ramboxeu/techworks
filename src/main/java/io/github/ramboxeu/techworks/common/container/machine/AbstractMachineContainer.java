@@ -5,7 +5,7 @@ import net.minecraft.container.Container;
 import net.minecraft.container.ContainerType;
 import net.minecraft.entity.player.PlayerInventory;
 
-public abstract class AbstractMachineContainer<T extends AbstractMachineBlockEntity<?, ?>> extends Container {
+public abstract class AbstractMachineContainer<T extends AbstractMachineBlockEntity> extends Container {
     protected T blockEntity;
     protected PlayerInventory playerInventory;
 

@@ -1,18 +1,15 @@
 package io.github.ramboxeu.techworks.common.block.machine;
 
-import io.github.ramboxeu.techworks.common.blockentity.machine.AbstractMachineBlockEntity;
+import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.common.blockstate.TechworksBlockStateProperties;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.BlockWithEntity;
-import net.minecraft.block.Material;
+import net.minecraft.block.*;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.Direction;
 
-public abstract class AbstractMachineBlock extends BlockWithEntity {
+public abstract class AbstractMachineBlock extends Block implements BlockEntityProvider {
     public AbstractMachineBlock() {
         super(FabricBlockSettings.of(Material.METAL).build());
 
