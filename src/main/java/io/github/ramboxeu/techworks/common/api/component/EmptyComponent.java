@@ -1,5 +1,7 @@
 package io.github.ramboxeu.techworks.common.api.component;
 
+import net.minecraft.nbt.CompoundTag;
+
 public class EmptyComponent implements IComponent {
     private EmptyComponent() {}
 
@@ -22,4 +24,14 @@ public class EmptyComponent implements IComponent {
 
     @Override
     public void tick() {}
+
+    @Override
+    public CompoundTag toTag(CompoundTag tag) {
+        return null;
+    }
+
+    @Override
+    public void fromTag(CompoundTag tag) {
+
+    }
 }

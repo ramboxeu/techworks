@@ -1,111 +1,67 @@
 package io.github.ramboxeu.techworks.common.api.component;
 
+import io.github.ramboxeu.techworks.Techworks;
+import io.github.ramboxeu.techworks.common.registry.TechworksRegistries;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.util.DefaultedList;
+import net.minecraft.util.Identifier;
 
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 /**
- * Stores both ItemStacks of IComponent Items and IComponents itself
+ * Stores both ItemStacks of IComponent Items and IComponents itself. This should keep itself in sync.
  * @param <T> type of container this is attached to
  */
-public class ComponentInventory<T> implements IComponentList<T>, Inventory {
+public class ComponentInventory<T> implements Inventory, IComponentList<T> {
     private T container;
-    private DefaultedList<Entry> entries;
-    private final Entry EMPTY = new Entry();
+    private DefaultedList<ItemStack> itemStacks;
+    private List<IComponent> components;
 
     public ComponentInventory(T container, int capacity) {
         this.container = container;
-        this.entries = DefaultedList.ofSize(capacity, EMPTY);
-    }
-
-    // IComponentList
-
-    @Override
-    public boolean add(IComponent component) {
-        if (containsType(component.getType())) {
-            return false;
-        }
-
-        int index = firstEmptySlot();
-
-        if (index >= 0) {
-            entries.set(index, new Entry(component));
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    @Override
-    public boolean remove(IComponent component) {
-        if (!containsType(component.getType())) {
-            return false;
-        }
-
-        int index = getIndexOfComponent(component);
-
-        if (index > 0) {
-            entries.remove(index);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    @Override
-    public T getContainer() {
-        return container;
-    }
-
-    @Override
-    public IComponent getComponent(ComponentType type) {
-        return getComponentByType(type);
-    }
-
-    @Override
-    public boolean hasComponent(ComponentType type) {
-        return hasComponent(type);
-    }
-
-    @Override
-    public void tick() {
-        entries.forEach(entry -> entry.component.tick());
+        this.itemStacks = DefaultedList.ofSize(capacity, ItemStack.EMPTY);
+        this.components = DefaultedList.ofSize(capacity, EmptyComponent.INSTANCE);
     }
 
     // IInventory
 
     @Override
     public int getInvSize() {
-        return entries.size();
+        return itemStacks.size();
     }
 
     @Override
     public boolean isInvEmpty() {
-        return entries.isEmpty();
+        return itemStacks.isEmpty();
     }
 
     @Override
     public ItemStack getInvStack(int slot) {
-        return slot > 0 && slot < entries.size() ? entries.get(slot).itemStack : ItemStack.EMPTY;
+        return slot > 0 && slot < itemStacks.size() ? itemStacks.get(slot) : ItemStack.EMPTY;
     }
 
     @Override
     public ItemStack takeInvStack(int slot, int amount) {
-        if (slot > entries.size() || slot < 0 || entries.get(slot).itemStack.isEmpty() || amount < 0) {
+        if (slot > itemStacks.size() || slot < 0 || itemStacks.get(slot).isEmpty() || amount < 0) {
             return ItemStack.EMPTY;
         }
 
-        ItemStack itemStack = entries.get(slot).itemStack.split(amount);
+        ItemStack itemStack = itemStacks.get(slot).split(amount);
 
         if (itemStack.isEmpty()) {
-            entries.set(slot, EMPTY);
+            itemStacks.set(slot, ItemStack.EMPTY);
+            components.set(slot, EmptyComponent.INSTANCE);
         } else {
-            this.markDirty();
+            onContentsChanged();
         }
 
         return itemStack;
@@ -113,23 +69,30 @@ public class ComponentInventory<T> implements IComponentList<T>, Inventory {
 
     @Override
     public ItemStack removeInvStack(int slot) {
-        if (slot < 0 || slot > entries.size()) {
+        if (slot < 0 || slot > itemStacks.size()) {
             return ItemStack.EMPTY;
         }
 
-        ItemStack itemStack = entries.get(slot).itemStack;
+        ItemStack itemStack = itemStacks.get(slot);
 
         if (itemStack.isEmpty()) {
             return ItemStack.EMPTY;
         } else {
-            entries.set(slot, EMPTY);
+            itemStacks.set(slot, ItemStack.EMPTY);
+            components.set(slot, EmptyComponent.INSTANCE);
+            onContentsChanged();
             return itemStack;
         }
     }
 
+    // This does void items that aren't providers
     @Override
     public void setInvStack(int slot, ItemStack stack) {
-        entries.set(slot, new Entry(stack));
+        if (stack.getItem() instanceof IComponentProvider) {
+            itemStacks.set(slot, stack);
+            components.set(slot, ((IComponentProvider)stack.getItem()).create(this));
+            onContentsChanged();
+        }
     }
 
     @Override
@@ -142,93 +105,120 @@ public class ComponentInventory<T> implements IComponentList<T>, Inventory {
         return false;
     }
 
+    protected void onContentsChanged(){}
+
     @Override
     public void clear() {
-        entries.clear();
+        itemStacks.clear();
+        components.clear();
     }
 
-    // Utils
-    private boolean containsType(ComponentType type) {
-        for (Entry entry : entries) {
-            if (entry.type == type) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private int getIndexOfComponent(IComponent component) {
-        for (int i = 0; i < entries.size(); i++) {
-            if (entries.get(i).component == component) {
-                return i;
-            }
-        }
-
-        return -1;
-    }
-
-    private IComponent getComponentByType(ComponentType type) {
-        for (Entry entry : entries) {
-            if (entry.type == type) {
-                return entry.component;
-            }
-        }
-
-        return null;
-    }
-
-    private int firstEmptySlot() {
-        for (int i = 0; i < entries.size(); i++) {
-            if (entries.get(i).equals(EMPTY)) {
-                return i;
-            }
-        }
-
-        return - 1;
-    }
+//    // Utils
+//    private boolean containsType(ComponentType type) {
+//        return this.components.stream().anyMatch(component -> component.getType().equals(type));
+//    }
+//
+//    private int getIndexOfComponent(IComponent component) {
+//        for (int i = 0; i < entries.size(); i++) {
+//            if (entries.get(i).component == component) {
+//                return i;
+//            }
+//        }
+//
+//        return -1;
+//    }
+//
+//    private IComponent getComponentByType(ComponentType type) {
+//        for (Entry entry : entries) {
+//            if (entry.type == type) {
+//                return entry.component;
+//            }
+//        }
+//
+//        return null;
+//    }
+//
+//    private int firstEmptySlot() {
+//        for (int i = 0; i < this.components.size(); i++) {
+//            if (components.get(i).equals(EmptyComponent.INSTANCE)) {
+//                return i;
+//            }
+//        }
+//
+//        return -1;
+//    }
 
     public CompoundTag toTag() {
         CompoundTag tag = new CompoundTag();
+        ListTag itemsTag = new ListTag();
+        ListTag componentsTag = new ListTag();
 
-        for (Entry entry : this.entries) {
-            CompoundTag entryTag = new CompoundTag();
-            entryTag.put("ItemStack", entry.itemStack.toTag(new CompoundTag()));
-            entryTag.putString("Component", entry.component.toString());
+        for (int i = 0; i < itemStacks.size(); ++i) {
+            ItemStack itemStack = itemStacks.get(i);
+            if (!itemStack.isEmpty()) {
+                CompoundTag itemTag = new CompoundTag();
+                itemTag.putByte("Slot", (byte) i);
+                itemStack.toTag(itemTag);
+                itemsTag.add(itemTag);
+            }
         }
+
+        for (int i = 0; i < components.size(); ++i) {
+            IComponent component = components.get(i);
+            if (!component.equals(EmptyComponent.INSTANCE)) {
+                CompoundTag componentTag = new CompoundTag();
+                componentTag.putString("Provider", TechworksRegistries.COMPONENT_PROVIDER.getId(component.getProvider()).toString());
+                componentTag.putByte("Index", (byte) i);
+                component.toTag(componentTag);
+                componentsTag.add(componentTag);
+            }
+        }
+
+        tag.put("ItemStacks", itemsTag);
+        tag.put("Components", componentsTag);
 
         return tag;
     }
 
-    private class Entry {
-        private final ItemStack itemStack;
-        private final ComponentType type;
-        private final IComponent component;
+    public void fromTag(CompoundTag tag) {
+        ListTag itemsListTag = tag.getList("ItemStacks", 10);
+        ListTag componentsListTag = tag.getList("Components", 10);
 
-        public Entry(ItemStack itemStack, ComponentType type, IComponent component) {
-            this.itemStack = itemStack;
-            this.type = type;
-            this.component = component;
-        }
-
-        public Entry() {
-            this(ItemStack.EMPTY, null, EmptyComponent.INSTANCE);
-        }
-
-        public Entry(IComponent component) {
-            this(ItemStack.EMPTY, component.getType(), component);
-        }
-
-        public Entry(ItemStack stack) {
-            this.itemStack = stack;
-            if (itemStack.getItem() instanceof IComponentProvider) {
-                IComponent component = ((IComponentProvider) itemStack.getItem()).create(ComponentInventory.this);
-                this.component = component;
-                this.type = component.getType();
-            } else {
-                this.component = EmptyComponent.INSTANCE;
-                this.type = EmptyComponent.INSTANCE.getType();
+        for (int i = 0; i < itemsListTag.size(); ++i) {
+            CompoundTag itemTag = itemsListTag.getCompound(i);
+            int slot = itemTag.getByte("Slot") & 255;
+            if (slot >= 0 && slot < itemStacks.size()) {
+                itemStacks.set(slot, ItemStack.fromTag(itemTag));
             }
         }
+
+        for (int i = 0; i < componentsListTag.size(); i++) {
+            CompoundTag componentTag = componentsListTag.getCompound(i);
+            int index = componentTag.getByte("Index") & 255;
+            Identifier providerIdentifier = new Identifier(Techworks.MOD_ID, componentTag.getString("Provider"));
+            IComponentProvider provider = TechworksRegistries.COMPONENT_PROVIDER.get(providerIdentifier);
+            IComponent component = provider.create(this);
+            component.fromTag(componentTag);
+            components.set(index, component);
+        }
+    }
+
+    @Override
+    public T getContainer() {
+        return container;
+    }
+
+    @Override
+    public Stream<IComponent> stream() {
+        return components.stream();
+    }
+
+    @Override
+    public Optional<IComponent> find(Predicate<IComponent> predicate) {
+        return components.stream().filter(predicate).findFirst();
+    }
+
+    public void tick() {
+        components.forEach(IComponent::tick);
     }
 }

@@ -2,7 +2,7 @@ package io.github.ramboxeu.techworks.common.api.component;
 
 import net.minecraft.text.Text;
 
-public class ComponentType {
+public abstract class ComponentType {
     private final Text name;
     private final Text description;
 

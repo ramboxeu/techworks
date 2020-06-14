@@ -1,6 +1,7 @@
 package io.github.ramboxeu.techworks.common.api.component;
 
 import com.sun.istack.internal.NotNull;
+import net.minecraft.nbt.CompoundTag;
 
 public interface IComponent {
     /**
@@ -34,4 +35,8 @@ public interface IComponent {
      * Ticks the component
      */
     void tick();
+
+    CompoundTag toTag(CompoundTag tag);
+
+    void fromTag(CompoundTag tag);
 }
