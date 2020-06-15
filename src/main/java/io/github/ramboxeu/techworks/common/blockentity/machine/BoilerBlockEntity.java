@@ -1,7 +1,8 @@
 package io.github.ramboxeu.techworks.common.blockentity.machine;
 
-import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.common.api.component.ComponentInventory;
+import io.github.ramboxeu.techworks.common.api.widget.GasTankWidget;
+import io.github.ramboxeu.techworks.common.api.widget.Widget;
 import io.github.ramboxeu.techworks.common.registry.TechworksBlockEntities;
 import io.github.ramboxeu.techworks.common.registry.TechworksItems;
 import net.minecraft.block.BlockState;
@@ -18,6 +19,8 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
+
 public class BoilerBlockEntity extends AbstractMachineBlockEntity<BoilerBlockEntity> {
     private ItemStack component = new ItemStack(TechworksItems.BASIC_BOILING_COMPONENT);
     private int lastSlot = 0;
@@ -26,6 +29,11 @@ public class BoilerBlockEntity extends AbstractMachineBlockEntity<BoilerBlockEnt
         super(TechworksBlockEntities.BOILER);
 
         componentList = new ComponentInventory<>(this, 5);
+        widgets = new ArrayList<Widget>() {
+            {
+                add(new GasTankWidget(0, 0, 16, 52, 0));
+            }
+        };
     }
 
     @Override

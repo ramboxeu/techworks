@@ -1,11 +1,11 @@
 package io.github.ramboxeu.techworks.common.container;
 
-import io.github.ramboxeu.techworks.Techworks;
+import io.github.ramboxeu.techworks.common.api.component.ComponentInventory;
+import io.github.ramboxeu.techworks.common.api.widget.Widget;
 import io.github.ramboxeu.techworks.common.blockentity.machine.AbstractMachineBlockEntity;
 import net.minecraft.container.Container;
 import net.minecraft.container.PropertyDelegate;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.DefaultedList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +59,15 @@ public abstract class AbstractMachineContainer<T extends AbstractMachineBlockEnt
         return playerInventory;
     }
 
-    protected int getSyncedValueOrDefault(int index, int defaultValue) {
+    public ComponentInventory<T> getComponentInventory() {
+        return this.blockEntity.getComponentList();
+    }
+
+    public List<Widget> getWidgets() {
+        return blockEntity.getWidgets();
+    }
+
+    public int getSyncedValueOrDefault(int index, int defaultValue) {
         if (syncedValues.size() > index) {
             return syncedValues.get(index);
         } else {

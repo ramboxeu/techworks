@@ -1,6 +1,5 @@
 package io.github.ramboxeu.techworks.common.api.component;
 
-import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.common.registry.TechworksRegistries;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
@@ -10,9 +9,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.util.DefaultedList;
 import net.minecraft.util.Identifier;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
