@@ -1,7 +1,9 @@
 package io.github.ramboxeu.techworks.common.registry;
 
 import io.github.ramboxeu.techworks.Techworks;
+import io.github.ramboxeu.techworks.common.blockentity.machine.AbstractMachineBlockEntity;
 import io.github.ramboxeu.techworks.common.blockentity.machine.BoilerBlockEntity;
+import io.github.ramboxeu.techworks.common.container.AbstractMachineContainer;
 import io.github.ramboxeu.techworks.common.container.machine.BoilerContainer;
 import net.fabricmc.fabric.api.container.ContainerFactory;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
@@ -13,7 +15,7 @@ import net.minecraft.util.Identifier;
 public class TechworksContainers {
     public static Identifier BOILER;
 
-    private static Identifier registerMachineContainer(String name, MachineContainerFactory factory) {
+    private static <T extends BlockEntity> Identifier registerMachineContainer(String name, MachineContainerFactory factory) {
         return register(name, (syncid, identifier, playerEntity, packetByteBuf) -> {
             BlockEntity blockEntity = playerEntity.world.getBlockEntity(packetByteBuf.readBlockPos());
 
@@ -28,7 +30,8 @@ public class TechworksContainers {
     }
 
     public static void registerAll() {
-        BOILER = registerMachineContainer("boiler", (syncid, inventory, blockEntity) -> new BoilerContainer(syncid, inventory, (BoilerBlockEntity) blockEntity));
+        BOILER = registerMachineContainer("boiler", (syncId, playerInventory, blockEntity) ->
+                new BoilerContainer(syncId, playerInventory, (BoilerBlockEntity) blockEntity));
     }
 
     @FunctionalInterface

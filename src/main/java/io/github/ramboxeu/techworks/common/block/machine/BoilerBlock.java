@@ -2,10 +2,12 @@ package io.github.ramboxeu.techworks.common.block.machine;
 
 import io.github.ramboxeu.techworks.common.blockentity.machine.BoilerBlockEntity;
 import io.github.ramboxeu.techworks.common.registry.TechworksBlockEntities;
-import io.github.ramboxeu.techworks.common.registry.TechworksRegistries;
+import io.github.ramboxeu.techworks.common.registry.TechworksContainers;
+import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Items;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -26,12 +28,5 @@ public class BoilerBlock extends AbstractMachineBlock {
     @Override
     public void onBlockRemoved(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         world.removeBlockEntity(pos);
-    }
-
-    @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        ((BoilerBlockEntity) world.getBlockEntity(pos)).onRightClick(player.isSneaking());
-
-        return ActionResult.SUCCESS;
     }
 }

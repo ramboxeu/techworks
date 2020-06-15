@@ -4,12 +4,19 @@ import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.common.api.component.ComponentInventory;
 import io.github.ramboxeu.techworks.common.registry.TechworksBlockEntities;
 import io.github.ramboxeu.techworks.common.registry.TechworksItems;
+import net.minecraft.block.BlockState;
 import net.minecraft.container.Container;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 public class BoilerBlockEntity extends AbstractMachineBlockEntity<BoilerBlockEntity> {
     private ItemStack component = new ItemStack(TechworksItems.BASIC_BOILING_COMPONENT);
@@ -43,17 +50,20 @@ public class BoilerBlockEntity extends AbstractMachineBlockEntity<BoilerBlockEnt
         super.fromTag(tag);
     }
 
-    public void onRightClick(boolean isSneaking) {
-        //Techworks.LOG.info("Components List tag: {}", componentList.toTag());
-        if (!isSneaking) {
-            lastSlot++;
-            componentList.setInvStack(lastSlot, component);
-            Techworks.LOG.info(lastSlot);
-        } else {
-            Techworks.LOG.info(lastSlot - 1);
-            Techworks.LOG.info(componentList.removeInvStack(lastSlot - 1));
-            lastSlot--;
+    @Override
+    public ActionResult onActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        if (player.getMainHandStack().getItem().equals(Items.STICK)) {
+            if (hand == Hand.MAIN_HAND) {
+                this.componentList.setInvStack(lastSlot, new ItemStack(TechworksItems.BASIC_BOILING_COMPONENT));
+                lastSlot++;
+            } else {
+                this.componentList.removeInvStack(lastSlot);
+                lastSlot--;
+            }
+
+            return ActionResult.SUCCESS;
         }
-        //Techworks.LOG.info("Components List tag: {}", componentList.toTag());
+
+        return super.onActivated(state, world, pos, player, hand, hit);
     }
 }

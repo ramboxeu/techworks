@@ -1,6 +1,8 @@
 package io.github.ramboxeu.techworks;
 
+import io.github.ramboxeu.techworks.client.screen.TechworksScreens;
 import io.github.ramboxeu.techworks.common.registry.*;
+import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.ModInitializer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,5 +20,7 @@ public class Techworks implements ModInitializer {
         TechworksContainers.registerAll();
         ComponentTypes.registerAll();
         ComponentProviders.registerAll();
+
+        TechworksScreens.registerAll();
     }
 }
