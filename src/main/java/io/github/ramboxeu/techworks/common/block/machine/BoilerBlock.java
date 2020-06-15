@@ -1,6 +1,8 @@
 package io.github.ramboxeu.techworks.common.block.machine;
 
 import io.github.ramboxeu.techworks.common.blockentity.machine.BoilerBlockEntity;
+import io.github.ramboxeu.techworks.common.registry.TechworksBlockEntities;
+import io.github.ramboxeu.techworks.common.registry.TechworksRegistries;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -18,7 +20,7 @@ public class BoilerBlock extends AbstractMachineBlock {
 
     @Override
     public BlockEntity createBlockEntity(BlockView view) {
-        return new BoilerBlockEntity();
+        return TechworksBlockEntities.BOILER.instantiate();
     }
 
     @Override

@@ -195,7 +195,7 @@ public class ComponentInventory<T> implements Inventory, IComponentList<T> {
         for (int i = 0; i < componentsListTag.size(); i++) {
             CompoundTag componentTag = componentsListTag.getCompound(i);
             int index = componentTag.getByte("Index") & 255;
-            Identifier providerIdentifier = new Identifier(Techworks.MOD_ID, componentTag.getString("Provider"));
+            Identifier providerIdentifier = new Identifier(componentTag.getString("Provider"));
             IComponentProvider provider = TechworksRegistries.COMPONENT_PROVIDER.get(providerIdentifier);
             IComponent component = provider.create(this);
             component.fromTag(componentTag);

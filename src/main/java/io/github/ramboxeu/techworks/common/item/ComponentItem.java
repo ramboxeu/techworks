@@ -16,10 +16,10 @@ public class ComponentItem<T extends IComponent> extends Item implements ICompon
 
     @Override
     public <T> IComponent create(IComponentList<T> list) {
-        return this.factory.create(list, this);
+        return this.factory.create(list);
     }
 
     public interface Factory<T extends IComponent> {
-        <U> T create(IComponentList<U> list, IComponentProvider provider);
+        <U> T create(IComponentList<U> list);
     }
 }

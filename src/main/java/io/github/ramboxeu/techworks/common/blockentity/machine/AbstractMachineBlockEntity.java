@@ -1,7 +1,6 @@
 package io.github.ramboxeu.techworks.common.blockentity.machine;
 
 import io.github.ramboxeu.techworks.common.api.component.ComponentInventory;
-import io.github.ramboxeu.techworks.common.api.component.IComponentList;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.container.NameableContainerFactory;
