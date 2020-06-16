@@ -2,7 +2,6 @@ package io.github.ramboxeu.techworks.common.blockentity.machine;
 
 import io.github.ramboxeu.techworks.common.api.component.ComponentInventory;
 import io.github.ramboxeu.techworks.common.api.widget.GasTankWidget;
-import io.github.ramboxeu.techworks.common.api.widget.Widget;
 import io.github.ramboxeu.techworks.common.registry.ComponentTypes;
 import io.github.ramboxeu.techworks.common.registry.TechworksBlockEntities;
 import io.github.ramboxeu.techworks.common.registry.TechworksItems;

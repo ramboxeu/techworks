@@ -83,4 +83,8 @@ public abstract class AbstractMachineContainer<T extends AbstractMachineBlockEnt
             return Optional.empty();
         }
     }
+
+    public T getBlockEntity() {
+        return blockEntity;
+    }
 }

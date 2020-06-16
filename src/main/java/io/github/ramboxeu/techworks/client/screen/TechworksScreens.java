@@ -8,6 +8,7 @@ import net.minecraft.util.Identifier;
 
 public class TechworksScreens {
     public static Identifier BOILER;
+    public static Identifier MACHINE_COMPONENTS;
 
     private static <T extends Container> Identifier register(String name, Factory<T> factory) {
         Identifier identifier = new Identifier(Techworks.MOD_ID, name);
@@ -18,6 +19,7 @@ public class TechworksScreens {
 
     public static void registerAll() {
         BOILER = register("boiler", BoilerScreen::new);
+        MACHINE_COMPONENTS = register("machine_components", MachineComponentsScreen::new);
     }
 
     private interface Factory<T extends Container> {

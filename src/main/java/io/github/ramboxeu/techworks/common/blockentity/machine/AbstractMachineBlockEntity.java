@@ -5,10 +5,13 @@ import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.common.api.component.ComponentInventory;
 import io.github.ramboxeu.techworks.common.api.widget.Widget;
 import io.github.ramboxeu.techworks.common.registry.TechworksContainers;
+import io.github.ramboxeu.techworks.common.registry.TechworksItems;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.client.Keyboard;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.container.NameableContainerFactory;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResult;
@@ -56,10 +59,12 @@ public abstract class AbstractMachineBlockEntity<TEntity extends AbstractMachine
     protected abstract void buildMachinery(MachineryBuilder machineryBuilder);
 
     public ActionResult onActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        ContainerProviderRegistry.INSTANCE.openContainer(TechworksContainers.BOILER, player, buf -> {
-            buf.writeBlockPos(pos);
-        });
-        return ActionResult.PASS;
+        if (player.getMainHandStack().getItem().equals(TechworksItems.WRENCH)) {
+            ContainerProviderRegistry.INSTANCE.openContainer(TechworksContainers.MACHINE_COMPONENTS, player, buf -> buf.writeBlockPos(pos));
+        } else {
+            ContainerProviderRegistry.INSTANCE.openContainer(TechworksContainers.BOILER, player, buf -> buf.writeBlockPos(pos));
+        }
+        return ActionResult.SUCCESS;
     }
 
     protected static class MachineryBuilder {
@@ -87,8 +92,13 @@ public abstract class AbstractMachineBlockEntity<TEntity extends AbstractMachine
             return this;
         }
 
-        private <T> Pair<ComponentInventory<T>, List<Widget>> build(T container) {
-            ComponentInventory<T> inventory = new ComponentInventory<>(container, slots.toArray(new ComponentInventory.Slot[0]));
+        private <T extends BlockEntity> Pair<ComponentInventory<T>, List<Widget>> build(T container) {
+            ComponentInventory<T> inventory = new ComponentInventory<T>(container, slots.toArray(new ComponentInventory.Slot[0])) {
+                @Override
+                protected void onContentsChanged() {
+                    container.markDirty();
+                }
+            };
             return new Pair<>(inventory, widgets);
         }
     }

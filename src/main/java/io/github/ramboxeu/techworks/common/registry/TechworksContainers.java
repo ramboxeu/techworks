@@ -5,6 +5,7 @@ import io.github.ramboxeu.techworks.common.blockentity.machine.AbstractMachineBl
 import io.github.ramboxeu.techworks.common.blockentity.machine.BoilerBlockEntity;
 import io.github.ramboxeu.techworks.common.container.AbstractMachineContainer;
 import io.github.ramboxeu.techworks.common.container.machine.BoilerContainer;
+import io.github.ramboxeu.techworks.common.container.machine.MachineComponentsContainer;
 import net.fabricmc.fabric.api.container.ContainerFactory;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.block.entity.BlockEntity;
@@ -14,6 +15,7 @@ import net.minecraft.util.Identifier;
 
 public class TechworksContainers {
     public static Identifier BOILER;
+    public static Identifier MACHINE_COMPONENTS;
 
     private static <T extends BlockEntity> Identifier registerMachineContainer(String name, MachineContainerFactory factory) {
         return register(name, (syncid, identifier, playerEntity, packetByteBuf) -> {
@@ -32,6 +34,8 @@ public class TechworksContainers {
     public static void registerAll() {
         BOILER = registerMachineContainer("boiler", (syncId, playerInventory, blockEntity) ->
                 new BoilerContainer(syncId, playerInventory, (BoilerBlockEntity) blockEntity));
+        MACHINE_COMPONENTS = registerMachineContainer("machine_components", (syncId, playerInventory, blockEntity) ->
+                new MachineComponentsContainer(syncId, playerInventory, (AbstractMachineBlockEntity<?>) blockEntity));
     }
 
     @FunctionalInterface

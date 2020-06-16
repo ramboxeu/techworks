@@ -46,7 +46,7 @@ public class ComponentInventory<T> implements Inventory, IComponentList<T> {
 
     @Override
     public ItemStack getInvStack(int slot) {
-        return slot > 0 && slot < itemStacks.size() ? itemStacks.get(slot) : ItemStack.EMPTY;
+        return slot >= 0 && slot < itemStacks.size() ? itemStacks.get(slot) : ItemStack.EMPTY;
     }
 
     @Override
@@ -55,16 +55,16 @@ public class ComponentInventory<T> implements Inventory, IComponentList<T> {
             return ItemStack.EMPTY;
         }
 
-        ItemStack itemStack = itemStacks.get(slot).split(amount);
+        ItemStack existingStack = itemStacks.get(slot);
+        ItemStack newStack = existingStack.split(amount);
 
-        if (itemStack.isEmpty()) {
+        if (existingStack.isEmpty()) {
             itemStacks.set(slot, ItemStack.EMPTY);
             components.set(slot, EmptyComponent.INSTANCE);
-        } else {
-            onContentsChanged();
         }
+        onContentsChanged();
 
-        return itemStack;
+        return newStack;
     }
 
     @Override
@@ -86,8 +86,14 @@ public class ComponentInventory<T> implements Inventory, IComponentList<T> {
     }
 
     // This does void items that aren't providers and mismatched types
+    // Empty stacks will work
     @Override
     public void setInvStack(int slot, ItemStack stack) {
+        if (stack.isEmpty()) {
+            itemStacks.set(slot, stack);
+            components.set(slot, EmptyComponent.INSTANCE);
+        }
+
         if (stack.getItem() instanceof IComponentProvider) {
             IComponentProvider provider = (IComponentProvider)stack.getItem();
             IComponent component = provider.create(this);
