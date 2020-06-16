@@ -9,6 +9,7 @@ import net.minecraft.entity.player.PlayerInventory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public abstract class AbstractMachineContainer<T extends AbstractMachineBlockEntity<T>> extends Container {
@@ -72,6 +73,14 @@ public abstract class AbstractMachineContainer<T extends AbstractMachineBlockEnt
             return syncedValues.get(index);
         } else {
             return defaultValue;
+        }
+    }
+
+    public Optional<Integer> getSyncedValue(int index) {
+        if (syncedValues.size() > index) {
+            return Optional.of(syncedValues.get(index));
+        } else {
+            return Optional.empty();
         }
     }
 }

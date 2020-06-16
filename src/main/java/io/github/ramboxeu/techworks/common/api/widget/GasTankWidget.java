@@ -7,6 +7,7 @@ import net.minecraft.container.Container;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class GasTankWidget extends Widget {
     private int dataIndex;
@@ -19,9 +20,15 @@ public class GasTankWidget extends Widget {
 
     @Override
     public void render(int mouseX, int mouseY, Screen screen, MinecraftClient client, Container container) {
+        super.render(mouseX, mouseY, screen, client, container);
+
         client.textRenderer.draw(String.format("(%d, %d)", mouseX, mouseY), 0,0, 4210752);
-        int data = ((AbstractMachineContainer<?>) container).getSyncedValueOrDefault(dataIndex, -1);
-        client.textRenderer.draw(String.format("%d", data), 0,10, 4210752);
+        Optional<Integer> data = ((AbstractMachineContainer<?>) container).getSyncedValue(dataIndex);
+        if (data.isPresent()) {
+            client.textRenderer.draw(String.format("%d", data.get()), 0, 10, 4210752);
+        } else {
+            client.textRenderer.draw("Gas Tank component not installed", 0, 10, 4210752);
+        }
     }
 
     @Override

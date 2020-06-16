@@ -11,6 +11,7 @@ import net.minecraft.util.Identifier;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -22,11 +23,13 @@ public class ComponentInventory<T> implements Inventory, IComponentList<T> {
     private T container;
     private DefaultedList<ItemStack> itemStacks;
     private List<IComponent> components;
+    private Slot[] slots;
 
-    public ComponentInventory(T container, int capacity) {
+    public ComponentInventory(T container, Slot ...slots) {
         this.container = container;
-        this.itemStacks = DefaultedList.ofSize(capacity, ItemStack.EMPTY);
-        this.components = DefaultedList.ofSize(capacity, EmptyComponent.INSTANCE);
+        this.itemStacks = DefaultedList.ofSize(slots.length, ItemStack.EMPTY);
+        this.components = DefaultedList.ofSize(slots.length, EmptyComponent.INSTANCE);
+        this.slots = slots;
     }
 
     // IInventory
@@ -48,7 +51,7 @@ public class ComponentInventory<T> implements Inventory, IComponentList<T> {
 
     @Override
     public ItemStack takeInvStack(int slot, int amount) {
-        if (slot > itemStacks.size() || slot < 0 || itemStacks.get(slot).isEmpty() || amount < 0) {
+        if (slot >= itemStacks.size() || slot < 0 || itemStacks.get(slot).isEmpty() || amount < 0) {
             return ItemStack.EMPTY;
         }
 
@@ -66,7 +69,7 @@ public class ComponentInventory<T> implements Inventory, IComponentList<T> {
 
     @Override
     public ItemStack removeInvStack(int slot) {
-        if (slot < 0 || slot > itemStacks.size()) {
+        if (slot < 0 || slot >= itemStacks.size()) {
             return ItemStack.EMPTY;
         }
 
@@ -82,13 +85,17 @@ public class ComponentInventory<T> implements Inventory, IComponentList<T> {
         }
     }
 
-    // This does void items that aren't providers
+    // This does void items that aren't providers and mismatched types
     @Override
     public void setInvStack(int slot, ItemStack stack) {
         if (stack.getItem() instanceof IComponentProvider) {
-            itemStacks.set(slot, stack);
-            components.set(slot, ((IComponentProvider)stack.getItem()).create(this));
-            onContentsChanged();
+            IComponentProvider provider = (IComponentProvider)stack.getItem();
+            IComponent component = provider.create(this);
+            if (component.getType().equals(slots[slot].type)) {
+                itemStacks.set(slot, stack);
+                components.set(slot, provider.create(this));
+                onContentsChanged();
+            }
         }
     }
 
@@ -110,7 +117,31 @@ public class ComponentInventory<T> implements Inventory, IComponentList<T> {
         components.clear();
     }
 
-//    // Utils
+    @Override
+    public boolean isValidInvStack(int index, ItemStack stack) {
+        if (index < 0 || index >= itemStacks.size()) {
+            return false;
+        }
+
+        if (stack.getItem() instanceof IComponentProvider) {
+            Slot slot = slots[index];
+            IComponent component = ((IComponentProvider) stack.getItem()).create(this);
+
+            if (slot.hasPredicate) {
+                if(slot.predicate.test(stack, component)) {
+                    return true;
+                } else {
+                    return component.getType().equals(slot.type);
+                }
+            } else {
+                return component.getType().equals(slot.type);
+            }
+        }
+
+        return false;
+    }
+
+    //    // Utils
 //    private boolean containsType(ComponentType type) {
 //        return this.components.stream().anyMatch(component -> component.getType().equals(type));
 //    }
@@ -217,5 +248,44 @@ public class ComponentInventory<T> implements Inventory, IComponentList<T> {
 
     public void tick() {
         components.forEach(IComponent::tick);
+    }
+
+    public static class Slot {
+        private ComponentType type;
+        private BiPredicate<ItemStack, IComponent> predicate;
+        private final boolean hasPredicate;
+
+        public Slot(ComponentType type, BiPredicate<ItemStack, IComponent> predicate) {
+            this.type = type;
+            this.predicate = predicate;
+            this.hasPredicate = true;
+        }
+
+        public Slot(BiPredicate<ItemStack, IComponent> predicate) {
+            this.predicate = predicate;
+            this.hasPredicate = true;
+        }
+
+        public Slot(ComponentType type) {
+            this.type = type;
+            this.hasPredicate = false;
+        }
+
+        public Slot() {
+            this.predicate = (itemStack, component) -> true;
+            this.hasPredicate = true;
+        }
+
+//        public ComponentType getType() {
+//            return type;
+//        }
+//
+//        public BiPredicate<ItemStack, IComponent> getPredicate() {
+//            return predicate;
+//        }
+//
+//        public boolean hasPredicate() {
+//            return hasPredicate;
+//        }
     }
 }

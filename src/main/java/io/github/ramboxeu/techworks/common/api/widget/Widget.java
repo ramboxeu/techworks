@@ -18,7 +18,19 @@ public abstract class Widget {
 
     public Widget(int x, int y, int width, int height) {}
 
-    public void render(int mouseX, int mouseY, Screen screen, MinecraftClient client, Container container) {}
+    public void render(int mouseX, int mouseY, Screen screen, MinecraftClient client, Container container) {
+        if (this.screen == null || !this.screen.equals(screen)) {
+            this.screen = screen;
+        }
+
+        if (this.container == null || !this.container.equals(container)) {
+            this.container = container;
+        }
+
+        if (this.client == null || !this.client.equals(client)) {
+            this.client = client;
+        }
+    }
 
     public List<String> buildTooltip(int mouseX, int mouseY) {
         return Collections.emptyList();

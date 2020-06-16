@@ -3,6 +3,7 @@ package io.github.ramboxeu.techworks.common.blockentity.machine;
 import io.github.ramboxeu.techworks.common.api.component.ComponentInventory;
 import io.github.ramboxeu.techworks.common.api.widget.GasTankWidget;
 import io.github.ramboxeu.techworks.common.api.widget.Widget;
+import io.github.ramboxeu.techworks.common.registry.ComponentTypes;
 import io.github.ramboxeu.techworks.common.registry.TechworksBlockEntities;
 import io.github.ramboxeu.techworks.common.registry.TechworksItems;
 import net.minecraft.block.BlockState;
@@ -19,21 +20,11 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import java.util.ArrayList;
-
 public class BoilerBlockEntity extends AbstractMachineBlockEntity<BoilerBlockEntity> {
-    private ItemStack component = new ItemStack(TechworksItems.BASIC_BOILING_COMPONENT);
     private int lastSlot = 0;
 
     public BoilerBlockEntity() {
         super(TechworksBlockEntities.BOILER);
-
-        componentList = new ComponentInventory<>(this, 5);
-        widgets = new ArrayList<Widget>() {
-            {
-                add(new GasTankWidget(0, 0, 16, 52, 0));
-            }
-        };
     }
 
     @Override
@@ -44,6 +35,11 @@ public class BoilerBlockEntity extends AbstractMachineBlockEntity<BoilerBlockEnt
     @Override
     public Container createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
         return null;
+    }
+
+    @Override
+    protected void buildMachinery(MachineryBuilder machineryBuilder) {
+        machineryBuilder.add(new ComponentInventory.Slot(ComponentTypes.BOILING_COMPONENT), i -> new GasTankWidget(0, 0, 16, 52, i));
     }
 
     @Override
@@ -61,14 +57,19 @@ public class BoilerBlockEntity extends AbstractMachineBlockEntity<BoilerBlockEnt
     @Override
     public ActionResult onActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (player.getMainHandStack().getItem().equals(Items.STICK)) {
-            if (hand == Hand.MAIN_HAND) {
-                this.componentList.setInvStack(lastSlot, new ItemStack(TechworksItems.BASIC_BOILING_COMPONENT));
+            ItemStack stack = new ItemStack(TechworksItems.BASIC_BOILING_COMPONENT);
+            if (componentList.isValidInvStack(lastSlot, stack)) {
+                this.componentList.setInvStack(lastSlot, stack);
                 lastSlot++;
+                return ActionResult.SUCCESS;
             } else {
-                this.componentList.removeInvStack(lastSlot);
-                lastSlot--;
+                return ActionResult.FAIL;
             }
+        }
 
+        if (player.getOffHandStack().getItem().equals(Items.STICK)) {
+            this.componentList.removeInvStack(lastSlot);
+            lastSlot--;
             return ActionResult.SUCCESS;
         }
 
