@@ -3,14 +3,15 @@ package io.github.ramboxeu.techworks.common.registry;
 import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.common.blockentity.machine.AbstractMachineBlockEntity;
 import io.github.ramboxeu.techworks.common.blockentity.machine.BoilerBlockEntity;
-import io.github.ramboxeu.techworks.common.container.AbstractMachineContainer;
 import io.github.ramboxeu.techworks.common.container.machine.BoilerContainer;
 import io.github.ramboxeu.techworks.common.container.machine.MachineComponentsContainer;
 import net.fabricmc.fabric.api.container.ContainerFactory;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
+import net.fabricmc.fabric.mixin.container.ServerPlayerEntityAccessor;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.container.Container;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
 public class TechworksContainers {
@@ -20,7 +21,10 @@ public class TechworksContainers {
     private static <T extends BlockEntity> Identifier registerMachineContainer(String name, MachineContainerFactory factory) {
         return register(name, (syncid, identifier, playerEntity, packetByteBuf) -> {
             BlockEntity blockEntity = playerEntity.world.getBlockEntity(packetByteBuf.readBlockPos());
-
+            if (playerEntity instanceof ServerPlayerEntity) {
+                Techworks.LOG.info("Var: {} | Player: {} | Mixin: {} | Calc: {}", syncid, playerEntity.container.syncId,
+                ((ServerPlayerEntityAccessor) playerEntity).getContainerSyncId(), (playerEntity.container.syncId + 1) % 100);
+            }
             return factory.create(syncid, playerEntity.inventory, blockEntity);
         });
     }

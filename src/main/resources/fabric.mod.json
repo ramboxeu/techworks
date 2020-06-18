@@ -20,6 +20,9 @@
   "entrypoints": {
     "main": [
       "io.github.ramboxeu.techworks.Techworks"
+    ],
+    "client": [
+      "io.github.ramboxeu.techworks.Techworks"
     ]
   },
   "mixins": [

@@ -1,9 +1,12 @@
 {
   "required": false,
   "minVersion": "0.8",
-  "package": "io.github.ramboxeu.fabricworks.mixin",
+  "package": "io.github.ramboxeu.techworks.common.mixin",
   "compatibilityLevel": "JAVA_8",
-  "mixins": [],
+  "mixins": [
+    "ServerPlayerEntityMixin",
+    "ContainerProviderImplMixin"
+  ],
   "client": [],
   "injectors": {
     "defaultRequire": 1

@@ -5,6 +5,7 @@ import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.common.api.component.IComponent;
 import io.github.ramboxeu.techworks.common.api.component.IComponentList;
 import io.github.ramboxeu.techworks.common.component.BasicBoilingComponent;
+import io.github.ramboxeu.techworks.common.component.BasicFluidStorageComponent;
 import io.github.ramboxeu.techworks.common.item.ComponentItem;
 import io.github.ramboxeu.techworks.common.item.WrenchItem;
 import net.minecraft.block.Block;
@@ -17,6 +18,7 @@ import net.minecraft.util.registry.Registry;
 public class TechworksItems {
     public static BlockItem BOILER;
     public static ComponentItem<BasicBoilingComponent> BASIC_BOILING_COMPONENT;
+    public static ComponentItem<BasicFluidStorageComponent> BASIC_FLUID_STORAGE_COMPONENT;
     public static WrenchItem WRENCH;
 
     private static <T extends Item> T register(String name, T item) {
@@ -31,6 +33,7 @@ public class TechworksItems {
     public static void registerAll() {
         BOILER = register("boiler", TechworksBlocks.BOILER);
         BASIC_BOILING_COMPONENT = register("basic_boiling_component", new ComponentItem<>(BasicBoilingComponent::new));
+        BASIC_FLUID_STORAGE_COMPONENT = register("basic_fluid_storage_component", new ComponentItem<>(BasicFluidStorageComponent::new));
         WRENCH = register("wrench", new WrenchItem());
     }
 }

@@ -1,11 +1,14 @@
 package io.github.ramboxeu.techworks.common.container;
 
+import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.common.api.component.ComponentInventory;
+import io.github.ramboxeu.techworks.common.api.sync.EventEmitter;
 import io.github.ramboxeu.techworks.common.api.widget.Widget;
 import io.github.ramboxeu.techworks.common.blockentity.machine.AbstractMachineBlockEntity;
 import net.minecraft.container.Container;
 import net.minecraft.container.PropertyDelegate;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.nbt.CompoundTag;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,10 +16,16 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public abstract class AbstractMachineContainer<T extends AbstractMachineBlockEntity<T>> extends Container {
+    protected List<Integer> syncedValues;
+    protected List<IAutoSyncable> syncableList;
+
     protected T blockEntity;
     protected PlayerInventory playerInventory;
-    protected List<IAutoSyncable> syncableList;
-    protected List<Integer> syncedValues;
+
+    //private int nextEmitterId = 0;
+    private final List<Integer> observerIds = new ArrayList<>();
+    private List<EventEmitter> emitters;
+    private final Object[] data;
 
     public AbstractMachineContainer(int syncId, PlayerInventory playerInventory, T blockEntity) {
         super(null, syncId);
@@ -54,6 +63,10 @@ public abstract class AbstractMachineContainer<T extends AbstractMachineBlockEnt
                 return syncableList.size() + 1;
             }
         });
+
+        // We need to have matching sizes on both sides so we don't crash everything
+        int dataSize = (int) this.blockEntity.getComponentList().stream().filter(component -> component instanceof EventEmitter).count();
+        data = new Object[dataSize];
     }
 
     public PlayerInventory getPlayerInventory() {
@@ -86,5 +99,36 @@ public abstract class AbstractMachineContainer<T extends AbstractMachineBlockEnt
 
     public T getBlockEntity() {
         return blockEntity;
+    }
+
+    public Optional<Object> getData(int index) {
+        if (syncedValues.size() > index) {
+            Object value = data[index];
+            return value == null ? Optional.empty() : Optional.of(value);
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    public void subscribeEmitters() {
+        emitters = blockEntity.getComponentList()
+                .stream()
+                .filter(component -> component instanceof EventEmitter)
+                .map(component -> (EventEmitter) component)
+                .collect(Collectors.toList());
+
+        for (int i = 0; i < emitters.size(); i++) {
+            EventEmitter emitter = emitters.get(i);
+            int finalI = i;
+            observerIds.add(emitter.subscribe(value -> Techworks.LOG.info("Value changed: {id={}, syncId={}, value={}}", finalI, syncId, emitter.serialize(new CompoundTag(), value))));
+        }
+    }
+
+    public void unsubscribeEmitters() {
+        if (!observerIds.isEmpty() && !emitters.isEmpty()) {
+            for (int i = 0; i < emitters.size(); i++) {
+                emitters.get(i).unsubscribe(observerIds.get(i));
+            }
+        }
     }
 }

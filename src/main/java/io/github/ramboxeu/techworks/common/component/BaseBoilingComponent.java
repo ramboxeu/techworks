@@ -4,6 +4,7 @@ import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.common.api.component.ComponentType;
 import io.github.ramboxeu.techworks.common.api.component.IComponent;
 import io.github.ramboxeu.techworks.common.api.component.IComponentList;
+import io.github.ramboxeu.techworks.common.api.sync.EventEmitter;
 import io.github.ramboxeu.techworks.common.registry.ComponentTypes;
 
 public abstract class BaseBoilingComponent implements IComponent {

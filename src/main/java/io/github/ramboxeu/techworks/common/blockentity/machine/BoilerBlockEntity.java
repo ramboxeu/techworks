@@ -39,6 +39,7 @@ public class BoilerBlockEntity extends AbstractMachineBlockEntity<BoilerBlockEnt
     @Override
     protected void buildMachinery(MachineryBuilder machineryBuilder) {
         machineryBuilder.add(new ComponentInventory.Slot(ComponentTypes.BOILING_COMPONENT), i -> new GasTankWidget(0, 0, 16, 52, i));
+        machineryBuilder.add(new ComponentInventory.Slot(ComponentTypes.FLUID_STORAGE_COMPONENT));
     }
 
     @Override
