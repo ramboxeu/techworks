@@ -3,6 +3,7 @@ package io.github.ramboxeu.techworks.common.blockentity.machine;
 import com.sun.jna.platform.win32.WinGDI;
 import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.common.api.component.ComponentInventory;
+import io.github.ramboxeu.techworks.common.api.sync.EventEmitter;
 import io.github.ramboxeu.techworks.common.api.widget.Widget;
 import io.github.ramboxeu.techworks.common.registry.TechworksContainers;
 import io.github.ramboxeu.techworks.common.registry.TechworksItems;
@@ -60,9 +61,17 @@ public abstract class AbstractMachineBlockEntity<TEntity extends AbstractMachine
 
     public ActionResult onActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (player.getMainHandStack().getItem().equals(TechworksItems.WRENCH)) {
-            ContainerProviderRegistry.INSTANCE.openContainer(TechworksContainers.MACHINE_COMPONENTS, player, buf -> buf.writeBlockPos(pos));
+            ContainerProviderRegistry.INSTANCE.openContainer(TechworksContainers.MACHINE_COMPONENTS, player, buf -> {
+                buf.writeBlockPos(pos);
+                buf.writeInt(0);
+            });
         } else {
-            ContainerProviderRegistry.INSTANCE.openContainer(TechworksContainers.BOILER, player, buf -> buf.writeBlockPos(pos));
+            ContainerProviderRegistry.INSTANCE.openContainer(TechworksContainers.BOILER, player, buf -> {
+                buf.writeBlockPos(pos);
+                int dataSize = (int) componentList.stream().filter(c -> c instanceof EventEmitter).count();
+                Techworks.LOG.info("Machine dataSize: {}", dataSize);
+                buf.writeInt(dataSize);
+            });
         }
         return ActionResult.SUCCESS;
     }

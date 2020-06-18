@@ -1,6 +1,7 @@
 package io.github.ramboxeu.techworks.common.registry;
 
 import io.github.ramboxeu.techworks.Techworks;
+import io.github.ramboxeu.techworks.common.api.sync.EventEmitter;
 import io.github.ramboxeu.techworks.common.blockentity.machine.AbstractMachineBlockEntity;
 import io.github.ramboxeu.techworks.common.blockentity.machine.BoilerBlockEntity;
 import io.github.ramboxeu.techworks.common.container.machine.BoilerContainer;
@@ -21,11 +22,16 @@ public class TechworksContainers {
     private static <T extends BlockEntity> Identifier registerMachineContainer(String name, MachineContainerFactory factory) {
         return register(name, (syncid, identifier, playerEntity, packetByteBuf) -> {
             BlockEntity blockEntity = playerEntity.world.getBlockEntity(packetByteBuf.readBlockPos());
+
             if (playerEntity instanceof ServerPlayerEntity) {
                 Techworks.LOG.info("Var: {} | Player: {} | Mixin: {} | Calc: {}", syncid, playerEntity.container.syncId,
                 ((ServerPlayerEntityAccessor) playerEntity).getContainerSyncId(), (playerEntity.container.syncId + 1) % 100);
             }
-            return factory.create(syncid, playerEntity.inventory, blockEntity);
+
+            int dataSize = packetByteBuf.readInt();
+            Techworks.LOG.info(dataSize);
+
+            return factory.create(syncid, playerEntity.inventory, blockEntity, dataSize);
         });
     }
 
@@ -36,14 +42,14 @@ public class TechworksContainers {
     }
 
     public static void registerAll() {
-        BOILER = registerMachineContainer("boiler", (syncId, playerInventory, blockEntity) ->
-                new BoilerContainer(syncId, playerInventory, (BoilerBlockEntity) blockEntity));
-        MACHINE_COMPONENTS = registerMachineContainer("machine_components", (syncId, playerInventory, blockEntity) ->
+        BOILER = registerMachineContainer("boiler", (syncId, playerInventory, blockEntity, dataSize) ->
+                new BoilerContainer(syncId, playerInventory, (BoilerBlockEntity) blockEntity, dataSize));
+        MACHINE_COMPONENTS = registerMachineContainer("machine_components", (syncId, playerInventory, blockEntity, dataSize) ->
                 new MachineComponentsContainer(syncId, playerInventory, (AbstractMachineBlockEntity<?>) blockEntity));
     }
 
     @FunctionalInterface
     interface MachineContainerFactory {
-        Container create(int syncId, PlayerInventory playerInventory, BlockEntity blockEntity);
+        Container create(int syncId, PlayerInventory playerInventory, BlockEntity blockEntity, int dataSize);
     }
 }

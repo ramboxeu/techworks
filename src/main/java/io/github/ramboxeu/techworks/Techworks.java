@@ -1,6 +1,7 @@
 package io.github.ramboxeu.techworks;
 
 import io.github.ramboxeu.techworks.client.screen.TechworksScreens;
+import io.github.ramboxeu.techworks.common.network.NetworkManager;
 import io.github.ramboxeu.techworks.common.registry.*;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.ModInitializer;
@@ -20,10 +21,12 @@ public class Techworks implements ModInitializer, ClientModInitializer {
         TechworksContainers.registerAll();
         ComponentTypes.registerAll();
         ComponentProviders.registerAll();
+        Events.registerAll();
     }
 
     @Override
     public void onInitializeClient() {
         TechworksScreens.registerAll();
+        NetworkManager.registerAllS2C();
     }
 }

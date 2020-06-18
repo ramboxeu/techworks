@@ -12,8 +12,8 @@ import net.minecraft.entity.player.PlayerInventory;
 
 public class BoilerContainer extends AbstractMachineContainer<BoilerBlockEntity> {
 
-    public BoilerContainer(int syncId, PlayerInventory inventory, BoilerBlockEntity blockEntity) {
-        super(syncId, inventory, blockEntity);
+    public BoilerContainer(int syncId, PlayerInventory inventory, BoilerBlockEntity blockEntity, int dataSize) {
+        super(syncId, inventory, blockEntity, dataSize);
     }
 
     @Override

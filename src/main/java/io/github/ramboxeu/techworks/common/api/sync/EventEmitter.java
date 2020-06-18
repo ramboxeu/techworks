@@ -6,9 +6,11 @@ import java.util.ArrayList;
 
 public abstract class EventEmitter {
     private final ArrayList<Observer> observers;
+    private final Event event;
 
-    protected EventEmitter() {
+    protected EventEmitter(Event event) {
         observers = new ArrayList<>();
+        this.event = event;
     }
 
     public int subscribe(Observer observer) {
@@ -24,9 +26,9 @@ public abstract class EventEmitter {
         observers.forEach(observer -> observer.update(value));
     }
 
-    public abstract CompoundTag serialize(CompoundTag tag, Object value);
-
-    public abstract Object deserialize(CompoundTag tag);
+    public Event getEvent() {
+        return event;
+    }
 
     public interface Observer {
         void update(Object value);

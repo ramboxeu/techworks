@@ -8,6 +8,7 @@ import io.github.ramboxeu.techworks.common.api.component.IComponentProvider;
 import io.github.ramboxeu.techworks.common.api.sync.EventEmitter;
 import io.github.ramboxeu.techworks.common.registry.ComponentProviders;
 import io.github.ramboxeu.techworks.common.registry.ComponentTypes;
+import io.github.ramboxeu.techworks.common.registry.Events;
 import io.github.ramboxeu.techworks.common.util.FluidStack;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
@@ -23,6 +24,7 @@ public class BasicFluidStorageComponent extends EventEmitter implements ICompone
     int counter;
 
     public BasicFluidStorageComponent(IComponentList<?> list) {
+        super(Events.FLUID_STORAGE);
         fluid = Fluids.EMPTY;
         amount = 0;
         Techworks.LOG.info("Creating fluid storage");
@@ -70,8 +72,7 @@ public class BasicFluidStorageComponent extends EventEmitter implements ICompone
 
     }
 
-    @Override
-    public CompoundTag serialize(CompoundTag tag, Object value) {
+    public static CompoundTag serialize(CompoundTag tag, Object value) {
         FluidStack fluidStack = (FluidStack) value;
         CompoundTag fluidTag = new CompoundTag();
         fluidTag.putInt("amount", fluidStack.getAmount());
@@ -80,8 +81,7 @@ public class BasicFluidStorageComponent extends EventEmitter implements ICompone
         return tag;
     }
 
-    @Override
-    public Object deserialize(CompoundTag tag) {
+    public static Object deserialize(CompoundTag tag) {
         CompoundTag fluidTag = tag.getCompound("FluidStack");
         int amount = fluidTag.getInt("amount");
         Fluid fluid = Registry.FLUID.get(new Identifier(fluidTag.getString("fluid")));
