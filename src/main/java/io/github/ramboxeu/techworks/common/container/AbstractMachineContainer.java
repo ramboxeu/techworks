@@ -6,16 +6,12 @@ import io.github.ramboxeu.techworks.common.api.sync.EventEmitter;
 import io.github.ramboxeu.techworks.common.api.widget.Widget;
 import io.github.ramboxeu.techworks.common.blockentity.machine.AbstractMachineBlockEntity;
 import io.github.ramboxeu.techworks.common.network.NetworkManager;
-import io.github.ramboxeu.techworks.common.registry.Events;
 import io.github.ramboxeu.techworks.common.registry.TechworksRegistries;
 import net.minecraft.container.Container;
 import net.minecraft.container.PropertyDelegate;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.network.DemoServerPlayerInteractionManager;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +19,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public abstract class AbstractMachineContainer<T extends AbstractMachineBlockEntity<T>> extends Container {
-    protected List<Integer> syncedValues;
-    protected List<IAutoSyncable> syncableList;
+//    protected List<Integer> syncedValues;
+//    protected List<IAutoSyncable> syncableList;
 
     protected T blockEntity;
     protected PlayerInventory playerInventory;
@@ -39,37 +35,37 @@ public abstract class AbstractMachineContainer<T extends AbstractMachineBlockEnt
         this.blockEntity = blockEntity;
         this.playerInventory = playerInventory;
 
-        syncableList = blockEntity.getComponentList().stream()
-                .filter(component -> component instanceof IAutoSyncable)
-                .map(component -> (IAutoSyncable) component)
-                .collect(Collectors.toList());
-
-        syncedValues = new ArrayList<>();
-
-        this.addProperties(new PropertyDelegate() {
-            @Override
-            public int get(int index) {
-                if (syncableList.size() > index) {
-                    return syncableList.get(index).getValue();
-                } else {
-                    return 0;
-                }
-            }
-
-            @Override
-            public void set(int index, int value) {
-                if (syncedValues.size() > index) {
-                    syncedValues.set(index, value);
-                } else {
-                    syncedValues.add(value);
-                }
-            }
-
-            @Override
-            public int size() {
-                return syncableList.size() + 1;
-            }
-        });
+//        syncableList = blockEntity.getComponentList().stream()
+//                .filter(component -> component instanceof IAutoSyncable)
+//                .map(component -> (IAutoSyncable) component)
+//                .collect(Collectors.toList());
+//
+//        syncedValues = new ArrayList<>();
+//
+//        this.addProperties(new PropertyDelegate() {
+//            @Override
+//            public int get(int index) {
+//                if (syncableList.size() > index) {
+//                    return syncableList.get(index).getValue();
+//                } else {
+//                    return 0;
+//                }
+//            }
+//
+//            @Override
+//            public void set(int index, int value) {
+//                if (syncedValues.size() > index) {
+//                    syncedValues.set(index, value);
+//                } else {
+//                    syncedValues.add(value);
+//                }
+//            }
+//
+//            @Override
+//            public int size() {
+//                return syncableList.size() + 1;
+//            }
+//        });
 
         // We need to have matching sizes on both sides so we don't crash everything
         data = new Object[dataSize];
@@ -87,28 +83,28 @@ public abstract class AbstractMachineContainer<T extends AbstractMachineBlockEnt
         return blockEntity.getWidgets();
     }
 
-    public int getSyncedValueOrDefault(int index, int defaultValue) {
-        if (syncedValues.size() > index) {
-            return syncedValues.get(index);
-        } else {
-            return defaultValue;
-        }
-    }
-
-    public Optional<Integer> getSyncedValue(int index) {
-        if (syncedValues.size() > index) {
-            return Optional.of(syncedValues.get(index));
-        } else {
-            return Optional.empty();
-        }
-    }
+//    public int getSyncedValueOrDefault(int index, int defaultValue) {
+//        if (syncedValues.size() > index) {
+//            return syncedValues.get(index);
+//        } else {
+//            return defaultValue;
+//        }
+//    }
+//
+//    public Optional<Integer> getSyncedValue(int index) {
+//        if (syncedValues.size() > index) {
+//            return Optional.of(syncedValues.get(index));
+//        } else {
+//            return Optional.empty();
+//        }
+//    }
 
     public T getBlockEntity() {
         return blockEntity;
     }
 
     public Optional<Object> getData(int index) {
-        if (syncedValues.size() > index) {
+        if (data.length > index) {
             Object value = data[index];
             return value == null ? Optional.empty() : Optional.of(value);
         } else {

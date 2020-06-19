@@ -21,7 +21,7 @@ public class BoilerContainer extends AbstractMachineContainer<BoilerBlockEntity>
         return true;
     }
 
-    public int getDummyInt() {
-        return getSyncedValueOrDefault(0, -1);
-    }
+//    public int getDummyInt() {
+//        return getSyncedValueOrDefault(0, -1);
+//    }
 }

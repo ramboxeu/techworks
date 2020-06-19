@@ -1,5 +1,6 @@
 package io.github.ramboxeu.techworks.common.blockentity.machine;
 
+import io.github.ramboxeu.techworks.client.widget.FluidTankWidget;
 import io.github.ramboxeu.techworks.common.api.component.ComponentInventory;
 import io.github.ramboxeu.techworks.common.api.widget.GasTankWidget;
 import io.github.ramboxeu.techworks.common.registry.ComponentTypes;
@@ -38,10 +39,10 @@ public class BoilerBlockEntity extends AbstractMachineBlockEntity<BoilerBlockEnt
 
     @Override
     protected void buildMachinery(MachineryBuilder machineryBuilder) {
+        machineryBuilder.add(new ComponentInventory.Slot(ComponentTypes.FLUID_STORAGE_COMPONENT), i -> new FluidTankWidget(0, 0, 50, 50, i));
+        machineryBuilder.add(new ComponentInventory.Slot(ComponentTypes.FLUID_STORAGE_COMPONENT), i -> new FluidTankWidget(0, 10, 50, 50, i));
+        machineryBuilder.add(new ComponentInventory.Slot(ComponentTypes.FLUID_STORAGE_COMPONENT), i -> new FluidTankWidget(0, 20, 50, 50, i));
         machineryBuilder.add(new ComponentInventory.Slot(ComponentTypes.BOILING_COMPONENT), i -> new GasTankWidget(0, 0, 16, 52, i));
-        machineryBuilder.add(new ComponentInventory.Slot(ComponentTypes.FLUID_STORAGE_COMPONENT));
-        machineryBuilder.add(new ComponentInventory.Slot(ComponentTypes.FLUID_STORAGE_COMPONENT));
-        machineryBuilder.add(new ComponentInventory.Slot(ComponentTypes.FLUID_STORAGE_COMPONENT));
     }
 
     @Override

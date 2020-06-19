@@ -8,15 +8,20 @@ import java.util.Collections;
 import java.util.List;
 
 public abstract class Widget {
-    private int x;
-    private int y;
-    private int width;
-    private int height;
+    protected int x;
+    protected int y;
+    protected int width;
+    protected int height;
     protected Screen screen;
     protected MinecraftClient client;
     protected Container container;
 
-    public Widget(int x, int y, int width, int height) {}
+    public Widget(int x, int y, int width, int height) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+    }
 
     public void render(int mouseX, int mouseY, Screen screen, MinecraftClient client, Container container) {
         if (this.screen == null || !this.screen.equals(screen)) {

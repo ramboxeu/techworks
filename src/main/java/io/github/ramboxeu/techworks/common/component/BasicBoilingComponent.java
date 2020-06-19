@@ -2,14 +2,10 @@ package io.github.ramboxeu.techworks.common.component;
 
 import io.github.ramboxeu.techworks.common.api.component.IComponentList;
 import io.github.ramboxeu.techworks.common.api.component.IComponentProvider;
-import io.github.ramboxeu.techworks.common.container.IAutoSyncable;
-import io.github.ramboxeu.techworks.common.container.machine.BoilerContainer;
 import io.github.ramboxeu.techworks.common.registry.ComponentProviders;
 import net.minecraft.nbt.CompoundTag;
 
-import java.util.function.Consumer;
-
-public class BasicBoilingComponent extends BaseBoilingComponent implements IAutoSyncable {
+public class BasicBoilingComponent extends BaseBoilingComponent {
     private int intDummy = 10;
     //private String stringDummy = "this is dumb string";
 
@@ -42,10 +38,5 @@ public class BasicBoilingComponent extends BaseBoilingComponent implements IAuto
     public void tick() {
         intDummy++;
         super.tick();
-    }
-
-    @Override
-    public int getValue() {
-        return intDummy;
     }
 }

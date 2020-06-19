@@ -23,9 +23,9 @@ public class GasTankWidget extends Widget {
         super.render(mouseX, mouseY, screen, client, container);
 
         client.textRenderer.draw(String.format("(%d, %d)", mouseX, mouseY), 0,0, 4210752);
-        Optional<Integer> data = ((AbstractMachineContainer<?>) container).getSyncedValue(dataIndex);
+        Optional<Object> data = ((AbstractMachineContainer<?>) container).getData(dataIndex);
         if (data.isPresent()) {
-            client.textRenderer.draw(String.format("%d", data.get()), 0, 10, 4210752);
+            client.textRenderer.draw(String.format("%s", data.get()), 0, 10, 4210752);
         } else {
             client.textRenderer.draw("Gas Tank component not installed", 0, 10, 4210752);
         }
