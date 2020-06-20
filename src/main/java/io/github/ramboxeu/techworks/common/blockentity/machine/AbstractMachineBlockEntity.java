@@ -15,6 +15,7 @@ import net.minecraft.client.Keyboard;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.container.NameableContainerFactory;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Pair;
@@ -73,8 +74,10 @@ public abstract class AbstractMachineBlockEntity<TEntity extends AbstractMachine
                 buf.writeInt(dataSize);
             });
         }
-        return ActionResult.SUCCESS;
+        return ActionResult.CONSUME;
     }
+
+    public abstract Text getComponentsContainerName();
 
     protected static class MachineryBuilder {
         private List<Widget> widgets;

@@ -89,6 +89,10 @@ public class ComponentInventory<T> implements Inventory, IComponentList<T> {
     // Empty stacks will work
     @Override
     public void setInvStack(int slot, ItemStack stack) {
+        if (itemStacks.get(slot).equals(stack)) {
+            return;
+        }
+
         if (stack.isEmpty()) {
             itemStacks.set(slot, stack);
             components.set(slot, EmptyComponent.INSTANCE);

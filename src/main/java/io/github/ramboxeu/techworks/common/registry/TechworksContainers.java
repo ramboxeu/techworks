@@ -23,13 +23,13 @@ public class TechworksContainers {
         return register(name, (syncid, identifier, playerEntity, packetByteBuf) -> {
             BlockEntity blockEntity = playerEntity.world.getBlockEntity(packetByteBuf.readBlockPos());
 
-            if (playerEntity instanceof ServerPlayerEntity) {
-                Techworks.LOG.info("Var: {} | Player: {} | Mixin: {} | Calc: {}", syncid, playerEntity.container.syncId,
-                ((ServerPlayerEntityAccessor) playerEntity).getContainerSyncId(), (playerEntity.container.syncId + 1) % 100);
-            }
+//            if (playerEntity instanceof ServerPlayerEntity) {
+//                //Techworks.LOG.info("Var: {} | Player: {} | Mixin: {} | Calc: {}", syncid, playerEntity.container.syncId,
+////                ((ServerPlayerEntityAccessor) playerEntity).getContainerSyncId(), (playerEntity.container.syncId + 1) % 100);
+//            }
 
             int dataSize = packetByteBuf.readInt();
-            Techworks.LOG.info(dataSize);
+//            Techworks.LOG.info(dataSize);
 
             return factory.create(syncid, playerEntity.inventory, blockEntity, dataSize);
         });
@@ -44,8 +44,7 @@ public class TechworksContainers {
     public static void registerAll() {
         BOILER = registerMachineContainer("boiler", (syncId, playerInventory, blockEntity, dataSize) ->
                 new BoilerContainer(syncId, playerInventory, (BoilerBlockEntity) blockEntity, dataSize));
-        MACHINE_COMPONENTS = registerMachineContainer("machine_components", (syncId, playerInventory, blockEntity, dataSize) ->
-                new MachineComponentsContainer(syncId, playerInventory, (AbstractMachineBlockEntity<?>) blockEntity));
+        MACHINE_COMPONENTS = register("machine_components", MachineComponentsContainer::factory);
     }
 
     @FunctionalInterface

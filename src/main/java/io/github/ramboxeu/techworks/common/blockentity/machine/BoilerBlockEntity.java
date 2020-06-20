@@ -14,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -42,7 +43,7 @@ public class BoilerBlockEntity extends AbstractMachineBlockEntity<BoilerBlockEnt
         machineryBuilder.add(new ComponentInventory.Slot(ComponentTypes.FLUID_STORAGE_COMPONENT), i -> new FluidTankWidget(0, 0, 50, 50, i));
         machineryBuilder.add(new ComponentInventory.Slot(ComponentTypes.FLUID_STORAGE_COMPONENT), i -> new FluidTankWidget(0, 10, 50, 50, i));
         machineryBuilder.add(new ComponentInventory.Slot(ComponentTypes.FLUID_STORAGE_COMPONENT), i -> new FluidTankWidget(0, 20, 50, 50, i));
-        machineryBuilder.add(new ComponentInventory.Slot(ComponentTypes.BOILING_COMPONENT), i -> new GasTankWidget(0, 0, 16, 52, i));
+        machineryBuilder.add(new ComponentInventory.Slot(ComponentTypes.BOILING_COMPONENT), i -> new GasTankWidget(0, 40, 16, 52, i));
     }
 
     @Override
@@ -77,5 +78,10 @@ public class BoilerBlockEntity extends AbstractMachineBlockEntity<BoilerBlockEnt
         }
 
         return super.onActivated(state, world, pos, player, hand, hit);
+    }
+
+    @Override
+    public Text getComponentsContainerName() {
+        return new TranslatableText("container.techworks.boiler_components");
     }
 }
