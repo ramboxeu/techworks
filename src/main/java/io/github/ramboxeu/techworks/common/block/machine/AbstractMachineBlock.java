@@ -1,15 +1,22 @@
 package io.github.ramboxeu.techworks.common.block.machine;
 
 import io.github.ramboxeu.techworks.Techworks;
+import io.github.ramboxeu.techworks.client.screen.BoilerScreen;
 import io.github.ramboxeu.techworks.common.blockentity.machine.AbstractMachineBlockEntity;
 import io.github.ramboxeu.techworks.common.blockstate.TechworksBlockStateProperties;
+import io.github.ramboxeu.techworks.common.container.machine.BoilerContainer;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.screen.NamedScreenHandlerFactory;
+import net.minecraft.screen.ScreenHandler;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -39,13 +46,28 @@ public abstract class AbstractMachineBlock extends Block implements BlockEntityP
         if (!world.isClient) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
 
-            if (blockEntity instanceof AbstractMachineBlockEntity<?>) {
-                return ((AbstractMachineBlockEntity<?>) blockEntity).onActivated(state, world, pos, player, hand, hit);
+            if (blockEntity instanceof AbstractMachineBlockEntity) {
+                return ((AbstractMachineBlockEntity) blockEntity).onActivated(state, world, pos, player, hand, hit);
             } else {
                 Techworks.LOG.warn("Expected AbstractMachineBlockEntity on {}, but it was not found.", pos);
             }
         }
 
         return ActionResult.FAIL;
+    }
+
+    @Override
+    public NamedScreenHandlerFactory createScreenHandlerFactory(BlockState state, World world, BlockPos pos) {
+        return new NamedScreenHandlerFactory() {
+            @Override
+            public Text getDisplayName() {
+                return new LiteralText("burh burh burh");
+            }
+
+            @Override
+            public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
+                return null;
+            }
+        };
     }
 }

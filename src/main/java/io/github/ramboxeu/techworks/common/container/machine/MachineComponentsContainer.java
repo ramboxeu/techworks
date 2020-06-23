@@ -1,26 +1,24 @@
 package io.github.ramboxeu.techworks.common.container.machine;
 
-import io.github.ramboxeu.techworks.client.screen.MachineComponentsScreen;
 import io.github.ramboxeu.techworks.common.api.component.ComponentInventory;
 import io.github.ramboxeu.techworks.common.blockentity.machine.AbstractMachineBlockEntity;
-import io.github.ramboxeu.techworks.common.container.AbstractMachineContainer;
 import io.github.ramboxeu.techworks.common.container.ComponentSlot;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.container.Container;
-import net.minecraft.container.Slot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.PacketByteBuf;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MachineComponentsContainer extends Container {
+public class MachineComponentsContainer extends ScreenHandler {
     protected PlayerInventory playerInventory;
 
-    private final AbstractMachineBlockEntity<?> machineBlockEntity;
+    private final AbstractMachineBlockEntity machineBlockEntity;
     private final List<ComponentSlot> componentSlotList;
     private final Text name;
 
@@ -31,19 +29,19 @@ public class MachineComponentsContainer extends Container {
     private static final int SPACING = 0;
     private static final int RIGHT_BOUND = 168;//137 + SPACING;
 
-    public MachineComponentsContainer(int syncId, PlayerInventory playerInventory, AbstractMachineBlockEntity<?> machineBlockEntity, Text name) {
+    public MachineComponentsContainer(int syncId, PlayerInventory playerInventory, AbstractMachineBlockEntity machineBlockEntity, Text name) {
         super(null, syncId);
         this.machineBlockEntity = machineBlockEntity;
         this.playerInventory = playerInventory;
         this.name = name;
 
-        ComponentInventory<?> componentInventory = machineBlockEntity.getComponentList();
+        ComponentInventory componentInventory = machineBlockEntity.getComponentList();
         componentSlotList = new ArrayList<>();
 
         // Make slots wrap
         int xMultiplier = 0;
         int yMultiplier = 0;
-        for (int i = 0; i < componentInventory.getInvSize(); i++) {
+        for (int i = 0; i < componentInventory.size(); i++) {
             int x = ((SLOT_WIDTH + SPACING) * xMultiplier) + BASE_X;
 
             if (x + SLOT_WIDTH >= RIGHT_BOUND) {
@@ -96,8 +94,8 @@ public class MachineComponentsContainer extends Container {
     public static MachineComponentsContainer factory(int syncId, Identifier identifier, PlayerEntity playerEntity, PacketByteBuf packetByteBuf) {
         BlockEntity blockEntity = playerEntity.world.getBlockEntity(packetByteBuf.readBlockPos());
 
-        if (blockEntity instanceof AbstractMachineBlockEntity<?>) {
-            AbstractMachineBlockEntity<?> machine = (AbstractMachineBlockEntity<?>)blockEntity;
+        if (blockEntity instanceof AbstractMachineBlockEntity) {
+            AbstractMachineBlockEntity machine = (AbstractMachineBlockEntity)blockEntity;
             return new MachineComponentsContainer(syncId, playerEntity.inventory, machine, machine.getComponentsContainerName());
         }
 

@@ -1,28 +1,26 @@
 package io.github.ramboxeu.techworks.client.screen;
 
 import io.github.ramboxeu.techworks.Techworks;
-import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry;
-import net.minecraft.client.gui.screen.ingame.ContainerScreen;
-import net.minecraft.container.Container;
+import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
+import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.screen.ScreenHandler;
 import net.minecraft.util.Identifier;
 
+// FIXME: This all has to be re-done
 public class TechworksScreens {
-    public static Identifier BOILER;
-    public static Identifier MACHINE_COMPONENTS;
-
-    private static <T extends Container> Identifier register(String name, Factory<T> factory) {
-        Identifier identifier = new Identifier(Techworks.MOD_ID, name);
-        ScreenProviderRegistry.INSTANCE.registerFactory(identifier, factory::create);
-
-        return identifier;
-    }
+//    private static <T extends ScreenHandler> HandledScreen<T> register(String name, Factory<T> factory) {
+////        Identifier identifier = new Identifier(Techworks.MOD_ID, name);
+////        ScreenRegistry.register(identifier, factory::create);
+////
+////        return identifier;
+//    }
 
     public static void registerAll() {
-        BOILER = register("boiler", BoilerScreen::new);
-        MACHINE_COMPONENTS = register("machine_components", MachineComponentsScreen::new);
+//        register("boiler", BoilerScreen::new);
+//        register("machine_components", MachineComponentsScreen::new);
     }
 
-    private interface Factory<T extends Container> {
-        ContainerScreen<T> create(T container);
+    private interface Factory<T extends ScreenHandler> {
+        HandledScreen<T> create(T container);
     }
 }

@@ -23,7 +23,7 @@ public class BasicFluidStorageComponent extends EventEmitter implements ICompone
     int amount;
     int counter;
 
-    public BasicFluidStorageComponent(IComponentList<?> list) {
+    public BasicFluidStorageComponent(IComponentList list) {
         super(Events.FLUID_STORAGE);
         fluid = Fluids.EMPTY;
         amount = 0;

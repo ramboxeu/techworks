@@ -15,11 +15,11 @@ public class ComponentItem<T extends IComponent> extends Item implements ICompon
     }
 
     @Override
-    public <T> IComponent create(IComponentList<T> list) {
+    public IComponent create(IComponentList list) {
         return this.factory.create(list);
     }
 
     public interface Factory<T extends IComponent> {
-        <U> T create(IComponentList<U> list);
+        T create(IComponentList list);
     }
 }

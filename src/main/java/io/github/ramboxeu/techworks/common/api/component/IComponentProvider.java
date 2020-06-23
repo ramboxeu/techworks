@@ -9,8 +9,7 @@ public interface IComponentProvider {
      * Creates new instance of component this provider provides.
      *
      * @param list The list component will be attached to
-     * @param <T> The type of list's container
      * @return New instance of component
      */
-    <T> IComponent create(IComponentList<T> list);
+    IComponent create(IComponentList list);
 }

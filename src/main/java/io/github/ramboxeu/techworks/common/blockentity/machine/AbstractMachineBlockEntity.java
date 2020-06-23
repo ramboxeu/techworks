@@ -1,6 +1,5 @@
 package io.github.ramboxeu.techworks.common.blockentity.machine;
 
-import com.sun.jna.platform.win32.WinGDI;
 import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.common.api.component.ComponentInventory;
 import io.github.ramboxeu.techworks.common.api.sync.EventEmitter;
@@ -11,9 +10,6 @@ import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.client.Keyboard;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.container.NameableContainerFactory;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
@@ -27,22 +23,21 @@ import net.minecraft.world.World;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbstractMachineBlockEntity<TEntity extends AbstractMachineBlockEntity<TEntity>> extends BlockEntity implements NameableContainerFactory, Tickable {
-    protected ComponentInventory<TEntity> componentList;
+public abstract class AbstractMachineBlockEntity extends BlockEntity implements Tickable {
+    protected ComponentInventory componentList;
     protected List<Widget> widgets;
 
     public AbstractMachineBlockEntity(BlockEntityType<?> type) {
         super(type);
         MachineryBuilder builder = new MachineryBuilder();
         buildMachinery(builder);
-        //noinspection unchecked
-        Pair<ComponentInventory<TEntity>, List<Widget>> pair = builder.build((TEntity) this);
+        Pair<ComponentInventory, List<Widget>> pair = builder.build(this);
         componentList = pair.getLeft();
         widgets = pair.getRight();
 
 
-        Techworks.LOG.info("ComponentInv: {}", componentList);
-        Techworks.LOG.info("Widgets: {}", widgets);
+//        Techworks.LOG.info("ComponentInv: {}", componentList);
+//        Techworks.LOG.info("Widgets: {}", widgets);
     }
 
     @Override
@@ -50,7 +45,7 @@ public abstract class AbstractMachineBlockEntity<TEntity extends AbstractMachine
         componentList.tick();
     }
 
-    public ComponentInventory<TEntity> getComponentList() {
+    public ComponentInventory getComponentList() {
         return componentList;
     }
 
@@ -58,7 +53,7 @@ public abstract class AbstractMachineBlockEntity<TEntity extends AbstractMachine
         return widgets;
     }
 
-    protected abstract void buildMachinery(MachineryBuilder machineryBuilder);
+    protected void buildMachinery(MachineryBuilder machineryBuilder) {}
 
     public ActionResult onActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (player.getMainHandStack().getItem().equals(TechworksItems.WRENCH)) {
@@ -70,7 +65,7 @@ public abstract class AbstractMachineBlockEntity<TEntity extends AbstractMachine
             ContainerProviderRegistry.INSTANCE.openContainer(TechworksContainers.BOILER, player, buf -> {
                 buf.writeBlockPos(pos);
                 int dataSize = (int) componentList.stream().filter(c -> c instanceof EventEmitter).count();
-                Techworks.LOG.info("Machine dataSize: {}", dataSize);
+//                Techworks.LOG.info("Machine dataSize: {}", dataSize);
                 buf.writeInt(dataSize);
             });
         }
@@ -104,8 +99,8 @@ public abstract class AbstractMachineBlockEntity<TEntity extends AbstractMachine
             return this;
         }
 
-        private <T extends BlockEntity> Pair<ComponentInventory<T>, List<Widget>> build(T container) {
-            ComponentInventory<T> inventory = new ComponentInventory<T>(container, slots.toArray(new ComponentInventory.Slot[0])) {
+        private <T extends BlockEntity> Pair<ComponentInventory, List<Widget>> build(T container) {
+            ComponentInventory inventory = new ComponentInventory(container, slots.toArray(new ComponentInventory.Slot[0])) {
                 @Override
                 protected void onContentsChanged() {
                     container.markDirty();

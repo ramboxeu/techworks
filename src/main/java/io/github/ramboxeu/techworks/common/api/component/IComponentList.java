@@ -4,7 +4,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-public interface IComponentList<T> {
+public interface IComponentList {
 //    /**
 //     * Adds a IComponent to the list. List can only hold one component of given type.
 //     * @param component component to add
@@ -23,7 +23,7 @@ public interface IComponentList<T> {
      * Return container for this list. It can be anything: Item, BlockEntity, Entity, etc.
      * @return container of this list
      */
-    T getContainer();
+    Object getContainer();
 
 //    /**
 //     * Retrieves item form list

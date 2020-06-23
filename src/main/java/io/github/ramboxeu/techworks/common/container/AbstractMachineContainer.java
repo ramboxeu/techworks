@@ -1,14 +1,12 @@
 package io.github.ramboxeu.techworks.common.container;
 
-import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.common.api.component.ComponentInventory;
+import io.github.ramboxeu.techworks.common.api.sync.Event;
 import io.github.ramboxeu.techworks.common.api.sync.EventEmitter;
 import io.github.ramboxeu.techworks.common.api.widget.Widget;
 import io.github.ramboxeu.techworks.common.blockentity.machine.AbstractMachineBlockEntity;
 import io.github.ramboxeu.techworks.common.network.NetworkManager;
 import io.github.ramboxeu.techworks.common.registry.TechworksRegistries;
-import net.minecraft.container.Container;
-import net.minecraft.container.PropertyDelegate;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
@@ -18,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public abstract class AbstractMachineContainer<T extends AbstractMachineBlockEntity<T>> extends Container {
+public abstract class AbstractMachineContainer<T extends AbstractMachineBlockEntity> extends ContainerBase {
 //    protected List<Integer> syncedValues;
 //    protected List<IAutoSyncable> syncableList;
 
@@ -31,7 +29,7 @@ public abstract class AbstractMachineContainer<T extends AbstractMachineBlockEnt
     private List<EventEmitter> emitters = new ArrayList<>();
 
     public AbstractMachineContainer(int syncId, PlayerInventory playerInventory, T blockEntity, int dataSize) {
-        super(null, syncId);
+        super(syncId);
         this.blockEntity = blockEntity;
         this.playerInventory = playerInventory;
 
@@ -75,7 +73,7 @@ public abstract class AbstractMachineContainer<T extends AbstractMachineBlockEnt
         return playerInventory;
     }
 
-    public ComponentInventory<T> getComponentInventory() {
+    public ComponentInventory getComponentInventory() {
         return this.blockEntity.getComponentList();
     }
 
@@ -113,8 +111,13 @@ public abstract class AbstractMachineContainer<T extends AbstractMachineBlockEnt
     }
 
     public void syncData(int dataId, Identifier eventId, CompoundTag tag) {
-        Techworks.LOG.info("Syncing #{}: {}", dataId, TechworksRegistries.EVENT.get(eventId).deserialize(tag));
-        data[dataId] = TechworksRegistries.EVENT.get(eventId).deserialize(tag);
+//        Techworks.LOG.info("Syncing #{}: {}", dataId, TechworksRegistries.EVENT.get(eventId).deserialize(tag));
+        Event event = TechworksRegistries.EVENT.get(eventId);
+        if (event == null) {
+            data[dataId] = null;
+        } else {
+            data[dataId] = event.deserialize(tag);
+        }
     }
 
     public void subscribeEmitters() {
@@ -128,7 +131,7 @@ public abstract class AbstractMachineContainer<T extends AbstractMachineBlockEnt
             EventEmitter emitter = emitters.get(i);
             int dataId = i;
             observerIds.add(emitter.subscribe(value -> {
-                Techworks.LOG.info("Value changed: {id={}, syncId={}, value={}}", dataId, syncId, emitter.getEvent().serialize(new CompoundTag(), value));
+//                Techworks.LOG.info("Value changed: {id={}, syncId={}, value={}}", dataId, syncId, emitter.getEvent().serialize(new CompoundTag(), value));
                 NetworkManager.sendToPlayer(playerInventory.player, NetworkManager.CONTAINER_DATA_SYNC, buf -> {
                         buf.writeByte(syncId);
                         buf.writeShort(dataId);

@@ -1,20 +1,21 @@
 package io.github.ramboxeu.techworks.common.api.widget;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.container.Container;
+import net.minecraft.screen.ScreenHandler;
 
 import java.util.Collections;
 import java.util.List;
 
-public abstract class Widget {
+public abstract class Widget extends DrawableHelper {
     protected int x;
     protected int y;
     protected int width;
     protected int height;
     protected Screen screen;
     protected MinecraftClient client;
-    protected Container container;
+    protected ScreenHandler container;
 
     public Widget(int x, int y, int width, int height) {
         this.x = x;
@@ -23,7 +24,7 @@ public abstract class Widget {
         this.height = height;
     }
 
-    public void render(int mouseX, int mouseY, Screen screen, MinecraftClient client, Container container) {
+    public void render(int mouseX, int mouseY, Screen screen, MinecraftClient client, ScreenHandler container) {
         if (this.screen == null || !this.screen.equals(screen)) {
             this.screen = screen;
         }

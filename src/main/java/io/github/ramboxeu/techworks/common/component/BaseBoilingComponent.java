@@ -8,10 +8,10 @@ import io.github.ramboxeu.techworks.common.api.sync.EventEmitter;
 import io.github.ramboxeu.techworks.common.registry.ComponentTypes;
 
 public abstract class BaseBoilingComponent implements IComponent {
-    private final IComponentList<?> componentList;
+    private final IComponentList componentList;
     private int counter;
 
-    public BaseBoilingComponent(IComponentList<?> componentList) {
+    public BaseBoilingComponent(IComponentList componentList) {
         this.componentList = componentList;
     }
 

@@ -1,13 +1,11 @@
 package io.github.ramboxeu.techworks.common.api.widget;
 
-import io.github.ramboxeu.techworks.common.container.AbstractMachineContainer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.container.Container;
+import net.minecraft.screen.ScreenHandler;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class GasTankWidget extends Widget {
     private int dataIndex;
@@ -19,16 +17,16 @@ public class GasTankWidget extends Widget {
     }
 
     @Override
-    public void render(int mouseX, int mouseY, Screen screen, MinecraftClient client, Container container) {
+    public void render(int mouseX, int mouseY, Screen screen, MinecraftClient client, ScreenHandler container) {
         super.render(mouseX, mouseY, screen, client, container);
 
-        client.textRenderer.draw(String.format("(%d, %d)", mouseX, mouseY), 0,0, 4210752);
-        Optional<Object> data = ((AbstractMachineContainer<?>) container).getData(dataIndex);
-        if (data.isPresent()) {
-            client.textRenderer.draw(String.format("%s", data.get()), 0, 10, 4210752);
-        } else {
-            client.textRenderer.draw("Gas Tank component not installed", 0, 10, 4210752);
-        }
+//        client.textRenderer.draw(String.format("(%d, %d)", mouseX, mouseY), 0,0, 4210752);
+//        Optional<Object> data = ((AbstractMachineContainer<?>) container).getData(dataIndex);
+//        if (data.isPresent()) {
+//            client.textRenderer.draw(String.format("%s", data.get()), 0, 10, 4210752);
+//        } else {
+//            client.textRenderer.draw("Gas Tank component not installed", 0, 10, 4210752);
+//        }
     }
 
     @Override

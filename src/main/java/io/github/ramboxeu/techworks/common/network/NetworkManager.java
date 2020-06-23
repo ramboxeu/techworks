@@ -6,11 +6,11 @@ import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.fabricmc.fabric.api.network.PacketConsumer;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
-import net.minecraft.container.Container;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.screen.ScreenHandler;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.PacketByteBuf;
 
 import java.util.function.Consumer;
 
@@ -32,7 +32,7 @@ public class NetworkManager {
 
     public static void registerAllS2C() {
         CONTAINER_DATA_SYNC = registerS2CPacket("container_data_sync", (packetContext, packetByteBuf) -> {
-            Container container = packetContext.getPlayer().container;
+            ScreenHandler container = packetContext.getPlayer().currentScreenHandler;
             int syncId = packetByteBuf.readUnsignedByte();
             int dataId = packetByteBuf.readShort();
             Identifier eventId = packetByteBuf.readIdentifier();

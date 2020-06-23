@@ -6,8 +6,8 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.util.DefaultedList;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.collection.DefaultedList;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,15 +17,14 @@ import java.util.stream.Stream;
 
 /**
  * Stores both ItemStacks of IComponent Items and IComponents itself. This should keep itself in sync.
- * @param <T> type of container this is attached to
  */
-public class ComponentInventory<T> implements Inventory, IComponentList<T> {
-    private T container;
+public class ComponentInventory implements Inventory, IComponentList {
+    private Object container;
     private DefaultedList<ItemStack> itemStacks;
     private List<IComponent> components;
     private Slot[] slots;
 
-    public ComponentInventory(T container, Slot ...slots) {
+    public ComponentInventory(Object container, Slot ...slots) {
         this.container = container;
         this.itemStacks = DefaultedList.ofSize(slots.length, ItemStack.EMPTY);
         this.components = DefaultedList.ofSize(slots.length, EmptyComponent.INSTANCE);
@@ -34,79 +33,109 @@ public class ComponentInventory<T> implements Inventory, IComponentList<T> {
 
     // IInventory
 
-    @Override
-    public int getInvSize() {
-        return itemStacks.size();
-    }
+//    @Override
+//    public int getInvSize() {
+//        return itemStacks.size();
+//    }
+//
+//    @Override
+//    public boolean isInvEmpty() {
+//        return itemStacks.isEmpty();
+//    }
+//
+//    @Override
+//    public ItemStack getInvStack(int slot) {
+//        return slot >= 0 && slot < itemStacks.size() ? itemStacks.get(slot) : ItemStack.EMPTY;
+//    }
+//
+//    @Override
+//    public ItemStack takeInvStack(int slot, int amount) {
+//        if (slot >= itemStacks.size() || slot < 0 || itemStacks.get(slot).isEmpty() || amount < 0) {
+//            return ItemStack.EMPTY;
+//        }
+//
+//        ItemStack existingStack = itemStacks.get(slot);
+//        ItemStack newStack = existingStack.split(amount);
+//
+//        if (existingStack.isEmpty()) {
+//            itemStacks.set(slot, ItemStack.EMPTY);
+//            components.set(slot, EmptyComponent.INSTANCE);
+//        }
+//        onContentsChanged();
+//
+//        return newStack;
+//    }
 
-    @Override
-    public boolean isInvEmpty() {
-        return itemStacks.isEmpty();
-    }
-
-    @Override
-    public ItemStack getInvStack(int slot) {
-        return slot >= 0 && slot < itemStacks.size() ? itemStacks.get(slot) : ItemStack.EMPTY;
-    }
-
-    @Override
-    public ItemStack takeInvStack(int slot, int amount) {
-        if (slot >= itemStacks.size() || slot < 0 || itemStacks.get(slot).isEmpty() || amount < 0) {
-            return ItemStack.EMPTY;
-        }
-
-        ItemStack existingStack = itemStacks.get(slot);
-        ItemStack newStack = existingStack.split(amount);
-
-        if (existingStack.isEmpty()) {
-            itemStacks.set(slot, ItemStack.EMPTY);
-            components.set(slot, EmptyComponent.INSTANCE);
-        }
-        onContentsChanged();
-
-        return newStack;
-    }
-
-    @Override
-    public ItemStack removeInvStack(int slot) {
-        if (slot < 0 || slot >= itemStacks.size()) {
-            return ItemStack.EMPTY;
-        }
-
-        ItemStack itemStack = itemStacks.get(slot);
-
-        if (itemStack.isEmpty()) {
-            return ItemStack.EMPTY;
-        } else {
-            itemStacks.set(slot, ItemStack.EMPTY);
-            components.set(slot, EmptyComponent.INSTANCE);
-            onContentsChanged();
-            return itemStack;
-        }
-    }
+//    @Override
+//    public ItemStack removeInvStack(int slot) {
+//        if (slot < 0 || slot >= itemStacks.size()) {
+//            return ItemStack.EMPTY;
+//        }
+//
+//        ItemStack itemStack = itemStacks.get(slot);
+//
+//        if (itemStack.isEmpty()) {
+//            return ItemStack.EMPTY;
+//        } else {
+//            itemStacks.set(slot, ItemStack.EMPTY);
+//            components.set(slot, EmptyComponent.INSTANCE);
+//            onContentsChanged();
+//            return itemStack;
+//        }
+//    }
 
     // This does void items that aren't providers and mismatched types
     // Empty stacks will work
+//    @Override
+//    public void setInvStack(int slot, ItemStack stack) {
+//        if (itemStacks.get(slot).equals(stack)) {
+//            return;
+//        }
+//
+//        if (stack.isEmpty()) {
+//            itemStacks.set(slot, stack);
+//            components.set(slot, EmptyComponent.INSTANCE);
+//        }
+//
+//        if (stack.getItem() instanceof IComponentProvider) {
+//            IComponentProvider provider = (IComponentProvider)stack.getItem();
+//            IComponent component = provider.create(this);
+//            if (component.getType().equals(slots[slot].type)) {
+//                itemStacks.set(slot, stack);
+//                components.set(slot, provider.create(this));
+//                onContentsChanged();
+//            }
+//        }
+//    }
+
     @Override
-    public void setInvStack(int slot, ItemStack stack) {
-        if (itemStacks.get(slot).equals(stack)) {
-            return;
-        }
+    public int size() {
+        return 0;
+    }
 
-        if (stack.isEmpty()) {
-            itemStacks.set(slot, stack);
-            components.set(slot, EmptyComponent.INSTANCE);
-        }
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
 
-        if (stack.getItem() instanceof IComponentProvider) {
-            IComponentProvider provider = (IComponentProvider)stack.getItem();
-            IComponent component = provider.create(this);
-            if (component.getType().equals(slots[slot].type)) {
-                itemStacks.set(slot, stack);
-                components.set(slot, provider.create(this));
-                onContentsChanged();
-            }
-        }
+    @Override
+    public ItemStack getStack(int slot) {
+        return null;
+    }
+
+    @Override
+    public ItemStack removeStack(int slot, int amount) {
+        return null;
+    }
+
+    @Override
+    public ItemStack removeStack(int slot) {
+        return null;
+    }
+
+    @Override
+    public void setStack(int slot, ItemStack stack) {
+
     }
 
     @Override
@@ -115,9 +144,14 @@ public class ComponentInventory<T> implements Inventory, IComponentList<T> {
     }
 
     @Override
-    public boolean canPlayerUseInv(PlayerEntity player) {
+    public boolean canPlayerUse(PlayerEntity player) {
         return false;
     }
+
+//    @Override
+//    public boolean canPlayerUseInv(PlayerEntity player) {
+//        return false;
+//    }
 
     protected void onContentsChanged(){}
 
@@ -127,29 +161,29 @@ public class ComponentInventory<T> implements Inventory, IComponentList<T> {
         components.clear();
     }
 
-    @Override
-    public boolean isValidInvStack(int index, ItemStack stack) {
-        if (index < 0 || index >= itemStacks.size()) {
-            return false;
-        }
-
-        if (stack.getItem() instanceof IComponentProvider) {
-            Slot slot = slots[index];
-            IComponent component = ((IComponentProvider) stack.getItem()).create(this);
-
-            if (slot.hasPredicate) {
-                if(slot.predicate.test(stack, component)) {
-                    return true;
-                } else {
-                    return component.getType().equals(slot.type);
-                }
-            } else {
-                return component.getType().equals(slot.type);
-            }
-        }
-
-        return false;
-    }
+//    @Override
+//    public boolean isValidInvStack(int index, ItemStack stack) {
+//        if (index < 0 || index >= itemStacks.size()) {
+//            return false;
+//        }
+//
+//        if (stack.getItem() instanceof IComponentProvider) {
+//            Slot slot = slots[index];
+//            IComponent component = ((IComponentProvider) stack.getItem()).create(this);
+//
+//            if (slot.hasPredicate) {
+//                if(slot.predicate.test(stack, component)) {
+//                    return true;
+//                } else {
+//                    return component.getType().equals(slot.type);
+//                }
+//            } else {
+//                return component.getType().equals(slot.type);
+//            }
+//        }
+//
+//        return false;
+//    }
 
     //    // Utils
 //    private boolean containsType(ComponentType type) {
@@ -242,7 +276,7 @@ public class ComponentInventory<T> implements Inventory, IComponentList<T> {
     }
 
     @Override
-    public T getContainer() {
+    public Object getContainer() {
         return container;
     }
 

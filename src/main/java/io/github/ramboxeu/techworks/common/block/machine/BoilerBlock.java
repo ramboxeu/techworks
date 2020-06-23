@@ -25,8 +25,8 @@ public class BoilerBlock extends AbstractMachineBlock {
         return TechworksBlockEntities.BOILER.instantiate();
     }
 
-    @Override
-    public void onBlockRemoved(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-        world.removeBlockEntity(pos);
-    }
+//    @Override
+//    public void onBlockRemoved(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+//        world.removeBlockEntity(pos);
+//    }
 }
