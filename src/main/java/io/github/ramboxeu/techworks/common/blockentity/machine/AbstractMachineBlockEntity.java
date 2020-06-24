@@ -7,10 +7,15 @@ import io.github.ramboxeu.techworks.common.api.widget.Widget;
 import io.github.ramboxeu.techworks.common.registry.TechworksContainers;
 import io.github.ramboxeu.techworks.common.registry.TechworksItems;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -56,19 +61,29 @@ public abstract class AbstractMachineBlockEntity extends BlockEntity implements 
     protected void buildMachinery(MachineryBuilder machineryBuilder) {}
 
     public ActionResult onActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (player.getMainHandStack().getItem().equals(TechworksItems.WRENCH)) {
-            ContainerProviderRegistry.INSTANCE.openContainer(TechworksContainers.MACHINE_COMPONENTS, player, buf -> {
-                buf.writeBlockPos(pos);
-                buf.writeInt(0);
-            });
-        } else {
-            ContainerProviderRegistry.INSTANCE.openContainer(TechworksContainers.BOILER, player, buf -> {
-                buf.writeBlockPos(pos);
-                int dataSize = (int) componentList.stream().filter(c -> c instanceof EventEmitter).count();
-//                Techworks.LOG.info("Machine dataSize: {}", dataSize);
-                buf.writeInt(dataSize);
-            });
-        }
+        // Is this stupid? Yes
+        // I have to fix it later
+//        player.openHandledScreen(new ExtendedScreenHandlerFactory() {
+//            @Override
+//            public void writeScreenOpeningData(ServerPlayerEntity serverPlayerEntity, PacketByteBuf packetByteBuf) {
+//
+//            }
+//
+//            @Override
+//            public Text getDisplayName() {
+//                return null;
+//            }
+//
+//            @Override
+//            public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
+//                return null;
+//            }
+//        }(syncId, playerInventory, packetByteBuf) -> {
+//            BlockEntity blockEntity = playerInventory.world.getBlockEntity(packetByteBuf.readBlockPos());
+//            int dataSize = packetByteBuf.readInt();
+//
+//            return TechworksContainers.BOILER.create(syncId, playerInventory, blockEntity, dataSize);
+//        });
         return ActionResult.CONSUME;
     }
 

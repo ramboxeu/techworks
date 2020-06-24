@@ -91,12 +91,12 @@ public class MachineComponentsContainer extends ScreenHandler {
         return name;
     }
 
-    public static MachineComponentsContainer factory(int syncId, Identifier identifier, PlayerEntity playerEntity, PacketByteBuf packetByteBuf) {
-        BlockEntity blockEntity = playerEntity.world.getBlockEntity(packetByteBuf.readBlockPos());
+    public static MachineComponentsContainer factory(int syncId, PlayerInventory inventory, PacketByteBuf packetByteBuf) {
+        BlockEntity blockEntity = inventory.player.world.getBlockEntity(packetByteBuf.readBlockPos());
 
         if (blockEntity instanceof AbstractMachineBlockEntity) {
             AbstractMachineBlockEntity machine = (AbstractMachineBlockEntity)blockEntity;
-            return new MachineComponentsContainer(syncId, playerEntity.inventory, machine, machine.getComponentsContainerName());
+            return new MachineComponentsContainer(syncId, inventory, machine, machine.getComponentsContainerName());
         }
 
         return null;

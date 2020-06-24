@@ -1,6 +1,8 @@
 package io.github.ramboxeu.techworks.client.screen;
 
 import io.github.ramboxeu.techworks.Techworks;
+import io.github.ramboxeu.techworks.common.container.machine.BoilerContainer;
+import io.github.ramboxeu.techworks.common.registry.TechworksContainers;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.screen.ScreenHandler;
@@ -16,8 +18,7 @@ public class TechworksScreens {
 //    }
 
     public static void registerAll() {
-//        register("boiler", BoilerScreen::new);
-//        register("machine_components", MachineComponentsScreen::new);
+        ScreenRegistry.<BoilerContainer, BoilerScreen>register(TechworksContainers.BOILER, (handler, inventory, title) -> new BoilerScreen(handler));
     }
 
     private interface Factory<T extends ScreenHandler> {

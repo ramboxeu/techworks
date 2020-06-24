@@ -42,7 +42,7 @@ public class NetworkManager {
                 Techworks.LOG.info("Received container data sync: {} {} {}", syncId, dataId, tag);
 
                 if (container.syncId == syncId && container instanceof AbstractMachineContainer<?>) {
-                    ((AbstractMachineContainer<?>) container).syncData(dataId, eventId, tag);
+//                    ((AbstractMachineContainer<?>) container).syncData(dataId, eventId, tag);
                 }
             });
         });

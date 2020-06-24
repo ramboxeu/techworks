@@ -11,19 +11,19 @@ public class ContainerManager {
     private static final Map<ServerPlayerEntity, Optional<AbstractMachineContainer<?>>> containers = new HashMap<>();
 
     public static void onContainerOpen(AbstractMachineContainer<?> container, ServerPlayerEntity player) {
-        if (containers.containsKey(player)) {
-            containers.get(player).ifPresent(AbstractMachineContainer::unsubscribeEmitters);
-        }
-
-        containers.put(player, Optional.of(container));
-        container.subscribeEmitters();
+//        if (containers.containsKey(player)) {
+//            containers.get(player).ifPresent(AbstractMachineContainer::unsubscribeEmitters);
+//        }
+//
+//        containers.put(player, Optional.of(container));
+//        container.subscribeEmitters();
     }
 
     public static void onContainerClose(AbstractMachineContainer<?> container, ServerPlayerEntity player) {
-        if (containers.containsKey(player)) {
-            containers.get(player).ifPresent(AbstractMachineContainer::unsubscribeEmitters);
-        }
-
-        containers.put(player, Optional.empty());
+//        if (containers.containsKey(player)) {
+//            containers.get(player).ifPresent(AbstractMachineContainer::unsubscribeEmitters);
+//        }
+//
+//        containers.put(player, Optional.empty());
     }
 }

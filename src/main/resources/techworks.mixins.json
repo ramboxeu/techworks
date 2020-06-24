@@ -4,8 +4,7 @@
   "package": "io.github.ramboxeu.techworks.common.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "ServerPlayerEntityMixin",
-    ""
+    "ServerPlayerEntityMixin"
   ],
   "client": [],
   "injectors": {

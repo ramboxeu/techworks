@@ -22,6 +22,10 @@ public abstract class EventEmitter {
         observers.remove(id);
     }
 
+    public void unsubscribe(Observer id) {
+        observers.remove(id);
+    }
+
     protected void updateAll(Object value) {
         observers.forEach(observer -> observer.update(value));
     }

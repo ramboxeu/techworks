@@ -3,15 +3,19 @@ package io.github.ramboxeu.techworks.common.blockentity.machine;
 import io.github.ramboxeu.techworks.client.widget.FluidTankWidget;
 import io.github.ramboxeu.techworks.common.api.component.ComponentInventory;
 import io.github.ramboxeu.techworks.common.api.widget.GasTankWidget;
+import io.github.ramboxeu.techworks.common.container.ExtendedScreenHandlerProvider;
+import io.github.ramboxeu.techworks.common.container.machine.BoilerContainer;
 import io.github.ramboxeu.techworks.common.registry.ComponentTypes;
 import io.github.ramboxeu.techworks.common.registry.TechworksBlockEntities;
-import io.github.ramboxeu.techworks.common.registry.TechworksItems;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
@@ -20,7 +24,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class BoilerBlockEntity extends AbstractMachineBlockEntity {
+public class BoilerBlockEntity extends AbstractMachineBlockEntity implements ExtendedScreenHandlerProvider {
     private int lastSlot = 0;
 
     public BoilerBlockEntity() {
@@ -67,11 +71,34 @@ public class BoilerBlockEntity extends AbstractMachineBlockEntity {
 //            return ActionResult.SUCCESS;
 //        }
 
+        player.openHandledScreen(createMenu(state, world, pos));
+
         return super.onActivated(state, world, pos, player, hand, hit);
     }
 
     @Override
     public Text getComponentsContainerName() {
         return new TranslatableText("container.techworks.boiler_components");
+    }
+
+    @Override
+    public ExtendedScreenHandlerFactory createMenu(BlockState state, World world, BlockPos pos) {
+        return new ExtendedScreenHandlerFactory() {
+            @Override
+            public void writeScreenOpeningData(ServerPlayerEntity serverPlayerEntity, PacketByteBuf packetByteBuf) {
+                packetByteBuf.writeBlockPos(pos);
+                packetByteBuf.writeInt(4);
+            }
+
+            @Override
+            public Text getDisplayName() {
+                return new LiteralText("bruh");
+            }
+
+            @Override
+            public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
+                return new BoilerContainer(syncId, inv, BoilerBlockEntity.this, 4);
+            }
+        };
     }
 }

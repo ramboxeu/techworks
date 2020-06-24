@@ -4,6 +4,7 @@ import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.client.screen.BoilerScreen;
 import io.github.ramboxeu.techworks.common.blockentity.machine.AbstractMachineBlockEntity;
 import io.github.ramboxeu.techworks.common.blockstate.TechworksBlockStateProperties;
+import io.github.ramboxeu.techworks.common.container.ExtendedScreenHandlerProvider;
 import io.github.ramboxeu.techworks.common.container.machine.BoilerContainer;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.minecraft.block.*;
@@ -58,16 +59,12 @@ public abstract class AbstractMachineBlock extends Block implements BlockEntityP
 
     @Override
     public NamedScreenHandlerFactory createScreenHandlerFactory(BlockState state, World world, BlockPos pos) {
-        return new NamedScreenHandlerFactory() {
-            @Override
-            public Text getDisplayName() {
-                return new LiteralText("burh burh burh");
-            }
+        BlockEntity blockEntity = world.getBlockEntity(pos);
 
-            @Override
-            public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-                return null;
-            }
-        };
+        if (blockEntity instanceof ExtendedScreenHandlerProvider) {
+            return ((ExtendedScreenHandlerProvider) blockEntity).createMenu(state, world, pos);
+        } else {
+            return null;
+        }
     }
 }
