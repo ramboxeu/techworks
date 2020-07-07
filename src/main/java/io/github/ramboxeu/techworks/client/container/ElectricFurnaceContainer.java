@@ -1,7 +1,7 @@
 package io.github.ramboxeu.techworks.client.container;
 
 import io.github.ramboxeu.techworks.common.registration.Registration;
-import io.github.ramboxeu.techworks.common.tile.AbstractMachineTile;
+import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
 import io.github.ramboxeu.techworks.common.util.PredicateUtils;
 import io.github.ramboxeu.techworks.common.util.inventory.InventoryBuilder;
 import io.github.ramboxeu.techworks.common.util.inventory.SlotBuilder;
@@ -15,32 +15,32 @@ public class ElectricFurnaceContainer extends AbstractMachineContainer {
     private int workTime;
     private int workCounter;
 
-    public ElectricFurnaceContainer(int id, PlayerInventory playerInventory, AbstractMachineTile machineTile) {
+    public ElectricFurnaceContainer(int id, PlayerInventory playerInventory, BaseMachineTile machineTile) {
         super(Registration.ELECTRIC_FURNACE_CONTAINER.get(), id, playerInventory, machineTile);
 
-        this.trackInt(new IntReferenceHolder() {
-            @Override
-            public int get() {
-                return machineTile.getOperationTime();
-            }
-
-            @Override
-            public void set(int time) {
-                workTime = time;
-            }
-        });
-
-        this.trackInt(new IntReferenceHolder() {
-            @Override
-            public int get() {
-                return machineTile.getTimeCounter();
-            }
-
-            @Override
-            public void set(int counter) {
-                workCounter = counter;
-            }
-        });
+//        this.trackInt(new IntReferenceHolder() {
+//            @Override
+//            public int get() {
+//                return machineTile.getOperationTime();
+//            }
+//
+//            @Override
+//            public void set(int time) {
+//                workTime = time;
+//            }
+//        });
+//
+//        this.trackInt(new IntReferenceHolder() {
+//            @Override
+//            public int get() {
+//                return machineTile.getTimeCounter();
+//            }
+//
+//            @Override
+//            public void set(int counter) {
+//                workCounter = counter;
+//            }
+//        });
     }
 
     @Override

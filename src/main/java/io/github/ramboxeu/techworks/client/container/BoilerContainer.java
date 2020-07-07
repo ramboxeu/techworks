@@ -1,8 +1,8 @@
 package io.github.ramboxeu.techworks.client.container;
 
 import io.github.ramboxeu.techworks.common.registration.Registration;
-import io.github.ramboxeu.techworks.common.tile.AbstractMachineTile;
-import io.github.ramboxeu.techworks.common.tile.BoilerTile;
+import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
+import io.github.ramboxeu.techworks.common.tile.machine.BoilerTile;
 import io.github.ramboxeu.techworks.common.util.PredicateUtils;
 import io.github.ramboxeu.techworks.common.util.inventory.InventoryBuilder;
 import io.github.ramboxeu.techworks.common.util.inventory.SlotBuilder;
@@ -18,7 +18,7 @@ public class BoilerContainer extends AbstractMachineContainer {
     private int cookTime;
     private int burnTime;
 
-    public BoilerContainer(int id, PlayerInventory playerInventory, AbstractMachineTile tile) {
+    public BoilerContainer(int id, PlayerInventory playerInventory, BaseMachineTile tile) {
         super(Registration.BOILER_CONTAINER.get(), id, playerInventory, tile);
 
         this.trackInt(new IntReferenceHolder() {

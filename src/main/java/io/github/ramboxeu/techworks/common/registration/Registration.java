@@ -22,6 +22,10 @@ import io.github.ramboxeu.techworks.common.item.GroundItem;
 import io.github.ramboxeu.techworks.common.recipe.ElectricGrinderRecipe;
 import io.github.ramboxeu.techworks.common.tile.*;
 import io.github.ramboxeu.techworks.common.tile.cable.BasicGasPipeTile;
+import io.github.ramboxeu.techworks.common.tile.machine.BoilerTile;
+import io.github.ramboxeu.techworks.common.tile.machine.ElectricFurnaceTile;
+import io.github.ramboxeu.techworks.common.tile.machine.ElectricGrinderTile;
+import io.github.ramboxeu.techworks.common.tile.machine.SteamEngineTile;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
@@ -93,8 +97,8 @@ public class Registration {
     public static final IRecipeSerializer<ElectricGrinderRecipe> GRINDING_RECIPE_SERIALIZER = IRecipeSerializer.register("techworks:grinding", new ElectricGrinderRecipe.Serializer());
 
     // TODO: Make this NullPointerException safe
-    private static AbstractMachineTile getTileFromPacketBuffer(PacketBuffer buffer) {
-        return (AbstractMachineTile) Minecraft.getInstance().world.getTileEntity(buffer.readBlockPos());
+    private static BaseMachineTile getTileFromPacketBuffer(PacketBuffer buffer) {
+        return (BaseMachineTile) Minecraft.getInstance().world.getTileEntity(buffer.readBlockPos());
     }
 
     public static void registerScreens(){

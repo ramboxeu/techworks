@@ -1,5 +1,6 @@
 package io.github.ramboxeu.techworks.common.block;
 
+import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
@@ -49,8 +50,18 @@ public abstract class AbstractMachineBlock extends Block {
 
     @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult rayTraceResult) {
+        TileEntity tileEntity = worldIn.getTileEntity(pos);
+
+        if (tileEntity instanceof BaseMachineTile) {
+            ActionResultType result = ((BaseMachineTile) tileEntity).onRightClick(state, worldIn, pos, player, handIn, rayTraceResult);
+
+            if (result != ActionResultType.PASS) {
+                return result;
+            }
+        }
+
         if (!worldIn.isRemote) {
-            TileEntity tileEntity = worldIn.getTileEntity(pos);
+
             if (tileEntity instanceof INamedContainerProvider) {
                 NetworkHooks.openGui((ServerPlayerEntity) player, (INamedContainerProvider) tileEntity, tileEntity.getPos());
             } else {

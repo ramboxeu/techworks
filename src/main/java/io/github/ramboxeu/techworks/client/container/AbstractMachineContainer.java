@@ -3,7 +3,7 @@ package io.github.ramboxeu.techworks.client.container;
 import io.github.ramboxeu.techworks.api.gas.CapabilityGas;
 import io.github.ramboxeu.techworks.api.gas.GasHandler;
 import io.github.ramboxeu.techworks.api.gas.IGasHandler;
-import io.github.ramboxeu.techworks.common.tile.AbstractMachineTile;
+import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
 import io.github.ramboxeu.techworks.common.util.inventory.InventoryBuilder;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -28,61 +28,61 @@ public abstract class AbstractMachineContainer extends Container {
     protected IItemHandler playerInventory;
     private LazyOptional<IItemHandler> inventory;
     private InventoryBuilder builder;
-    protected AbstractMachineTile machineTile;
+    protected BaseMachineTile machineTile;
     private int energy;
 
-    protected AbstractMachineContainer(@Nullable ContainerType<?> containerType, int id, PlayerInventory playerInventory, AbstractMachineTile machineTile) {
+    protected AbstractMachineContainer(@Nullable ContainerType<?> containerType, int id, PlayerInventory playerInventory, BaseMachineTile machineTile) {
         super(containerType, id);
 
         this.playerInventory = new InvWrapper(playerInventory);
         this.inventory = machineTile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
 
-        if (machineTile.hasFluidHandler()) {
-            this.trackInt(new IntReferenceHolder() {
-                @Override
-                public int get() {
-                    return getFluid().getAmount();
-                }
-
-                @Override
-                public void set(int amount) {
-                    machineTile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).ifPresent(fluidHandler -> {
-                        ((FluidTank) fluidHandler).setFluid(new FluidStack(Fluids.WATER, amount));
-                    });
-                }
-            });
-        }
-
-        if (machineTile.hasGasHandler()) {
-            this.trackInt(new IntReferenceHolder() {
-                @Override
-                public int get() {
-                    return getGas();
-                }
-
-                @Override
-                public void set(int amount) {
-                    machineTile.getCapability(CapabilityGas.GAS).ifPresent(gasHandler -> {
-                        ((GasHandler) gasHandler).setAmountStored(amount);
-                    });
-                }
-            });
-        }
-
-        if (machineTile.hasEnergyStorage()) {
-            this.trackInt(new IntReferenceHolder() {
-                @Override
-                public int get() {
-                    energy = machineTile.getCapability(CapabilityEnergy.ENERGY).map(IEnergyStorage::getEnergyStored).orElse(0);
-                    return energy;
-                }
-
-                @Override
-                public void set(int e) {
-                    energy = e;
-                }
-            });
-        }
+//        if (machineTile.hasFluidHandler()) {
+//            this.trackInt(new IntReferenceHolder() {
+//                @Override
+//                public int get() {
+//                    return getFluid().getAmount();
+//                }
+//
+//                @Override
+//                public void set(int amount) {
+//                    machineTile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).ifPresent(fluidHandler -> {
+//                        ((FluidTank) fluidHandler).setFluid(new FluidStack(Fluids.WATER, amount));
+//                    });
+//                }
+//            });
+//        }
+//
+//        if (machineTile.hasGasHandler()) {
+//            this.trackInt(new IntReferenceHolder() {
+//                @Override
+//                public int get() {
+//                    return getGas();
+//                }
+//
+//                @Override
+//                public void set(int amount) {
+//                    machineTile.getCapability(CapabilityGas.GAS).ifPresent(gasHandler -> {
+//                        ((GasHandler) gasHandler).setAmountStored(amount);
+//                    });
+//                }
+//            });
+//        }
+//
+//        if (machineTile.hasEnergyStorage()) {
+//            this.trackInt(new IntReferenceHolder() {
+//                @Override
+//                public int get() {
+//                    energy = machineTile.getCapability(CapabilityEnergy.ENERGY).map(IEnergyStorage::getEnergyStored).orElse(0);
+//                    return energy;
+//                }
+//
+//                @Override
+//                public void set(int e) {
+//                    energy = e;
+//                }
+//            });
+//        }
 
         this.builder = new InventoryBuilder();
 

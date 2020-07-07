@@ -1,6 +1,6 @@
 package io.github.ramboxeu.techworks.common.block;
 
-import io.github.ramboxeu.techworks.common.tile.ElectricFurnaceTile;
+import io.github.ramboxeu.techworks.common.tile.machine.ElectricFurnaceTile;
 import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockReader;

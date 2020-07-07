@@ -1,5 +1,6 @@
 package io.github.ramboxeu.techworks.api.component.base;
 
+import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.api.component.ComponentItem;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
@@ -14,7 +15,7 @@ public class BaseBoilingComponent extends ComponentItem {
     private int level;
 
     public BaseBoilingComponent(int level, int maxDamage) {
-        super(new Properties().maxStackSize(1).maxDamage(maxDamage));
+        super(new Properties().maxStackSize(1).maxDamage(maxDamage).group(Techworks.ITEM_GROUP));
 
         this.level = level;
     }

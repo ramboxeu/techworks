@@ -1,6 +1,6 @@
 package io.github.ramboxeu.techworks.client.container;
 import io.github.ramboxeu.techworks.common.registration.Registration;
-import io.github.ramboxeu.techworks.common.tile.AbstractMachineTile;
+import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
 import io.github.ramboxeu.techworks.common.util.PredicateUtils;
 import io.github.ramboxeu.techworks.common.util.inventory.InventoryBuilder;
 import io.github.ramboxeu.techworks.common.util.inventory.SlotBuilder;
@@ -10,7 +10,7 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 
 public class SteamEngineContainer extends AbstractMachineContainer {
-    public SteamEngineContainer(int id, PlayerInventory playerInventory, AbstractMachineTile machineTile) {
+    public SteamEngineContainer(int id, PlayerInventory playerInventory, BaseMachineTile machineTile) {
         super(Registration.STEAM_ENGINE_CONTAINER.get(), id, playerInventory, machineTile);
     }
 
