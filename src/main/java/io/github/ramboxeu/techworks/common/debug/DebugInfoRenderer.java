@@ -32,7 +32,7 @@ public class DebugInfoRenderer {
                 if (result.getType() == RayTraceResult.Type.BLOCK) {
                     if (cachedPos.compareTo(result.getPos()) != 0) {
                         cachedPos = result.getPos();
-                        TechworkPacketHandler.sentDebugRequestPacket(new DebugRequestPacket(cachedPos, world.dimension.getType()));
+//                        TechworkPacketHandler.sentDebugRequestPacket(new DebugRequestPacket(cachedPos, world.dimension.getType()));
                     }
 
                     BlockState state = world.getBlockState(result.getPos());
@@ -51,17 +51,17 @@ public class DebugInfoRenderer {
                     int y = 10;
                     int i = 9;
                     int color = new Color(0, 0, 0, 255).getRGB();
-                    font.drawString("Debugging " + builder.getTitle() + ":", x, y, color);
+//                    font.drawString("Debugging " + builder.getTitle() + ":", x, y, color);
 
                     if (serverSideSections != null) {
                         builder.getSections().addAll(serverSideSections);
                     }
 
                     for (DebugInfoBuilder.Section section : builder.getSections()) {
-                        font.drawString("- " + section.getName(), x + 5, y + i, color);
+//                        font.drawString("- " + section.getName(), x + 5, y + i, color);
                         for (String line : section.getLines()) {
                             i += 9;
-                            font.drawString(line, x + 10, y + i, color);
+//                            font.drawString(line, x + 10, y + i, color);
                         }
                         i += 9;
                     }

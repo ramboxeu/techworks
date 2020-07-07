@@ -10,6 +10,7 @@ import io.github.ramboxeu.techworks.common.util.capability.EnergyWrapper;
 import io.github.ramboxeu.techworks.common.util.capability.FluidWrapper;
 import io.github.ramboxeu.techworks.common.util.capability.GasWrapper;
 import io.github.ramboxeu.techworks.common.util.capability.InventoryWrapper;
+import net.minecraft.block.BlockState;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
@@ -136,16 +137,29 @@ public abstract class AbstractMachineTile extends TileEntity implements ITickabl
         return false;
     }
 
-    @Override
+//    @Override
+//    @SuppressWarnings("unchecked")
+//    public void read(CompoundNBT compound) {
+//        this.inventory.ifPresent(itemHandler -> ((INBTSerializable<CompoundNBT>) itemHandler).deserializeNBT(compound.getCompound("Inventory")));
+//        this.energyStorage.ifPresent(energyStorage -> CapabilityEnergy.ENERGY.readNBT(energyStorage, null, compound.get("Energy")));
+//        this.fluidHandler.ifPresent(fluidHandler -> CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.readNBT(fluidHandler, null, compound.getCompound("FluidTank")));
+//        this.gasHandler.ifPresent(gasHandler -> CapabilityGas.GAS.readNBT(gasHandler, null, compound.getCompound("GasHandler")));
+//        this.timeCounter = compound.getInt("counter");
+//
+//        super.read(compound);
+//    }
+
+
     @SuppressWarnings("unchecked")
-    public void read(CompoundNBT compound) {
+    @Override
+    // a.k.a read from NBT
+    public void func_230337_a_(BlockState state, CompoundNBT compound) {
         this.inventory.ifPresent(itemHandler -> ((INBTSerializable<CompoundNBT>) itemHandler).deserializeNBT(compound.getCompound("Inventory")));
         this.energyStorage.ifPresent(energyStorage -> CapabilityEnergy.ENERGY.readNBT(energyStorage, null, compound.get("Energy")));
         this.fluidHandler.ifPresent(fluidHandler -> CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.readNBT(fluidHandler, null, compound.getCompound("FluidTank")));
         this.gasHandler.ifPresent(gasHandler -> CapabilityGas.GAS.readNBT(gasHandler, null, compound.getCompound("GasHandler")));
         this.timeCounter = compound.getInt("counter");
-
-        super.read(compound);
+        super.func_230337_a_(state, compound);
     }
 
     @Override
@@ -166,6 +180,7 @@ public abstract class AbstractMachineTile extends TileEntity implements ITickabl
         return this.getCapability(cap, side, null);
     }
 
+    // TODO: Remove
     /*
         Null mode assumes that capability is requested for Vanilla-like behaviour and will be wrapped to prevent unwanted behaviour, eg. inputting to output
     */

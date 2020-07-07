@@ -8,6 +8,7 @@ import io.github.ramboxeu.techworks.common.network.CableSyncShapePacket;
 import io.github.ramboxeu.techworks.common.network.TechworkPacketHandler;
 import io.github.ramboxeu.techworks.common.util.CableConnections;
 import io.github.ramboxeu.techworks.common.util.NBTUtils;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
@@ -97,9 +98,17 @@ public abstract class AbstractCableTile<THandler> extends TileEntity implements 
         }
     }
 
+//    @Override
+//    public void read(CompoundNBT compound) {
+//        super.read(compound);
+//        this.connections = NBTUtils.readCableConnections(compound.getCompound("cableConnections"));
+//        handler.ifPresent(h -> capability.readNBT(h, Direction.NORTH, compound.getCompound("storage")));
+//    }
+
+
     @Override
-    public void read(CompoundNBT compound) {
-        super.read(compound);
+    public void func_230337_a_(BlockState p_230337_1_, CompoundNBT compound) {
+        super.func_230337_a_(p_230337_1_, compound);
         this.connections = NBTUtils.readCableConnections(compound.getCompound("cableConnections"));
         handler.ifPresent(h -> capability.readNBT(h, Direction.NORTH, compound.getCompound("storage")));
     }
@@ -116,7 +125,7 @@ public abstract class AbstractCableTile<THandler> extends TileEntity implements 
     public IModelData getModelData() {
         if (world.isRemote && !synced) {
             synced = true;
-            TechworkPacketHandler.sendRequestCableSyncPacket(new CableRequestSyncShapePacket(this.pos, this.world.dimension.getType()));
+//            TechworkPacketHandler.sendRequestCableSyncPacket(new CableRequestSyncShapePacket(this.pos, this.world.dimension.getType()));
         }
         return new ModelDataMap.Builder().withInitial(TechworksModelData.PIPE_CONNECTIONS, connections).build();
     }
@@ -164,7 +173,7 @@ public abstract class AbstractCableTile<THandler> extends TileEntity implements 
     public void addDebugInfo(DebugInfoBuilder builder) {
         DebugInfoBuilder.Section connections = new DebugInfoBuilder.Section("Connections");
 
-        this.connections.getAsMap().forEach((direction, value) -> connections.line(direction.getName() + ": " + value));
+//        this.connections.getAsMap().forEach((direction, value) -> connections.line(direction.getName() + ": " + value));
         builder.addSection(connections);
 
         DebugInfoBuilder.Section inputs = new DebugInfoBuilder.Section("Inputs");

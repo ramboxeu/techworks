@@ -9,6 +9,7 @@ import io.github.ramboxeu.techworks.common.capability.extensions.IInventoryItemS
 import io.github.ramboxeu.techworks.common.property.TechworksBlockStateProperties;
 import io.github.ramboxeu.techworks.common.registration.Registration;
 import io.github.ramboxeu.techworks.common.util.PredicateUtils;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.fluid.Fluids;
@@ -117,14 +118,24 @@ public class BoilerTile extends AbstractMachineTile {
         return true;
     }
 
+//    @Override
+//    public void (CompoundNBT compound) {
+//        counter = compound.getInt("counter");
+//        cookTime = compound.getInt("cookTime");
+//        cachedBurnTime = compound.getInt("cachedBurnTime");
+//        isBurning = compound.getBoolean("isBurning");
+//
+//        super.read(compound);
+//    }
+
+
     @Override
-    public void read(CompoundNBT compound) {
+    public void func_230337_a_(BlockState state, CompoundNBT compound) {
         counter = compound.getInt("counter");
         cookTime = compound.getInt("cookTime");
         cachedBurnTime = compound.getInt("cachedBurnTime");
         isBurning = compound.getBoolean("isBurning");
-
-        super.read(compound);
+        super.func_230337_a_(state, compound);
     }
 
     @Override

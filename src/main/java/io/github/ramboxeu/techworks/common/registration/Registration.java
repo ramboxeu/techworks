@@ -46,11 +46,11 @@ import static io.github.ramboxeu.techworks.Techworks.MOD_ID;
 public class Registration {
     private static final IForgeRegistry<Gas> GAS_REGISTRY = new RegistryBuilder<Gas>().setName(new ResourceLocation(MOD_ID, "gas")).setType(Gas.class).create();
 
-    private static final DeferredRegister<Block>             BLOCKS     = new DeferredRegister<>(ForgeRegistries.BLOCKS, MOD_ID);
-    private static final DeferredRegister<Item>              ITEMS      = new DeferredRegister<>(ForgeRegistries.ITEMS, MOD_ID);
-    private static final DeferredRegister<TileEntityType<?>> TILES      = new DeferredRegister<>(ForgeRegistries.TILE_ENTITIES, MOD_ID);
-    private static final DeferredRegister<ContainerType<?>>  CONTAINERS = new DeferredRegister<>(ForgeRegistries.CONTAINERS, MOD_ID);
-    private static final DeferredRegister<Gas>               GASES      = new DeferredRegister<>(GAS_REGISTRY, MOD_ID);
+    private static final DeferredRegister<Block>             BLOCKS     = DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);
+    private static final DeferredRegister<Item>              ITEMS      = DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID);
+    private static final DeferredRegister<TileEntityType<?>> TILES      = DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, MOD_ID);
+    private static final DeferredRegister<ContainerType<?>>  CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS, MOD_ID);
+    private static final DeferredRegister<Gas>               GASES      = DeferredRegister.create(GAS_REGISTRY, MOD_ID);
 
     public static void addToEventBus() {
         BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
