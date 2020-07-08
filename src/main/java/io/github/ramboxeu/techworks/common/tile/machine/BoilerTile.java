@@ -1,11 +1,13 @@
 package io.github.ramboxeu.techworks.common.tile.machine;
 
+import io.github.ramboxeu.techworks.api.component.ComponentStackHandler;
 import io.github.ramboxeu.techworks.api.gas.CapabilityGas;
 import io.github.ramboxeu.techworks.api.gas.GasHandler;
 import io.github.ramboxeu.techworks.api.gas.IGasHandler;
 import io.github.ramboxeu.techworks.client.container.BoilerContainer;
 import io.github.ramboxeu.techworks.common.property.TechworksBlockStateProperties;
 import io.github.ramboxeu.techworks.common.registration.Registration;
+import io.github.ramboxeu.techworks.common.registration.TechworksItems;
 import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
 import io.github.ramboxeu.techworks.common.util.PredicateUtils;
 import net.minecraft.block.BlockState;
@@ -49,10 +51,12 @@ public class BoilerTile extends BaseMachineTile {
     private final IItemHandler fuelInventory;
     private final IFluidHandler waterTank;
     private final IGasHandler steamTank;
-    // components inventory
+    private final ComponentStackHandler components;
 
     public BoilerTile() {
         super(Registration.BOILER_TILE.get());
+
+        components = new ComponentStackHandler.Builder().defaults(TechworksItems.BASE_BOILING_COMPONENT.get()).build();
 
         fuelInventory = new ItemStackHandler() {
             @Override
@@ -66,8 +70,8 @@ public class BoilerTile extends BaseMachineTile {
         steamTank = new GasHandler(Registration.STEAM_GAS.get(), 10000, 10000);
 
 
-        this.capabilities[1] = CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
-        this.optionals[1] = LazyOptional.of(() -> fuelInventory);
+//        this.capabilities[1] = CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
+//        this.optionals[1] = LazyOptional.of(() -> fuelInventory);
     }
 
     @Override
@@ -139,6 +143,7 @@ public class BoilerTile extends BaseMachineTile {
 
                 if (fluidHandler.drain(maxDrain, IFluidHandler.FluidAction.SIMULATE).getFluid().isIn(FluidTags.WATER)) {
                     waterTank.fill(fluidHandler.drain(maxDrain, IFluidHandler.FluidAction.EXECUTE), IFluidHandler.FluidAction.EXECUTE);
+                    player.setHeldItem(handIn, fluidHandler.getContainer());
                     resultType.set(ActionResultType.SUCCESS);
                 }
             });
@@ -158,6 +163,7 @@ public class BoilerTile extends BaseMachineTile {
         compound.put("FuelInv", CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.writeNBT(fuelInventory, null));
         compound.put("WaterTank", CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.writeNBT(waterTank, null));
         compound.put("SteamTank", CapabilityGas.GAS.writeNBT(steamTank, null));
+        compound.put("ComponentInv", components.serializeNBT());
 
         return super.write(compound);
     }
@@ -174,6 +180,7 @@ public class BoilerTile extends BaseMachineTile {
         CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.readNBT(fuelInventory, null, compound.get("FuelInv"));
         CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.readNBT(waterTank, null, compound.get("WaterTank"));
         CapabilityGas.GAS.readNBT(steamTank, null, compound.get("SteamTank"));
+        components.deserializeNBT(compound.getCompound("ComponentsInv"));
 
         super.func_230337_a_(state, compound);
     }

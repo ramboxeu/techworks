@@ -12,12 +12,23 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class BaseBoilingComponent extends ComponentItem {
-    private int level;
+    private final int level;
+    private final boolean unbreakable;
 
-    public BaseBoilingComponent(int level, int maxDamage) {
-        super(new Properties().maxStackSize(1).maxDamage(maxDamage).group(Techworks.ITEM_GROUP));
+    @SuppressWarnings("ConstantConditions")
+    public BaseBoilingComponent(int level, int maxDamage, boolean hidden) {
+        super(new Properties().maxStackSize(1).maxDamage(maxDamage).group(!hidden ? Techworks.ITEM_GROUP : null));
 
         this.level = level;
+        unbreakable = maxDamage > 0;
+    }
+
+    public BaseBoilingComponent() {
+        this(0, -1, true);
+    }
+
+    public BaseBoilingComponent(int level, int maxDamage) {
+        this(level, maxDamage, false);
     }
 
     @Override
@@ -30,7 +41,21 @@ public class BaseBoilingComponent extends ComponentItem {
         // Change this with translate-able version
         tooltip.add(new StringTextComponent("Boils water. Core component of boiler"));
         tooltip.add(new StringTextComponent("Level: " + level));
-        tooltip.add(new StringTextComponent(String.format("Durability: %d/%d (%d%%)", stack.getDamage(), stack.getMaxDamage(), ((stack.getMaxDamage() - stack.getDamage()) / stack.getMaxDamage()) * 100 )));
+        StringBuilder durability = new StringBuilder("Durability: ");
+
+        if (!unbreakable) {
+            durability.append(
+                    String.format("%d/%d (%d%%)",
+                            stack.getDamage(),
+                            stack.getMaxDamage(),
+                            ((stack.getMaxDamage() - stack.getDamage()) / stack.getMaxDamage()) * 100
+                    )
+            );
+        } else {
+            durability.append("Unbreakable");
+        }
+
+        tooltip.add(new StringTextComponent(durability.toString()));
         super.addInformation(stack, worldIn, tooltip, flagIn);
     }
 }

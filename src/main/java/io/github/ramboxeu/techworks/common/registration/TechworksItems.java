@@ -16,6 +16,7 @@ public class TechworksItems {
     }
 
     // Components
+    public static final RegistryObject<BaseBoilingComponent> BASE_BOILING_COMPONENT = ITEMS.register("base_boiling_component", BaseBoilingComponent::new);
     public static final RegistryObject<BaseBoilingComponent> BASIC_BOILING_COMPONENT = ITEMS.register("basic_boiling_component", () -> new BaseBoilingComponent(1, 500));
     public static final RegistryObject<BaseBoilingComponent> ADVANCED_BOILING_COMPONENT = ITEMS.register("advanced_boiling_component", () -> new BaseBoilingComponent(2, 1000));
 
