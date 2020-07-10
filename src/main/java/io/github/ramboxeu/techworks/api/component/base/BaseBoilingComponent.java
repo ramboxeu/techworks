@@ -20,7 +20,7 @@ public class BaseBoilingComponent extends ComponentItem {
         super(new Properties().maxStackSize(1).maxDamage(maxDamage).group(!hidden ? Techworks.ITEM_GROUP : null));
 
         this.level = level;
-        unbreakable = maxDamage > 0;
+        unbreakable = maxDamage < 0;
     }
 
     public BaseBoilingComponent() {

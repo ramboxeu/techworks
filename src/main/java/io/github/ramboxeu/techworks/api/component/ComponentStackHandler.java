@@ -16,14 +16,25 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class ComponentStackHandler implements IItemHandler, IItemHandlerModifiable, INBTSerializable<CompoundNBT> {
-    private final NonNullList<ItemStack> stacks;
-    private final ImmutableList<ItemStack> defaults;
+    private NonNullList<ItemStack> stacks;
+    private ImmutableList<ItemStack> defaults;
 
+    public static ComponentStackHandler withSize(int size) {
+        NonNullList<ItemStack> stacks = NonNullList.withSize(size, ItemStack.EMPTY);
+
+        return new ComponentStackHandler(stacks);
+    }
 
     @SuppressWarnings("ToArrayCallWithZeroLengthArrayArgument")
+    @Deprecated
     private ComponentStackHandler(ImmutableList<ItemStack> defaults) {
         stacks = NonNullList.from(ItemStack.EMPTY, defaults.toArray(new ItemStack[defaults.size()]));
         this.defaults = defaults;
+    }
+
+    private ComponentStackHandler(NonNullList<ItemStack> stacks) {
+        this.stacks = stacks;
+//        this.defaults = defaults;
     }
 
     @Override
@@ -31,6 +42,7 @@ public class ComponentStackHandler implements IItemHandler, IItemHandlerModifiab
         validateSlot(slot);
         validateStack(slot, stack);
         stacks.set(slot, stack);
+        onContentsChanged(slot);
     }
 
     @Override
@@ -58,7 +70,7 @@ public class ComponentStackHandler implements IItemHandler, IItemHandlerModifiab
         // We have a hardcoded limit of 1, so we don't have to worry about merging and things
         ItemStack existing = stacks.get(slot);
 
-        if (!existing.isEmpty() && !existing.isItemEqual(defaults.get(slot))) {
+        if (!existing.isEmpty() /*&& !existing.isItemEqual(defaults.get(slot))*/) {
             return stack;
         }
 
@@ -66,6 +78,7 @@ public class ComponentStackHandler implements IItemHandler, IItemHandlerModifiab
 
         if (!simulate) {
             stacks.set(slot, entry);
+            onContentsChanged(slot);
         }
 
         return stack;
@@ -81,12 +94,13 @@ public class ComponentStackHandler implements IItemHandler, IItemHandlerModifiab
         // We should be able to guarantee that this stacks all have size of 1
         ItemStack existing = stacks.get(slot);
 
-        if (existing.isEmpty() || existing.isItemEqual(defaults.get(slot))) {
+        if (existing.isEmpty() /*|| existing.isItemEqual(defaults.get(slot))*/) {
             return ItemStack.EMPTY;
         }
 
         if (!simulate) {
-            stacks.set(slot, defaults.get(slot));
+            stacks.set(slot, ItemStack.EMPTY);
+            onContentsChanged(slot);
         }
 
         return existing.copy();
@@ -99,44 +113,78 @@ public class ComponentStackHandler implements IItemHandler, IItemHandlerModifiab
 
     @Override
     public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-        return stack.getItem() instanceof ComponentItem;
+        return stack.getItem() instanceof ComponentItem || stack.isEmpty();
     }
 
     @Override
     public CompoundNBT serializeNBT() {
-        ListNBT listTag = new ListNBT();
+        ListNBT itemsTag = new ListNBT();
+//        ListNBT defaultsTag = new ListNBT();
 
         for (int i = 0; i < stacks.size(); i++) {
             if(!stacks.get(i).isEmpty()) {
                 CompoundNBT itemTag = new CompoundNBT();
                 itemTag.putInt("Slot", i);
                 stacks.get(i).write(itemTag);
-                listTag.add(itemTag);
+                itemsTag.add(itemTag);
             }
         }
 
+//        for (int i = 0; i < defaults.size(); i++) {
+//            CompoundNBT itemTag = new CompoundNBT();
+//            itemTag.putInt("Slot", i);
+//            stacks.get(i).write(itemTag);
+//            defaultsTag.add(itemTag);
+//        }
+
         CompoundNBT invTag = new CompoundNBT();
-        invTag.put("Items", listTag);
-//        invTag.putInt("Size", );
+        invTag.put("Items", itemsTag);
+//        invTag.put("Defaults", defaultsTag);
+        invTag.putInt("Size", stacks.size());
         return invTag;
     }
 
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
-        ListNBT listTag = nbt.getList("Items", Constants.NBT.TAG_COMPOUND);
-        for (int i = 0; i < listTag.size(); i++) {
-            CompoundNBT itemTag = listTag.getCompound(i);
+        ListNBT itemsTag = nbt.getList("Items", Constants.NBT.TAG_COMPOUND);
+        if (nbt.contains("Size", Constants.NBT.TAG_INT)) {
+            this.stacks = NonNullList.withSize(nbt.getInt("Size"), ItemStack.EMPTY);
+        }
+//        ListNBT defaultsTag = nbt.getList("Defaults", Constants.NBT.TAG_COMPOUND);
+//        int size = nbt.getInt("Size");
+//
+//        List<ItemStack> tempDefaults = new ArrayList<>();
+//
+//        for (int i = 0; i < size; i++) {
+//            CompoundNBT itemTag = defaultsTag.getCompound(i);
+//            int slot = itemTag.getInt("Slot");
+//
+//            tempDefaults.add(slot, ItemStack.read(itemTag));
+//        }
+
+//        ImmutableList<ItemStack> defaults = ImmutableList.copyOf(tempDefaults);
+//        NonNullList<ItemStack> stacks = NonNullList.from(ItemStack.EMPTY, );
+
+        for (int i = 0; i < itemsTag.size(); i++) {
+            CompoundNBT itemTag = itemsTag.getCompound(i);
             int slot = itemTag.getInt("Slot");
 
             if (slot >= 0 && slot < stacks.size()) {
                 stacks.set(i, ItemStack.read(itemTag));
             }
         }
+
+//        this.stacks = stacks;
+//        this.defaults = defaults;
     }
 
     public Stream<ItemStack> stream() {
         return stacks.stream();
     }
+
+//    public ImmutableList<ItemStack> getDefaults() {
+//        return defaults;
+//    }
 
     private void validateSlot(int slot) {
         if (slot < 0 || slot >= stacks.size()) {
@@ -154,6 +202,7 @@ public class ComponentStackHandler implements IItemHandler, IItemHandlerModifiab
 
     }
 
+    @Deprecated // Default components are doomed, but infrastructure is there
     public static class Builder {
         private final List<ItemStack> defaults = new ArrayList<>();
 
@@ -167,6 +216,10 @@ public class ComponentStackHandler implements IItemHandler, IItemHandlerModifiab
 
         public ComponentStackHandler build() {
             return new ComponentStackHandler(ImmutableList.copyOf(defaults));
+        }
+
+        public ComponentStackHandler empty() {
+            return new ComponentStackHandler(ImmutableList.of());
         }
     }
 }

@@ -1,13 +1,20 @@
 package io.github.ramboxeu.techworks.common.item;
 
 import io.github.ramboxeu.techworks.Techworks;
+import io.github.ramboxeu.techworks.api.component.ComponentStackHandler;
+import io.github.ramboxeu.techworks.client.container.ComponentsContainer;
+import io.github.ramboxeu.techworks.common.component.IComponentsContainerProvider;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
@@ -20,6 +27,7 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -37,10 +45,27 @@ public class WrenchItem extends Item {
             return ActionResultType.PASS;
         }
 
-        if (!context.func_225518_g_() /*Player isn't null and sneaking*/) {
+        if (mode == Mode.CONFIGURE && !context.getWorld().isRemote && context.getPlayer() != null) {
+            TileEntity tileEntity = context.getWorld().getTileEntity(context.getPos());
 
-        } else {
+            if (tileEntity instanceof IComponentsContainerProvider) {
+                IComponentsContainerProvider containerProvider = (IComponentsContainerProvider) tileEntity;
+                ComponentStackHandler components = containerProvider.getComponentsStackHandler();
 
+                NetworkHooks.openGui((ServerPlayerEntity) context.getPlayer(), new INamedContainerProvider() {
+                    @Override
+                    public ITextComponent getDisplayName() {
+                        return containerProvider.getComponentsDisplayName();
+                    }
+
+                    @Nullable
+                    @Override
+                    public Container createMenu(int syncId, PlayerInventory playerInv, PlayerEntity player) {
+                        return new ComponentsContainer(syncId, playerInv, components);
+                    }
+                }, buf -> buf.writeCompoundTag(components.serializeNBT()));
+                return ActionResultType.SUCCESS;
+            }
         }
 
         return ActionResultType.CONSUME;

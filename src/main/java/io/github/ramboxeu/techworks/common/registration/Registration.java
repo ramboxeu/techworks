@@ -5,10 +5,7 @@ import io.github.ramboxeu.techworks.client.container.BoilerContainer;
 import io.github.ramboxeu.techworks.client.container.ElectricFurnaceContainer;
 import io.github.ramboxeu.techworks.client.container.ElectricGrinderContainer;
 import io.github.ramboxeu.techworks.client.container.SteamEngineContainer;
-import io.github.ramboxeu.techworks.client.screen.BoilerScreen;
-import io.github.ramboxeu.techworks.client.screen.ElectricFurnaceScreen;
-import io.github.ramboxeu.techworks.client.screen.ElectricGrinderScreen;
-import io.github.ramboxeu.techworks.client.screen.SteamEngineScreen;
+import io.github.ramboxeu.techworks.client.screen.*;
 import io.github.ramboxeu.techworks.common.block.BoilerBlock;
 import io.github.ramboxeu.techworks.common.block.ElectricFurnaceBlock;
 import io.github.ramboxeu.techworks.common.block.ElectricGrinderBlock;
@@ -106,6 +103,7 @@ public class Registration {
         ScreenManager.registerFactory(STEAM_ENGINE_CONTAINER.get(), SteamEngineScreen::new);
         ScreenManager.registerFactory(ELECTRIC_GRINDER_CONTAINER.get(), ElectricGrinderScreen::new);
         ScreenManager.registerFactory(ELECTRIC_FURNACE_CONTAINER.get(), ElectricFurnaceScreen::new);
+        ScreenManager.registerFactory(TechworksContainers.COMPONENTS.get(), ComponentsScreen::new);
     }
 
     public static Gas getGasByString(String name) {

@@ -6,6 +6,7 @@ import io.github.ramboxeu.techworks.common.TechworksItemGroup;
 import io.github.ramboxeu.techworks.common.debug.DebugInfoRenderer;
 import io.github.ramboxeu.techworks.common.network.TechworkPacketHandler;
 import io.github.ramboxeu.techworks.common.registration.Registration;
+import io.github.ramboxeu.techworks.common.registration.TechworksContainers;
 import io.github.ramboxeu.techworks.common.registration.TechworksItems;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.util.ResourceLocation;
@@ -30,10 +31,10 @@ public class Techworks {
 
         Registration.addToEventBus();
         TechworksItems.addToEventBus();
+        TechworksContainers.addToEventBus();
 
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientSetup);
-        MinecraftForge.EVENT_BUS.addListener(DebugInfoRenderer::render);
     }
 
     public void setup(FMLCommonSetupEvent event) {
@@ -44,5 +45,6 @@ public class Techworks {
     public void clientSetup(FMLClientSetupEvent event) {
         Registration.registerScreens();
         ModelLoaderRegistry.registerLoader(new ResourceLocation("techworks:cable"), new CableModelLoader());
+        MinecraftForge.EVENT_BUS.addListener(DebugInfoRenderer::render);
     }
 }

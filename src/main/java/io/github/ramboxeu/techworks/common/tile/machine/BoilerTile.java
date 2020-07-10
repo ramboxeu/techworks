@@ -5,6 +5,7 @@ import io.github.ramboxeu.techworks.api.gas.CapabilityGas;
 import io.github.ramboxeu.techworks.api.gas.GasHandler;
 import io.github.ramboxeu.techworks.api.gas.IGasHandler;
 import io.github.ramboxeu.techworks.client.container.BoilerContainer;
+import io.github.ramboxeu.techworks.common.component.IComponentsContainerProvider;
 import io.github.ramboxeu.techworks.common.property.TechworksBlockStateProperties;
 import io.github.ramboxeu.techworks.common.registration.Registration;
 import io.github.ramboxeu.techworks.common.registration.TechworksItems;
@@ -24,10 +25,10 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
@@ -42,7 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class BoilerTile extends BaseMachineTile {
+public class BoilerTile extends BaseMachineTile implements IComponentsContainerProvider {
     private int cookTime = 0;
     private int cachedBurnTime = 0;
     private int counter = 0;
@@ -56,7 +57,7 @@ public class BoilerTile extends BaseMachineTile {
     public BoilerTile() {
         super(Registration.BOILER_TILE.get());
 
-        components = new ComponentStackHandler.Builder().defaults(TechworksItems.BASE_BOILING_COMPONENT.get()).build();
+        components = ComponentStackHandler.withSize(3);
 
         fuelInventory = new ItemStackHandler() {
             @Override
@@ -180,7 +181,7 @@ public class BoilerTile extends BaseMachineTile {
         CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.readNBT(fuelInventory, null, compound.get("FuelInv"));
         CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.readNBT(waterTank, null, compound.get("WaterTank"));
         CapabilityGas.GAS.readNBT(steamTank, null, compound.get("SteamTank"));
-        components.deserializeNBT(compound.getCompound("ComponentsInv"));
+        components.deserializeNBT(compound.getCompound("ComponentInv"));
 
         super.func_230337_a_(state, compound);
     }
@@ -194,6 +195,17 @@ public class BoilerTile extends BaseMachineTile {
     @Override
     public Container createMenu(int id, PlayerInventory playerInventory, PlayerEntity playerEntity) {
         return new BoilerContainer(id, playerInventory, this);
+    }
+
+    @Override
+    public ComponentStackHandler getComponentsStackHandler() {
+        return components;
+    }
+
+    @Override
+    public ITextComponent getComponentsDisplayName() {
+        // TODO: translation
+        return new StringTextComponent("Boiler's Components");
     }
 
     public void handleFluidHandlerInput(ItemStack stack, SlotItemHandler slot) {
