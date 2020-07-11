@@ -3,6 +3,7 @@ package io.github.ramboxeu.techworks.client.screen;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.ramboxeu.techworks.Techworks;
+import io.github.ramboxeu.techworks.api.component.ComponentStackHandler;
 import io.github.ramboxeu.techworks.client.container.ComponentsContainer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
@@ -35,7 +36,7 @@ public class ComponentsScreen extends ContainerScreen<ComponentsContainer> {
         super.func_230459_a_(stack, mouseX, mouseY);
     }
 
-    @Override // ComponentScree.drawGuiForegroundLayer
+    @Override // ComponentScreen.drawGuiForegroundLayer
     protected void func_230451_b_(MatrixStack stack, int mouseX, int mouseY) {
         super.func_230451_b_(stack, mouseX, mouseY);
     }
@@ -43,9 +44,16 @@ public class ComponentsScreen extends ContainerScreen<ComponentsContainer> {
     private void renderSlots(MatrixStack stack) {
         field_230706_i_.textureManager.bindTexture(SLOT_TEXTURE);
 
-        for (int i = 0; i < /*container.getComponents().getSlots()*/15; i++) {
+        ComponentStackHandler components = container.getComponents();
+
+        for (int i = 0; i < components.getSlots(); i++) {
             Slot componentSlot = container.getSlot(i);
             func_238464_a_(stack, (componentSlot.xPos - 1) + guiLeft, (componentSlot.yPos - 1) + guiTop, 0,0.0F, 0.0F, 18, 18, 18, 18);
+            components.getSlotList().get(i).getTexture().ifPresent(texture -> {
+                field_230706_i_.textureManager.bindTexture(texture);
+                func_238464_a_(stack, componentSlot.xPos + guiLeft, componentSlot.yPos + guiTop, 0,0.0F, 0.0F, 16, 16, 16, 16);
+                field_230706_i_.textureManager.bindTexture(SLOT_TEXTURE);
+            });
         }
     }
 }

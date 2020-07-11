@@ -8,6 +8,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
@@ -31,49 +32,53 @@ public class ComponentsContainer extends Container {
         this.components = components;
 
         int x = components.getSlots();
-        int rows = 1;
-        int slots = x;
 
-        if (x > 5) {
-            if (x % 2 == 0) {
-                rows = 2;
-                slots = x / 2;
-            } else if (x % 3 == 0) {
-                rows = 3;
-                slots = x / 3;
-            } else {
-                if (x % 5 == 1) {
-                    slots = (int) Math.ceil((x / 2.0F));
-                } else {
+        if (x > 0) {
+
+            int rows = 1;
+            int slots = x;
+
+            if (x > 5) {
+                if (x % 2 == 0) {
                     rows = 2;
-                    slots = 5;
+                    slots = x / 2;
+                } else if (x % 3 == 0) {
+                    rows = 3;
+                    slots = x / 3;
+                } else {
+                    if (x % 5 == 1) {
+                        slots = (int) Math.ceil((x / 2.0F));
+                    } else {
+                        rows = 2;
+                        slots = 5;
+                    }
+
+                }
+            }
+
+            int space = WIDTH - X_OFFSET * 2;
+            int spacing = (space / slots) - SLOT_WIDTH;
+            int xOffset = (space - ((spacing + SLOT_WIDTH) * slots)) + (spacing / 2) + X_OFFSET;
+
+            int index = 0;
+
+            for (int i = 0; i < rows; i++) {
+                for (int j = 0; j < slots; j++) {
+                    addSlot(new SlotItemHandler(components, index,
+                            ((SLOT_WIDTH + spacing) * j) + xOffset,
+                            ((SLOT_HEIGHT + Y_SPACING) * i) + Y_OFFSET)
+                    );
+
+                    index++;
                 }
 
+                if (x - slots > 0 && x - slots < slots) {
+                    slots = x - slots;
+                    xOffset = (space - ((spacing + SLOT_WIDTH) * slots)) + (spacing / 2) + X_OFFSET;
+                }
+
+                x -= slots;
             }
-        }
-
-        int space = WIDTH - X_OFFSET * 2;
-        int spacing = (space / slots) - SLOT_WIDTH;
-        int xOffset = (space - ((spacing + SLOT_WIDTH) * slots)) + (spacing / 2) + X_OFFSET;
-
-        int index = 0;
-
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < slots; j++) {
-                addSlot(new SlotItemHandler(components, index,
-                        ((SLOT_WIDTH + spacing) * j) + xOffset,
-                        ((SLOT_HEIGHT + Y_SPACING) * i) + Y_OFFSET)
-                );
-
-                index++;
-            }
-
-            if (x - slots > 0 && x - slots < slots) {
-                slots = x - slots;
-                xOffset = (space - ((spacing + SLOT_WIDTH) * slots)) + (spacing / 2) + X_OFFSET;
-            }
-
-            x -= slots;
         }
 
         // Main inventory
@@ -96,5 +101,28 @@ public class ComponentsContainer extends Container {
 
     public ComponentStackHandler getComponents() {
         return components;
+    }
+
+    @Override
+    public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
+        Slot sourceSlot = getSlot(index);
+        ItemStack stack = sourceSlot.getStack();
+
+        if (index > components.getSlots() - 1) {
+            for (int i = 0; i < components.getSlots() - 1; i++) {
+                Slot targetSlot = getSlot(i);
+                if (components.isItemValid(i, stack) && !targetSlot.getHasStack()) {
+                    targetSlot.putStack(stack);
+                    sourceSlot.putStack(ItemStack.EMPTY);
+                    break;
+                }
+            }
+        } else {
+            if (mergeItemStack(stack, components.getSlots(), inventorySlots.size(), false)) {
+                sourceSlot.putStack(ItemStack.EMPTY);
+            }
+        }
+
+        return ItemStack.EMPTY;
     }
 }

@@ -5,6 +5,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.items.IItemHandler;
@@ -13,16 +14,25 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public class ComponentStackHandler implements IItemHandler, IItemHandlerModifiable, INBTSerializable<CompoundNBT> {
     private NonNullList<ItemStack> stacks;
     private ImmutableList<ItemStack> defaults;
+    private NonNullList<Slot> slots;
 
     public static ComponentStackHandler withSize(int size) {
-        NonNullList<ItemStack> stacks = NonNullList.withSize(size, ItemStack.EMPTY);
+        return new ComponentStackHandler(NonNullList.withSize(size, ItemStack.EMPTY), NonNullList.withSize(size, new Slot()));
+    }
 
-        return new ComponentStackHandler(stacks);
+    public static ComponentStackHandler empty() {
+        return new ComponentStackHandler(NonNullList.create(), NonNullList.create());
+    }
+
+    public static ComponentStackHandler withBuilder(Builder builder) {
+        return new ComponentStackHandler(builder.stacks, builder.slots);
     }
 
     @SuppressWarnings("ToArrayCallWithZeroLengthArrayArgument")
@@ -32,8 +42,9 @@ public class ComponentStackHandler implements IItemHandler, IItemHandlerModifiab
         this.defaults = defaults;
     }
 
-    private ComponentStackHandler(NonNullList<ItemStack> stacks) {
+    private ComponentStackHandler(NonNullList<ItemStack> stacks, NonNullList<Slot> slots) {
         this.stacks = stacks;
+        this.slots = slots;
 //        this.defaults = defaults;
     }
 
@@ -113,7 +124,7 @@ public class ComponentStackHandler implements IItemHandler, IItemHandlerModifiab
 
     @Override
     public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-        return stack.getItem() instanceof ComponentItem || stack.isEmpty();
+        return (stack.getItem() instanceof ComponentItem && slots.get(slot).predicate.test(stack)) || stack.isEmpty();
     }
 
     @Override
@@ -182,7 +193,11 @@ public class ComponentStackHandler implements IItemHandler, IItemHandlerModifiab
         return stacks.stream();
     }
 
-//    public ImmutableList<ItemStack> getDefaults() {
+    public NonNullList<Slot> getSlotList() {
+        return slots;
+    }
+
+    //    public ImmutableList<ItemStack> getDefaults() {
 //        return defaults;
 //    }
 
@@ -202,24 +217,64 @@ public class ComponentStackHandler implements IItemHandler, IItemHandlerModifiab
 
     }
 
-    @Deprecated // Default components are doomed, but infrastructure is there
     public static class Builder {
-        private final List<ItemStack> defaults = new ArrayList<>();
+        private final int size;
+        private final NonNullList<Slot> slots;
+        private NonNullList<ItemStack> stacks;
 
-        public Builder defaults(ComponentItem... items) {
-            for (ComponentItem item : items) {
-                defaults.add(new ItemStack(item));
-            }
+        public Builder(int size) {
+            this.size = size;
+            slots = NonNullList.withSize(size, new Slot());
+            stacks = NonNullList.withSize(size, ItemStack.EMPTY);
+        }
 
+        public Builder slot(int index, Slot slot) {
+            slots.set(index, slot);
             return this;
         }
 
-        public ComponentStackHandler build() {
-            return new ComponentStackHandler(ImmutableList.copyOf(defaults));
+        public Builder copyStacks(NonNullList<ItemStack> stacks) {
+            this.stacks = stacks;
+            return this;
+        }
+//        private final List<ItemStack> defaults = new ArrayList<>();
+//
+//        public Builder defaults(ComponentItem... items) {
+//            for (ComponentItem item : items) {
+//                defaults.add(new ItemStack(item));
+//            }
+//
+//            return this;
+//        }
+//
+//        public ComponentStackHandler build() {
+//            return new ComponentStackHandler(ImmutableList.copyOf(defaults));
+//        }
+//
+//        public ComponentStackHandler empty() {
+//            return new ComponentStackHandler(ImmutableList.of());
+//        }
+    }
+
+    public static class Slot {
+        private final Predicate<ItemStack> predicate;
+        private final ResourceLocation texture;
+
+        public Slot(Predicate<ItemStack> predicate, ResourceLocation texture) {
+            this.predicate = predicate;
+            this.texture = texture;
         }
 
-        public ComponentStackHandler empty() {
-            return new ComponentStackHandler(ImmutableList.of());
+        public Slot() {
+            this(stack -> true, null);
+        }
+
+        public Optional<ResourceLocation> getTexture() {
+            if (texture == null) {
+                return Optional.empty();
+            } else {
+                return Optional.of(texture);
+            }
         }
     }
 }

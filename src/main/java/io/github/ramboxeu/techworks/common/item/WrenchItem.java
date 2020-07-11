@@ -63,7 +63,7 @@ public class WrenchItem extends Item {
                     public Container createMenu(int syncId, PlayerInventory playerInv, PlayerEntity player) {
                         return new ComponentsContainer(syncId, playerInv, components);
                     }
-                }, buf -> buf.writeCompoundTag(components.serializeNBT()));
+                }, tileEntity.getPos());
                 return ActionResultType.SUCCESS;
             }
         }

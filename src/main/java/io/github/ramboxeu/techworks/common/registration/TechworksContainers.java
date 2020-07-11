@@ -3,8 +3,12 @@ package io.github.ramboxeu.techworks.common.registration;
 import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.api.component.ComponentStackHandler;
 import io.github.ramboxeu.techworks.client.container.ComponentsContainer;
+import io.github.ramboxeu.techworks.common.component.IComponentsContainerProvider;
+import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -20,9 +24,20 @@ public class TechworksContainers {
 
     public static final RegistryObject<ContainerType<ComponentsContainer>> COMPONENTS = CONTAINERS.register("components",
             () -> IForgeContainerType.create((id, inv, buf) -> {
-                CompoundNBT nbt = buf.readCompoundTag();
-                ComponentStackHandler components = new ComponentStackHandler.Builder().empty();
-                components.deserializeNBT(nbt);
+//                CompoundNBT nbt = buf.readCompoundTag();
+                ComponentStackHandler components = ComponentStackHandler.empty();
+//                components.deserializeNBT(nbt);
+
+                BlockPos pos = buf.readBlockPos();
+                TileEntity te = inv.player.world.getTileEntity(pos);
+
+                if (te instanceof IComponentsContainerProvider) {
+                    components = ((IComponentsContainerProvider)te).getComponentsStackHandler();
+                } else {
+                    // Should this crash, or something?
+                    Techworks.LOGGER.warn("Expected IComponentsContainerProvider on " + pos + ", but it was not found.");
+                }
+
                 return new ComponentsContainer(id, inv, components);
             }));
 }

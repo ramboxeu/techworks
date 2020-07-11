@@ -1,6 +1,8 @@
 package io.github.ramboxeu.techworks.common.tile.machine;
 
+import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.api.component.ComponentStackHandler;
+import io.github.ramboxeu.techworks.api.component.base.BaseBoilingComponent;
 import io.github.ramboxeu.techworks.api.gas.CapabilityGas;
 import io.github.ramboxeu.techworks.api.gas.GasHandler;
 import io.github.ramboxeu.techworks.api.gas.IGasHandler;
@@ -22,6 +24,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
@@ -44,20 +47,25 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class BoilerTile extends BaseMachineTile implements IComponentsContainerProvider {
+    private final IItemHandler fuelInventory;
+    private final IFluidHandler waterTank;
+    private final IGasHandler steamTank;
+    private final ComponentStackHandler components;
     private int cookTime = 0;
     private int cachedBurnTime = 0;
     private int counter = 0;
     private boolean isBurning;
 
-    private final IItemHandler fuelInventory;
-    private final IFluidHandler waterTank;
-    private final IGasHandler steamTank;
-    private final ComponentStackHandler components;
-
     public BoilerTile() {
         super(Registration.BOILER_TILE.get());
 
-        components = ComponentStackHandler.withSize(3);
+        components = ComponentStackHandler.withBuilder(
+                new ComponentStackHandler.Builder(3)
+                        .slot(1, new ComponentStackHandler.Slot(
+                                stack -> stack.getItem() instanceof BaseBoilingComponent,
+                                new ResourceLocation(Techworks.MOD_ID, "textures/gui/slot/boiling_component_overlay.png")
+                        ))
+        );
 
         fuelInventory = new ItemStackHandler() {
             @Override
@@ -196,6 +204,7 @@ public class BoilerTile extends BaseMachineTile implements IComponentsContainerP
     public Container createMenu(int id, PlayerInventory playerInventory, PlayerEntity playerEntity) {
         return new BoilerContainer(id, playerInventory, this);
     }
+
 
     @Override
     public ComponentStackHandler getComponentsStackHandler() {

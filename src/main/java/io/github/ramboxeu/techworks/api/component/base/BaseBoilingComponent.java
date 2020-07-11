@@ -44,11 +44,13 @@ public class BaseBoilingComponent extends ComponentItem {
         StringBuilder durability = new StringBuilder("Durability: ");
 
         if (!unbreakable) {
+            int health = stack.getMaxDamage() - stack.getDamage();
+
             durability.append(
                     String.format("%d/%d (%d%%)",
-                            stack.getDamage(),
+                            health,
                             stack.getMaxDamage(),
-                            ((stack.getMaxDamage() - stack.getDamage()) / stack.getMaxDamage()) * 100
+                            (health / stack.getMaxDamage()) * 100
                     )
             );
         } else {
