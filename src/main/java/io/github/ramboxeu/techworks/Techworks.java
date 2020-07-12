@@ -7,6 +7,7 @@ import io.github.ramboxeu.techworks.common.debug.DebugInfoRenderer;
 import io.github.ramboxeu.techworks.common.network.TechworkPacketHandler;
 import io.github.ramboxeu.techworks.common.registration.Registration;
 import io.github.ramboxeu.techworks.common.registration.TechworksContainers;
+import io.github.ramboxeu.techworks.common.registration.TechworksFluids;
 import io.github.ramboxeu.techworks.common.registration.TechworksItems;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.util.ResourceLocation;
@@ -32,6 +33,7 @@ public class Techworks {
         Registration.addToEventBus();
         TechworksItems.addToEventBus();
         TechworksContainers.addToEventBus();
+        TechworksFluids.addToEventBus();
 
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientSetup);

@@ -12,7 +12,10 @@
   "item.techworks.wrench": "Wrench",
   "item.techworks.basic_boiling_component": "Basic Boiling Component",
   "item.techworks.advanced_boiling_component": "Advanced Boiling Component",
-  "item.techworks.basic_liquid_storage": "Advanced Boiling Component",
+  "item.techworks.basic_liquid_storage_component": "Basic Liquid Storage Component",
+  "item.techworks.advanced_liquid_storage_component": "Advanced Liquid Storage Component",
+  "item.techworks.basic_gas_storage_component": "Basic Gas Storage Component",
+  "item.techworks.advanced_gas_storage_component": "Advanced Gas Storage Component",
 
   "container.techworks.boiler": "Boiler",
   "container.techworks.steam_engine": "Steam Engine",
