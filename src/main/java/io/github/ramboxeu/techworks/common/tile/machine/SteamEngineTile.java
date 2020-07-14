@@ -1,5 +1,6 @@
 package io.github.ramboxeu.techworks.common.tile.machine;
 
+import io.github.ramboxeu.techworks.api.component.ComponentStackHandler;
 import io.github.ramboxeu.techworks.api.gas.GasHandler;
 import io.github.ramboxeu.techworks.api.gas.IGasHandler;
 import io.github.ramboxeu.techworks.client.container.SteamEngineContainer;
@@ -27,7 +28,7 @@ import java.util.List;
 
 public class SteamEngineTile extends BaseMachineTile {
     public SteamEngineTile() {
-        super(Registration.STEAM_ENGINE_TILE.get());
+        super(Registration.STEAM_ENGINE_TILE.get(), new ComponentStackHandler.Builder(0));
     }
 
 //    @Override

@@ -24,7 +24,7 @@ public class BoilerContainer extends AbstractMachineContainer {
         this.trackInt(new IntReferenceHolder() {
             @Override
             public int get() {
-                return ((BoilerTile) machineTile).getCookTime();
+                return ((BoilerTile) machineTile).getBurnTime();
             }
 
             @Override
@@ -36,7 +36,7 @@ public class BoilerContainer extends AbstractMachineContainer {
         this.trackInt(new IntReferenceHolder() {
             @Override
             public int get() {
-                return ((BoilerTile) machineTile).getBurnTime();
+                return ((BoilerTile) machineTile).getFuelBurnTime();
             }
 
             @Override

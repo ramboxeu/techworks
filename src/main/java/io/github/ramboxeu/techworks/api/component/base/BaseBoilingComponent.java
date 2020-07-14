@@ -13,22 +13,23 @@ import java.util.List;
 
 public class BaseBoilingComponent extends ComponentItem {
     private final int level;
+    private final int cookTime;
+    private final int amount;
     private final boolean unbreakable;
 
     @SuppressWarnings("ConstantConditions")
-    public BaseBoilingComponent(int level, int maxDamage, boolean hidden) {
+    public BaseBoilingComponent(int level, int maxDamage, boolean hidden, int cookTime, int amount) {
         super(new Properties().maxStackSize(1).maxDamage(maxDamage).group(!hidden ? Techworks.ITEM_GROUP : null));
 
         this.level = level;
+        this.cookTime = cookTime;
+        this.amount = amount;
+
         unbreakable = maxDamage < 0;
     }
 
-    public BaseBoilingComponent() {
-        this(0, -1, true);
-    }
-
-    public BaseBoilingComponent(int level, int maxDamage) {
-        this(level, maxDamage, false);
+    public BaseBoilingComponent(int level, int maxDamage, int cookTime, int amount) {
+        this(level, maxDamage, false, cookTime, amount);
     }
 
     @Override
@@ -59,5 +60,13 @@ public class BaseBoilingComponent extends ComponentItem {
 
         tooltip.add(new StringTextComponent(durability.toString()));
         super.addInformation(stack, worldIn, tooltip, flagIn);
+    }
+
+    public int getCookTime() {
+        return cookTime;
+    }
+
+    public int getAmountProduced() {
+        return amount;
     }
 }

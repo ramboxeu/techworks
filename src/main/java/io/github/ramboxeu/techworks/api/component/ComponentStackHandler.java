@@ -12,9 +12,8 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -22,17 +21,18 @@ public class ComponentStackHandler implements IItemHandler, IItemHandlerModifiab
     private NonNullList<ItemStack> stacks;
     private ImmutableList<ItemStack> defaults;
     private NonNullList<Slot> slots;
+    private Callback callback;
 
     public static ComponentStackHandler withSize(int size) {
-        return new ComponentStackHandler(NonNullList.withSize(size, ItemStack.EMPTY), NonNullList.withSize(size, new Slot()));
+        return new ComponentStackHandler(NonNullList.withSize(size, ItemStack.EMPTY), NonNullList.withSize(size, new Slot()), () -> {});
     }
 
     public static ComponentStackHandler empty() {
-        return new ComponentStackHandler(NonNullList.create(), NonNullList.create());
+        return new ComponentStackHandler(NonNullList.create(), NonNullList.create(), () -> {});
     }
 
     public static ComponentStackHandler withBuilder(Builder builder) {
-        return new ComponentStackHandler(builder.stacks, builder.slots);
+        return new ComponentStackHandler(builder.stacks, builder.slots, builder.callback);
     }
 
     @SuppressWarnings("ToArrayCallWithZeroLengthArrayArgument")
@@ -42,10 +42,12 @@ public class ComponentStackHandler implements IItemHandler, IItemHandlerModifiab
         this.defaults = defaults;
     }
 
-    private ComponentStackHandler(NonNullList<ItemStack> stacks, NonNullList<Slot> slots) {
+    private ComponentStackHandler(NonNullList<ItemStack> stacks, NonNullList<Slot> slots, Callback callback) {
         this.stacks = stacks;
         this.slots = slots;
-//        this.defaults = defaults;
+        this.callback = callback;
+
+        callback.call();
     }
 
     @Override
@@ -214,11 +216,13 @@ public class ComponentStackHandler implements IItemHandler, IItemHandlerModifiab
     }
 
     protected void onContentsChanged(int slot) {
-
+        slots.get(slot).callback.accept(stacks.get(slot));
+        callback.call();
     }
 
     public static class Builder {
         private final int size;
+        private Callback callback;
         private final NonNullList<Slot> slots;
         private NonNullList<ItemStack> stacks;
 
@@ -226,6 +230,7 @@ public class ComponentStackHandler implements IItemHandler, IItemHandlerModifiab
             this.size = size;
             slots = NonNullList.withSize(size, new Slot());
             stacks = NonNullList.withSize(size, ItemStack.EMPTY);
+            callback = () -> {};
         }
 
         public Builder slot(int index, Slot slot) {
@@ -237,6 +242,12 @@ public class ComponentStackHandler implements IItemHandler, IItemHandlerModifiab
             this.stacks = stacks;
             return this;
         }
+
+        public Builder onChanged(Callback callback) {
+            this.callback = callback;
+            return this;
+        }
+
 //        private final List<ItemStack> defaults = new ArrayList<>();
 //
 //        public Builder defaults(ComponentItem... items) {
@@ -257,24 +268,36 @@ public class ComponentStackHandler implements IItemHandler, IItemHandlerModifiab
     }
 
     public static class Slot {
-        private final Predicate<ItemStack> predicate;
-        private final ResourceLocation texture;
+        private Predicate<ItemStack> predicate = stack -> true;
 
-        public Slot(Predicate<ItemStack> predicate, ResourceLocation texture) {
-            this.predicate = predicate;
-            this.texture = texture;
-        }
+        @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+        private Optional<ResourceLocation> texture = Optional.empty();
+        private Consumer<ItemStack> callback = stack -> {};
 
-        public Slot() {
-            this(stack -> true, null);
-        }
+        public Slot() {}
 
         public Optional<ResourceLocation> getTexture() {
-            if (texture == null) {
-                return Optional.empty();
-            } else {
-                return Optional.of(texture);
-            }
+            return texture;
         }
+
+        public Slot predicate(Predicate<ItemStack> predicate) {
+            this.predicate = predicate;
+            return this;
+        }
+
+        public Slot texture(ResourceLocation texture) {
+            this.texture = Optional.of(texture);
+            return this;
+        }
+
+        public Slot callback(Consumer<ItemStack> callback) {
+            this.callback = callback;
+            return this;
+        }
+    }
+
+    @FunctionalInterface
+    public interface Callback {
+        void call();
     }
 }

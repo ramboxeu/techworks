@@ -1,8 +1,13 @@
 package io.github.ramboxeu.techworks.common.tile;
 
+import io.github.ramboxeu.techworks.Techworks;
+import io.github.ramboxeu.techworks.api.component.ComponentItem;
+import io.github.ramboxeu.techworks.api.component.ComponentStackHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -18,17 +23,25 @@ import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.swing.text.html.Option;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
-// Seems pretty useless, but there's probably be more common code to add here
 public abstract class BaseMachineTile extends TileEntity implements ITickableTileEntity, INamedContainerProvider {
 
     // TODO: Merge these 2 into nice util class
     protected Capability<?>[] capabilities = { null, null, null, null, null, null };
     protected LazyOptional<?>[] optionals = { LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty()};
+    protected final ComponentStackHandler components;
 
-    public BaseMachineTile(TileEntityType<?> tileEntityType) {
+    public BaseMachineTile(TileEntityType<?> tileEntityType, ComponentStackHandler.Builder builder) {
         super(tileEntityType);
+
+        this.components = ComponentStackHandler.withBuilder(builder.onChanged(this::markComponentsDirty));
     }
 
     // PASS continues the execution on the block side
@@ -37,6 +50,8 @@ public abstract class BaseMachineTile extends TileEntity implements ITickableTil
     }
 
     public void onLeftClick(BlockState state, World worldIn, BlockPos pos, PlayerEntity player) {}
+
+    protected void markComponentsDirty() {}
 
     @Nonnull
     @Override

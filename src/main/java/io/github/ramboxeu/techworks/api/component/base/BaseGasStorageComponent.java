@@ -102,7 +102,7 @@ public class BaseGasStorageComponent extends ComponentItem {
             return new FluidHandlerItemStack(stack, volume) {
                 @Override
                 public boolean canFillFluidType(FluidStack fluid) {
-                    return !fluid.getFluid().getAttributes().isGaseous(fluid);
+                    return fluid.getFluid().getAttributes().isGaseous(fluid);
                 }
 
                 @Override

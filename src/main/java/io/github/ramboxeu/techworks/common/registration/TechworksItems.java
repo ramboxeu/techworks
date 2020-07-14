@@ -19,8 +19,8 @@ public class TechworksItems {
     }
 
     // Components
-    public static final RegistryObject<BaseBoilingComponent> BASIC_BOILING_COMPONENT = ITEMS.register("basic_boiling_component", () -> new BaseBoilingComponent(1, 500));
-    public static final RegistryObject<BaseBoilingComponent> ADVANCED_BOILING_COMPONENT = ITEMS.register("advanced_boiling_component", () -> new BaseBoilingComponent(2, 1000));
+    public static final RegistryObject<BaseBoilingComponent> BASIC_BOILING_COMPONENT = ITEMS.register("basic_boiling_component", () -> new BaseBoilingComponent(1, 500, 1, 1));
+    public static final RegistryObject<BaseBoilingComponent> ADVANCED_BOILING_COMPONENT = ITEMS.register("advanced_boiling_component", () -> new BaseBoilingComponent(2, 1000, 1, 100));
 
     public static final RegistryObject<BaseLiquidStorageComponent> BASIC_LIQUID_STORAGE_COMPONENT = ITEMS.register("basic_liquid_storage_component", () -> new BaseLiquidStorageComponent(1, 5000));
     public static final RegistryObject<BaseLiquidStorageComponent> ADVANCED_LIQUID_STORAGE_COMPONENT = ITEMS.register("advanced_liquid_storage_component", () -> new BaseLiquidStorageComponent(2, 10000));
