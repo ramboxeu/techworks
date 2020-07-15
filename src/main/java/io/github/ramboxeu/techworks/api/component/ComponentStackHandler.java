@@ -46,8 +46,6 @@ public class ComponentStackHandler implements IItemHandler, IItemHandlerModifiab
         this.stacks = stacks;
         this.slots = slots;
         this.callback = callback;
-
-        callback.call();
     }
 
     @Override

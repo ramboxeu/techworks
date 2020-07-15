@@ -13,23 +13,20 @@ import java.util.List;
 
 public class BaseBoilingComponent extends ComponentItem {
     private final int level;
-    private final int cookTime;
-    private final int amount;
+    private final int workTime;
+    private final int steamAmount;
+    private final int waterAmount;
     private final boolean unbreakable;
 
-    @SuppressWarnings("ConstantConditions")
-    public BaseBoilingComponent(int level, int maxDamage, boolean hidden, int cookTime, int amount) {
-        super(new Properties().maxStackSize(1).maxDamage(maxDamage).group(!hidden ? Techworks.ITEM_GROUP : null));
+    public BaseBoilingComponent(int level, int maxDamage, int workTime, int waterAmount, int steamAmount) {
+        super(new Properties().maxStackSize(1).maxDamage(maxDamage).group(Techworks.ITEM_GROUP));
 
         this.level = level;
-        this.cookTime = cookTime;
-        this.amount = amount;
+        this.workTime = workTime;
+        this.steamAmount = steamAmount;
+        this.waterAmount = waterAmount;
 
         unbreakable = maxDamage < 0;
-    }
-
-    public BaseBoilingComponent(int level, int maxDamage, int cookTime, int amount) {
-        this(level, maxDamage, false, cookTime, amount);
     }
 
     @Override
@@ -62,11 +59,19 @@ public class BaseBoilingComponent extends ComponentItem {
         super.addInformation(stack, worldIn, tooltip, flagIn);
     }
 
-    public int getCookTime() {
-        return cookTime;
+    public int getWorkTime() {
+        return workTime;
     }
 
-    public int getAmountProduced() {
-        return amount;
+    public int getSteamAmount() {
+        return steamAmount;
+    }
+
+    public int getWaterAmount() {
+        return waterAmount;
+    }
+
+    public int calcWorkTime() {
+        return (workTime / (waterAmount / steamAmount));
     }
 }

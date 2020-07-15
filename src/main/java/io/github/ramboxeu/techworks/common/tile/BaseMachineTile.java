@@ -41,7 +41,7 @@ public abstract class BaseMachineTile extends TileEntity implements ITickableTil
     public BaseMachineTile(TileEntityType<?> tileEntityType, ComponentStackHandler.Builder builder) {
         super(tileEntityType);
 
-        this.components = ComponentStackHandler.withBuilder(builder.onChanged(this::markComponentsDirty));
+        this.components = ComponentStackHandler.withBuilder(builder.onChanged(() -> markComponentsDirty(false)));
     }
 
     // PASS continues the execution on the block side
@@ -51,7 +51,22 @@ public abstract class BaseMachineTile extends TileEntity implements ITickableTil
 
     public void onLeftClick(BlockState state, World worldIn, BlockPos pos, PlayerEntity player) {}
 
-    protected void markComponentsDirty() {}
+    protected void markComponentsDirty(boolean forced) {}
+
+    @Override
+    public void tick() {
+        if (world != null) {
+            if (world.isRemote) {
+                clientTick();
+            } else {
+                serverTick();
+            }
+        }
+    }
+
+    protected void serverTick() {}
+
+    protected void clientTick() {}
 
     @Nonnull
     @Override
