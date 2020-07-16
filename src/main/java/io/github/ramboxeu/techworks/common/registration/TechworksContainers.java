@@ -2,11 +2,9 @@ package io.github.ramboxeu.techworks.common.registration;
 
 import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.api.component.ComponentStackHandler;
-import io.github.ramboxeu.techworks.client.container.ComponentsContainer;
+import io.github.ramboxeu.techworks.client.container.machine.ComponentsContainer;
 import io.github.ramboxeu.techworks.common.component.IComponentsContainerProvider;
-import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
 import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.extensions.IForgeContainerType;

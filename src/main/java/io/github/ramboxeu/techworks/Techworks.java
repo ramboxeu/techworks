@@ -3,6 +3,7 @@ package io.github.ramboxeu.techworks;
 import io.github.ramboxeu.techworks.api.gas.CapabilityGas;
 import io.github.ramboxeu.techworks.client.model.CableModelLoader;
 import io.github.ramboxeu.techworks.common.TechworksItemGroup;
+import io.github.ramboxeu.techworks.common.capability.CapabilityExtendedListenerProvider;
 import io.github.ramboxeu.techworks.common.debug.DebugInfoRenderer;
 import io.github.ramboxeu.techworks.common.network.TechworkPacketHandler;
 import io.github.ramboxeu.techworks.common.registration.Registration;
@@ -37,10 +38,13 @@ public class Techworks {
 
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientSetup);
+
+        MinecraftForge.EVENT_BUS.register(TechworksEvents.class);
     }
 
     public void setup(FMLCommonSetupEvent event) {
         CapabilityGas.register();
+        CapabilityExtendedListenerProvider.register();
         TechworkPacketHandler.register();
     }
 

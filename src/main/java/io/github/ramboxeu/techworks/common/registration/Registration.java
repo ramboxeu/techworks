@@ -1,10 +1,10 @@
 package io.github.ramboxeu.techworks.common.registration;
 
 import io.github.ramboxeu.techworks.Techworks;
-import io.github.ramboxeu.techworks.client.container.BoilerContainer;
-import io.github.ramboxeu.techworks.client.container.ElectricFurnaceContainer;
-import io.github.ramboxeu.techworks.client.container.ElectricGrinderContainer;
-import io.github.ramboxeu.techworks.client.container.SteamEngineContainer;
+import io.github.ramboxeu.techworks.client.container.machine.BoilerContainer;
+import io.github.ramboxeu.techworks.client.container.machine.ElectricFurnaceContainer;
+import io.github.ramboxeu.techworks.client.container.machine.ElectricGrinderContainer;
+import io.github.ramboxeu.techworks.client.container.machine.SteamEngineContainer;
 import io.github.ramboxeu.techworks.client.screen.*;
 import io.github.ramboxeu.techworks.common.block.BoilerBlock;
 import io.github.ramboxeu.techworks.common.block.ElectricFurnaceBlock;
@@ -93,9 +93,10 @@ public class Registration {
     public static final IRecipeType<ElectricGrinderRecipe> GRINDING_RECIPE = IRecipeType.register("techworks:grinding");
     public static final IRecipeSerializer<ElectricGrinderRecipe> GRINDING_RECIPE_SERIALIZER = IRecipeSerializer.register("techworks:grinding", new ElectricGrinderRecipe.Serializer());
 
-    // TODO: Make this NullPointerException safe
-    private static BaseMachineTile getTileFromPacketBuffer(PacketBuffer buffer) {
-        return (BaseMachineTile) Minecraft.getInstance().world.getTileEntity(buffer.readBlockPos());
+    // TODO: Make this NullPointerException safe and not garbage
+    @SuppressWarnings("unchecked")
+    private static <T extends BaseMachineTile> T getTileFromPacketBuffer(PacketBuffer buffer) {
+        return (T) Minecraft.getInstance().world.getTileEntity(buffer.readBlockPos());
     }
 
     public static void registerScreens(){

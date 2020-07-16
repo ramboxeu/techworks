@@ -2,7 +2,7 @@ package io.github.ramboxeu.techworks.common.item;
 
 import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.api.component.ComponentStackHandler;
-import io.github.ramboxeu.techworks.client.container.ComponentsContainer;
+import io.github.ramboxeu.techworks.client.container.machine.ComponentsContainer;
 import io.github.ramboxeu.techworks.common.component.IComponentsContainerProvider;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;

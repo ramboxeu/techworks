@@ -15,17 +15,17 @@ public class SlotBuilder {
     private boolean isOutput;
     private int stackLimit;
     private BiConsumer<ItemStack, SlotItemHandler> onChangedListener;
+    private final IItemHandler inv;
+    private final int index;
 
-    public SlotBuilder(int x, int y) {
-        this.x = x;
-        this.y = y;
-        this.predicate = itemStack -> true;
+    public SlotBuilder(IItemHandler inv, int index) {
+        this.x = 0;
+        this.y = 0;
+        this.predicate = itemStack -> inv.isItemValid(index, itemStack);
         this.stackLimit = 64;
         this.onChangedListener = ((itemStack, slotItemHandler) -> {});
-    }
-
-    public SlotBuilder() {
-        this(0,0);
+        this.inv = inv;
+        this.index = index;
     }
 
     public SlotBuilder pos(int x, int y) {
@@ -54,8 +54,8 @@ public class SlotBuilder {
         return this;
     }
 
-    public SlotItemHandler build(IItemHandler itemHandler, int index) {
-        return new SlotItemHandler(itemHandler, index, this.x, this.y) {
+    public SlotItemHandler build() {
+        return new SlotItemHandler(inv, index, x, y) {
             @Override
             public boolean isItemValid(@Nonnull ItemStack stack) {
                 return isOutput || predicate.test(stack);

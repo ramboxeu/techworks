@@ -1,4 +1,4 @@
-package io.github.ramboxeu.techworks.client.container;
+package io.github.ramboxeu.techworks.client.container.machine;
 
 import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.api.component.ComponentStackHandler;

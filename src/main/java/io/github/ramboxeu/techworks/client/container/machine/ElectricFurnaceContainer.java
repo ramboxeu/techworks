@@ -1,5 +1,6 @@
-package io.github.ramboxeu.techworks.client.container;
+package io.github.ramboxeu.techworks.client.container.machine;
 
+import io.github.ramboxeu.techworks.client.container.BaseMachineContainer;
 import io.github.ramboxeu.techworks.common.registration.Registration;
 import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
 import io.github.ramboxeu.techworks.common.util.PredicateUtils;
@@ -9,14 +10,13 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IntReferenceHolder;
 
-public class ElectricGrinderContainer extends AbstractMachineContainer {
+public class ElectricFurnaceContainer extends BaseMachineContainer {
     private int workTime;
     private int workCounter;
 
-    public ElectricGrinderContainer(int id, PlayerInventory playerInventory, BaseMachineTile machineTile) {
-        super(Registration.ELECTRIC_GRINDER_CONTAINER.get(), id, playerInventory, machineTile);
+    public ElectricFurnaceContainer(int id, PlayerInventory playerInventory, BaseMachineTile machineTile) {
+        super(Registration.ELECTRIC_FURNACE_CONTAINER.get(), id, playerInventory, machineTile);
 
 //        this.trackInt(new IntReferenceHolder() {
 //            @Override
@@ -44,16 +44,16 @@ public class ElectricGrinderContainer extends AbstractMachineContainer {
     }
 
     @Override
-    protected void layoutSlots(InventoryBuilder builder) {
-        builder.addSlot(new SlotBuilder(56, 35))
-                .addSlot(new SlotBuilder(32, 53).predicate(PredicateUtils::isEnergyStorage))
-                .addSlot(new SlotBuilder(116, 35).output(true).limit(0));
-    }
-
-    @Override
     public boolean canInteractWith(PlayerEntity playerIn) {
         return true;
     }
+
+//    @Override
+//    protected void layoutSlots(InventoryBuilder builder) {
+//        builder.addSlot(new SlotBuilder(56, 35))
+//                .addSlot(new SlotBuilder(32, 53).predicate(PredicateUtils::isEnergyStorage).limit(0))
+//                .addSlot(new SlotBuilder(116, 35).output(true).limit(0));
+//    }
 
     public int getWorkTime() {
         return this.workTime;

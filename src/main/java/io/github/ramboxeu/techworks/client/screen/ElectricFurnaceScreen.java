@@ -1,11 +1,8 @@
 package io.github.ramboxeu.techworks.client.screen;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.ramboxeu.techworks.Techworks;
-import io.github.ramboxeu.techworks.client.container.ElectricFurnaceContainer;
-import io.github.ramboxeu.techworks.common.util.inventory.RenderUtils;
-import net.minecraft.client.gui.screen.Screen;
+import io.github.ramboxeu.techworks.client.container.machine.ElectricFurnaceContainer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;

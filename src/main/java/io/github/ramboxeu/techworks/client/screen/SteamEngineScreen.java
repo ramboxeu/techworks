@@ -1,17 +1,12 @@
 package io.github.ramboxeu.techworks.client.screen;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.ramboxeu.techworks.Techworks;
-import io.github.ramboxeu.techworks.client.container.SteamEngineContainer;
-import io.github.ramboxeu.techworks.common.util.inventory.RenderUtils;
-import net.minecraft.client.gui.screen.Screen;
+import io.github.ramboxeu.techworks.client.container.machine.SteamEngineContainer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-
-import java.awt.*;
 
 public class SteamEngineScreen extends ContainerScreen<SteamEngineContainer> {
     public static final ResourceLocation BOILER_GUI_TEXTURE = new ResourceLocation(Techworks.MOD_ID, "textures/gui/container/steam_engine.png");

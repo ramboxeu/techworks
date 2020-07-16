@@ -17,12 +17,18 @@ public class TechworkPacketHandler {
             .networkProtocolVersion(() -> PROTOCOL_VERSION)
             .simpleChannel();
 
+    private static int id = 0;
+
     public static void register() {
-        int id = 0;
         CHANNEL.registerMessage(id++, CableSyncShapePacket.class, CableSyncShapePacket::encode, CableSyncShapePacket::decode, CableSyncShapePacket.Handler::handle);
         CHANNEL.registerMessage(id++, CableRequestSyncShapePacket.class, CableRequestSyncShapePacket::encode, CableRequestSyncShapePacket::decode, CableRequestSyncShapePacket.Handler::handle);
         CHANNEL.registerMessage(id++, DebugRequestPacket.class, DebugRequestPacket::encode, DebugRequestPacket::decode, DebugRequestPacket.Handler::handle);
         CHANNEL.registerMessage(id++, DebugResponsePacket.class, DebugResponsePacket::encode, DebugResponsePacket::decode, DebugResponsePacket.Handler::handle);
+        CHANNEL.registerMessage(id++, SObjectUpdatePacket.class, SObjectUpdatePacket::encode, SObjectUpdatePacket::decode, SObjectUpdatePacket::handle);
+    }
+
+    public static void sendObjectUpdatePacket(SObjectUpdatePacket packet, ServerPlayerEntity entity) {
+        CHANNEL.send(PacketDistributor.PLAYER.with(() -> entity), packet);
     }
 
     public static void sendCableSyncPacket(Chunk chunk, CableSyncShapePacket packet) {

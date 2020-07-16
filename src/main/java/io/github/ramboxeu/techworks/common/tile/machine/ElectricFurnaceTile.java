@@ -1,23 +1,15 @@
 package io.github.ramboxeu.techworks.common.tile.machine;
 
 import io.github.ramboxeu.techworks.api.component.ComponentStackHandler;
-import io.github.ramboxeu.techworks.client.container.ElectricFurnaceContainer;
-import io.github.ramboxeu.techworks.common.capability.InventoryItemStackHandler;
-import io.github.ramboxeu.techworks.common.capability.extensions.IInventoryItemStackHandler;
+import io.github.ramboxeu.techworks.client.container.machine.ElectricFurnaceContainer;
 import io.github.ramboxeu.techworks.common.registration.Registration;
 import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
-import io.github.ramboxeu.techworks.common.util.PredicateUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.energy.EnergyStorage;
-import net.minecraftforge.energy.IEnergyStorage;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class ElectricFurnaceTile extends BaseMachineTile {

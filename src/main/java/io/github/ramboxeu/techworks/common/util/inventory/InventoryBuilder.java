@@ -22,7 +22,7 @@ public class InventoryBuilder {
 
         for (int i = 0; i < slots.size(); i++) {
             SlotBuilder builder = slots.get(i);
-            slotItemHandlers.add(builder.build(itemHandler, i));
+            slotItemHandlers.add(builder.build());
         }
 
         return slotItemHandlers.toArray(new SlotItemHandler[] {});

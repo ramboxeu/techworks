@@ -3,6 +3,7 @@ package io.github.ramboxeu.techworks.common.tile;
 import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.api.component.ComponentItem;
 import io.github.ramboxeu.techworks.api.component.ComponentStackHandler;
+import io.github.ramboxeu.techworks.common.util.event.EventStore;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.INamedContainerProvider;
@@ -37,6 +38,8 @@ public abstract class BaseMachineTile extends TileEntity implements ITickableTil
     protected Capability<?>[] capabilities = { null, null, null, null, null, null };
     protected LazyOptional<?>[] optionals = { LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty(), LazyOptional.empty()};
     protected final ComponentStackHandler components;
+
+    private EventStore eventStore = new EventStore();
 
     public BaseMachineTile(TileEntityType<?> tileEntityType, ComponentStackHandler.Builder builder) {
         super(tileEntityType);
@@ -80,5 +83,9 @@ public abstract class BaseMachineTile extends TileEntity implements ITickableTil
         }
 
         return super.getCapability(cap, side);
+    }
+
+    public EventStore getEventStore() {
+        return eventStore;
     }
 }

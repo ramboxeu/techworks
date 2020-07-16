@@ -1,4 +1,5 @@
-package io.github.ramboxeu.techworks.client.container;
+package io.github.ramboxeu.techworks.client.container.machine;
+import io.github.ramboxeu.techworks.client.container.BaseMachineContainer;
 import io.github.ramboxeu.techworks.common.registration.Registration;
 import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
 import io.github.ramboxeu.techworks.common.util.PredicateUtils;
@@ -9,17 +10,17 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 
-public class SteamEngineContainer extends AbstractMachineContainer {
+public class SteamEngineContainer extends BaseMachineContainer {
     public SteamEngineContainer(int id, PlayerInventory playerInventory, BaseMachineTile machineTile) {
         super(Registration.STEAM_ENGINE_CONTAINER.get(), id, playerInventory, machineTile);
     }
 
-    @Override
-    protected void layoutSlots(InventoryBuilder builder) {
-        builder.addSlot(new SlotBuilder(27, 16).limit(1).predicate(itemStack -> false))
-                .addSlot(new SlotBuilder(27, 54).limit(1).predicate(itemStack -> false))
-                .addSlot(new SlotBuilder(133, 35).limit(1).predicate(PredicateUtils::isEnergyStorage));
-    }
+//    @Override
+//    protected void layoutSlots(InventoryBuilder builder) {
+//        builder.addSlot(new SlotBuilder(27, 16).limit(1).predicate(itemStack -> false))
+//                .addSlot(new SlotBuilder(27, 54).limit(1).predicate(itemStack -> false))
+//                .addSlot(new SlotBuilder(133, 35).limit(1).predicate(PredicateUtils::isEnergyStorage));
+//    }
 
     @Override
     public boolean canInteractWith(PlayerEntity playerIn) {

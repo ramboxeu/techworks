@@ -1,11 +1,9 @@
 package io.github.ramboxeu.techworks.client.screen;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.ramboxeu.techworks.Techworks;
-import io.github.ramboxeu.techworks.client.container.BoilerContainer;
+import io.github.ramboxeu.techworks.client.container.machine.BoilerContainer;
 import io.github.ramboxeu.techworks.common.util.inventory.RenderUtils;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
@@ -41,8 +39,8 @@ public class BoilerScreen extends ContainerScreen<BoilerContainer> {
 //    }
 
     private void renderTanks() {
-        RenderUtils.drawFluidInTank(this.guiLeft + 50,this.guiTop + 16, boilerContainer.getFluid(), 16, 54, 10000);
-        RenderUtils.drawGasInTank(this.guiLeft + 110,this.guiTop + 16, boilerContainer.getGas(), new Color(195, 195, 195, 255), 16, 54, 10000);
+//        RenderUtils.drawFluidInTank(this.guiLeft + 50,this.guiTop + 16, boilerContainer.getFluid(), 16, 54, 10000);
+//        RenderUtils.drawGasInTank(this.guiLeft + 110,this.guiTop + 16, boilerContainer.getGas(), new Color(195, 195, 195, 255), 16, 54, 10000);
     }
 
     private void renderProgressBars() {

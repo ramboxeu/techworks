@@ -6,7 +6,7 @@ import io.github.ramboxeu.techworks.api.component.ComponentStackHandler.Slot;
 import io.github.ramboxeu.techworks.api.component.base.BaseBoilingComponent;
 import io.github.ramboxeu.techworks.api.component.base.BaseGasStorageComponent;
 import io.github.ramboxeu.techworks.api.component.base.BaseLiquidStorageComponent;
-import io.github.ramboxeu.techworks.client.container.BoilerContainer;
+import io.github.ramboxeu.techworks.client.container.machine.BoilerContainer;
 import io.github.ramboxeu.techworks.common.component.IComponentsContainerProvider;
 import io.github.ramboxeu.techworks.common.registration.Registration;
 import io.github.ramboxeu.techworks.common.registration.TechworksFluids;
@@ -31,16 +31,12 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.LogicalSidedProvider;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
@@ -272,44 +268,12 @@ public class BoilerTile extends BaseMachineTile implements IComponentsContainerP
         return new StringTextComponent("Boiler Components");
     }
 
-    public void handleFluidHandlerInput(ItemStack stack, SlotItemHandler slot) {
-//        stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).ifPresent(fluidHandler -> {
-//            for (int i = 0; i < fluidHandler.getTanks(); i++) {
-//                if (fluidHandler.getFluidInTank(i).isEmpty() || !fluidHandler.getFluidInTank(i).isFluidEqual(new FluidStack(Fluids.WATER, 1000)))
-//                    return;
-//
-//                this.fluidHandler.ifPresent(machineFluidHandler -> {
-//                    int drainAmount = machineFluidHandler.getTankCapacity(0) - machineFluidHandler.getFluidInTank(0).getAmount();
-//                    if (machineFluidHandler.fill(fluidHandler.drain(drainAmount, IFluidHandler.FluidAction.EXECUTE), IFluidHandler.FluidAction.EXECUTE) > 0) {
-//                        slot.putStack(fluidHandler.getContainer());
-//                    }
-//                });
-//            }
-//        });
-    }
-
-    public void handleFluidHandlerOutput(ItemStack stack, SlotItemHandler slot) {
-//        stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).ifPresent(fluidHandler -> {
-//            for (int i = 0; i < fluidHandler.getTanks(); i++) {
-//                if (!fluidHandler.getFluidInTank(i).isEmpty() && !fluidHandler.getFluidInTank(i).getFluid().equals(Fluids.WATER))
-//                    return;
-//
-//                int finalI = i;
-//                this.fluidHandler.ifPresent(machineFluidHandler -> {
-//                    int fillAmount = fluidHandler.getTankCapacity(finalI) - fluidHandler.getFluidInTank(finalI).getAmount();
-//                    if (fluidHandler.fill(machineFluidHandler.drain(fillAmount, IFluidHandler.FluidAction.EXECUTE), IFluidHandler.FluidAction.EXECUTE) > 0)
-//                        slot.putStack(fluidHandler.getContainer());
-//                });
-//            }
-//        });
-    }
-
-    public int getWorkTime() {
-        return workTime;
-    }
-
     public int getFuelBurnTime() {
         return fuelBurnTime;
+    }
+
+    public int getBurnTime() {
+        return burnTime;
     }
 
     public FluidStack getWater() {
@@ -318,5 +282,9 @@ public class BoilerTile extends BaseMachineTile implements IComponentsContainerP
 
     public FluidStack getSteam() {
         return steamTank.map(handler -> handler.getFluidInTank(0)).orElse(FluidStack.EMPTY);
+    }
+
+    public IItemHandler getFuelInventory() {
+        return fuelInventory;
     }
 }

@@ -7,8 +7,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.ForgeRegistry;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
@@ -88,6 +91,25 @@ public class Utils {
             if (componentStack.getDamage() != componentStack.getMaxDamage() - 1) {
                 componentStack.setDamage(componentStack.getDamage() + 1);
             }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> T castOrDefault(Object value, T other) {
+        try {
+            return (T)value;
+        } catch (ClassCastException e) {
+            return other;
+        }
+    }
+
+    public static String stringifyFluidStack(FluidStack stack) {
+        try {
+            return String.format("Fluid: %s, %dmb",
+                    ForgeRegistries.FLUIDS.getKey(stack.getFluid()),
+                    stack.getAmount());
+        } catch (NullPointerException e) {
+            return "Fluid: null";
         }
     }
 }
