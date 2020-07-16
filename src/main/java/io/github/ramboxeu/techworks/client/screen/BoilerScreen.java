@@ -4,6 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.client.container.machine.BoilerContainer;
 import io.github.ramboxeu.techworks.common.util.inventory.RenderUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
@@ -23,20 +24,15 @@ public class BoilerScreen extends ContainerScreen<BoilerContainer> {
     }
 
     @Override
-    // a.k.a render
-    protected void func_230450_a_(MatrixStack p_230450_1_, float p_230450_2_, int p_230450_3_, int p_230450_4_) {
+    // a.k.a drawBackgroundLayer
+    protected void func_230450_a_(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
 
     }
 
-//    @Override
-//    public void render(int mouseX, int mouseY, float partialTicks) {
-//        this.renderBackground();
-//        //this.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
-//        super.render(mouseX, mouseY, partialTicks);
-//        this.renderProgressBars();
-//        this.renderTanks();
-//        this.renderHoveredToolTip(mouseX, mouseY);
-//    }
+    @Override
+    protected void func_230451_b_(MatrixStack stack, int mouseX, int mouseY) {
+        super.func_230451_b_(stack, mouseX, mouseY);
+    }
 
     private void renderTanks() {
 //        RenderUtils.drawFluidInTank(this.guiLeft + 50,this.guiTop + 16, boilerContainer.getFluid(), 16, 54, 10000);

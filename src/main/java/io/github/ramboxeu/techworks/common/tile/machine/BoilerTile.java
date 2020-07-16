@@ -229,8 +229,7 @@ public class BoilerTile extends BaseMachineTile implements IComponentsContainerP
 
 
     @Override
-    // a. k. a read
-    public void func_230337_a_(BlockState state, CompoundNBT compound) {
+    public void read(BlockState state, CompoundNBT compound) {
         fuelBurnTime = compound.getInt("FuelBurnTime");
         burnTime = compound.getInt("BurnTime");
         workTime = compound.getInt("WorkTime");
@@ -242,7 +241,7 @@ public class BoilerTile extends BaseMachineTile implements IComponentsContainerP
         components.deserializeNBT(compound.getCompound("ComponentInv"));
         markComponentsDirty(true);
 
-        super.func_230337_a_(state, compound);
+        super.read(state, compound);
     }
 
     @Override
