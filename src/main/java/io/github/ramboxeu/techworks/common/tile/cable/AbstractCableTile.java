@@ -107,8 +107,8 @@ public abstract class AbstractCableTile<THandler> extends TileEntity implements 
 
 
     @Override
-    public void func_230337_a_(BlockState p_230337_1_, CompoundNBT compound) {
-        super.func_230337_a_(p_230337_1_, compound);
+    public void read(BlockState p_230337_1_, CompoundNBT compound) {
+        super.read(p_230337_1_, compound);
         this.connections = NBTUtils.readCableConnections(compound.getCompound("cableConnections"));
         handler.ifPresent(h -> capability.readNBT(h, Direction.NORTH, compound.getCompound("storage")));
     }

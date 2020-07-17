@@ -2,36 +2,44 @@ package io.github.ramboxeu.techworks.client.screen;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import io.github.ramboxeu.techworks.Techworks;
+import io.github.ramboxeu.techworks.client.container.IExtendedContainerListener;
 import io.github.ramboxeu.techworks.client.container.machine.BoilerContainer;
-import io.github.ramboxeu.techworks.common.util.inventory.RenderUtils;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import io.github.ramboxeu.techworks.client.screen.widget.BurnProgressWidget;
+import io.github.ramboxeu.techworks.client.screen.widget.FluidTankWidget;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.IContainerListener;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
-import java.awt.*;
-
-public class BoilerScreen extends ContainerScreen<BoilerContainer> {
+public class BoilerScreen extends BaseScreen<BoilerContainer> {
     public static final ResourceLocation BOILER_GUI_TEXTURE = new ResourceLocation(Techworks.MOD_ID, "textures/gui/container/boiler.png");
 
-    private BoilerContainer boilerContainer;
+    private final BurnProgressWidget burnProgress;
+    private final FluidTankWidget waterTank;
+    private final FluidTankWidget steamTank;
 
     public BoilerScreen(BoilerContainer boilerContainer, PlayerInventory playerInventory, ITextComponent title) {
-        super(boilerContainer, playerInventory, title);
+        super(boilerContainer, playerInventory, title, BOILER_GUI_TEXTURE);
 
-        this.boilerContainer = boilerContainer;
+        burnProgress = addWidget(new BurnProgressWidget(80 ,37));
+        waterTank = addWidget(new FluidTankWidget(49, 15));
+        steamTank = addWidget(new FluidTankWidget(109, 15));
+
+        waterTank.setMaxStorage(5000);
+        steamTank.setMaxStorage(5000);
     }
 
     @Override
-    // a.k.a drawBackgroundLayer
-    protected void func_230450_a_(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+        burnProgress.setProgress((float) container.getCookTime() / container.getBurnTime());
+        waterTank.setStoredFluid(container.getWaterStack());
+        steamTank.setStoredFluid(container.getSteamStack());
 
-    }
-
-    @Override
-    protected void func_230451_b_(MatrixStack stack, int mouseX, int mouseY) {
-        super.func_230451_b_(stack, mouseX, mouseY);
+        super.render(stack, mouseX, mouseY, partialTicks);
     }
 
     private void renderTanks() {
@@ -67,34 +75,15 @@ public class BoilerScreen extends ContainerScreen<BoilerContainer> {
 //        this.font.drawString(this.playerInventory.getDisplayName().getFormattedText(), 8.0F, (float)(this.ySize - 96 + 2), 4210752);
 //    }
 //
-//    @Override
-//    protected void renderHoveredToolTip(int mouseX, int mouseY) {
-//        // Water  | Steam
-//        // 50, 15 | 110, 15
-//        // 65, 68 | 125, 68
-//        int x = mouseX - this.guiLeft;
-//        int y = mouseY - this.guiTop;
-//
-//        if (x >= 50 && x <= 65 && y >= 15 && y <= 68) {
-//            if (Screen.hasShiftDown()) {
-//                this.renderTooltip(String.format("Water %db", boilerContainer.getFluid().getAmount() / 1000), mouseX, mouseY);
-//            } else {
-//                this.renderTooltip(String.format("Water %dmb", boilerContainer.getFluid().getAmount()), mouseX, mouseY);
-//            }
-//        }
-//
-//        if (x >= 100 && x <= 125 && y >= 15 && y <= 68) {
-//            if (Screen.hasShiftDown()) {
-//                this.renderTooltip(String.format("Steam %sb", boilerContainer.getGas() / 1000), mouseX, mouseY);
-//            } else {
-//                this.renderTooltip(String.format("Steam %smb", boilerContainer.getGas()), mouseX, mouseY);
-//            }
-//        }
-//
-//        if (x >= 80 && x <= 93 && y >= 37 && y <= 50) {
-//            this.renderTooltip(this.boilerContainer.getCookTime() + "/" + this.boilerContainer.getBurnTime(), mouseX, mouseY);
-//        }
-//
-//        super.renderHoveredToolTip(mouseX, mouseY);
-//    }
+    @Override
+    protected void renderHoveredTooltip(MatrixStack stack, int mouseX, int mouseY) {
+        int x = mouseX - this.guiLeft;
+        int y = mouseY - this.guiTop;
+
+        if (x >= 80 && x <= 93 && y >= 37 && y <= 50) {
+            this.renderTooltip(stack, container.getCookTime() + "/" + container.getBurnTime(), x, y);
+        }
+
+        super.renderHoveredTooltip(stack, mouseX, mouseY);
+    }
 }

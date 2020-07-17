@@ -112,4 +112,14 @@ public class Utils {
             return "Fluid: null";
         }
     }
+
+    public static float clampFloat(float a) {
+        if (a > 1) {
+            return 1;
+        } else if (a < 0) {
+            return 0;
+        } else {
+            return a;
+        }
+    }
 }
