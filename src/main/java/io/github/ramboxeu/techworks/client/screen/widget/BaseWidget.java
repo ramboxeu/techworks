@@ -11,4 +11,6 @@ public abstract class BaseWidget extends Widget {
 
     // Somewhat hacky way of rendering tooltips, until something with matrices transformations will be made
     public void renderTooltip(MatrixStack stack, int mouseX, int mouseY, int width, int height) {}
+
+
 }

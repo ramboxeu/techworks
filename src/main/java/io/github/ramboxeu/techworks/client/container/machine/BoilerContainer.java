@@ -8,6 +8,7 @@ import io.github.ramboxeu.techworks.common.util.PredicateUtils;
 import io.github.ramboxeu.techworks.common.util.inventory.SlotBuilder;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -68,6 +69,13 @@ public class BoilerContainer extends BaseMachineContainer<BoilerTile> {
             public Object deserialize(CompoundNBT tag) {
                 return FluidStack.loadFluidStackFromNBT(tag);
             }
+
+            @Override
+            protected boolean isSame(Object old, Object current) {
+                FluidStack a = (FluidStack) old;
+                FluidStack b = (FluidStack) current;
+                return a.getFluid() != b.getFluid() || a.getAmount() != b.getAmount();
+            }
         });
 
         trackObject(new ObjectReferenceHolder() {
@@ -89,6 +97,13 @@ public class BoilerContainer extends BaseMachineContainer<BoilerTile> {
             @Override
             public Object deserialize(CompoundNBT tag) {
                 return FluidStack.loadFluidStackFromNBT(tag);
+            }
+
+            @Override
+            protected boolean isSame(Object old, Object current) {
+                FluidStack a = (FluidStack) old;
+                FluidStack b = (FluidStack) current;
+                return a.getFluid() != b.getFluid() || a.getAmount() != b.getAmount();
             }
         });
 

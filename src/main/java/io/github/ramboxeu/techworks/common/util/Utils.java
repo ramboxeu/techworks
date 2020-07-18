@@ -6,6 +6,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -110,6 +112,16 @@ public class Utils {
                     stack.getAmount());
         } catch (NullPointerException e) {
             return "Fluid: null";
+        }
+    }
+
+    public static ITextComponent getFluidName(FluidStack stack) {
+        if (stack.isEmpty()) {
+            // Technically this could be fluid.minecraft.empty,
+            // but to avoid any possible problems techworks namespace is used
+            return new TranslationTextComponent("fluid.techworks.empty");
+        } else {
+            return stack.getFluid().getAttributes().getDisplayName(stack);
         }
     }
 

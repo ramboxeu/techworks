@@ -3,6 +3,9 @@ package io.github.ramboxeu.techworks.client.screen.widget;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import io.github.ramboxeu.techworks.Techworks;
+import io.github.ramboxeu.techworks.client.util.Color;
+import io.github.ramboxeu.techworks.client.util.RenderUtils;
+import io.github.ramboxeu.techworks.common.util.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.ResourceLocation;
@@ -34,20 +37,24 @@ public class FluidTankWidget extends BaseWidget {
         blit(stack, x, y, 0, 0, width, height, width, height);
 
         if (!storedFluid.isEmpty()) {
-            FluidAttributes attributes = storedFluid.getFluid().getAttributes();
-            int color = attributes.getColor(storedFluid);
-            ResourceLocation stillTexture = attributes.getStillTexture();
-            Minecraft.getInstance().textureManager.bindTexture(stillTexture);
-
             float level = (float) storedFluid.getAmount() / maxStorage;
-            int height  = (int) (this.height - (this.height * level));
-            blit(stack, x + 1, (y + 1) + height, 0,0, 16, (int)(this.height * level) - 1, 16, (int)(this.height * level) - 1);
+            int height  = (int) ((this.height - 2) * level);
+            int tankY = y + (this.height - height) - 1;
+
+            FluidAttributes attributes = storedFluid.getFluid().getAttributes();
+
+            Color color = Color.fromRGBA(attributes.getColor(storedFluid));
+            ResourceLocation stillTexture = attributes.getStillTexture(storedFluid);
+
+            stack.push();
+            RenderUtils.drawFluid(stack, x + 1, tankY, width - 2, height, color, stillTexture);
+            stack.pop();
         }
     }
 
     @Override
     public void renderTooltip(MatrixStack stack, int mouseX, int mouseY, int width, int height) {
-        StringBuilder builder = new StringBuilder(storedFluid.getDisplayName().getString()).append(" ");
+        StringBuilder builder = new StringBuilder(Utils.getFluidName(storedFluid).getString()).append(" ");
 
         if (Screen.hasShiftDown()) {
             builder.append(storedFluid.getAmount() / (float) FluidAttributes.BUCKET_VOLUME).append("b");

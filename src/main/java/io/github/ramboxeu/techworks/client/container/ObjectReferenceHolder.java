@@ -13,9 +13,11 @@ public abstract class ObjectReferenceHolder {
 
     public abstract Object deserialize(CompoundNBT tag);
 
+    protected abstract boolean isSame(Object old, Object current);
+
     public boolean isDirty() {
         Object newValue = get();
-        boolean isDirty = !newValue.equals(oldValue);
+        boolean isDirty = !isSame(oldValue == null ? newValue : oldValue , newValue);
         oldValue = newValue;
         return isDirty;
     }
