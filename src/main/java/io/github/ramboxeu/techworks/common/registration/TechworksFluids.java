@@ -20,7 +20,7 @@ public class TechworksFluids {
     private static final DeferredRegister<Fluid> FLUIDS = DeferredRegister.create(ForgeRegistries.FLUIDS, Techworks.MOD_ID);
 
     public static final Pair<RegistryObject<Source>, RegistryObject<Flowing>> STEAM = register("steam",
-            FluidAttributes.builder(new ResourceLocation(Techworks.MOD_ID, "block/water_still"), new ResourceLocation(Techworks.MOD_ID, "block/water_still")).gaseous().color(Color.toRGBA(229, 229, 299, 200)),
+            FluidAttributes.builder(new ResourceLocation(Techworks.MOD_ID, "block/steam_still"), new ResourceLocation(Techworks.MOD_ID, "block/steam_still")).gaseous().color(Color.toRGBA(225, 225, 225, 220)),
             null, Items.AIR);
 
     private static Pair<RegistryObject<Source>, RegistryObject<Flowing>> register(String name, FluidAttributes.Builder builder, FlowingFluidBlock block, Item bucket) {

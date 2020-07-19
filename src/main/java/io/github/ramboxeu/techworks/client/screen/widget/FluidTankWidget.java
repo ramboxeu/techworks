@@ -2,6 +2,7 @@ package io.github.ramboxeu.techworks.client.screen.widget;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.client.util.Color;
 import io.github.ramboxeu.techworks.client.util.RenderUtils;
@@ -46,9 +47,7 @@ public class FluidTankWidget extends BaseWidget {
             Color color = Color.fromRGBA(attributes.getColor(storedFluid));
             ResourceLocation stillTexture = attributes.getStillTexture(storedFluid);
 
-            stack.push();
             RenderUtils.drawFluid(stack, x + 1, tankY, width - 2, height, color, stillTexture);
-            stack.pop();
         }
     }
 

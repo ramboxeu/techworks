@@ -20,5 +20,8 @@
   "container.techworks.boiler": "Boiler",
   "container.techworks.steam_engine": "Steam Engine",
   "container.techworks.electric_grinder": "Electric Grinder",
-  "container.techworks.electric_furnace": "Electric Furnace"
+  "container.techworks.electric_furnace": "Electric Furnace",
+
+  "fluid.techworks.empty": "Empty",
+  "fluid.techworks.steam": "Steam"
 }
