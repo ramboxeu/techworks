@@ -25,56 +25,33 @@ public class BoilerScreen extends BaseScreen<BoilerContainer> {
     public BoilerScreen(BoilerContainer boilerContainer, PlayerInventory playerInventory, ITextComponent title) {
         super(boilerContainer, playerInventory, title, BOILER_GUI_TEXTURE);
 
-        burnProgress = addWidget(new BurnProgressWidget(80 ,37));
+        burnProgress = addWidget(new BurnProgressWidget(80 ,37, true));
         waterTank = addWidget(new FluidTankWidget(49, 15));
         steamTank = addWidget(new FluidTankWidget(109, 15));
 
-        waterTank.setMaxStorage(5000);
-        steamTank.setMaxStorage(5000);
+        waterTank.setMaxStorage(container.getWaterTankStorage());
+        steamTank.setMaxStorage(container.getSteamTankStorage());
     }
 
     @Override
     public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
-        burnProgress.setProgress((float) container.getCookTime() / container.getBurnTime());
+        int cookTime = container.getCookTime();
+        int burnTime = container.getBurnTime();
+
+        if (cookTime > 0 && burnTime > 0) {
+            burnProgress.setProgress((float) cookTime / burnTime);
+        } else {
+            burnProgress.setProgress(0);
+        }
+
         waterTank.setStoredFluid(container.getWaterStack());
         steamTank.setStoredFluid(container.getSteamStack());
+        waterTank.setMaxStorage(container.getWaterTankStorage());
+        steamTank.setMaxStorage(container.getSteamTankStorage());
 
         super.render(stack, mouseX, mouseY, partialTicks);
     }
 
-    private void renderTanks() {
-//        RenderUtils.drawFluidInTank(this.guiLeft + 50,this.guiTop + 16, boilerContainer.getFluid(), 16, 54, 10000);
-//        RenderUtils.drawGasInTank(this.guiLeft + 110,this.guiTop + 16, boilerContainer.getGas(), new Color(195, 195, 195, 255), 16, 54, 10000);
-    }
-
-    private void renderProgressBars() {
-        // Render fuel burning
-//        this.minecraft.getTextureManager().bindTexture(BOILER_GUI_TEXTURE);
-//        int burnTime = this.boilerContainer.getBurnTime();
-//        int cookTime = this.boilerContainer.getCookTime();
-//
-//        if (burnTime > 0 && cookTime > 0) {
-//            int progress = (int) (14 * ((float) cookTime / burnTime));
-//
-//            this.blit(80 + this.guiLeft, 37 + this.guiTop + progress, 176, progress, 14, 14);
-//        }
-    }
-
-//    @Override
-//    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-//        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-//        this.minecraft.getTextureManager().bindTexture(BOILER_GUI_TEXTURE);
-//        int i = (this.width - this.xSize) / 2;
-//        int j = (this.height - this.ySize) / 2;
-//        this.blit(i, j, 0, 0, this.xSize, this.ySize);
-//    }
-
-//    @Override
-//    protected void drawGuiContainerForegroundLayer(int p_146979_1_, int p_146979_2_) {
-//        this.font.drawString(this.title.getFormattedText(), (float) ((this.xSize / 2) - (this.font.getStringWidth(this.title.getString()) / 2)) , 6.0F, 4210752);
-//        this.font.drawString(this.playerInventory.getDisplayName().getFormattedText(), 8.0F, (float)(this.ySize - 96 + 2), 4210752);
-//    }
-//
     @Override
     protected void renderHoveredTooltip(MatrixStack stack, int mouseX, int mouseY) {
         int x = mouseX - this.guiLeft;

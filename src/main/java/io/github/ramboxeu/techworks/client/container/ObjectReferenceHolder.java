@@ -17,7 +17,7 @@ public abstract class ObjectReferenceHolder {
 
     public boolean isDirty() {
         Object newValue = get();
-        boolean isDirty = !isSame(oldValue == null ? newValue : oldValue , newValue);
+        boolean isDirty = oldValue == null || !isSame(oldValue, newValue);
         oldValue = newValue;
         return isDirty;
     }

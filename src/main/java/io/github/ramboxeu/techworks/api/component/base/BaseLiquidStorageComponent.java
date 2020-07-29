@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
@@ -40,11 +41,10 @@ public class BaseLiquidStorageComponent extends ComponentItem {
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         // Change this with translate-able version
-        tooltip.add(new StringTextComponent("Holds various liquids"));
-        tooltip.add(new StringTextComponent("Level: " + level));
-        tooltip.add(new StringTextComponent("Capacity: " + volume + " mb"));
-
-        String fluidName = "None";
+        tooltip.add(new TranslationTextComponent("tooltip.techworks.liquid_storage_component_description"));
+        tooltip.add(new TranslationTextComponent("tooltip.techworks.component_level", level));
+        tooltip.add(new TranslationTextComponent("tooltip.techworks.component_capacity", volume));
+        String fluidName = new TranslationTextComponent("fluid.techworks.none").getString();
 
         // Seems like you can't use capabilities when this first gets called,
         // so to stop the game from crashing we need to void that exception
@@ -53,14 +53,14 @@ public class BaseLiquidStorageComponent extends ComponentItem {
             if (capability.isPresent()) {
                 FluidStack fluidStack = capability.orElse(null).getFluidInTank(0);
                 if (fluidStack.isEmpty()) {
-                    fluidName = "Empty";
+                    fluidName = new TranslationTextComponent("fluid.techworks.empty").getString();
                 } else {
                     fluidName = fluidStack.getFluid().getAttributes().getDisplayName(fluidStack).getString();
                 }
             }
         } catch (NullPointerException e) {}
 
-        tooltip.add(new StringTextComponent("Fluid: " + fluidName));
+        tooltip.add(new TranslationTextComponent("tooltip.techworks.liquid_storage_component_liquid", fluidName));
 
         super.addInformation(stack, worldIn, tooltip, flagIn);
     }
@@ -95,7 +95,12 @@ public class BaseLiquidStorageComponent extends ComponentItem {
             return new FluidHandlerItemStack(stack, volume) {
                 @Override
                 public boolean isFluidValid(int tank, @Nonnull FluidStack stack) {
-                    return !stack.getFluid().getAttributes().isGaseous();
+                    return canFillFluidType(stack);
+                }
+
+                @Override
+                public boolean canFillFluidType(FluidStack fluid) {
+                    return !fluid.getFluid().getAttributes().isGaseous();
                 }
             };
         } else {

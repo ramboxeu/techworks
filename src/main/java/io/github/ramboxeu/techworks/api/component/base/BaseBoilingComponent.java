@@ -5,7 +5,7 @@ import io.github.ramboxeu.techworks.api.component.ComponentItem;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -36,10 +36,9 @@ public class BaseBoilingComponent extends ComponentItem {
 
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        // Change this with translate-able version
-        tooltip.add(new StringTextComponent("Boils water. Core component of boiler"));
-        tooltip.add(new StringTextComponent("Level: " + level));
-        StringBuilder durability = new StringBuilder("Durability: ");
+        tooltip.add(new TranslationTextComponent("tooltip.techworks.boiling_component_description"));
+        tooltip.add(new TranslationTextComponent("tooltip.techworks.component_level", level));
+        StringBuilder durability = new StringBuilder();
 
         if (!unbreakable) {
             int health = stack.getMaxDamage() - stack.getDamage();
@@ -52,10 +51,10 @@ public class BaseBoilingComponent extends ComponentItem {
                     )
             );
         } else {
-            durability.append("Unbreakable");
+            durability.append(new TranslationTextComponent("tooltip.techworks.component_unbreakable"));
         }
 
-        tooltip.add(new StringTextComponent(durability.toString()));
+        tooltip.add(new TranslationTextComponent("tooltip.techworks.component_durability", durability.toString()));
         super.addInformation(stack, worldIn, tooltip, flagIn);
     }
 

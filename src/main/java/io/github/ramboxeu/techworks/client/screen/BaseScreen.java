@@ -18,10 +18,12 @@ import java.util.List;
 public class BaseScreen<T extends Container> extends ContainerScreen<T> {
     protected ResourceLocation background;
     protected List<BaseWidget> widgets = new ArrayList<>();
+    protected final T container;
 
     public BaseScreen(T screenContainer, PlayerInventory inv, ITextComponent titleIn, ResourceLocation background) {
         super(screenContainer, inv, titleIn);
 
+        this.container = screenContainer;
         this.background = background;
     }
 

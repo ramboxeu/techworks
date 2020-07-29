@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
@@ -38,12 +39,11 @@ public class BaseGasStorageComponent extends ComponentItem {
     @SuppressWarnings("ConstantConditions")
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        // Change this with translate-able version
-        tooltip.add(new StringTextComponent("Holds various gases"));
-        tooltip.add(new StringTextComponent("Level: " + level));
-        tooltip.add(new StringTextComponent("Capacity: " + volume + " mb"));
+        tooltip.add(new TranslationTextComponent("tooltip.techworks.gas_storage_component_description"));
+        tooltip.add(new TranslationTextComponent("tooltip.techworks.component_level", level));
+        tooltip.add(new TranslationTextComponent("tooltip.techworks.component_capacity", volume));
 
-        String fluidName = "None";
+        String fluidName = new TranslationTextComponent("fluid.techworks.none").getString();
 
         // Seems like you can't use capabilities when this first gets called,
         // so to stop the game from crashing we need to void that exception
@@ -52,14 +52,14 @@ public class BaseGasStorageComponent extends ComponentItem {
             if (capability.isPresent()) {
                 FluidStack fluidStack = capability.orElse(null).getFluidInTank(0);
                 if (fluidStack.isEmpty()) {
-                    fluidName = "Empty";
+                    fluidName = new TranslationTextComponent("fluid.techworks.empty").getString();
                 } else {
                     fluidName = fluidStack.getFluid().getAttributes().getDisplayName(fluidStack).getString();
                 }
             }
         } catch (NullPointerException e) {}
 
-        tooltip.add(new StringTextComponent("Gas: " + fluidName));
+        tooltip.add(new TranslationTextComponent("tooltip.techworks.gas_storage_component_gas", fluidName));
 
         super.addInformation(stack, worldIn, tooltip, flagIn);
     }

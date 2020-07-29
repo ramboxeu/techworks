@@ -21,7 +21,19 @@
   "container.techworks.steam_engine": "Steam Engine",
   "container.techworks.electric_grinder": "Electric Grinder",
   "container.techworks.electric_furnace": "Electric Furnace",
+  "container.techworks.boiler_components": "Boiler Components",
 
+  "fluid.techworks.none": "None",
   "fluid.techworks.empty": "Empty",
-  "fluid.techworks.steam": "Steam"
+  "fluid.techworks.steam": "Steam",
+
+  "tooltip.techworks.liquid_storage_component_description": "Holds various liquids",
+  "tooltip.techworks.component_level": "Level: %d",
+  "tooltip.techworks.component_capacity": "Volume: %dmb",
+  "tooltip.techworks.liquid_storage_component_liquid": "Liquid: %s",
+  "tooltip.techworks.gas_storage_component_description": "Holds various gases",
+  "tooltip.techworks.gas_storage_component_gas": "Gas: %s",
+  "tooltip.techworks.boiling_component_description": "Boils water",
+  "tooltip.techworks.component_unbreakable": "Unbreakable",
+  "tooltip.techworks.component_durability": "Durability: %s"
 }

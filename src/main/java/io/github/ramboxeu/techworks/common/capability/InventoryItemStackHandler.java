@@ -9,6 +9,8 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import javax.annotation.Nonnull;
 
 // When Forge and Vanilla have their own idea about things
+
+// Obsolete
 public class InventoryItemStackHandler implements IInventoryItemStackHandler {
     protected NonNullList<ItemStack> stacks;
 

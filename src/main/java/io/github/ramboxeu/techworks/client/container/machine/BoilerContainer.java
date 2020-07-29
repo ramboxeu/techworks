@@ -2,6 +2,7 @@ package io.github.ramboxeu.techworks.client.container.machine;
 
 import io.github.ramboxeu.techworks.client.container.BaseMachineContainer;
 import io.github.ramboxeu.techworks.client.container.ObjectReferenceHolder;
+import io.github.ramboxeu.techworks.client.container.holder.FluidStackHolder;
 import io.github.ramboxeu.techworks.common.registration.Registration;
 import io.github.ramboxeu.techworks.common.tile.machine.BoilerTile;
 import io.github.ramboxeu.techworks.common.util.PredicateUtils;
@@ -19,8 +20,10 @@ import net.minecraftforge.items.IItemHandler;
 public class BoilerContainer extends BaseMachineContainer<BoilerTile> {
     private int cookTime;
     private int burnTime;
-    private FluidStack waterStack;
-    private FluidStack steamStack;
+    private int waterTankStorage;
+    private int steamTankStorage;
+    private FluidStack waterStack = FluidStack.EMPTY;
+    private FluidStack steamStack = FluidStack.EMPTY;
 
     public BoilerContainer(int id, PlayerInventory playerInventory, BoilerTile tile) {
         super(Registration.BOILER_CONTAINER.get(), id, playerInventory, tile);
@@ -49,61 +52,51 @@ public class BoilerContainer extends BaseMachineContainer<BoilerTile> {
             }
         });
 
-        trackObject(new ObjectReferenceHolder() {
+        trackInt(new IntReferenceHolder() {
+            @Override
+            public int get() {
+                return machineTile.getSteamStorage();
+            }
+
+            @Override
+            public void set(int value) {
+                steamTankStorage = value;
+            }
+        });
+
+        trackInt(new IntReferenceHolder() {
+            @Override
+            public int get() {
+                return machineTile.getWaterStorage();
+            }
+
+            @Override
+            public void set(int value) {
+                waterTankStorage = value;
+            }
+        });
+
+        trackObject(new FluidStackHolder() {
             @Override
             public Object get() {
                 return machineTile.getWater();
             }
 
             @Override
-            public CompoundNBT serialize(Object value) {
-                return ((FluidStack) value).writeToNBT(new CompoundNBT());
-            }
-
-            @Override
             public void set(Object value) {
                 waterStack = (FluidStack) value;
             }
-
-            @Override
-            public Object deserialize(CompoundNBT tag) {
-                return FluidStack.loadFluidStackFromNBT(tag);
-            }
-
-            @Override
-            protected boolean isSame(Object old, Object current) {
-                FluidStack a = (FluidStack) old;
-                FluidStack b = (FluidStack) current;
-                return a.getFluid() != b.getFluid() || a.getAmount() != b.getAmount();
-            }
         });
 
-        trackObject(new ObjectReferenceHolder() {
+        trackObject(new FluidStackHolder() {
             @Override
             public Object get() {
                 return machineTile.getSteam();
             }
 
             @Override
-            public CompoundNBT serialize(Object value) {
-                return ((FluidStack) value).writeToNBT(new CompoundNBT());
-            }
-
-            @Override
             public void set(Object value) {
                 steamStack = (FluidStack) value;
-            }
-
-            @Override
-            public Object deserialize(CompoundNBT tag) {
-                return FluidStack.loadFluidStackFromNBT(tag);
-            }
-
-            @Override
-            protected boolean isSame(Object old, Object current) {
-                FluidStack a = (FluidStack) old;
-                FluidStack b = (FluidStack) current;
-                return a.getFluid() != b.getFluid() || a.getAmount() != b.getAmount();
             }
         });
 
@@ -159,5 +152,13 @@ public class BoilerContainer extends BaseMachineContainer<BoilerTile> {
 
     public FluidStack getSteamStack() {
         return steamStack;
+    }
+
+    public int getWaterTankStorage() {
+        return waterTankStorage;
+    }
+
+    public int getSteamTankStorage() {
+        return steamTankStorage;
     }
 }

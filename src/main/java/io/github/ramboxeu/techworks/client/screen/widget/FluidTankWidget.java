@@ -2,7 +2,6 @@ package io.github.ramboxeu.techworks.client.screen.widget;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.client.util.Color;
 import io.github.ramboxeu.techworks.client.util.RenderUtils;
@@ -37,7 +36,7 @@ public class FluidTankWidget extends BaseWidget {
         Minecraft.getInstance().textureManager.bindTexture(TANK_TEXTURE);
         blit(stack, x, y, 0, 0, width, height, width, height);
 
-        if (!storedFluid.isEmpty()) {
+        if (!storedFluid.isEmpty() && maxStorage > 0) {
             float level = (float) storedFluid.getAmount() / maxStorage;
             int height  = (int) ((this.height - 2) * level);
             int tankY = y + (this.height - height) - 1;
