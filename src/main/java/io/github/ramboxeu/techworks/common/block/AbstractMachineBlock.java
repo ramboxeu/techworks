@@ -3,6 +3,7 @@ package io.github.ramboxeu.techworks.common.block;
 import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -17,6 +18,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ToolType;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import static io.github.ramboxeu.techworks.common.property.TechworksBlockStateProperties.*;
@@ -25,7 +27,7 @@ import javax.annotation.Nullable;
 
 public abstract class AbstractMachineBlock extends Block {
     public AbstractMachineBlock() {
-        super(Properties.create(Material.IRON));
+        super(Properties.create(Material.IRON).setRequiresTool().hardnessAndResistance(5, 6).sound(SoundType.METAL).harvestLevel(2).harvestTool(ToolType.PICKAXE));
     }
 
     @Nullable
