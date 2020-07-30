@@ -43,6 +43,7 @@ import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Optional;
 
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
@@ -226,6 +227,11 @@ public class BoilerTile extends BaseMachineTile implements IComponentsContainerP
         }
 
         return ActionResultType.PASS;
+    }
+
+    @Override
+    public List<ItemStack> getDrops() {
+        return Utils.concatItemHandlers(components, fuelInventory);
     }
 
     @SuppressWarnings("ConstantConditions")

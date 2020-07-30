@@ -12,6 +12,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistry;
 import org.apache.commons.lang3.tuple.Pair;
@@ -133,5 +134,17 @@ public class Utils {
         } else {
             return a;
         }
+    }
+
+    public static List<ItemStack> concatItemHandlers(IItemHandler ...handlers) {
+        ArrayList<ItemStack> stacks = new ArrayList<>();
+
+        for (IItemHandler handler : handlers) {
+            for (int i = 0; i < handler.getSlots(); i++) {
+                stacks.add(handler.getStackInSlot(i));
+            }
+        }
+
+        return stacks;
     }
 }

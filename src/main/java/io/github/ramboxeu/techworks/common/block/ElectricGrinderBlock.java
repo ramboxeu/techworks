@@ -7,7 +7,7 @@ import net.minecraft.world.IBlockReader;
 
 import javax.annotation.Nullable;
 
-public class ElectricGrinderBlock extends AbstractMachineBlock {
+public class ElectricGrinderBlock extends BaseMachineBlock {
     @Nullable
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {

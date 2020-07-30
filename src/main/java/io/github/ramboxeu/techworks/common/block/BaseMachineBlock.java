@@ -9,6 +9,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
@@ -25,8 +26,8 @@ import static io.github.ramboxeu.techworks.common.property.TechworksBlockStatePr
 
 import javax.annotation.Nullable;
 
-public abstract class AbstractMachineBlock extends Block {
-    public AbstractMachineBlock() {
+public abstract class BaseMachineBlock extends Block {
+    public BaseMachineBlock() {
         super(Properties.create(Material.IRON).setRequiresTool().hardnessAndResistance(5, 6).sound(SoundType.METAL).harvestLevel(2).harvestTool(ToolType.PICKAXE));
     }
 
@@ -72,5 +73,21 @@ public abstract class AbstractMachineBlock extends Block {
             return ActionResultType.SUCCESS;
         }
         return ActionResultType.SUCCESS;
+    }
+
+    @Override
+    public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (state.hasTileEntity() && (state.getBlock() != newState.getBlock() || !newState.hasTileEntity())) {
+            TileEntity te = world.getTileEntity(pos);
+
+            if (te instanceof BaseMachineTile) {
+                BaseMachineTile machineTile = (BaseMachineTile) te;
+                for (ItemStack stack : machineTile.getDrops()) {
+                    spawnAsEntity(world, pos, stack);
+                }
+            }
+
+            world.removeTileEntity(pos);
+        }
     }
 }

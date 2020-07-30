@@ -1,17 +1,13 @@
 package io.github.ramboxeu.techworks.common.tile;
 
-import io.github.ramboxeu.techworks.Techworks;
-import io.github.ramboxeu.techworks.api.component.ComponentItem;
 import io.github.ramboxeu.techworks.api.component.ComponentStackHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
@@ -23,13 +19,8 @@ import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.text.html.Option;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 public abstract class BaseMachineTile extends TileEntity implements ITickableTileEntity, INamedContainerProvider {
 
@@ -67,6 +58,10 @@ public abstract class BaseMachineTile extends TileEntity implements ITickableTil
     protected void serverTick() {}
 
     protected void clientTick() {}
+
+    public List<ItemStack> getDrops() {
+        return Collections.emptyList();
+    }
 
     @Nonnull
     @Override
