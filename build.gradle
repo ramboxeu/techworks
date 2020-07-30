@@ -129,6 +129,7 @@ minecraft {
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.16.1-32.0.67' // there's no stable version
+    compile 'org.jetbrains:annotations:16.0.2'
 }
 
 jar {

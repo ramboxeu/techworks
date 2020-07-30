@@ -22,6 +22,11 @@ public class ElectricGrinderTile extends BaseMachineTile {
 
     }
 
+    @Override
+    protected ITextComponent getComponentsGuiName() {
+        return new TranslationTextComponent("");
+    }
+
     //    @Override
 //    void run() {
 //        this.inventory.ifPresent(handler -> {

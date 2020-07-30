@@ -43,11 +43,12 @@ import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Optional;
 
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-public class BoilerTile extends BaseMachineTile implements IComponentsContainerProvider {
+public class BoilerTile extends BaseMachineTile {
     private final IItemHandler fuelInventory;
 
     private LazyOptional<IFluidHandlerItem> waterTank = LazyOptional.empty();
@@ -246,12 +247,12 @@ public class BoilerTile extends BaseMachineTile implements IComponentsContainerP
 
         compound.put("FuelInv", CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.writeNBT(fuelInventory, null));
         compound.put("ComponentInv", components.serializeNBT());
-
         return super.write(compound);
     }
 
 
     @Override
+    @ParametersAreNonnullByDefault
     public void read(BlockState state, CompoundNBT compound) {
         fuelBurnTime = compound.getInt("FuelBurnTime");
         burnTime = compound.getInt("BurnTime");
@@ -278,14 +279,8 @@ public class BoilerTile extends BaseMachineTile implements IComponentsContainerP
         return new BoilerContainer(id, playerInventory, this);
     }
 
-
     @Override
-    public ComponentStackHandler getComponentsStackHandler() {
-        return components;
-    }
-
-    @Override
-    public ITextComponent getComponentsDisplayName() {
+    protected ITextComponent getComponentsGuiName() {
         return new TranslationTextComponent("container.techworks.boiler_components");
     }
 

@@ -8,6 +8,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nullable;
@@ -44,6 +45,11 @@ public class SteamEngineTile extends BaseMachineTile {
     @Override
     public void tick() {
 
+    }
+
+    @Override
+    protected ITextComponent getComponentsGuiName() {
+        return new TranslationTextComponent("");
     }
 
     @Override

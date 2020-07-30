@@ -4,6 +4,7 @@ import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.api.component.ComponentStackHandler;
 import io.github.ramboxeu.techworks.client.container.machine.ComponentsContainer;
 import io.github.ramboxeu.techworks.common.component.IComponentsContainerProvider;
+import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -22,18 +23,16 @@ public class TechworksContainers {
 
     public static final RegistryObject<ContainerType<ComponentsContainer>> COMPONENTS = CONTAINERS.register("components",
             () -> IForgeContainerType.create((id, inv, buf) -> {
-//                CompoundNBT nbt = buf.readCompoundTag();
                 ComponentStackHandler components = ComponentStackHandler.empty();
-//                components.deserializeNBT(nbt);
 
                 BlockPos pos = buf.readBlockPos();
                 TileEntity te = inv.player.world.getTileEntity(pos);
 
-                if (te instanceof IComponentsContainerProvider) {
-                    components = ((IComponentsContainerProvider)te).getComponentsStackHandler();
+                if (te instanceof BaseMachineTile) {
+                    components = ((BaseMachineTile) te).getComponents();
                 } else {
                     // Should this crash, or something?
-                    Techworks.LOGGER.warn("Expected IComponentsContainerProvider on " + pos + ", but it was not found.");
+                    Techworks.LOGGER.warn("Expected BaseMachineTile on " + pos + ", but it was not found.");
                 }
 
                 return new ComponentsContainer(id, inv, components);

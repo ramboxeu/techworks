@@ -1,19 +1,23 @@
 package io.github.ramboxeu.techworks.common.block;
 
+import io.github.ramboxeu.techworks.api.wrench.IWrenchable;
 import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -23,10 +27,13 @@ import net.minecraftforge.common.ToolType;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import static io.github.ramboxeu.techworks.common.property.TechworksBlockStateProperties.*;
+import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
+import static net.minecraftforge.common.util.Constants.NBT.TAG_COMPOUND;
 
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
-public abstract class BaseMachineBlock extends Block {
+public abstract class BaseMachineBlock extends Block implements IWrenchable {
     public BaseMachineBlock() {
         super(Properties.create(Material.IRON).setRequiresTool().hardnessAndResistance(5, 6).sound(SoundType.METAL).harvestLevel(2).harvestTool(ToolType.PICKAXE));
     }
@@ -42,16 +49,17 @@ public abstract class BaseMachineBlock extends Block {
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(BlockStateProperties.FACING, RUNNING);
+        builder.add(HORIZONTAL_FACING, RUNNING);
     }
 
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return this.getDefaultState().with(BlockStateProperties.FACING, context.getPlacementHorizontalFacing().getOpposite()).with(RUNNING, false);
+        return this.getDefaultState().with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing().getOpposite()).with(RUNNING, false);
     }
 
     @Override
+    @ParametersAreNonnullByDefault
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult rayTraceResult) {
         TileEntity tileEntity = worldIn.getTileEntity(pos);
 
@@ -76,6 +84,7 @@ public abstract class BaseMachineBlock extends Block {
     }
 
     @Override
+    @ParametersAreNonnullByDefault
     public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.hasTileEntity() && (state.getBlock() != newState.getBlock() || !newState.hasTileEntity())) {
             TileEntity te = world.getTileEntity(pos);
@@ -90,4 +99,57 @@ public abstract class BaseMachineBlock extends Block {
             world.removeTileEntity(pos);
         }
     }
+
+    @Override
+    @ParametersAreNonnullByDefault
+    public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        TileEntity te = world.getTileEntity(pos);
+        CompoundNBT stackTag = stack.getOrCreateTag();
+
+        if (te instanceof BaseMachineTile && stackTag.contains("TileEntity", TAG_COMPOUND)) {
+            CompoundNBT teNbt = stackTag.getCompound("TileEntity");
+            teNbt.putInt("x", pos.getX());
+            teNbt.putInt("y", pos.getY());
+            teNbt.putInt("z", pos.getZ());
+            te.deserializeNBT(teNbt);
+        }
+    }
+
+    @Override
+    public void rotate(BlockState state, BlockPos pos, @Nullable Direction face, World world) {
+        if (face != null && face.getAxis() != Direction.Axis.Y) {
+            Direction facing = state.get(HORIZONTAL_FACING);
+            world.setBlockState(pos, state.with(HORIZONTAL_FACING, facing.rotateY()));
+        }
+    }
+
+    @Override
+    public void dismantle(BlockState state, BlockPos pos, World world) {
+        if (!world.isRemote) {
+            TileEntity te = world.getTileEntity(pos);
+            ItemStack blockStack = new ItemStack(getSelf().asItem());
+
+            if (te instanceof BaseMachineTile) {
+                blockStack.getOrCreateTag().put("TileEntity", te.serializeNBT());
+                world.removeTileEntity(pos);
+            }
+
+            spawnAsEntity(world, pos, blockStack);
+            world.removeBlock(pos, false);
+        }
+    }
+
+    @Override
+    public void openComponents(BlockPos pos, PlayerEntity player, World world) {
+        if (!world.isRemote) {
+            TileEntity te = world.getTileEntity(pos);
+
+            if (te instanceof BaseMachineTile) {
+                ((BaseMachineTile) te).openComponentsScreen((ServerPlayerEntity) player);
+            }
+        }
+    }
+
+    @Override
+    public void configure(Direction face) { }
 }

@@ -35,6 +35,11 @@ public class ElectricFurnaceTile extends BaseMachineTile {
 
     }
 
+    @Override
+    protected ITextComponent getComponentsGuiName() {
+        return new TranslationTextComponent("");
+    }
+
 
 //    protected IEnergyStorage createEnergyStorage() {
 //        return new EnergyStorage(5000, 100, 100);
