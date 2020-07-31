@@ -31,7 +31,7 @@ public interface IWrenchable {
      * Called when player right clicks on block
      * <br/>Techworks use: do all sorts of configurations, eg. toggle pipe connections
      */
-    void configure(Direction face);
+    void configure(World world, BlockPos pos, Direction face);
 
     /**
      * Called when player right clicks on a block and is sneaking

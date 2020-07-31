@@ -7,10 +7,11 @@ import io.github.ramboxeu.techworks.api.component.base.BaseBoilingComponent;
 import io.github.ramboxeu.techworks.api.component.base.BaseGasStorageComponent;
 import io.github.ramboxeu.techworks.api.component.base.BaseLiquidStorageComponent;
 import io.github.ramboxeu.techworks.client.container.machine.BoilerContainer;
-import io.github.ramboxeu.techworks.common.component.IComponentsContainerProvider;
 import io.github.ramboxeu.techworks.common.registration.Registration;
 import io.github.ramboxeu.techworks.common.registration.TechworksFluids;
 import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
+import io.github.ramboxeu.techworks.common.tile.machine.MachineIO.PortConfig;
+import io.github.ramboxeu.techworks.common.tile.machine.MachinePort.Type;
 import io.github.ramboxeu.techworks.common.util.PredicateUtils;
 import io.github.ramboxeu.techworks.common.util.Utils;
 import io.github.ramboxeu.techworks.common.util.capability.EmptyTankItem;
@@ -21,7 +22,6 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.tags.Tag;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
@@ -80,16 +80,17 @@ public class BoilerTile extends BaseMachineTile {
                         )
         );
 
+        machineIO = MachineIO.create(
+                PortConfig.create(Type.GAS, steamTank.orElse(EmptyTankItem.INSTANCE)),
+                PortConfig.create(Type.LIQUID, waterTank.orElse(EmptyTankItem.INSTANCE))
+        );
+
         fuelInventory = new ItemStackHandler() {
             @Override
             public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
                 return PredicateUtils.isFuel(stack);
             }
         };
-
-
-        this.capabilities[1] = CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
-        this.optionals[1] = LazyOptional.of(() -> fuelInventory);
     }
 
     @Override
@@ -246,7 +247,6 @@ public class BoilerTile extends BaseMachineTile {
         compound.putBoolean("IsBurning", isBurning);
 
         compound.put("FuelInv", CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.writeNBT(fuelInventory, null));
-        compound.put("ComponentInv", components.serializeNBT());
         return super.write(compound);
     }
 
@@ -262,7 +262,6 @@ public class BoilerTile extends BaseMachineTile {
         isBurning = compound.getBoolean("IsBurning");
 
         CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.readNBT(fuelInventory, null, compound.get("FuelInv"));
-        components.deserializeNBT(compound.getCompound("ComponentInv"));
         markComponentsDirty(true);
 
         super.read(state, compound);

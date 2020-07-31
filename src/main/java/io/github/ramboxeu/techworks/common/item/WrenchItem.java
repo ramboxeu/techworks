@@ -88,7 +88,7 @@ public class WrenchItem extends Item {
             } else {
                 // There will a special case for pipes (and possibly other things) that require hit vector to
                 // determine which portion (rather than face) user clicked
-                wrenchable.configure(face);
+                wrenchable.configure(world, pos, face);
             }
         }
 
