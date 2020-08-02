@@ -34,26 +34,14 @@ import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class BaseMachineTile extends TileEntity implements ITickableTileEntity, INamedContainerProvider {
+public abstract class BaseMachineTile extends BaseTechworksTile implements INamedContainerProvider {
     protected MachineIO machineIO;
     protected final ComponentStackHandler components;
-    private boolean shouldSyncPorts = true;
 
     public BaseMachineTile(TileEntityType<?> tileEntityType, ComponentStackHandler.Builder builder) {
         super(tileEntityType);
 
         this.components = ComponentStackHandler.withBuilder(builder.onChanged(() -> markComponentsDirty(false)));
-    }
-
-    @Override
-    public void tick() {
-        if (world != null) {
-            if (world.isRemote) {
-                clientTick();
-            } else {
-                serverTick();
-            }
-        }
     }
 
     // PASS continues the execution on the block side
@@ -64,10 +52,6 @@ public abstract class BaseMachineTile extends TileEntity implements ITickableTil
     public void onLeftClick(BlockState state, World worldIn, BlockPos pos, PlayerEntity player) {}
 
     protected void markComponentsDirty(boolean forced) {}
-
-    protected void serverTick() {}
-
-    protected void clientTick() {}
 
     public List<ItemStack> getDrops() {
         return Collections.emptyList();
@@ -80,18 +64,17 @@ public abstract class BaseMachineTile extends TileEntity implements ITickableTil
     }
 
     @Override
-    public void handleUpdateTag(BlockState state, CompoundNBT tag) {
-        machineIO.deserializeNBT(tag.getCompound("MachineIO"));
-        super.handleUpdateTag(state, tag);
+    protected void readUpdateTag(CompoundNBT nbt, BlockState state) {
+        machineIO.deserializeNBT(nbt.getCompound("MachineIO"));
+
+        super.readUpdateTag(nbt, state);
     }
 
     @Override
-    public CompoundNBT getUpdateTag() {
-        CompoundNBT nbt = super.getUpdateTag();
-
+    protected CompoundNBT writeUpdateTag(CompoundNBT nbt) {
         nbt.put("MachineIO", machineIO.serializeNBT());
 
-        return nbt;
+        return super.writeUpdateTag(nbt);
     }
 
     @Override
