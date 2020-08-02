@@ -1,5 +1,7 @@
 package io.github.ramboxeu.techworks.common.tile.machine;
 
+import io.github.ramboxeu.techworks.Techworks;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -42,20 +44,40 @@ public class MachinePort {
     }
 
     public enum Type {
-        NONE(null),
-        ITEM(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY),
-        LIQUID(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY),
-        GAS(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY),
-        ENERGY(CapabilityEnergy.ENERGY);
+        NONE(null, "disabled"),
+        ITEM(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, "item"),
+        LIQUID(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, "liquid"),
+        GAS(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, "gas"),
+        ENERGY(CapabilityEnergy.ENERGY, "energy");
 
         private final Capability<?> capability;
+        private final ResourceLocation inputSprite;
+        private final ResourceLocation outputSprite;
+        private final ResourceLocation bothSprite;
 
-        Type(Capability<?> capability) {
+        Type(Capability<?> capability, String spriteName) {
             this.capability = capability;
+            this.inputSprite = new ResourceLocation(Techworks.MOD_ID, "machine/port/" + spriteName + "_input");
+            this.outputSprite = new ResourceLocation(Techworks.MOD_ID, "machine/port/" + spriteName + "_output");
+            this.bothSprite = new ResourceLocation(Techworks.MOD_ID, "machine/port/" + spriteName + "_both");
         }
 
         public Capability<?> getCapability() {
             return capability;
+        }
+
+        public ResourceLocation getSpriteLocation(Mode mode) {
+            if (this == NONE) return null;
+            switch (mode) {
+                case INPUT:
+                    return inputSprite;
+                case OUTPUT:
+                    return outputSprite;
+                case BOTH:
+                    return bothSprite;
+                default:
+                    return null;
+            }
         }
 
         public static Type next(Type type) {

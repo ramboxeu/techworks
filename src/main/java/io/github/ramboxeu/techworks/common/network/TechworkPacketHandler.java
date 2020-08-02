@@ -1,8 +1,10 @@
 package io.github.ramboxeu.techworks.common.network;
 
 import io.github.ramboxeu.techworks.Techworks;
+import io.github.ramboxeu.techworks.common.tile.machine.MachinePort;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.PacketDistributor;
@@ -25,10 +27,20 @@ public class TechworkPacketHandler {
         CHANNEL.registerMessage(id++, DebugRequestPacket.class, DebugRequestPacket::encode, DebugRequestPacket::decode, DebugRequestPacket.Handler::handle);
         CHANNEL.registerMessage(id++, DebugResponsePacket.class, DebugResponsePacket::encode, DebugResponsePacket::decode, DebugResponsePacket.Handler::handle);
         CHANNEL.registerMessage(id++, SObjectUpdatePacket.class, SObjectUpdatePacket::encode, SObjectUpdatePacket::decode, SObjectUpdatePacket::handle);
+        CHANNEL.registerMessage(id++, SMachinePortSyncPacket.class, SMachinePortSyncPacket::encode, SMachinePortSyncPacket::decode, SMachinePortSyncPacket::handle);
     }
 
     public static void sendObjectUpdatePacket(SObjectUpdatePacket packet, ServerPlayerEntity entity) {
         CHANNEL.send(PacketDistributor.PLAYER.with(() -> entity), packet);
+    }
+
+    public static void sendMachinePortUpdatePacket(BlockPos pos, int index, MachinePort port, Chunk chunk) {
+        CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> chunk), new SMachinePortSyncPacket(
+                pos,
+                index,
+                port.getType().ordinal(),
+                port.getMode().ordinal()
+        ));
     }
 
     public static void sendCableSyncPacket(Chunk chunk, CableSyncShapePacket packet) {

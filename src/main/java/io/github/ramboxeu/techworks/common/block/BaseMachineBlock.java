@@ -2,6 +2,7 @@ package io.github.ramboxeu.techworks.common.block;
 
 import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.api.wrench.IWrenchable;
+import io.github.ramboxeu.techworks.common.network.TechworkPacketHandler;
 import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
 import io.github.ramboxeu.techworks.common.tile.machine.MachineIO;
 import io.github.ramboxeu.techworks.common.tile.machine.MachinePort;
@@ -64,8 +65,6 @@ public abstract class BaseMachineBlock extends Block implements IWrenchable {
     @Override
     @ParametersAreNonnullByDefault
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult rayTraceResult) {
-//        Techworks.LOGGER.debug(rayTraceResult.getHitVec());
-
         TileEntity tileEntity = worldIn.getTileEntity(pos);
 
         if (tileEntity instanceof BaseMachineTile) {
@@ -162,9 +161,9 @@ public abstract class BaseMachineBlock extends Block implements IWrenchable {
 
             if (te instanceof BaseMachineTile) {
                 MachineIO machineIO = ((BaseMachineTile) te).getMachineIO();
-                Techworks.LOGGER.debug("{} {} {}", face, machineIO.getPort(face).getMode(), machineIO.getPort(face).getType());
                 machineIO.cyclePort(face);
-                Techworks.LOGGER.debug("{} {} {}", face, machineIO.getPort(face).getMode(), machineIO.getPort(face).getType());
+                machineIO.getPort(face);
+                TechworkPacketHandler.sendMachinePortUpdatePacket(pos, face.getIndex(), machineIO.getPort(face), world.getChunkAt(pos));
             }
         }
     }

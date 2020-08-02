@@ -2,7 +2,9 @@ package io.github.ramboxeu.techworks.common.tile;
 
 import io.github.ramboxeu.techworks.api.component.ComponentStackHandler;
 import io.github.ramboxeu.techworks.client.container.machine.ComponentsContainer;
+import io.github.ramboxeu.techworks.common.network.TechworkPacketHandler;
 import io.github.ramboxeu.techworks.common.tile.machine.MachineIO;
+import io.github.ramboxeu.techworks.common.tile.machine.MachinePort;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -21,6 +23,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.ChunkStatus;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -33,6 +37,7 @@ import java.util.List;
 public abstract class BaseMachineTile extends TileEntity implements ITickableTileEntity, INamedContainerProvider {
     protected MachineIO machineIO;
     protected final ComponentStackHandler components;
+    private boolean shouldSyncPorts = true;
 
     public BaseMachineTile(TileEntityType<?> tileEntityType, ComponentStackHandler.Builder builder) {
         super(tileEntityType);
@@ -72,6 +77,21 @@ public abstract class BaseMachineTile extends TileEntity implements ITickableTil
 
     public MachineIO getMachineIO() {
         return machineIO;
+    }
+
+    @Override
+    public void handleUpdateTag(BlockState state, CompoundNBT tag) {
+        machineIO.deserializeNBT(tag.getCompound("MachineIO"));
+        super.handleUpdateTag(state, tag);
+    }
+
+    @Override
+    public CompoundNBT getUpdateTag() {
+        CompoundNBT nbt = super.getUpdateTag();
+
+        nbt.put("MachineIO", machineIO.serializeNBT());
+
+        return nbt;
     }
 
     @Override

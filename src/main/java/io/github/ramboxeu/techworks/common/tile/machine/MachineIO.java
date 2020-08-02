@@ -49,6 +49,10 @@ public class MachineIO {
         return ports[direction.getIndex()];
     }
 
+    public MachinePort[] getPorts() {
+        return ports;
+    }
+
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
         if (side != null) {
             if (ports[side.getIndex()].getCapability() == cap) {

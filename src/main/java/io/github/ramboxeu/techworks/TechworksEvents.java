@@ -3,23 +3,20 @@ package io.github.ramboxeu.techworks;
 import io.github.ramboxeu.techworks.common.capability.ExtendedListenerProvider;
 import io.github.ramboxeu.techworks.common.item.WrenchItem;
 import io.github.ramboxeu.techworks.common.registration.TechworksItems;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber
 public class TechworksEvents {
 
     @SubscribeEvent
