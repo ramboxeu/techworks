@@ -8,6 +8,8 @@ import net.minecraft.tileentity.TileEntityType;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class BaseTechworksTile extends TileEntity implements ITickableTileEntity {
+    private boolean firstTicked = false;
+
     public BaseTechworksTile(TileEntityType<?> type) {
         super(type);
     }
@@ -15,6 +17,11 @@ public abstract class BaseTechworksTile extends TileEntity implements ITickableT
     @Override
     public void tick() {
         if (world != null) {
+            if (!firstTicked) {
+                onFirstTick();
+                firstTicked = true;
+            }
+
             if (world.isRemote) {
                 clientTick();
             } else {
@@ -23,6 +30,8 @@ public abstract class BaseTechworksTile extends TileEntity implements ITickableT
         }
     }
 
+    // Method that gets called once and it should guarantee that world, pos are not null and tile with its chunk are loaded
+    protected void onFirstTick() {}
     protected void serverTick() {}
     protected void clientTick() {}
 

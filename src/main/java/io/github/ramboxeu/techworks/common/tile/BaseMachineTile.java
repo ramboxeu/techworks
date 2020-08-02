@@ -13,6 +13,7 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -42,6 +43,13 @@ public abstract class BaseMachineTile extends BaseTechworksTile implements IName
         super(tileEntityType);
 
         this.components = ComponentStackHandler.withBuilder(builder.onChanged(() -> markComponentsDirty(false)));
+    }
+
+    @Override
+    protected void onFirstTick() {
+        if (!world.isRemote && machineIO != null) {
+            machineIO.setFaceStatus(world.getBlockState(pos).get(BlockStateProperties.HORIZONTAL_FACING), true);
+        }
     }
 
     // PASS continues the execution on the block side

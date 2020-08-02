@@ -123,7 +123,19 @@ public abstract class BaseMachineBlock extends Block implements IWrenchable {
     public void rotate(BlockState state, BlockPos pos, @Nullable Direction face, World world) {
         if (face != null && face.getAxis() != Direction.Axis.Y) {
             Direction facing = state.get(HORIZONTAL_FACING);
-            world.setBlockState(pos, state.with(HORIZONTAL_FACING, facing.rotateY()));
+            Direction rotated = facing.rotateY();
+            world.setBlockState(pos, state.with(HORIZONTAL_FACING, rotated));
+
+            if (!world.isRemote) {
+                TileEntity te = world.getTileEntity(pos);
+
+                if (te instanceof BaseMachineTile) {
+                    MachineIO machineIO = ((BaseMachineTile) te).getMachineIO();
+                    machineIO.setFaceStatus(facing, false);
+                    machineIO.setFaceStatus(rotated, true);
+                    TechworkPacketHandler.sendMachinePortUpdatePacket(pos, rotated.getIndex(), machineIO.getPort(rotated), world.getChunkAt(pos));
+                }
+            }
         }
     }
 
@@ -161,9 +173,11 @@ public abstract class BaseMachineBlock extends Block implements IWrenchable {
 
             if (te instanceof BaseMachineTile) {
                 MachineIO machineIO = ((BaseMachineTile) te).getMachineIO();
-                machineIO.cyclePort(face);
-                machineIO.getPort(face);
-                TechworkPacketHandler.sendMachinePortUpdatePacket(pos, face.getIndex(), machineIO.getPort(face), world.getChunkAt(pos));
+                if (!machineIO.isFaceDisabled(face)) {
+                    machineIO.cyclePort(face);
+                    machineIO.getPort(face);
+                    TechworkPacketHandler.sendMachinePortUpdatePacket(pos, face.getIndex(), machineIO.getPort(face), world.getChunkAt(pos));
+                }
             }
         }
     }

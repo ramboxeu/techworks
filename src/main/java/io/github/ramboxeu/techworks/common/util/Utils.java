@@ -147,4 +147,24 @@ public class Utils {
 
         return stacks;
     }
+
+    public static int getDirectionBinIndex(Direction direction) {
+        switch (direction) {
+            case DOWN:
+                return 1;
+            case UP:
+                return 2;
+            case NORTH:
+                return 4;
+            case SOUTH:
+                return 8;
+            case WEST:
+                return 16;
+            case EAST:
+                return 32;
+        }
+
+        // This shouldn't happen, ever
+        return -1;
+    }
 }

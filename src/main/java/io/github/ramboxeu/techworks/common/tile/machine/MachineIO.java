@@ -6,6 +6,7 @@ import io.github.ramboxeu.techworks.common.capability.handler.ConfigurableFluidH
 import io.github.ramboxeu.techworks.common.capability.handler.ConfigurableItemHandler;
 import io.github.ramboxeu.techworks.common.tile.machine.MachinePort.Mode;
 import io.github.ramboxeu.techworks.common.tile.machine.MachinePort.Type;
+import io.github.ramboxeu.techworks.common.util.Utils;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.Direction;
@@ -25,6 +26,7 @@ public class MachineIO {
     //                                                 down       up      north      south     west      east
     private MachinePort[] ports = new MachinePort[]{ DISABLED, DISABLED, DISABLED, DISABLED, DISABLED, DISABLED };
     private Map<Type, PortConfig> portConfigs;
+    private int disabledFaces = 0;
 
     private MachineIO(HashMap<Type, PortConfig> portConfigs) {
         this.portConfigs = portConfigs;
@@ -43,6 +45,20 @@ public class MachineIO {
                 }
             }
         }
+    }
+
+    public void setFaceStatus(Direction face, boolean disabled) {
+        if (disabled) {
+            disabledFaces |= Utils.getDirectionBinIndex(face);
+            configurePort(face.getIndex(), Type.NONE, Mode.NONE);
+        } else {
+            disabledFaces &= -Utils.getDirectionBinIndex(face) - 1;
+        }
+    }
+
+    public boolean isFaceDisabled(Direction face) {
+        int index = Utils.getDirectionBinIndex(face);
+        return (disabledFaces & index) == index;
     }
 
     public MachinePort getPort(Direction direction) {
@@ -75,11 +91,14 @@ public class MachineIO {
         }
 
         nbt.put("Ports", list);
+        nbt.putByte("DisabledFaces", (byte) disabledFaces);
         return nbt;
     }
 
     public void deserializeNBT(CompoundNBT nbt) {
         ListNBT list = nbt.getList("Ports", Constants.NBT.TAG_COMPOUND);
+
+        disabledFaces = nbt.getByte("DisabledFaces");
 
         for (int i = 0; i < list.size(); i++) {
             CompoundNBT portTag = list.getCompound(i);
