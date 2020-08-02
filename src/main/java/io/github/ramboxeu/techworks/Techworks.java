@@ -7,17 +7,17 @@ import io.github.ramboxeu.techworks.common.TechworksItemGroup;
 import io.github.ramboxeu.techworks.common.capability.CapabilityExtendedListenerProvider;
 import io.github.ramboxeu.techworks.common.debug.DebugInfoRenderer;
 import io.github.ramboxeu.techworks.common.network.TechworkPacketHandler;
-import io.github.ramboxeu.techworks.common.registration.Registration;
-import io.github.ramboxeu.techworks.common.registration.TechworksContainers;
-import io.github.ramboxeu.techworks.common.registration.TechworksFluids;
-import io.github.ramboxeu.techworks.common.registration.TechworksItems;
+import io.github.ramboxeu.techworks.common.registration.*;
+import io.github.ramboxeu.techworks.common.registry.BlockDeferredRegister;
+import io.github.ramboxeu.techworks.common.registry.TileDeferredRegister;
+import io.github.ramboxeu.techworks.common.registry.TileRegistryObject;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -36,14 +36,18 @@ public class Techworks {
     public Techworks() {
         LOGGER.info("Starting up Techworks!");
 
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+
         Registration.addToEventBus();
+        TechworksBlocks.BLOCKS.register(modEventBus);
+        TechworksTiles.TILES.register(modEventBus);
         TechworksItems.addToEventBus();
         TechworksContainers.addToEventBus();
         TechworksFluids.addToEventBus();
 
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientSetup);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onPreStitch);
+        modEventBus.addListener(this::setup);
+        modEventBus.addListener(this::clientSetup);
+        modEventBus.addListener(this::onPreStitch);
 
         MinecraftForge.EVENT_BUS.register(TechworksEvents.class);
     }
@@ -57,7 +61,7 @@ public class Techworks {
     public void clientSetup(FMLClientSetupEvent event) {
         Registration.registerScreens();
         ModelLoaderRegistry.registerLoader(new ResourceLocation("techworks:cable"), new CableModelLoader());
-        ClientRegistry.bindTileEntityRenderer(Registration.BOILER_TILE.get(), MachineTileEntityRenderer::new);
+        TechworksTiles.bindMachineRenderers();
         MinecraftForge.EVENT_BUS.addListener(DebugInfoRenderer::render);
     }
 

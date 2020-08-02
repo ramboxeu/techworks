@@ -3,6 +3,7 @@ package io.github.ramboxeu.techworks.common.tile.machine;
 import io.github.ramboxeu.techworks.api.component.ComponentStackHandler;
 import io.github.ramboxeu.techworks.client.container.machine.SteamEngineContainer;
 import io.github.ramboxeu.techworks.common.registration.Registration;
+import io.github.ramboxeu.techworks.common.registration.TechworksTiles;
 import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -15,7 +16,7 @@ import javax.annotation.Nullable;
 
 public class SteamEngineTile extends BaseMachineTile {
     public SteamEngineTile() {
-        super(Registration.STEAM_ENGINE_TILE.get(), new ComponentStackHandler.Builder(0));
+        super(TechworksTiles.STEAM_ENGINE.getTileType(), new ComponentStackHandler.Builder(0));
     }
 
 //    @Override

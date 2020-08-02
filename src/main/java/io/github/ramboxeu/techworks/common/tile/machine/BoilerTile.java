@@ -9,6 +9,7 @@ import io.github.ramboxeu.techworks.api.component.base.BaseLiquidStorageComponen
 import io.github.ramboxeu.techworks.client.container.machine.BoilerContainer;
 import io.github.ramboxeu.techworks.common.registration.Registration;
 import io.github.ramboxeu.techworks.common.registration.TechworksFluids;
+import io.github.ramboxeu.techworks.common.registration.TechworksTiles;
 import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
 import io.github.ramboxeu.techworks.common.tile.machine.MachineIO.PortConfig;
 import io.github.ramboxeu.techworks.common.tile.machine.MachinePort.Type;
@@ -65,7 +66,7 @@ public class BoilerTile extends BaseMachineTile {
     private Direction next = null;
 
     public BoilerTile() {
-        super(Registration.BOILER_TILE.get(), new ComponentStackHandler.Builder(3)
+        super(TechworksTiles.BOILER.getTileType(), new ComponentStackHandler.Builder(3)
                         .slot(0, new Slot()
                                 .predicate(stack -> stack.getItem() instanceof BaseLiquidStorageComponent)
                                 .texture(new ResourceLocation(Techworks.MOD_ID, "textures/gui/slot/liquid_storage_component_overlay.png"))
