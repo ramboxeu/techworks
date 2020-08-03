@@ -4,6 +4,7 @@ import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.client.TechworksBlockStateProvider;
 import io.github.ramboxeu.techworks.client.TechworksItemModelProvider;
 import io.github.ramboxeu.techworks.common.loot.TechworksLootProvider;
+import io.github.ramboxeu.techworks.common.tag.TechworksFluidTagProvider;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.client.model.generators.ExistingFileHelper;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -27,6 +28,7 @@ public class TechworksDataGenerator {
 
         if (event.includeServer()) {
             generator.addProvider(new TechworksLootProvider(generator));
+            generator.addProvider(new TechworksFluidTagProvider(generator));
         }
     }
 }
