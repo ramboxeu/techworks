@@ -65,35 +65,14 @@ public class Registration {
 
     public static final RegistryObject<Item> GAS_PIPE_BASIC_ITEM = ITEMS.register("gas_pipe_basic", () -> new BlockItem(GAS_PIPE_BASIC_BLOCK.get(), new Item.Properties().group(Techworks.ITEM_GROUP)));
     public static final RegistryObject<DebuggerItem> DEBUGGER_ITEM = ITEMS.register("debugger", DebuggerItem::new);
-    public static final RegistryObject<GroundItem> GROUND_IRON_ITEM = ITEMS.register("ground_iron", GroundItem::new);
-    public static final RegistryObject<GroundItem> GROUND_GOLD_ITEM = ITEMS.register("ground_gold", GroundItem::new);
 
     public static final RegistryObject<TileEntityType<BasicGasPipeTile>> GAS_PIPE_BASIC_TILE = TILES.register("gas_pipe_basic", () ->  TileEntityType.Builder.create(BasicGasPipeTile::new, GAS_PIPE_BASIC_BLOCK.get()).build(null));
-
-    public static final RegistryObject<ContainerType<BoilerContainer>> BOILER_CONTAINER = CONTAINERS.register("boiler", () -> IForgeContainerType.create((id, playerInventory, buf) -> new BoilerContainer(id, playerInventory, getTileFromPacketBuffer(buf))));
-    public static final RegistryObject<ContainerType<SteamEngineContainer>> STEAM_ENGINE_CONTAINER = CONTAINERS.register("steam_engine", () -> IForgeContainerType.create((id, inventory, buf) -> new SteamEngineContainer(id, inventory, getTileFromPacketBuffer(buf))));
-    public static final RegistryObject<ContainerType<ElectricGrinderContainer>> ELECTRIC_GRINDER_CONTAINER = CONTAINERS.register("electric_grinder", () -> IForgeContainerType.create((id, inventory, buf) -> new ElectricGrinderContainer(id, inventory, getTileFromPacketBuffer(buf))));
-    public static final RegistryObject<ContainerType<ElectricFurnaceContainer>> ELECTRIC_FURNACE_CONTAINER = CONTAINERS.register("electric_furnace", () -> IForgeContainerType.create((id, inventory, buf) -> new ElectricFurnaceContainer(id, inventory, getTileFromPacketBuffer(buf))));
 
     public static final RegistryObject<EmptyGas> EMPTY_GAS = GASES.register("empty", EmptyGas::new);
     public static final RegistryObject<SteamGas> STEAM_GAS = GASES.register("steam", SteamGas::new);
 
     public static final IRecipeType<ElectricGrinderRecipe> GRINDING_RECIPE = IRecipeType.register("techworks:grinding");
     public static final IRecipeSerializer<ElectricGrinderRecipe> GRINDING_RECIPE_SERIALIZER = IRecipeSerializer.register("techworks:grinding", new ElectricGrinderRecipe.Serializer());
-
-    // TODO: Make this NullPointerException safe and not garbage
-    @SuppressWarnings("unchecked")
-    private static <T extends BaseMachineTile> T getTileFromPacketBuffer(PacketBuffer buffer) {
-        return (T) Minecraft.getInstance().world.getTileEntity(buffer.readBlockPos());
-    }
-
-    public static void registerScreens(){
-        ScreenManager.registerFactory(BOILER_CONTAINER.get(), BoilerScreen::new);
-        ScreenManager.registerFactory(STEAM_ENGINE_CONTAINER.get(), SteamEngineScreen::new);
-        ScreenManager.registerFactory(ELECTRIC_GRINDER_CONTAINER.get(), ElectricGrinderScreen::new);
-        ScreenManager.registerFactory(ELECTRIC_FURNACE_CONTAINER.get(), ElectricFurnaceScreen::new);
-        ScreenManager.registerFactory(TechworksContainers.COMPONENTS.get(), ComponentsScreen::new);
-    }
 
     public static Gas getGasByString(String name) {
         return GAS_REGISTRY.getValue(new ResourceLocation(name));

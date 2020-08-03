@@ -33,7 +33,7 @@ public class TechworksEvents {
         // Hand is always MAIN_HAND
         ItemStack stack = player.getHeldItem(event.getHand());
 
-        if (stack.getItem() == TechworksItems.WRENCH.get()) {
+        if (stack.getItem() == TechworksItems.WRENCH.getItem()) {
             event.setCanceled(((WrenchItem) stack.getItem()).onLeftClickBlock(player, event.getWorld(), event.getPos(), event.getFace(), stack));
         }
     }
@@ -44,7 +44,7 @@ public class TechworksEvents {
 
         ItemStack stack = player.getHeldItem(event.getHand());
 
-        if (stack.getItem() == TechworksItems.WRENCH.get()) {
+        if (stack.getItem() == TechworksItems.WRENCH.getItem()) {
             Techworks.LOGGER.debug(player.getLook(1));
             Techworks.LOGGER.debug(player.getLookVec());
 

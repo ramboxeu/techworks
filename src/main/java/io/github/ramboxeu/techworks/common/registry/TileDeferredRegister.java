@@ -18,7 +18,6 @@ public class TileDeferredRegister {
     }
 
     public <TILE extends TileEntity> TileRegistryObject<TILE> register(String name, Supplier<TileEntityType<TILE>> typeSupplier) {
-        Techworks.LOGGER.debug("Registering: {} tile", name);
         return new TileRegistryObject<>(TILES.register(name, typeSupplier));
     }
 

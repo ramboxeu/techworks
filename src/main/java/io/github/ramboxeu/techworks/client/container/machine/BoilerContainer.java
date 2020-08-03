@@ -4,6 +4,7 @@ import io.github.ramboxeu.techworks.client.container.BaseMachineContainer;
 import io.github.ramboxeu.techworks.client.container.ObjectReferenceHolder;
 import io.github.ramboxeu.techworks.client.container.holder.FluidStackHolder;
 import io.github.ramboxeu.techworks.common.registration.Registration;
+import io.github.ramboxeu.techworks.common.registration.TechworksContainers;
 import io.github.ramboxeu.techworks.common.tile.machine.BoilerTile;
 import io.github.ramboxeu.techworks.common.util.PredicateUtils;
 import io.github.ramboxeu.techworks.common.util.inventory.SlotBuilder;
@@ -26,7 +27,7 @@ public class BoilerContainer extends BaseMachineContainer<BoilerTile> {
     private FluidStack steamStack = FluidStack.EMPTY;
 
     public BoilerContainer(int id, PlayerInventory playerInventory, BoilerTile tile) {
-        super(Registration.BOILER_CONTAINER.get(), id, playerInventory, tile);
+        super(TechworksContainers.BOILER.getContainer(), id, playerInventory, tile);
 
         trackInt(new IntReferenceHolder() {
             @Override

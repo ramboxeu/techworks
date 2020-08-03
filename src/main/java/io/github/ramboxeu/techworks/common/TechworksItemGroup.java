@@ -13,6 +13,6 @@ public class TechworksItemGroup extends ItemGroup {
 
     @Override
     public ItemStack createIcon() {
-        return new ItemStack(TechworksItems.WRENCH.get());
+        return new ItemStack(TechworksItems.WRENCH.getItem());
     }
 }

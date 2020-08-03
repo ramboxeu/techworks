@@ -2,9 +2,15 @@ package io.github.ramboxeu.techworks.common.registration;
 
 import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.api.component.ComponentStackHandler;
-import io.github.ramboxeu.techworks.client.container.machine.ComponentsContainer;
+import io.github.ramboxeu.techworks.client.container.BaseMachineContainer;
+import io.github.ramboxeu.techworks.client.container.machine.*;
+import io.github.ramboxeu.techworks.client.screen.*;
 import io.github.ramboxeu.techworks.common.component.IComponentsContainerProvider;
+import io.github.ramboxeu.techworks.common.registry.ContainerDeferredRegister;
+import io.github.ramboxeu.techworks.common.registry.ContainerRegistryObject;
 import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
+import io.github.ramboxeu.techworks.common.tile.machine.SteamEngineTile;
+import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -15,14 +21,14 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class TechworksContainers {
-    private static final DeferredRegister<ContainerType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS, Techworks.MOD_ID);
+    public static final ContainerDeferredRegister CONTAINERS = new ContainerDeferredRegister();
 
-    public static void addToEventBus() {
-        CONTAINERS.register(FMLJavaModLoadingContext.get().getModEventBus());
-    }
+    public static final ContainerRegistryObject<BoilerContainer> BOILER = CONTAINERS.registerMachineContainer("boiler", BoilerContainer::new);
+    public static final ContainerRegistryObject<SteamEngineContainer> STEAM_ENGINE = CONTAINERS.registerMachineContainer("steam_engine", SteamEngineContainer::new);
+    public static final ContainerRegistryObject<ElectricGrinderContainer> ELECTRIC_GRINDER = CONTAINERS.registerMachineContainer("electric_grinder", ElectricGrinderContainer::new);
+    public static final ContainerRegistryObject<ElectricFurnaceContainer> ELECTRIC_FURNACE = CONTAINERS.registerMachineContainer("electric_furnace", ElectricFurnaceContainer::new);
 
-    public static final RegistryObject<ContainerType<ComponentsContainer>> COMPONENTS = CONTAINERS.register("components",
-            () -> IForgeContainerType.create((id, inv, buf) -> {
+    public static final ContainerRegistryObject<ComponentsContainer> COMPONENTS = CONTAINERS.register("components", (id, inv, buf) -> {
                 ComponentStackHandler components = ComponentStackHandler.empty();
 
                 BlockPos pos = buf.readBlockPos();
@@ -36,5 +42,13 @@ public class TechworksContainers {
                 }
 
                 return new ComponentsContainer(id, inv, components);
-            }));
+            });
+
+    public static void registerScreenFactories(){
+        ScreenManager.registerFactory(BOILER.getContainer(), BoilerScreen::new);
+        ScreenManager.registerFactory(STEAM_ENGINE.getContainer(), SteamEngineScreen::new);
+        ScreenManager.registerFactory(ELECTRIC_GRINDER.getContainer(), ElectricGrinderScreen::new);
+        ScreenManager.registerFactory(ELECTRIC_FURNACE.getContainer(), ElectricFurnaceScreen::new);
+        ScreenManager.registerFactory(COMPONENTS.getContainer(), ComponentsScreen::new);
+    }
 }

@@ -27,7 +27,7 @@ public class ComponentsContainer extends Container {
     private static final int HEIGHT = 166;
 
     public ComponentsContainer(int id, PlayerInventory inventory, ComponentStackHandler components) {
-        super(TechworksContainers.COMPONENTS.get(), id);
+        super(TechworksContainers.COMPONENTS.getContainer(), id);
 
         this.components = components;
 

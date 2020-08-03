@@ -41,8 +41,8 @@ public class Techworks {
         Registration.addToEventBus();
         TechworksBlocks.BLOCKS.register(modEventBus);
         TechworksTiles.TILES.register(modEventBus);
-        TechworksItems.addToEventBus();
-        TechworksContainers.addToEventBus();
+        TechworksItems.ITEMS.register(modEventBus);
+        TechworksContainers.CONTAINERS.register(modEventBus);
         TechworksFluids.addToEventBus();
 
         modEventBus.addListener(this::setup);
@@ -59,14 +59,14 @@ public class Techworks {
     }
 
     public void clientSetup(FMLClientSetupEvent event) {
-        Registration.registerScreens();
         ModelLoaderRegistry.registerLoader(new ResourceLocation("techworks:cable"), new CableModelLoader());
         TechworksTiles.bindMachineRenderers();
+        TechworksContainers.registerScreenFactories();
+
         MinecraftForge.EVENT_BUS.addListener(DebugInfoRenderer::render);
     }
 
     public void onPreStitch(TextureStitchEvent.Pre event) {
-        Techworks.LOGGER.debug("Event fired for map: {}", event.getMap().getTextureLocation());
         if (!event.getMap().getTextureLocation().equals(AtlasTexture.LOCATION_BLOCKS_TEXTURE)) return;
 
         // Stitch all of this onto blocks atlas until creation of custom atlases is possible

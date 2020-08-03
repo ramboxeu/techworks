@@ -21,14 +21,13 @@ public class BlockDeferredRegister {
     private final List<BlockRegistryObject<?, ?>> REGISTERED_BLOCKS = new ArrayList<>();
 
     public <BLOCK extends Block> BlockRegistryObject<BLOCK, BlockItem> register(String name, Supplier<BLOCK> blockSupplier) {
-        return register(name, blockSupplier, block -> new BlockItem(block, new Item.Properties().group(Techworks.ITEM_GROUP)));
+        return register(name, blockSupplier, block -> new BlockItem(block, ItemDeferredRegister.getDefaultProperties()));
     }
 
     public <BLOCK extends Block, ITEM extends Item> BlockRegistryObject<BLOCK, ITEM> register(String name, Supplier<BLOCK> blockSupplier, Function<BLOCK, ITEM> itemFactory) {
         RegistryObject<BLOCK> block = BLOCKS.register(name, blockSupplier);
         BlockRegistryObject<BLOCK, ITEM> object = new BlockRegistryObject<>(block, ITEMS.register(name, () -> itemFactory.apply(block.get())));
         REGISTERED_BLOCKS.add(object);
-        Techworks.LOGGER.debug("Registering: {} block", name);
         return object;
     }
 
