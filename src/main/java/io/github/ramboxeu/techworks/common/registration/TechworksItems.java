@@ -8,10 +8,14 @@ import io.github.ramboxeu.techworks.common.item.WrenchItem;
 import io.github.ramboxeu.techworks.common.registry.ItemDeferredRegister;
 import io.github.ramboxeu.techworks.common.registry.ItemRegistryObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TechworksItems {
     public static final ItemDeferredRegister ITEMS = new ItemDeferredRegister();
 
     // Components
+    public static final List<ItemRegistryObject<?>> COMPONENTS = new ArrayList<>();
     public static final ItemRegistryObject<BaseBoilingComponent> BASIC_BOILING_COMPONENT = ITEMS.register("basic_boiling_component", () -> new BaseBoilingComponent(1, 500, 100, 300, 30));
     public static final ItemRegistryObject<BaseBoilingComponent> ADVANCED_BOILING_COMPONENT = ITEMS.register("advanced_boiling_component", () -> new BaseBoilingComponent(2, 1000, 50, 2000, 200));
 
@@ -25,4 +29,13 @@ public class TechworksItems {
 
     public static final ItemRegistryObject<GroundItem> GROUND_IRON = ITEMS.register("ground_iron", GroundItem::new);
     public static final ItemRegistryObject<GroundItem> GROUND_GOLD = ITEMS.register("ground_gold", GroundItem::new);
+
+    static {
+        COMPONENTS.add(BASIC_BOILING_COMPONENT);
+        COMPONENTS.add(ADVANCED_BOILING_COMPONENT);
+        COMPONENTS.add(BASIC_LIQUID_STORAGE_COMPONENT);
+        COMPONENTS.add(ADVANCED_LIQUID_STORAGE_COMPONENT);
+        COMPONENTS.add(BASIC_GAS_STORAGE_COMPONENT);
+        COMPONENTS.add(ADVANCED_GAS_STORAGE_COMPONENT);
+    }
 }

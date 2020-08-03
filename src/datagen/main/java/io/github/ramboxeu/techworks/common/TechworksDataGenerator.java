@@ -2,6 +2,7 @@ package io.github.ramboxeu.techworks.common;
 
 import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.client.TechworksBlockStateProvider;
+import io.github.ramboxeu.techworks.client.TechworksItemModelProvider;
 import io.github.ramboxeu.techworks.common.loot.TechworksLootProvider;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.client.model.generators.ExistingFileHelper;
@@ -21,6 +22,7 @@ public class TechworksDataGenerator {
 
         if (event.includeClient()) {
             generator.addProvider(new TechworksBlockStateProvider(generator, existingFileHelper));
+            generator.addProvider(new TechworksItemModelProvider(generator, existingFileHelper));
         }
 
         if (event.includeServer()) {

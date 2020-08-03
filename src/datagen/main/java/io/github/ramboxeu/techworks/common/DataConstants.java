@@ -8,5 +8,7 @@ public class DataConstants {
         public static final ResourceLocation MACHINE_SIDE = new ResourceLocation(Techworks.MOD_ID, "block/machine_side");
         public static final ResourceLocation MACHINE_TOP = new ResourceLocation(Techworks.MOD_ID, "block/machine_top");
         public static final ResourceLocation MACHINE_BOTTOM = new ResourceLocation(Techworks.MOD_ID, "block/machine_bottom");
+
+        public static final ResourceLocation ITEM_GENERATED = new ResourceLocation("item/generated");
     }
 }

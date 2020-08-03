@@ -26,6 +26,7 @@ public class TechworksBlockStateProvider extends BlockStateProvider {
     protected void registerStatesAndModels() {
         for (BlockRegistryObject<? extends BaseMachineBlock, BlockItem> machine : TechworksBlocks.MACHINES) {
             machineBlock(machine.getBlock(), machine.getRegistryName().getPath());
+            machineBlockItem(machine.getRegistryName().getPath());
         }
     }
 
@@ -41,6 +42,10 @@ public class TechworksBlockStateProvider extends BlockStateProvider {
                 .rotationY(getHorizontalRotation(state.get(BlockStateProperties.HORIZONTAL_FACING)))
                 .build()
         );
+    }
+
+    private void machineBlockItem(String name) {
+        models().withExistingParent("item/" + name, modLoc("block/" + name + "_off"));
     }
 
     private BlockModelBuilder machineBlockModel(String name, ResourceLocation frontTex) {

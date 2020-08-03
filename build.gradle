@@ -110,7 +110,7 @@ minecraft {
 
         data {
             workingDirectory project.file('run')
-            environment 'target', 'fmluserdata'
+            environment 'target', 'fmluserdevdata'
             property 'forge.logging.console.level', 'debug'
             properties 'fml.earlyprogresswindow': 'false'
 
