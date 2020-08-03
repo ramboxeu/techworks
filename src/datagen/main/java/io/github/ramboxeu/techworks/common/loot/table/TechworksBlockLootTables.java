@@ -1,8 +1,11 @@
 package io.github.ramboxeu.techworks.common.loot.table;
 
-import io.github.ramboxeu.techworks.common.registration.Registration;
+import io.github.ramboxeu.techworks.common.block.BaseMachineBlock;
+import io.github.ramboxeu.techworks.common.registration.TechworksBlocks;
+import io.github.ramboxeu.techworks.common.registry.BlockRegistryObject;
 import net.minecraft.block.Block;
 import net.minecraft.data.loot.BlockLootTables;
+import net.minecraft.item.BlockItem;
 import net.minecraft.loot.LootTable;
 
 import java.util.HashSet;
@@ -24,8 +27,8 @@ public class TechworksBlockLootTables extends BlockLootTables {
 
     @Override
     protected void addTables() {
-        registerDropSelfLootTable(Registration.BOILER_BLOCK.get());
-        registerDropSelfLootTable(Registration.ELECTRIC_FURNACE_BLOCK.get());
-        registerDropSelfLootTable(Registration.ELECTRIC_GRINDER_BLOCK.get());
+        for (BlockRegistryObject<? extends BaseMachineBlock, BlockItem> machine : TechworksBlocks.MACHINES) {
+            registerDropSelfLootTable(machine.getBlock());
+        }
     }
 }
