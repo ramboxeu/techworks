@@ -10,12 +10,14 @@ import io.github.ramboxeu.techworks.client.container.machine.BoilerContainer;
 import io.github.ramboxeu.techworks.common.registration.Registration;
 import io.github.ramboxeu.techworks.common.registration.TechworksFluids;
 import io.github.ramboxeu.techworks.common.registration.TechworksTiles;
+import io.github.ramboxeu.techworks.common.tag.TechworksFluidTags;
 import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
 import io.github.ramboxeu.techworks.common.tile.machine.MachineIO.PortConfig;
 import io.github.ramboxeu.techworks.common.tile.machine.MachinePort.Type;
 import io.github.ramboxeu.techworks.common.util.PredicateUtils;
 import io.github.ramboxeu.techworks.common.util.Utils;
 import io.github.ramboxeu.techworks.common.util.capability.EmptyTankItem;
+import io.github.ramboxeu.techworks.common.util.capability.FluidWrapper;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -82,8 +84,8 @@ public class BoilerTile extends BaseMachineTile {
         );
 
         machineIO = MachineIO.create(
-                PortConfig.create(Type.GAS, steamTank.orElse(EmptyTankItem.INSTANCE)),
-                PortConfig.create(Type.LIQUID, waterTank.orElse(EmptyTankItem.INSTANCE))
+                PortConfig.create(Type.GAS, new FluidWrapper(steamTank, stack -> stack.getFluid().isIn(TechworksFluidTags.STEAM))),
+                PortConfig.create(Type.LIQUID, new FluidWrapper(waterTank, stack -> stack.getFluid().isIn(FluidTags.WATER)))
         );
 
         fuelInventory = new ItemStackHandler() {
@@ -151,10 +153,10 @@ public class BoilerTile extends BaseMachineTile {
                     if (!isWorking) {
                         IFluidHandlerItem waterTank = this.waterTank.orElse(EmptyTankItem.INSTANCE);
                         int totalBurnTime = (fuelInventory.getStackInSlot(0).getCount() * fuelBurnTime) + (fuelBurnTime - burnTime) + 1;
-                        Techworks.LOGGER.debug("TotalBurnTime: {} | Water: [{}]", totalBurnTime, Utils.stringifyFluidStack(waterTank.getFluidInTank(0)));
+//                        Techworks.LOGGER.debug("TotalBurnTime: {} | Water: [{}]", totalBurnTime, Utils.stringifyFluidStack(waterTank.getFluidInTank(0)));
 
                         if (canWork(waterTank, steamTank, boilingComponent) && totalBurnTime >= boilingComponent.getWorkTime() ) {
-                            Techworks.LOGGER.debug("Consumed water");
+//                            Techworks.LOGGER.debug("Consumed water");
                             waterTank.drain(boilingComponent.getWaterAmount(), IFluidHandler.FluidAction.EXECUTE);
                             isWorking = true;
                             workTime++;
@@ -200,6 +202,8 @@ public class BoilerTile extends BaseMachineTile {
         if ((world != null && !world.isRemote) || force) {
             waterTank = components.getStackInSlot(0).getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
             steamTank = components.getStackInSlot(2).getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
+
+            // set handlers
 
             ItemStack boilingStack = components.getStackInSlot(1);
             boilingComponent = boilingStack.getItem() instanceof BaseBoilingComponent ? Optional.of((BaseBoilingComponent) boilingStack.getItem()) : Optional.empty();

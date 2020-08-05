@@ -1,6 +1,5 @@
 package io.github.ramboxeu.techworks.common.registry;
 
-import com.sun.org.apache.regexp.internal.RE;
 import io.github.ramboxeu.techworks.Techworks;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;

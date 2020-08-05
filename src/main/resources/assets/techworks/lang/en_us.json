@@ -16,12 +16,15 @@
   "item.techworks.advanced_liquid_storage_component": "Advanced Liquid Storage Component",
   "item.techworks.basic_gas_storage_component": "Basic Gas Storage Component",
   "item.techworks.advanced_gas_storage_component": "Advanced Gas Storage Component",
+  "item.techworks.basic_steam_turbine_component": "Basic Steam Turbine Component",
+  "item.techworks.basic_energy_storage_component": "Basic Energy Storage Component",
 
   "container.techworks.boiler": "Boiler",
   "container.techworks.steam_engine": "Steam Engine",
   "container.techworks.electric_grinder": "Electric Grinder",
   "container.techworks.electric_furnace": "Electric Furnace",
   "container.techworks.boiler_components": "Boiler Components",
+  "container.techworks.steam_engine_components": "Steam Engine Components",
 
   "fluid.techworks.none": "None",
   "fluid.techworks.empty": "Empty",
@@ -30,10 +33,13 @@
   "tooltip.techworks.liquid_storage_component_description": "Holds various liquids",
   "tooltip.techworks.component_level": "Level: %d",
   "tooltip.techworks.component_capacity": "Volume: %dmb",
+  "tooltip.techworks.component_energy_capacity": "Capacity: %dFE",
   "tooltip.techworks.liquid_storage_component_liquid": "Liquid: %s",
   "tooltip.techworks.gas_storage_component_description": "Holds various gases",
   "tooltip.techworks.gas_storage_component_gas": "Gas: %s",
   "tooltip.techworks.boiling_component_description": "Boils water",
   "tooltip.techworks.component_unbreakable": "Unbreakable",
-  "tooltip.techworks.component_durability": "Durability: %s"
+  "tooltip.techworks.component_durability": "Durability: %s",
+  "tooltip.techworks.energy_storage_component_description": "Stores energy",
+  "tooltip.techworks.energy_storage_component_energy": "Energy: %dFE"
 }

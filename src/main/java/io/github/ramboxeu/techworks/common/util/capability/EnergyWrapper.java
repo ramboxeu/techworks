@@ -1,46 +1,49 @@
 package io.github.ramboxeu.techworks.common.util.capability;
 
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.IEnergyStorage;
 
+// My own system gets in my way, yay I'm dumb
+@SuppressWarnings("ConstantConditions")
 public class EnergyWrapper implements IEnergyStorage {
-    private IEnergyStorage storage;
-    private boolean canInsert;
-    private boolean canExtract;
+    private LazyOptional<IEnergyStorage> storage;
 
-    public EnergyWrapper(IEnergyStorage storage, boolean canInsert, boolean canExtract) {
+    public EnergyWrapper(LazyOptional<IEnergyStorage> storage) {
         this.storage = storage;
-        this.canInsert = canInsert;
-        this.canExtract = canExtract;
     }
 
 
     @Override
     public int receiveEnergy(int maxReceive, boolean simulate) {
-        return canInsert ? storage.receiveEnergy(maxReceive, simulate) : 0;
+        return storage.isPresent() ? storage.orElse(null).receiveEnergy(maxReceive, simulate) : 0;
     }
 
     @Override
     public int extractEnergy(int maxExtract, boolean simulate) {
-        return canExtract ? storage.extractEnergy(maxExtract, simulate) : 0;
+        return storage.isPresent() ? storage.orElse(null).extractEnergy(maxExtract, simulate) : 0;
     }
 
     @Override
     public int getEnergyStored() {
-        return storage.getEnergyStored();
+        return storage.isPresent() ? storage.orElse(null).getEnergyStored() : 0;
     }
 
     @Override
     public int getMaxEnergyStored() {
-        return storage.getMaxEnergyStored();
+        return storage.isPresent() ? storage.orElse(null).getMaxEnergyStored() : 0;
     }
 
     @Override
     public boolean canExtract() {
-        return storage.canExtract();
+        return storage.isPresent() && storage.orElse(null).canExtract();
     }
 
     @Override
     public boolean canReceive() {
-        return storage.canReceive();
+        return storage.isPresent() && storage.orElse(null).canReceive();
+    }
+
+    public void setHandler(LazyOptional<IEnergyStorage> handler) {
+        storage = handler;
     }
 }

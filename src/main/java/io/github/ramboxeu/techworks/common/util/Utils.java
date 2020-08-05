@@ -2,6 +2,7 @@ package io.github.ramboxeu.techworks.common.util;
 
 import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.api.component.ComponentItem;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
@@ -36,7 +37,7 @@ public class Utils {
         for (Direction direction : Direction.values()) {
             TileEntity targetTe = world.getTileEntity(sourcePos.offset(direction));
             if (targetTe != null) {
-                targetTe.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).ifPresent(h -> targets.add(Pair.of(h, direction)));
+                targetTe.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, direction.getOpposite()).ifPresent(h -> targets.add(Pair.of(h, direction)));
             }
         }
 
@@ -49,19 +50,18 @@ public class Utils {
         int amount = totalAmount / targets.size();
         int remainder = totalAmount - (amount * targets.size());
 
-        if (next == null) {
-            next = targets.get(0).getRight();
-        }
-
         Direction tempNext = null;
         boolean shouldUseTempNext = false;
+
+        Fluid fluid = sourceTank.getFluidInTank(0).getFluid();
 
         for (int i = 0; i < targets.size(); i++) {
             Pair<IFluidHandler, Direction> targetPair = targets.get(i);
             Direction targetDirection = targetPair.getRight();
 
             int toDrain = next == targetDirection || (shouldUseTempNext && tempNext == targetDirection) ? amount + remainder : amount;
-            int filled = targetPair.getLeft().fill(sourceTank.drain(toDrain, IFluidHandler.FluidAction.EXECUTE), IFluidHandler.FluidAction.EXECUTE);
+            int filled = targetPair.getLeft().fill(new FluidStack(fluid, toDrain), IFluidHandler.FluidAction.EXECUTE);
+            sourceTank.drain(filled, IFluidHandler.FluidAction.EXECUTE);
 
             if (filled < toDrain) {
                 totalAmount = sourceTank.getFluidInTank(0).getAmount();
@@ -75,7 +75,7 @@ public class Utils {
             }
         }
 
-        return next.rotateY();
+        return next != null ? next.rotateY() : null;
     }
 
     public static void damageComponent(ItemStack componentStack) {

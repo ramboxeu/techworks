@@ -1,8 +1,6 @@
 package io.github.ramboxeu.techworks.common.registration;
 
-import io.github.ramboxeu.techworks.api.component.base.BaseBoilingComponent;
-import io.github.ramboxeu.techworks.api.component.base.BaseGasStorageComponent;
-import io.github.ramboxeu.techworks.api.component.base.BaseLiquidStorageComponent;
+import io.github.ramboxeu.techworks.api.component.base.*;
 import io.github.ramboxeu.techworks.common.item.GroundItem;
 import io.github.ramboxeu.techworks.common.item.WrenchItem;
 import io.github.ramboxeu.techworks.common.registry.ItemDeferredRegister;
@@ -25,6 +23,10 @@ public class TechworksItems {
     public static final ItemRegistryObject<BaseGasStorageComponent> BASIC_GAS_STORAGE_COMPONENT = ITEMS.register("basic_gas_storage_component", () -> new BaseGasStorageComponent(1, 5000));
     public static final ItemRegistryObject<BaseGasStorageComponent> ADVANCED_GAS_STORAGE_COMPONENT = ITEMS.register("advanced_gas_storage_component", () -> new BaseGasStorageComponent(2, 10000));
 
+    public static final ItemRegistryObject<BaseSteamTurbineComponent> BASIC_STEAM_TURBINE_COMPONENT = ITEMS.register("basic_steam_turbine_component", () -> new BaseSteamTurbineComponent(1, 500, 100, 150, 15));
+
+    public static final ItemRegistryObject<BaseEnergyStorageComponent> BASIC_ENERGY_STORAGE_COMPONENT = ITEMS.register("basic_energy_storage_component", () -> new BaseEnergyStorageComponent(1, 5000));
+
     public static final ItemRegistryObject<WrenchItem> WRENCH = ITEMS.register("wrench", WrenchItem::new);
 
     public static final ItemRegistryObject<GroundItem> GROUND_IRON = ITEMS.register("ground_iron", GroundItem::new);
@@ -37,5 +39,7 @@ public class TechworksItems {
         COMPONENTS.add(ADVANCED_LIQUID_STORAGE_COMPONENT);
         COMPONENTS.add(BASIC_GAS_STORAGE_COMPONENT);
         COMPONENTS.add(ADVANCED_GAS_STORAGE_COMPONENT);
+        COMPONENTS.add(BASIC_STEAM_TURBINE_COMPONENT);
+        COMPONENTS.add(BASIC_ENERGY_STORAGE_COMPONENT);
     }
 }
