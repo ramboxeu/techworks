@@ -7,7 +7,6 @@ import io.github.ramboxeu.techworks.api.component.base.BaseBoilingComponent;
 import io.github.ramboxeu.techworks.api.component.base.BaseGasStorageComponent;
 import io.github.ramboxeu.techworks.api.component.base.BaseLiquidStorageComponent;
 import io.github.ramboxeu.techworks.client.container.machine.BoilerContainer;
-import io.github.ramboxeu.techworks.common.registration.Registration;
 import io.github.ramboxeu.techworks.common.registration.TechworksFluids;
 import io.github.ramboxeu.techworks.common.registration.TechworksTiles;
 import io.github.ramboxeu.techworks.common.tag.TechworksFluidTags;
@@ -17,11 +16,11 @@ import io.github.ramboxeu.techworks.common.tile.machine.MachinePort.Type;
 import io.github.ramboxeu.techworks.common.util.PredicateUtils;
 import io.github.ramboxeu.techworks.common.util.Utils;
 import io.github.ramboxeu.techworks.common.util.capability.EmptyTankItem;
-import io.github.ramboxeu.techworks.common.util.capability.FluidWrapper;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tags.FluidTags;
@@ -32,6 +31,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.ITextProperties;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
@@ -40,6 +40,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
@@ -54,9 +55,24 @@ import java.util.Optional;
 public class BoilerTile extends BaseMachineTile {
     private final IItemHandler fuelInventory;
 
-    private LazyOptional<IFluidHandlerItem> waterTank = LazyOptional.empty();
-    private LazyOptional<IFluidHandlerItem> steamTank = LazyOptional.empty();
+    private FluidTank waterTank = new FluidTank(0, stack -> stack.getFluid().isIn(FluidTags.WATER)) {
+        @Override
+        protected void onContentsChanged() {
+            markDirty();
+        }
+    };
+
+    private FluidTank steamTank = new FluidTank(0, stack -> stack.getFluid().isIn(TechworksFluidTags.STEAM)){
+        @Override
+        protected void onContentsChanged() {
+            markDirty();
+        }
+    };
+
     private Optional<BaseBoilingComponent> boilingComponent = Optional.empty();
+
+    private boolean isWaterTankPresent = false;
+    private boolean isSteamTankPresent = false;
 
     private int burnTime = 0;
     private int fuelBurnTime = 0;
@@ -71,7 +87,7 @@ public class BoilerTile extends BaseMachineTile {
         super(TechworksTiles.BOILER.getTileType(), new ComponentStackHandler.Builder(3)
                         .slot(0, new Slot()
                                 .predicate(stack -> stack.getItem() instanceof BaseLiquidStorageComponent)
-                                .texture(new ResourceLocation(Techworks.MOD_ID, "textures/gui/slot/liquid_storage_component_overlay.png"))
+//                                .texture(new ResourceLocation(Techworks.MOD_ID, "textures/gui/slot/liquid_storage_component_overlay.png"))
                         )
                         .slot(1, new Slot()
                                 .predicate(stack -> stack.getItem() instanceof BaseBoilingComponent)
@@ -84,8 +100,8 @@ public class BoilerTile extends BaseMachineTile {
         );
 
         machineIO = MachineIO.create(
-                PortConfig.create(Type.GAS, new FluidWrapper(steamTank, stack -> stack.getFluid().isIn(TechworksFluidTags.STEAM))),
-                PortConfig.create(Type.LIQUID, new FluidWrapper(waterTank, stack -> stack.getFluid().isIn(FluidTags.WATER)))
+                PortConfig.create(Type.GAS, steamTank),
+                PortConfig.create(Type.LIQUID, waterTank)
         );
 
         fuelInventory = new ItemStackHandler() {
@@ -100,11 +116,11 @@ public class BoilerTile extends BaseMachineTile {
     protected void serverTick() {
         boolean flag = true;
 
-        if (!waterTank.isPresent()) {
+        if (!isWaterTankPresent) {
             flag = false;
         }
 
-        if (!steamTank.isPresent()) {
+        if (!isSteamTankPresent) {
             flag = false;
         }
 
@@ -114,13 +130,11 @@ public class BoilerTile extends BaseMachineTile {
         }
 
         if (flag) {
-            IFluidHandlerItem steamTank = this.steamTank.orElse(EmptyTankItem.INSTANCE);
             BaseBoilingComponent boilingComponent = this.boilingComponent.get();
 
             if (!isBurning) {
                 int burnTime = ForgeHooks.getBurnTime(fuelInventory.extractItem(0, 1, true));
                 int totalBurnTime = fuelInventory.getStackInSlot(0).getCount() * burnTime;
-                IFluidHandlerItem waterTank = this.waterTank.orElse(EmptyTankItem.INSTANCE);
 
                 if (burnTime > 0 && (canWork(waterTank, steamTank, boilingComponent) || workTime > 0) && totalBurnTime >= boilingComponent.getWorkTime() - workTime) {
                     fuelInventory.extractItem(0, 1, false);
@@ -151,7 +165,6 @@ public class BoilerTile extends BaseMachineTile {
                     burnTime++;
 
                     if (!isWorking) {
-                        IFluidHandlerItem waterTank = this.waterTank.orElse(EmptyTankItem.INSTANCE);
                         int totalBurnTime = (fuelInventory.getStackInSlot(0).getCount() * fuelBurnTime) + (fuelBurnTime - burnTime) + 1;
 //                        Techworks.LOGGER.debug("TotalBurnTime: {} | Water: [{}]", totalBurnTime, Utils.stringifyFluidStack(waterTank.getFluidInTank(0)));
 
@@ -198,15 +211,44 @@ public class BoilerTile extends BaseMachineTile {
     }
 
     @Override
-    protected void markComponentsDirty(boolean force) {
-        if ((world != null && !world.isRemote) || force) {
-            waterTank = components.getStackInSlot(0).getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
-            steamTank = components.getStackInSlot(2).getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
+    protected void refreshComponents(ItemStack stack, boolean input) {
+        Item item = stack.getItem();
 
-            // set handlers
+        if (item instanceof BaseLiquidStorageComponent) {
+            if (input) {
+                Utils.readComponentTank(stack, waterTank);
+                isWaterTankPresent = true;
+            } else {
+                Utils.writeComponentTank(stack, waterTank, true);
+                isWaterTankPresent = false;
+            }
+        }
 
-            ItemStack boilingStack = components.getStackInSlot(1);
-            boilingComponent = boilingStack.getItem() instanceof BaseBoilingComponent ? Optional.of((BaseBoilingComponent) boilingStack.getItem()) : Optional.empty();
+        if (item instanceof BaseGasStorageComponent) {
+            if (input) {
+                Utils.readComponentTank(stack, steamTank);
+                isSteamTankPresent = true;
+            } else {
+                Utils.writeComponentTank(stack, steamTank, true);
+                isSteamTankPresent = false;
+            }
+        }
+
+        if (item instanceof BaseBoilingComponent) {
+            boilingComponent = input ? Optional.of((BaseBoilingComponent) item) : Optional.empty();
+        }
+    }
+
+    @Override
+    public void markDirty() {
+        super.markDirty();
+
+        if (isWaterTankPresent) {
+            Utils.writeComponentTank(components.getStackInSlot(0), waterTank, false);
+        }
+
+        if (isSteamTankPresent) {
+            Utils.writeComponentTank(components.getStackInSlot(2), steamTank, false);
         }
     }
 
@@ -217,10 +259,8 @@ public class BoilerTile extends BaseMachineTile {
 
             LazyOptional<IFluidHandlerItem> bucket = handStack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
 
-            if (bucket.isPresent() && waterTank.isPresent()) {
+            if (bucket.isPresent()) {
                 IFluidHandlerItem bucketTank = bucket.orElse(EmptyTankItem.INSTANCE);
-                IFluidHandlerItem waterTank = this.waterTank.orElse(EmptyTankItem.INSTANCE);
-
                 int maxDrain = waterTank.getTankCapacity(0) - waterTank.getFluidInTank(0).getAmount();
 
                 if (bucketTank.drain(maxDrain, IFluidHandler.FluidAction.SIMULATE).getFluid().isIn(FluidTags.WATER)) {
@@ -267,8 +307,6 @@ public class BoilerTile extends BaseMachineTile {
         isBurning = compound.getBoolean("IsBurning");
 
         CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.readNBT(fuelInventory, null, compound.get("FuelInv"));
-        markComponentsDirty(true);
-
         super.read(state, compound);
     }
 
@@ -297,19 +335,19 @@ public class BoilerTile extends BaseMachineTile {
     }
 
     public int getWaterStorage() {
-        return waterTank.map(handler -> handler.getTankCapacity(0)).orElse(0);
+        return waterTank.getTankCapacity(0);
     }
 
     public int getSteamStorage() {
-        return steamTank.map(handler -> handler.getTankCapacity(0)).orElse(0);
+        return steamTank.getTankCapacity(0);
     }
 
     public FluidStack getWater() {
-        return waterTank.map(handler -> handler.getFluidInTank(0)).orElse(FluidStack.EMPTY);
+        return waterTank.getFluidInTank(0);
     }
 
     public FluidStack getSteam() {
-        return steamTank.map(handler -> handler.getFluidInTank(0)).orElse(FluidStack.EMPTY);
+        return steamTank.getFluidInTank(0);
     }
 
     public IItemHandler getFuelInventory() {

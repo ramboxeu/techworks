@@ -2,9 +2,7 @@ package io.github.ramboxeu.techworks.common.tile;
 
 import io.github.ramboxeu.techworks.api.component.ComponentStackHandler;
 import io.github.ramboxeu.techworks.client.container.machine.ComponentsContainer;
-import io.github.ramboxeu.techworks.common.network.TechworkPacketHandler;
 import io.github.ramboxeu.techworks.common.tile.machine.MachineIO;
-import io.github.ramboxeu.techworks.common.tile.machine.MachinePort;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -14,8 +12,6 @@ import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
@@ -24,8 +20,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.ChunkStatus;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -42,7 +36,7 @@ public abstract class BaseMachineTile extends BaseTechworksTile implements IName
     public BaseMachineTile(TileEntityType<?> tileEntityType, ComponentStackHandler.Builder builder) {
         super(tileEntityType);
 
-        this.components = ComponentStackHandler.withBuilder(builder.onChanged(() -> markComponentsDirty(false)));
+        this.components = ComponentStackHandler.withBuilder(builder.onChanged(this::refreshComponents));
     }
 
     @Override
@@ -59,7 +53,7 @@ public abstract class BaseMachineTile extends BaseTechworksTile implements IName
 
     public void onLeftClick(BlockState state, World worldIn, BlockPos pos, PlayerEntity player) {}
 
-    protected void markComponentsDirty(boolean forced) {}
+    protected void refreshComponents(ItemStack stack, boolean input) {}
 
     public List<ItemStack> getDrops() {
         return Collections.emptyList();

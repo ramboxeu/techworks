@@ -2,17 +2,27 @@ package io.github.ramboxeu.techworks.common.util;
 
 import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.api.component.ComponentItem;
+import io.github.ramboxeu.techworks.api.component.base.BaseBoilingComponent;
+import io.github.ramboxeu.techworks.api.component.base.BaseEnergyStorageComponent;
+import io.github.ramboxeu.techworks.api.component.base.BaseGasStorageComponent;
+import io.github.ramboxeu.techworks.api.component.base.BaseLiquidStorageComponent;
+import io.github.ramboxeu.techworks.common.util.capability.EnergyBattery;
 import net.minecraft.fluid.Fluid;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistry;
@@ -166,5 +176,83 @@ public class Utils {
 
         // This shouldn't happen, ever
         return -1;
+    }
+
+    public static void readComponentTank(ItemStack stack, FluidTank tank) {
+        if (stack.hasTag()) {
+            CompoundNBT nbt = stack.getTag();
+
+            if (nbt.contains("FluidTank", Constants.NBT.TAG_COMPOUND)) {
+                CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.readNBT(tank, null, nbt.getCompound("FluidTank"));
+
+                int volume = 0;
+                Item item = stack.getItem();
+
+                if (item instanceof BaseGasStorageComponent) {
+                    volume = ((BaseGasStorageComponent) item).getVolume();
+                } else if (item instanceof BaseLiquidStorageComponent) {
+                    volume = ((BaseLiquidStorageComponent) item).getVolume();
+                }
+
+                tank.setCapacity(volume);
+
+                Techworks.LOGGER.debug("Read: Tag: {} | Tank: {}", nbt.getCompound("FluidTank"), tank.writeToNBT(new CompoundNBT()));
+            }
+        }
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    public static void writeComponentTank(ItemStack stack, FluidTank tank, boolean empty) {
+        CompoundNBT stackTag = stack.getOrCreateTag();
+        stackTag.put("FluidTank", CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.writeNBT(tank, null));
+
+        Techworks.LOGGER.debug("Write: {}", stackTag.getCompound("FluidTank"));
+
+        if (empty) {
+            tank.setCapacity(0);
+            tank.setFluid(FluidStack.EMPTY);
+        }
+    }
+
+    public static void readComponentBattery(ItemStack stack, EnergyBattery battery) {
+        if (stack.hasTag()) {
+            CompoundNBT nbt = stack.getTag();
+
+            if (nbt.contains("EnergyBattery", Constants.NBT.TAG_COMPOUND)) {
+                int energy = nbt.getCompound("EnergyBattery").getInt("Energy");
+
+                battery.setEnergy(energy);
+
+                Item item = stack.getItem();
+                if (item instanceof BaseEnergyStorageComponent) {
+                    battery.setCapacity(((BaseEnergyStorageComponent) item).getCapacity());
+                }
+            }
+        }
+    }
+
+    public static void writeComponentBattery(ItemStack stack, EnergyBattery battery, boolean empty) {
+        CompoundNBT stackTag = stack.getOrCreateTag();
+
+        CompoundNBT nbt = new CompoundNBT();
+        nbt.putInt("Energy", battery.getEnergyStored());
+
+        stackTag.put("EnergyBattery", nbt);
+
+        if (empty) {
+            battery.setCapacity(0);
+            battery.setEnergy(0);
+        }
+    }
+
+    public static FluidStack getFluidFromNBT(CompoundNBT nbt) {
+        ResourceLocation fluidId = new ResourceLocation(nbt.getString("FluidName"));
+        int amount = nbt.getInt("Amount");
+        Fluid fluid = ForgeRegistries.FLUIDS.getValue(fluidId);
+        return new FluidStack(fluid, amount);
+    }
+
+    public static int getEnergyFromNBT(CompoundNBT nbt) {
+        return nbt.getInt("Energy");
     }
 }

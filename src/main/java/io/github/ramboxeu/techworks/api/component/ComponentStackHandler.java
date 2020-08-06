@@ -1,6 +1,7 @@
 package io.github.ramboxeu.techworks.api.component;
 
 import com.google.common.collect.ImmutableList;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
@@ -24,11 +25,11 @@ public class ComponentStackHandler implements IItemHandler, IItemHandlerModifiab
     private Callback callback;
 
     public static ComponentStackHandler withSize(int size) {
-        return new ComponentStackHandler(NonNullList.withSize(size, ItemStack.EMPTY), NonNullList.withSize(size, new Slot()), () -> {});
+        return new ComponentStackHandler(NonNullList.withSize(size, ItemStack.EMPTY), NonNullList.withSize(size, new Slot()), (a, b) -> {});
     }
 
     public static ComponentStackHandler empty() {
-        return new ComponentStackHandler(NonNullList.create(), NonNullList.create(), () -> {});
+        return new ComponentStackHandler(NonNullList.create(), NonNullList.create(), (a, b) -> {});
     }
 
     public static ComponentStackHandler withBuilder(Builder builder) {
@@ -53,6 +54,7 @@ public class ComponentStackHandler implements IItemHandler, IItemHandlerModifiab
         validateSlot(slot);
         validateStack(slot, stack);
         stacks.set(slot, stack);
+        callback.call(stack, true);
         onContentsChanged(slot);
     }
 
@@ -90,6 +92,7 @@ public class ComponentStackHandler implements IItemHandler, IItemHandlerModifiab
         if (!simulate) {
             stacks.set(slot, entry);
             onContentsChanged(slot);
+            callback.call(stack, true);
         }
 
         return stack;
@@ -112,6 +115,7 @@ public class ComponentStackHandler implements IItemHandler, IItemHandlerModifiab
         if (!simulate) {
             stacks.set(slot, ItemStack.EMPTY);
             onContentsChanged(slot);
+            callback.call(existing, false);
         }
 
         return existing.copy();
@@ -181,7 +185,9 @@ public class ComponentStackHandler implements IItemHandler, IItemHandlerModifiab
             int slot = itemTag.getInt("Slot");
 
             if (slot >= 0 && slot < stacks.size()) {
-                stacks.set(i, ItemStack.read(itemTag));
+                ItemStack stack = ItemStack.read(itemTag);
+                stacks.set(i, stack);
+                callback.call(stack, true);
             }
         }
 
@@ -215,7 +221,6 @@ public class ComponentStackHandler implements IItemHandler, IItemHandlerModifiab
 
     protected void onContentsChanged(int slot) {
         slots.get(slot).callback.accept(stacks.get(slot));
-        callback.call();
     }
 
     public static class Builder {
@@ -228,7 +233,7 @@ public class ComponentStackHandler implements IItemHandler, IItemHandlerModifiab
             this.size = size;
             slots = NonNullList.withSize(size, new Slot());
             stacks = NonNullList.withSize(size, ItemStack.EMPTY);
-            callback = () -> {};
+            callback = (a, b) -> {};
         }
 
         public Builder slot(int index, Slot slot) {
@@ -296,6 +301,6 @@ public class ComponentStackHandler implements IItemHandler, IItemHandlerModifiab
 
     @FunctionalInterface
     public interface Callback {
-        void call();
+        void call(ItemStack stack, boolean input);
     }
 }

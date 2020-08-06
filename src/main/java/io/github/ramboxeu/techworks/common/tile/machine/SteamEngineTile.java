@@ -9,28 +9,23 @@ import io.github.ramboxeu.techworks.common.registration.TechworksTiles;
 import io.github.ramboxeu.techworks.common.tag.TechworksFluidTags;
 import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
 import io.github.ramboxeu.techworks.common.util.Utils;
-import io.github.ramboxeu.techworks.common.util.capability.EmptyEnergyHandler;
-import io.github.ramboxeu.techworks.common.util.capability.EmptyTankItem;
-import io.github.ramboxeu.techworks.common.util.capability.EnergyWrapper;
-import io.github.ramboxeu.techworks.common.util.capability.FluidWrapper;
+import io.github.ramboxeu.techworks.common.util.capability.*;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-import net.minecraftforge.fluids.capability.templates.EmptyFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import javax.annotation.Nullable;
 
@@ -40,12 +35,24 @@ import static io.github.ramboxeu.techworks.api.component.ComponentStackHandler.*
 
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public class SteamEngineTile extends BaseMachineTile {
-    private LazyOptional<IFluidHandlerItem> steamTank = LazyOptional.empty();
-    private LazyOptional<IEnergyStorage> energyStorage = LazyOptional.empty();
+    private FluidTank steamTank = new FluidTank(0, stack -> stack.getFluid().isIn(TechworksFluidTags.STEAM)){
+        @Override
+        protected void onContentsChanged() {
+            markDirty();
+        }
+    };
+
+    private EnergyBattery energyStorage = new EnergyBattery(0, 100, 100) {
+        @Override
+        protected void onContentsChanged() {
+            markDirty(); // This is run every tick. Is it stupid? probably...
+        }
+    };
+
     private Optional<BaseSteamTurbineComponent> steamTurbine = Optional.empty();
 
-    private final FluidWrapper steamWrapper = new FluidWrapper(steamTank, stack -> stack.getFluid().isIn(TechworksFluidTags.STEAM));
-    private final EnergyWrapper energyWrapper = new EnergyWrapper(energyStorage);
+    private boolean isSteamTankPresent = false;
+    private boolean isEnergyStoragePresent = false;
 
     private boolean isWorking = false;
     private int workTime = 1;
@@ -65,8 +72,8 @@ public class SteamEngineTile extends BaseMachineTile {
         );
 
         machineIO = MachineIO.create(
-                MachineIO.PortConfig.create(MachinePort.Type.GAS, steamWrapper),
-                MachineIO.PortConfig.create(MachinePort.Type.ENERGY, energyWrapper)
+                MachineIO.PortConfig.create(MachinePort.Type.GAS, steamTank),
+                MachineIO.PortConfig.create(MachinePort.Type.ENERGY, energyStorage)
         );
     }
 
@@ -74,7 +81,7 @@ public class SteamEngineTile extends BaseMachineTile {
     protected void serverTick() {
         boolean flag = true;
 
-        if (!steamTank.isPresent()) {
+        if (!isSteamTankPresent) {
             flag = false;
         }
 
@@ -82,7 +89,7 @@ public class SteamEngineTile extends BaseMachineTile {
             flag = false;
         }
 
-        if (!energyStorage.isPresent()) {
+        if (!isEnergyStoragePresent) {
             flag = false;
         }
 
@@ -90,9 +97,6 @@ public class SteamEngineTile extends BaseMachineTile {
             BaseSteamTurbineComponent steamTurbine = this.steamTurbine.get();
 
             if (!isWorking) {
-                IFluidHandler steamTank = this.steamTank.orElse(EmptyTankItem.INSTANCE);
-                IEnergyStorage energyStorage = this.energyStorage.orElse(EmptyEnergyHandler.INSTANCE);
-
                 if (canWork(steamTank, energyStorage, steamTurbine)) {
                     steamTank.drain(steamTurbine.getSteam(), IFluidHandler.FluidAction.EXECUTE);
                     isWorking = true;
@@ -107,7 +111,7 @@ public class SteamEngineTile extends BaseMachineTile {
                     isWorking = false;
                     workTime = 1;
                 } else {
-                    energyStorage.orElse(EmptyEnergyHandler.INSTANCE).receiveEnergy(steamTurbine.getEnergy(), false);
+                    energyStorage.receiveEnergy(steamTurbine.getEnergy(), false);
                     Techworks.LOGGER.debug("Released energy");
                     workTime++;
                 }
@@ -144,16 +148,44 @@ public class SteamEngineTile extends BaseMachineTile {
     }
 
     @Override
-    protected void markComponentsDirty(boolean forced) {
-        if ((world != null && !world.isRemote) || forced) {
-            steamTank = components.getStackInSlot(0).getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
-            energyStorage = components.getStackInSlot(2).getCapability(CapabilityEnergy.ENERGY);
+    protected void refreshComponents(ItemStack stack, boolean input) {
+        Item item = stack.getItem();
 
-            steamWrapper.setHandler(steamTank);
-            energyWrapper.setHandler(energyStorage);
+        if (item instanceof BaseGasStorageComponent) {
+            if (input) {
+                Utils.readComponentTank(stack, steamTank);
+                isSteamTankPresent = true;
+            } else {
+                Utils.writeComponentTank(stack, steamTank, true);
+                isSteamTankPresent = false;
+            }
+        }
 
-            Item turbineItem = components.getStackInSlot(1).getItem();
-            steamTurbine = turbineItem instanceof BaseSteamTurbineComponent ? Optional.of((BaseSteamTurbineComponent) turbineItem) : Optional.empty();
+        if (item instanceof BaseEnergyStorageComponent) {
+            if (input) {
+                Utils.readComponentBattery(stack, energyStorage);
+                isEnergyStoragePresent = true;
+            } else {
+                Utils.writeComponentBattery(stack, energyStorage, true);
+                isEnergyStoragePresent = false;
+            }
+        }
+
+        if (item instanceof BaseSteamTurbineComponent) {
+            steamTurbine = input ? Optional.of((BaseSteamTurbineComponent) item) : Optional.empty();
+        }
+    }
+
+    @Override
+    public void markDirty() {
+        super.markDirty();
+
+        if (isSteamTankPresent) {
+            Utils.writeComponentTank(components.getStackInSlot(0), steamTank, false);
+        }
+
+        if (isEnergyStoragePresent) {
+            Utils.writeComponentBattery(components.getStackInSlot(2), energyStorage, false);
         }
     }
 
