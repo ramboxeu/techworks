@@ -12,14 +12,15 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.generators.BlockModelBuilder;
-import net.minecraftforge.client.model.generators.BlockStateProvider;
-import net.minecraftforge.client.model.generators.ConfiguredModel;
-import net.minecraftforge.client.model.generators.ExistingFileHelper;
+import net.minecraftforge.client.model.generators.*;
 
 public class TechworksBlockStateProvider extends BlockStateProvider {
+    private final ExistingFileHelper helper;
+
     public TechworksBlockStateProvider(DataGenerator generator, ExistingFileHelper helper) {
         super(generator, Techworks.MOD_ID, helper);
+
+        this.helper = helper;
     }
 
     @Override
@@ -28,6 +29,8 @@ public class TechworksBlockStateProvider extends BlockStateProvider {
             machineBlock(machine.getBlock(), machine.getRegistryName().getPath());
             machineBlockItem(machine.getRegistryName().getPath());
         }
+
+        horizontalBlock(TechworksBlocks.BLUEPRINT_TABLE);
     }
 
     private void machineBlock(Block machineBlock, String name) {
@@ -46,6 +49,16 @@ public class TechworksBlockStateProvider extends BlockStateProvider {
 
     private void machineBlockItem(String name) {
         models().withExistingParent("item/" + name, modLoc("block/" + name + "_off"));
+    }
+
+    private void horizontalBlock(BlockRegistryObject<?, ?> object) {
+        String name = object.getRegistryName().getPath();
+        horizontalBlock(object.getBlock(), new ModelFile.ExistingModelFile(modLoc("block/" + name), helper));
+        blockItem(name);
+    }
+
+    private void blockItem(String name) {
+        models().withExistingParent("item/" + name, modLoc("block/" + name));
     }
 
     private BlockModelBuilder machineBlockModel(String name, ResourceLocation frontTex) {

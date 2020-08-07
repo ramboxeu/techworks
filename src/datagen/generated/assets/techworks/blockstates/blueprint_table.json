@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "techworks:block/blueprint_table"
+    },
+    "facing=south": {
+      "model": "techworks:block/blueprint_table",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "techworks:block/blueprint_table",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "techworks:block/blueprint_table",
+      "y": 90
+    }
+  }
+}

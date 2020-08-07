@@ -18,6 +18,8 @@ public class TechworksBlocks {
     public static final BlockRegistryObject<ElectricGrinderBlock, BlockItem> ELECTRIC_GRINDER = BLOCKS.register("electric_grinder", ElectricGrinderBlock::new);
     public static final BlockRegistryObject<ElectricFurnaceBlock, BlockItem> ELECTRIC_FURNACE = BLOCKS.register("electric_furnace", ElectricFurnaceBlock::new);
 
+    public static final BlockRegistryObject<BlueprintTableBlock, BlockItem> BLUEPRINT_TABLE = BLOCKS.register("blueprint_table", BlueprintTableBlock::new);
+
     static {
         MACHINES.add(BOILER);
         MACHINES.add(STEAM_ENGINE);
