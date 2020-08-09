@@ -2,16 +2,10 @@ package io.github.ramboxeu.techworks.client.screen;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import io.github.ramboxeu.techworks.Techworks;
-import io.github.ramboxeu.techworks.client.container.IExtendedContainerListener;
 import io.github.ramboxeu.techworks.client.container.machine.BoilerContainer;
 import io.github.ramboxeu.techworks.client.screen.widget.BurnProgressWidget;
 import io.github.ramboxeu.techworks.client.screen.widget.FluidTankWidget;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.IContainerListener;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
@@ -25,9 +19,9 @@ public class BoilerScreen extends BaseScreen<BoilerContainer> {
     public BoilerScreen(BoilerContainer boilerContainer, PlayerInventory playerInventory, ITextComponent title) {
         super(boilerContainer, playerInventory, title, BOILER_GUI_TEXTURE);
 
-        burnProgress = addWidget(new BurnProgressWidget(80 ,37, true));
-        waterTank = addWidget(new FluidTankWidget(49, 15));
-        steamTank = addWidget(new FluidTankWidget(109, 15));
+        burnProgress = addBaseWidget(new BurnProgressWidget(80 ,37, true));
+        waterTank = addBaseWidget(new FluidTankWidget(49, 15));
+        steamTank = addBaseWidget(new FluidTankWidget(109, 15));
 
         waterTank.setMaxStorage(container.getWaterTankStorage());
         steamTank.setMaxStorage(container.getSteamTankStorage());

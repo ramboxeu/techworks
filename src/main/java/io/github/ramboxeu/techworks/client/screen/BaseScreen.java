@@ -1,6 +1,7 @@
 package io.github.ramboxeu.techworks.client.screen;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.client.screen.widget.BaseWidget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
@@ -17,7 +18,8 @@ import java.util.List;
 // Just a ContainerScreen with some probably hacky hacks
 public class BaseScreen<T extends Container> extends ContainerScreen<T> {
     protected ResourceLocation background;
-    protected List<BaseWidget> widgets = new ArrayList<>();
+    protected List<BaseWidget> baseWidgets = new ArrayList<>();
+    protected List<Widget> widgets = new ArrayList<>();
     protected final T container;
 
     public BaseScreen(T screenContainer, PlayerInventory inv, ITextComponent titleIn, ResourceLocation background) {
@@ -43,6 +45,10 @@ public class BaseScreen<T extends Container> extends ContainerScreen<T> {
 
     @Override
     protected void func_230451_b_(MatrixStack stack, int mouseX, int mouseY) {
+        for (Widget widget : baseWidgets) {
+            widget.render(stack, mouseX, mouseY, Minecraft.getInstance().getRenderPartialTicks());
+        }
+
         for (Widget widget : widgets) {
             widget.render(stack, mouseX, mouseY, Minecraft.getInstance().getRenderPartialTicks());
         }
@@ -53,7 +59,7 @@ public class BaseScreen<T extends Container> extends ContainerScreen<T> {
     }
 
     protected void renderHoveredTooltip(MatrixStack stack, int mouseX, int mouseY) {
-        for (BaseWidget widget : widgets) {
+        for (BaseWidget widget : baseWidgets) {
             if (widget.isMouseOver(mouseX - guiLeft, mouseY - guiTop)) {
                 widget.renderTooltip(stack, mouseX - guiLeft, mouseY - guiTop, width, height);
             }
@@ -64,9 +70,19 @@ public class BaseScreen<T extends Container> extends ContainerScreen<T> {
         renderTooltip(stack, ITextProperties.func_240652_a_(text), mouseX, mouseY);
     }
 
-    protected <T extends BaseWidget> T addWidget(T widget) {
+    protected <T extends BaseWidget> T addBaseWidget(T widget) {
+        this.baseWidgets.add(widget);
+        addListener(widget);
+        return widget;
+    }
+
+    protected <T extends Widget> T addWidget(T widget) {
         this.widgets.add(widget);
         addListener(widget);
         return widget;
+    }
+
+    public static ResourceLocation guiTexture(String name) {
+        return new ResourceLocation(Techworks.MOD_ID, "textures/gui/container/" + name + ".png");
     }
 }

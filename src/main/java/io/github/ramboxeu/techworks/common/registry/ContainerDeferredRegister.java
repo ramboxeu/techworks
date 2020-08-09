@@ -32,6 +32,19 @@ public class ContainerDeferredRegister {
         });
     }
 
+    @SuppressWarnings("unchecked")
+    public  <TILE extends TileEntity, CONTAINER extends Container> ContainerRegistryObject<CONTAINER> registerTileContainer(String name, ITileContainerFactory<TILE, CONTAINER> factory) {
+        return register(name, (id, inv, buf) -> {
+            BlockPos pos = buf.readBlockPos();
+            TileEntity te = inv.player.world.getTileEntity(pos);
+            if (te != null) {
+                return factory.create(id, inv, (TILE) te);
+            } else {
+                throw new IllegalStateException("Expected TileEntity on " + buf + " but it was not found!");
+            }
+        });
+    }
+
     public <CONTAINER extends Container> ContainerRegistryObject<CONTAINER> register(String name, IContainerFactory<CONTAINER> factory) {
         return register(name, () -> IForgeContainerType.create(factory));
     }
@@ -45,6 +58,10 @@ public class ContainerDeferredRegister {
     }
 
     public interface IMachineContainerFactory<TILE extends BaseMachineTile, CONTAINER extends BaseMachineContainer<TILE>> {
+        CONTAINER create(int id, PlayerInventory inventory, TILE tile);
+    }
+
+    public interface ITileContainerFactory<TILE extends TileEntity, CONTAINER extends Container> {
         CONTAINER create(int id, PlayerInventory inventory, TILE tile);
     }
 }

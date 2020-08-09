@@ -3,14 +3,17 @@ package io.github.ramboxeu.techworks.common.registration;
 import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.api.component.ComponentStackHandler;
 import io.github.ramboxeu.techworks.client.container.BaseMachineContainer;
+import io.github.ramboxeu.techworks.client.container.BlueprintTableContainer;
 import io.github.ramboxeu.techworks.client.container.machine.*;
 import io.github.ramboxeu.techworks.client.screen.*;
 import io.github.ramboxeu.techworks.common.component.IComponentsContainerProvider;
 import io.github.ramboxeu.techworks.common.registry.ContainerDeferredRegister;
 import io.github.ramboxeu.techworks.common.registry.ContainerRegistryObject;
 import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
+import io.github.ramboxeu.techworks.common.tile.BlueprintTableTile;
 import io.github.ramboxeu.techworks.common.tile.machine.SteamEngineTile;
 import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -38,11 +41,13 @@ public class TechworksContainers {
                     components = ((BaseMachineTile) te).getComponents();
                 } else {
                     // Should this crash, or something?
-                    Techworks.LOGGER.warn("Expected BaseMachineTile on " + pos + ", but it was not found.");
+                    Techworks.LOGGER.error("Expected BaseMachineTile on {}, but it was not found!", pos);
                 }
 
                 return new ComponentsContainer(id, inv, components);
             });
+
+    public static final ContainerRegistryObject<BlueprintTableContainer> BLUEPRINT_TABLE = CONTAINERS.registerTileContainer("blueprint_table", (id, inv, tile) -> new BlueprintTableContainer(id, inv, (BlueprintTableTile) tile));
 
     public static void registerScreenFactories(){
         ScreenManager.registerFactory(BOILER.getContainer(), BoilerScreen::new);
@@ -50,5 +55,6 @@ public class TechworksContainers {
         ScreenManager.registerFactory(ELECTRIC_GRINDER.getContainer(), ElectricGrinderScreen::new);
         ScreenManager.registerFactory(ELECTRIC_FURNACE.getContainer(), ElectricFurnaceScreen::new);
         ScreenManager.registerFactory(COMPONENTS.getContainer(), ComponentsScreen::new);
+        ScreenManager.registerFactory(BLUEPRINT_TABLE.getContainer(), BlueprintTableScreen::new);
     }
 }

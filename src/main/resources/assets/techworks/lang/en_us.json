@@ -6,6 +6,7 @@
   "block.techworks.electric_grinder": "Electric Grinder",
   "block.techworks.electric_furnace": "Electric Furnace",
   "block.techworks.gas_pipe_basic": "Basic Gas Pipe",
+  "block.techworks.blueprint_table": "Blueprint Table",
 
   "item.techworks.ground_iron": "Ground Iron",
   "item.techworks.ground_gold": "Ground Gold",
@@ -18,6 +19,8 @@
   "item.techworks.advanced_gas_storage_component": "Advanced Gas Storage Component",
   "item.techworks.basic_steam_turbine_component": "Basic Steam Turbine Component",
   "item.techworks.basic_energy_storage_component": "Basic Energy Storage Component",
+  "item.techworks.blueprint": "Blueprint",
+  "item.techworks.empty_blueprint": "Empty Blueprint",
 
   "container.techworks.boiler": "Boiler",
   "container.techworks.steam_engine": "Steam Engine",
@@ -25,6 +28,7 @@
   "container.techworks.electric_furnace": "Electric Furnace",
   "container.techworks.boiler_components": "Boiler Components",
   "container.techworks.steam_engine_components": "Steam Engine Components",
+  "container.techworks.blueprint_table": "Blueprint Table",
 
   "fluid.techworks.none": "None",
   "fluid.techworks.empty": "Empty",
@@ -41,5 +45,8 @@
   "tooltip.techworks.component_unbreakable": "Unbreakable",
   "tooltip.techworks.component_durability": "Durability: %s",
   "tooltip.techworks.energy_storage_component_description": "Stores energy",
-  "tooltip.techworks.energy_storage_component_energy": "Energy: %dFE"
+  "tooltip.techworks.energy_storage_component_energy": "Energy: %dFE",
+  "tooltip.techworks.blueprint.boiler": "Boiler",
+
+  "gui.techworks.widget.search_blueprints": "Search"
 }

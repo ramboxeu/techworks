@@ -58,7 +58,7 @@ public class SlotBuilder {
         return new SlotItemHandler(inv, index, x, y) {
             @Override
             public boolean isItemValid(@Nonnull ItemStack stack) {
-                return isOutput || predicate.test(stack);
+                return !isOutput && predicate.test(stack);
             }
 
             @Override

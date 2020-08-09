@@ -1,19 +1,26 @@
 package io.github.ramboxeu.techworks.common.registration;
 
 import io.github.ramboxeu.techworks.api.component.base.*;
+import io.github.ramboxeu.techworks.common.item.BlueprintItem;
 import io.github.ramboxeu.techworks.common.item.GroundItem;
 import io.github.ramboxeu.techworks.common.item.WrenchItem;
+import io.github.ramboxeu.techworks.common.registry.BlockRegistryObject;
 import io.github.ramboxeu.techworks.common.registry.ItemDeferredRegister;
 import io.github.ramboxeu.techworks.common.registry.ItemRegistryObject;
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiFunction;
 
 public class TechworksItems {
     public static final ItemDeferredRegister ITEMS = new ItemDeferredRegister();
 
     // Components
     public static final List<ItemRegistryObject<?>> COMPONENTS = new ArrayList<>();
+    public static final List<ItemRegistryObject<BlueprintItem>> BLUEPRINTS = new ArrayList<>();
+
     public static final ItemRegistryObject<BaseBoilingComponent> BASIC_BOILING_COMPONENT = ITEMS.register("basic_boiling_component", () -> new BaseBoilingComponent(1, 500, 100, 300, 30));
     public static final ItemRegistryObject<BaseBoilingComponent> ADVANCED_BOILING_COMPONENT = ITEMS.register("advanced_boiling_component", () -> new BaseBoilingComponent(2, 1000, 50, 2000, 200));
 
@@ -31,6 +38,21 @@ public class TechworksItems {
 
     public static final ItemRegistryObject<GroundItem> GROUND_IRON = ITEMS.register("ground_iron", GroundItem::new);
     public static final ItemRegistryObject<GroundItem> GROUND_GOLD = ITEMS.register("ground_gold", GroundItem::new);
+
+    public static final ItemRegistryObject<Item> EMPTY_BLUEPRINT = ITEMS.register("empty_blueprint", Item::new);
+    public static final ItemRegistryObject<BlueprintItem> BOILER_BLUEPRINT = registerBlueprint("boiler_blueprint", TechworksBlocks.BOILER, BlueprintItem::new);
+
+    public static final ItemRegistryObject<BlueprintItem> BOILER_BLUEPRINT1 = registerBlueprint("boiler_blueprint1", TechworksBlocks.BOILER, BlueprintItem::new);
+    public static final ItemRegistryObject<BlueprintItem> BOILER_BLUEPRINT2 = registerBlueprint("boiler_blueprint2", TechworksBlocks.ELECTRIC_FURNACE, BlueprintItem::new);
+    public static final ItemRegistryObject<BlueprintItem> BOILER_BLUEPRINT3 = registerBlueprint("boiler_blueprint3", TechworksBlocks.ELECTRIC_GRINDER, BlueprintItem::new);
+    public static final ItemRegistryObject<BlueprintItem> BOILER_BLUEPRINT4 = registerBlueprint("boiler_blueprint4", TechworksBlocks.STEAM_ENGINE, BlueprintItem::new);
+    public static final ItemRegistryObject<BlueprintItem> BOILER_BLUEPRINT5 = registerBlueprint("boiler_blueprint5", TechworksBlocks.BOILER, BlueprintItem::new);
+
+    private static ItemRegistryObject<BlueprintItem> registerBlueprint(String name, BlockRegistryObject<?, ?> machine, BiFunction<Item.Properties, Block, BlueprintItem> factory) {
+        ItemRegistryObject<BlueprintItem> object = ITEMS.register(name, props -> factory.apply(props, machine.getBlock()));
+        BLUEPRINTS.add(object);
+        return object;
+    }
 
     static {
         COMPONENTS.add(BASIC_BOILING_COMPONENT);
