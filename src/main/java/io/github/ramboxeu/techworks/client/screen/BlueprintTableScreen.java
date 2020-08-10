@@ -27,6 +27,11 @@ public class BlueprintTableScreen extends BaseScreen<BlueprintTableContainer> {
     private final List<BlueprintButton> buttons = new ArrayList<>(BLUEPRINTS.size());
     private List<BlueprintButton> visibleButtons;
     private TextFieldWidget searchBar;
+    private int offset = 0;
+    private int scrollStep;
+    private boolean isScrollPressed = false;
+    private int lastGuiTop;
+    private int lastGuiLeft;
 
     public BlueprintTableScreen(BlueprintTableContainer screenContainer, PlayerInventory inv, ITextComponent title) {
         super(screenContainer, inv, title, TEXTURE);
@@ -47,7 +52,8 @@ public class BlueprintTableScreen extends BaseScreen<BlueprintTableContainer> {
     protected void init() {
         super.init();
 
-        visibleButtons = buttons.subList(0, 4);
+        visibleButtons = buttons;
+        scrollStep = 76 / (visibleButtons.size() - 3);
         addBlueprintButtons();
 
         searchBar = addButton(new TextFieldWidget(font, 62 + guiLeft, 19 + guiTop, 106, 20, StringTextComponent.EMPTY));
@@ -59,21 +65,100 @@ public class BlueprintTableScreen extends BaseScreen<BlueprintTableContainer> {
             // yep...
             visibleButtons = buttons.stream().filter(button -> button.label.toLowerCase().contains(search.toLowerCase())).collect(Collectors.toList());
             addBlueprintButtons();
+            scrollStep = visibleButtons.size() > 0 ? 76 / (visibleButtons.size() - 3) : 0;
         });
     }
 
     @Override
-    public void onClose() {
-        super.onClose();
+    public void tick() {
+        super.tick();
+
+        // Get the button int the correct place after resize
+        // This should instead use matrix stack translation powers, but that's for another time
+        if (lastGuiLeft != guiLeft || lastGuiTop != guiTop) {
+            lastGuiLeft = guiLeft;
+            lastGuiTop = guiTop;
+
+            setButtonPositions();
+        }
     }
 
     @Override
     public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         super.render(stack, mouseX, mouseY, partialTicks);
 
-        for (int i = 0; i < Math.min(4, visibleButtons.size()); i++) {
-            visibleButtons.get(i).render(stack, mouseX, mouseY, partialTicks);
+        boolean flag = visibleButtons.size() > 4;
+
+        for (int i = 0; i < (flag ? 4 : visibleButtons.size()); i++) {
+            int index = i;
+
+            if (flag) {
+                index += offset;
+            }
+
+            visibleButtons.get(index).render(stack, mouseX, mouseY, partialTicks);
         }
+
+        minecraft.textureManager.bindTexture(TEXTURE);
+
+        if (isScrollPressed) {
+            blit(stack, guiLeft + 162, guiTop + 41 + (offset * scrollStep), 182, 0, 6, 27);
+        } else {
+            blit(stack, guiLeft + 162, guiTop + 41 + (offset * scrollStep), 176, 0, 6, 27);
+        }
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double horizontal, double vertical) {
+        // button: 0 left click, 1 right click, 2 middle click
+
+        int x = (int) (mouseX - guiLeft);
+        int y = (int) (mouseY - guiTop);
+
+        int barY = 41 + (offset * scrollStep);
+
+        if (horizontal <= 0.5 && x >= 162 && x <= 168 && y >= barY && y <= barY + 27) {
+            if (vertical > 0) { // dragged down
+                if (offset < visibleButtons.size() - 4) {
+                    offset++;
+                    setButtonPositions();
+                    return true;
+                }
+            } else { // dragged up
+                if (offset > 0) {
+                    offset--;
+                    setButtonPositions();
+                    return true;
+                }
+            }
+        }
+
+        return super.mouseDragged(mouseX, mouseY, button, horizontal, horizontal);
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        int x = (int) (mouseX - guiLeft);
+        int y = (int) (mouseY - guiTop);
+
+        int barY = (guiTop + 41 + (offset * scrollStep));
+
+        if (x >= 162 && x <= 168 && mouseY >= barY && mouseY <= barY + 27) {
+            isScrollPressed = true;
+            return true;
+        }
+
+        return super.mouseClicked(mouseX, mouseY, button);
+    }
+
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        if (isScrollPressed) {
+            isScrollPressed = false;
+            return true;
+        }
+
+        return super.mouseReleased(mouseX, mouseY, button);
     }
 
     @Override
@@ -86,6 +171,30 @@ public class BlueprintTableScreen extends BaseScreen<BlueprintTableContainer> {
         } else {
             return super.keyPressed(keyCode, scanCode, p_231046_3_);
         }
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double scroll) {
+        int x = (int) (mouseX - guiLeft);
+        int y = (int) (mouseY - guiTop);
+
+        if (x >= 62 && y >= 41 && x <= 168 && y <= 121) {
+            if (scroll > 0) { // wheel moved up
+                if (offset > 0) {
+                    offset--;
+                    setButtonPositions();
+                    return true;
+                }
+            } else { // wheel moved down
+                if (offset < visibleButtons.size() - 4) {
+                    offset++;
+                    setButtonPositions();
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     private void onBlueprintButtonPressed(BlueprintButton button) {
@@ -104,6 +213,19 @@ public class BlueprintTableScreen extends BaseScreen<BlueprintTableContainer> {
             BlueprintButton button = visibleButtons.get(i);
             button.setPos(guiLeft + 62, guiTop + 41 + (20 * i));
             addListener(button);
+        }
+    }
+
+    private void setButtonPositions() {
+        boolean flag = visibleButtons.size() > 4;
+        for (int i = 0; i < (flag ? 4 : visibleButtons.size()); i++) {
+            int index = i;
+
+            if (flag) {
+                index += offset;
+            }
+
+            visibleButtons.get(index).setPos(guiLeft + 62, guiTop + 41 + (20 * i));
         }
     }
 
