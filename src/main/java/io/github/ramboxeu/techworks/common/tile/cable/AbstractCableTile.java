@@ -3,9 +3,8 @@ package io.github.ramboxeu.techworks.common.tile.cable;
 import io.github.ramboxeu.techworks.common.debug.DebugInfoBuilder;
 import io.github.ramboxeu.techworks.common.debug.IDebuggable;
 import io.github.ramboxeu.techworks.common.model.TechworksModelData;
-import io.github.ramboxeu.techworks.common.network.CableRequestSyncShapePacket;
 import io.github.ramboxeu.techworks.common.network.CableSyncShapePacket;
-import io.github.ramboxeu.techworks.common.network.TechworkPacketHandler;
+import io.github.ramboxeu.techworks.common.network.TechworksPacketHandler;
 import io.github.ramboxeu.techworks.common.util.CableConnections;
 import io.github.ramboxeu.techworks.common.util.NBTUtils;
 import net.minecraft.block.BlockState;
@@ -152,7 +151,7 @@ public abstract class AbstractCableTile<THandler> extends TileEntity implements 
 
             this.connections = builder.build();
 
-            TechworkPacketHandler.sendCableSyncPacket(world.getChunkAt(pos), new CableSyncShapePacket(NBTUtils.writeCableConnections(this.connections), pos));
+            TechworksPacketHandler.sendCableSyncPacket(world.getChunkAt(pos), new CableSyncShapePacket(NBTUtils.writeCableConnections(this.connections), pos));
             markDirty();
         }
     }

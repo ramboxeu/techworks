@@ -2,6 +2,7 @@ package io.github.ramboxeu.techworks.common.network;
 
 import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.common.tile.machine.MachinePort;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -10,7 +11,7 @@ import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 
-public class TechworkPacketHandler {
+public class TechworksPacketHandler {
     private static final String PROTOCOL_VERSION = Integer.toString(1);
     private static final SimpleChannel CHANNEL = NetworkRegistry.ChannelBuilder
             .named(new ResourceLocation(Techworks.MOD_ID, "main_channel"))
@@ -28,6 +29,7 @@ public class TechworkPacketHandler {
         CHANNEL.registerMessage(id++, DebugResponsePacket.class, DebugResponsePacket::encode, DebugResponsePacket::decode, DebugResponsePacket.Handler::handle);
         CHANNEL.registerMessage(id++, SObjectUpdatePacket.class, SObjectUpdatePacket::encode, SObjectUpdatePacket::decode, SObjectUpdatePacket::handle);
         CHANNEL.registerMessage(id++, SMachinePortSyncPacket.class, SMachinePortSyncPacket::encode, SMachinePortSyncPacket::decode, SMachinePortSyncPacket::handle);
+        CHANNEL.registerMessage(id++, CBlueprintCraftPacket.class, CBlueprintCraftPacket::encode, CBlueprintCraftPacket::decode, CBlueprintCraftPacket::handle);
     }
 
     public static void sendObjectUpdatePacket(SObjectUpdatePacket packet, ServerPlayerEntity entity) {
@@ -45,6 +47,10 @@ public class TechworkPacketHandler {
 
     public static void sendCableSyncPacket(Chunk chunk, CableSyncShapePacket packet) {
         CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> chunk), packet);
+    }
+
+    public static void sendBlueprintCraftPacket(CBlueprintCraftPacket packet) {
+        CHANNEL.sendToServer(packet);
     }
 
     public static void sendRequestCableSyncPacket(CableRequestSyncShapePacket packet) {

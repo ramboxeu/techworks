@@ -1,11 +1,9 @@
 package io.github.ramboxeu.techworks.common.block;
 
-import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.api.wrench.IWrenchable;
-import io.github.ramboxeu.techworks.common.network.TechworkPacketHandler;
+import io.github.ramboxeu.techworks.common.network.TechworksPacketHandler;
 import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
 import io.github.ramboxeu.techworks.common.tile.machine.MachineIO;
-import io.github.ramboxeu.techworks.common.tile.machine.MachinePort;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
@@ -18,7 +16,6 @@ import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
@@ -133,7 +130,7 @@ public abstract class BaseMachineBlock extends Block implements IWrenchable {
                     MachineIO machineIO = ((BaseMachineTile) te).getMachineIO();
                     machineIO.setFaceStatus(facing, false);
                     machineIO.setFaceStatus(rotated, true);
-                    TechworkPacketHandler.sendMachinePortUpdatePacket(pos, rotated.getIndex(), machineIO.getPort(rotated), world.getChunkAt(pos));
+                    TechworksPacketHandler.sendMachinePortUpdatePacket(pos, rotated.getIndex(), machineIO.getPort(rotated), world.getChunkAt(pos));
                 }
             }
         }
@@ -176,7 +173,7 @@ public abstract class BaseMachineBlock extends Block implements IWrenchable {
                 if (!machineIO.isFaceDisabled(face)) {
                     machineIO.cyclePort(face);
                     machineIO.getPort(face);
-                    TechworkPacketHandler.sendMachinePortUpdatePacket(pos, face.getIndex(), machineIO.getPort(face), world.getChunkAt(pos));
+                    TechworksPacketHandler.sendMachinePortUpdatePacket(pos, face.getIndex(), machineIO.getPort(face), world.getChunkAt(pos));
                 }
             }
         }

@@ -7,8 +7,8 @@ import io.github.ramboxeu.techworks.common.util.inventory.SlotBuilder;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.items.ItemStackHandler;
@@ -39,6 +39,11 @@ public class BlueprintTableContainer extends Container {
             public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
                 return false;
             }
+
+            @Override
+            public void setStackInSlot(int slot, @Nonnull ItemStack stack) {
+                super.setStackInSlot(slot, stack);
+            }
         };
 
         addSlot(new SlotBuilder(inventory, 0).pos(9, 46).predicate(stack -> stack.getItem().isIn(Tags.Items.DYES_WHITE)).build());
@@ -55,6 +60,16 @@ public class BlueprintTableContainer extends Container {
 
         for (int i = 0; i < 9; i++) {
             this.addSlot(new SlotItemHandler(playerInv, i, 8 + i * 18, 192));
+        }
+    }
+
+    public void craftBlueprint(Item blueprint) {
+        if (outputInv.getStackInSlot(0).isEmpty() && inventory.getStackInSlot(0).getCount() > 0 && inventory.getStackInSlot(1).getCount() > 0) {
+            inventory.getStackInSlot(0).shrink(1);
+            inventory.getStackInSlot(1).shrink(1);
+            outputInv.setStackInSlot(0, new ItemStack(blueprint));
+
+            detectAndSendChanges();
         }
     }
 

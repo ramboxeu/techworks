@@ -1,7 +1,10 @@
 package io.github.ramboxeu.techworks.common;
 
 import io.github.ramboxeu.techworks.Techworks;
+import io.github.ramboxeu.techworks.common.registry.ItemRegistryObject;
 import net.minecraft.util.ResourceLocation;
+
+import static io.github.ramboxeu.techworks.common.registration.TechworksItems.*;
 
 public class DataConstants {
     public static class Textures {
@@ -10,5 +13,11 @@ public class DataConstants {
         public static final ResourceLocation MACHINE_BOTTOM = new ResourceLocation(Techworks.MOD_ID, "block/machine_bottom");
 
         public static final ResourceLocation ITEM_GENERATED = new ResourceLocation("item/generated");
+    }
+
+    public static class Items {
+        public static final ItemRegistryObject<?>[] BLUEPRINTS = new ItemRegistryObject[]{
+                BOILER_BLUEPRINT, STEAM_ENGINE_BLUEPRINT, ELECTRIC_FURNACE_BLUEPRINT, ELECTRIC_GRINDER_BLUEPRINT
+        };
     }
 }

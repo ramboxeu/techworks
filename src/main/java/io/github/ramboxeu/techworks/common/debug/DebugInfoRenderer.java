@@ -1,7 +1,5 @@
 package io.github.ramboxeu.techworks.common.debug;
 
-import io.github.ramboxeu.techworks.common.network.DebugRequestPacket;
-import io.github.ramboxeu.techworks.common.network.TechworkPacketHandler;
 import io.github.ramboxeu.techworks.common.registration.Registration;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;

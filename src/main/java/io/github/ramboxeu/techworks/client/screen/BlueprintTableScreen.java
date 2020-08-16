@@ -5,6 +5,8 @@ import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.client.container.BlueprintTableContainer;
 import io.github.ramboxeu.techworks.client.util.Color;
 import io.github.ramboxeu.techworks.common.item.BlueprintItem;
+import io.github.ramboxeu.techworks.common.network.CBlueprintCraftPacket;
+import io.github.ramboxeu.techworks.common.network.TechworksPacketHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
@@ -15,6 +17,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,8 +44,8 @@ public class BlueprintTableScreen extends BaseScreen<BlueprintTableContainer> {
 
         for (int i = 0; i < BLUEPRINTS.size(); i++) {
             buttons.add(0, new BlueprintButton(
-                    btn -> onBlueprintButtonPressed((BlueprintButton) btn),
-                    ((BlueprintItem) BLUEPRINTS.get(i).getItem()).getMachine(),
+                    this::onBlueprintButtonPressed,
+                    (BlueprintItem) BLUEPRINTS.get(i).getItem(),
                     i
             ));
         }
@@ -197,8 +200,11 @@ public class BlueprintTableScreen extends BaseScreen<BlueprintTableContainer> {
         return false;
     }
 
-    private void onBlueprintButtonPressed(BlueprintButton button) {
-        Techworks.LOGGER.debug("Blueprint id: {}", button.index);
+    private void onBlueprintButtonPressed(Button button) {
+        if (button instanceof BlueprintButton) {
+            BlueprintButton blueprint = (BlueprintButton) button;
+            TechworksPacketHandler.sendBlueprintCraftPacket(new CBlueprintCraftPacket(ForgeRegistries.ITEMS.getKey(blueprint.blueprint)));
+        }
     }
 
 
@@ -231,18 +237,21 @@ public class BlueprintTableScreen extends BaseScreen<BlueprintTableContainer> {
 
     public static class BlueprintButton extends Button {
         private final ItemStack machine;
+        private final BlueprintItem blueprint;
         private final String label;
         private final String trimmedLabel;
         private final int index;
 
-        public BlueprintButton(IPressable pressable, Item machine, int index) {
+        public BlueprintButton(IPressable pressable, BlueprintItem blueprint, int index) {
             super(0, 0, 99, 20, StringTextComponent.EMPTY, pressable);
 
-            this.machine = new ItemStack(machine);
+            Item machineItem = blueprint.getMachine();
+            this.machine = new ItemStack(machineItem);
             this.index = index;
+            this.blueprint = blueprint;
 
-            label = machine.getName().getString();
-            trimmedLabel = machine.getName().getStringTruncated(14);
+            label = machineItem.getName().getString();
+            trimmedLabel = machineItem.getName().getStringTruncated(14);
         }
 
         public void setPos(int x, int y) {

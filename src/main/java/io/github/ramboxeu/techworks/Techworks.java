@@ -2,15 +2,11 @@ package io.github.ramboxeu.techworks;
 
 import io.github.ramboxeu.techworks.api.gas.CapabilityGas;
 import io.github.ramboxeu.techworks.client.model.CableModelLoader;
-import io.github.ramboxeu.techworks.client.render.MachineTileEntityRenderer;
 import io.github.ramboxeu.techworks.common.TechworksItemGroup;
 import io.github.ramboxeu.techworks.common.capability.CapabilityExtendedListenerProvider;
 import io.github.ramboxeu.techworks.common.debug.DebugInfoRenderer;
-import io.github.ramboxeu.techworks.common.network.TechworkPacketHandler;
+import io.github.ramboxeu.techworks.common.network.TechworksPacketHandler;
 import io.github.ramboxeu.techworks.common.registration.*;
-import io.github.ramboxeu.techworks.common.registry.BlockDeferredRegister;
-import io.github.ramboxeu.techworks.common.registry.TileDeferredRegister;
-import io.github.ramboxeu.techworks.common.registry.TileRegistryObject;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.util.ResourceLocation;
@@ -18,7 +14,6 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -55,7 +50,7 @@ public class Techworks {
     public void setup(FMLCommonSetupEvent event) {
         CapabilityGas.register();
         CapabilityExtendedListenerProvider.register();
-        TechworkPacketHandler.register();
+        TechworksPacketHandler.register();
     }
 
     public void clientSetup(FMLClientSetupEvent event) {

@@ -47,6 +47,9 @@
   "tooltip.techworks.energy_storage_component_description": "Stores energy",
   "tooltip.techworks.energy_storage_component_energy": "Energy: %dFE",
   "tooltip.techworks.blueprint.boiler": "Boiler",
+  "tooltip.techworks.blueprint.steam_engine": "Steam Engine",
+  "tooltip.techworks.blueprint.electric_furnace": "Electric Furnace",
+  "tooltip.techworks.blueprint.electric_grinder": "Electric Grinder",
 
   "gui.techworks.widget.search_blueprints": "Search"
 }

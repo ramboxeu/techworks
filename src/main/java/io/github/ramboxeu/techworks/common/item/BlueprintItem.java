@@ -17,7 +17,7 @@ public class BlueprintItem extends Item {
     private final Item machineItem;
 
     public BlueprintItem(Properties properties, Block machineBlock) {
-        super(properties);
+        super(properties.maxStackSize(1));
 
         machineItem = machineBlock.asItem();
     }
@@ -31,6 +31,12 @@ public class BlueprintItem extends Item {
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         if (this == TechworksItems.BOILER_BLUEPRINT.getItem()) {
             tooltip.add(makeTooltipEntry("boiler"));
+        } else if (this == TechworksItems.STEAM_ENGINE_BLUEPRINT.getItem()) {
+            tooltip.add(makeTooltipEntry("steam_engine"));
+        } else if (this == TechworksItems.ELECTRIC_FURNACE_BLUEPRINT.getItem()) {
+            tooltip.add(makeTooltipEntry("electric_furnace"));
+        } else if (this == TechworksItems.ELECTRIC_GRINDER_BLUEPRINT.getItem()) {
+            tooltip.add(makeTooltipEntry("electric_grinder"));
         }
 
         super.addInformation(stack, worldIn, tooltip, flagIn);

@@ -20,12 +20,18 @@ public class TechworksItemModelProvider extends ItemModelProvider {
             itemGenerated(component.getRegistryName().getPath());
         }
 
+        for (ItemRegistryObject<?> blueprint : DataConstants.Items.BLUEPRINTS) {
+            singleTexture(blueprint.getRegistryName().getPath(), DataConstants.Textures.ITEM_GENERATED, "layer0", modLoc("item/blueprint"));
+        }
+
         singleTexture("wrench", DataConstants.Textures.ITEM_GENERATED, "layer0", modLoc("item/wrench")).transforms()
                 .transform(ModelBuilder.Perspective.FIRSTPERSON_LEFT).rotation(0, 90, 25).scale(1, 1, 1).end()
                 .transform(ModelBuilder.Perspective.FIRSTPERSON_RIGHT).rotation(0, -90, -25).scale(1, 1, 1).end()
                 .transform(ModelBuilder.Perspective.THIRDPERSON_LEFT).rotation(0, 90, 55).scale(.85f, .85f, .85f).end()
                 .transform(ModelBuilder.Perspective.THIRDPERSON_RIGHT).rotation(0, -90, -55).scale(.85f, .85f, .85f).end()
                 .end();
+
+        itemGenerated("empty_blueprint");
     }
 
     private void itemGenerated(String name) {

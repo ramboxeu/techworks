@@ -41,12 +41,9 @@ public class TechworksItems {
 
     public static final ItemRegistryObject<Item> EMPTY_BLUEPRINT = ITEMS.register("empty_blueprint", Item::new);
     public static final ItemRegistryObject<BlueprintItem> BOILER_BLUEPRINT = registerBlueprint("boiler_blueprint", TechworksBlocks.BOILER, BlueprintItem::new);
-
-    public static final ItemRegistryObject<BlueprintItem> BOILER_BLUEPRINT1 = registerBlueprint("boiler_blueprint1", TechworksBlocks.BOILER, BlueprintItem::new);
-    public static final ItemRegistryObject<BlueprintItem> BOILER_BLUEPRINT2 = registerBlueprint("boiler_blueprint2", TechworksBlocks.ELECTRIC_FURNACE, BlueprintItem::new);
-    public static final ItemRegistryObject<BlueprintItem> BOILER_BLUEPRINT3 = registerBlueprint("boiler_blueprint3", TechworksBlocks.ELECTRIC_GRINDER, BlueprintItem::new);
-    public static final ItemRegistryObject<BlueprintItem> BOILER_BLUEPRINT4 = registerBlueprint("boiler_blueprint4", TechworksBlocks.STEAM_ENGINE, BlueprintItem::new);
-    public static final ItemRegistryObject<BlueprintItem> BOILER_BLUEPRINT5 = registerBlueprint("boiler_blueprint5", TechworksBlocks.BOILER, BlueprintItem::new);
+    public static final ItemRegistryObject<BlueprintItem> STEAM_ENGINE_BLUEPRINT = registerBlueprint("steam_engine_blueprint", TechworksBlocks.STEAM_ENGINE, BlueprintItem::new);
+    public static final ItemRegistryObject<BlueprintItem> ELECTRIC_FURNACE_BLUEPRINT = registerBlueprint("electric_furnace_blueprint", TechworksBlocks.ELECTRIC_FURNACE, BlueprintItem::new);
+    public static final ItemRegistryObject<BlueprintItem> ELECTRIC_GRINDER_BLUEPRINT = registerBlueprint("electric_grinder_blueprint", TechworksBlocks.ELECTRIC_GRINDER, BlueprintItem::new);
 
     private static ItemRegistryObject<BlueprintItem> registerBlueprint(String name, BlockRegistryObject<?, ?> machine, BiFunction<Item.Properties, Block, BlueprintItem> factory) {
         ItemRegistryObject<BlueprintItem> object = ITEMS.register(name, props -> factory.apply(props, machine.getBlock()));

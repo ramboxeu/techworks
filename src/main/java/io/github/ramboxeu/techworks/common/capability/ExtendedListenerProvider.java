@@ -2,7 +2,7 @@ package io.github.ramboxeu.techworks.common.capability;
 
 import io.github.ramboxeu.techworks.client.container.IExtendedContainerListener;
 import io.github.ramboxeu.techworks.common.network.SObjectUpdatePacket;
-import io.github.ramboxeu.techworks.common.network.TechworkPacketHandler;
+import io.github.ramboxeu.techworks.common.network.TechworksPacketHandler;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
@@ -28,6 +28,6 @@ public class ExtendedListenerProvider implements ICapabilityProvider, IExtendedL
 
     @Override
     public IExtendedContainerListener create(ServerPlayerEntity entity) {
-        return (container, index, tag) -> TechworkPacketHandler.sendObjectUpdatePacket(new SObjectUpdatePacket(container.windowId, index, tag), entity);
+        return (container, index, tag) -> TechworksPacketHandler.sendObjectUpdatePacket(new SObjectUpdatePacket(container.windowId, index, tag), entity);
     }
 }
