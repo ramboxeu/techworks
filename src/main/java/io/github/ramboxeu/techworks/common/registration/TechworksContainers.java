@@ -2,13 +2,16 @@ package io.github.ramboxeu.techworks.common.registration;
 
 import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.api.component.ComponentStackHandler;
+import io.github.ramboxeu.techworks.client.container.AssemblyTableContainer;
 import io.github.ramboxeu.techworks.client.container.BaseMachineContainer;
 import io.github.ramboxeu.techworks.client.container.BlueprintTableContainer;
 import io.github.ramboxeu.techworks.client.container.machine.*;
 import io.github.ramboxeu.techworks.client.screen.*;
+import io.github.ramboxeu.techworks.common.block.AssemblyTableBlock;
 import io.github.ramboxeu.techworks.common.component.IComponentsContainerProvider;
 import io.github.ramboxeu.techworks.common.registry.ContainerDeferredRegister;
 import io.github.ramboxeu.techworks.common.registry.ContainerRegistryObject;
+import io.github.ramboxeu.techworks.common.tile.AssemblyTableTile;
 import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
 import io.github.ramboxeu.techworks.common.tile.BlueprintTableTile;
 import io.github.ramboxeu.techworks.common.tile.machine.SteamEngineTile;
@@ -48,6 +51,7 @@ public class TechworksContainers {
             });
 
     public static final ContainerRegistryObject<BlueprintTableContainer> BLUEPRINT_TABLE = CONTAINERS.registerTileContainer("blueprint_table", (id, inv, tile) -> new BlueprintTableContainer(id, inv, (BlueprintTableTile) tile));
+    public static final ContainerRegistryObject<AssemblyTableContainer> ASSEMBLY_TABLE = CONTAINERS.registerTileContainer("assembly_table", (id, inv, tile) -> new AssemblyTableContainer(id, inv, (AssemblyTableTile) tile));
 
     public static void registerScreenFactories(){
         ScreenManager.registerFactory(BOILER.getContainer(), BoilerScreen::new);
@@ -56,5 +60,6 @@ public class TechworksContainers {
         ScreenManager.registerFactory(ELECTRIC_FURNACE.getContainer(), ElectricFurnaceScreen::new);
         ScreenManager.registerFactory(COMPONENTS.getContainer(), ComponentsScreen::new);
         ScreenManager.registerFactory(BLUEPRINT_TABLE.getContainer(), BlueprintTableScreen::new);
+        ScreenManager.registerFactory(ASSEMBLY_TABLE.getContainer(), AssemblyTableScreen::new);
     }
 }

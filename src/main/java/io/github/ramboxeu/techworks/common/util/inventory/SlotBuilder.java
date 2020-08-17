@@ -15,6 +15,7 @@ public class SlotBuilder {
     private boolean isOutput;
     private int stackLimit;
     private BiConsumer<ItemStack, SlotItemHandler> onChangedListener;
+    private BiConsumer<ItemStack, ItemStack> callback;
     private final IItemHandler inv;
     private final int index;
 
@@ -24,6 +25,7 @@ public class SlotBuilder {
         this.predicate = itemStack -> inv.isItemValid(index, itemStack);
         this.stackLimit = 64;
         this.onChangedListener = ((itemStack, slotItemHandler) -> {});
+        this.callback = (oldStack, newStack) -> {};
         this.inv = inv;
         this.index = index;
     }
@@ -54,6 +56,11 @@ public class SlotBuilder {
         return this;
     }
 
+    public SlotBuilder callback(BiConsumer<ItemStack, ItemStack> listener) {
+        this.callback = listener;
+        return this;
+    }
+
     public SlotItemHandler build() {
         return new SlotItemHandler(inv, index, x, y) {
             @Override
@@ -73,6 +80,11 @@ public class SlotBuilder {
             public void onSlotChanged() {
                 onChangedListener.accept(this.getStack(), this);
                 super.onSlotChanged();
+            }
+
+            @Override
+            public void onSlotChange(@Nonnull ItemStack oldStack, @Nonnull ItemStack newStack) {
+                callback.accept(oldStack, newStack);
             }
         };
     }

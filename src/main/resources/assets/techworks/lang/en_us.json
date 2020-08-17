@@ -29,6 +29,7 @@
   "container.techworks.boiler_components": "Boiler Components",
   "container.techworks.steam_engine_components": "Steam Engine Components",
   "container.techworks.blueprint_table": "Blueprint Table",
+  "container.techworks.assembly_table":  "Assembly Table",
 
   "fluid.techworks.none": "None",
   "fluid.techworks.empty": "Empty",
