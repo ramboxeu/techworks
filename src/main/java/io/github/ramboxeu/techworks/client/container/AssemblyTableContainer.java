@@ -1,32 +1,37 @@
 package io.github.ramboxeu.techworks.client.container;
 
-import io.github.ramboxeu.techworks.Techworks;
-import io.github.ramboxeu.techworks.common.registration.TechworksBlocks;
 import io.github.ramboxeu.techworks.common.registration.TechworksContainers;
-import io.github.ramboxeu.techworks.common.tag.TechworksItemTags;
 import io.github.ramboxeu.techworks.common.tile.AssemblyTableTile;
 import io.github.ramboxeu.techworks.common.util.inventory.SlotBuilder;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.play.server.SSetSlotPacket;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
-public class AssemblyTableContainer extends Container {
-    private final IItemHandler inv;
-    private final IItemHandler outputInv;
+import javax.annotation.Nonnull;
+
+public class AssemblyTableContainer extends Container implements AssemblyTableTile.IListener {
+    private final AssemblyTableTile tile;
+    private final PlayerEntity player;
+    private final Slot outputSlot;
 
     public AssemblyTableContainer(int id, PlayerInventory inventory, AssemblyTableTile tile) {
         super(TechworksContainers.ASSEMBLY_TABLE.getContainer(), id);
 
         InvWrapper playerInventory = new InvWrapper(inventory);
-        inv = tile.getInventory();
-        outputInv = tile.getOutputInv();
+        IItemHandler inv = tile.getInventory();
+        IItemHandler outputInv = tile.getOutputInv();
+
+        this.tile = tile;
 
         // Blueprint
-        addSlot(new SlotBuilder(inv, 0).pos(44, 28).predicate(stack -> stack.getItem().isIn(TechworksItemTags.BLUEPRINTS)).build());
+        addSlot(new SlotItemHandler(inv, 0, 44, 28));
 
         // Casings
         addSlot(new SlotBuilder(inv, 1).pos(44, 64).build());
@@ -45,7 +50,26 @@ public class AssemblyTableContainer extends Container {
         }
 
         // Output slot
-        addSlot(new SlotBuilder(outputInv, 0).output(true).pos(137, 46).build());
+        outputSlot = addSlot(new SlotItemHandler(outputInv, 0, 137, 46) {
+            @Override
+            public boolean isItemValid(@Nonnull ItemStack stack) {
+                return false;
+            }
+
+            public void onSlotChange(ItemStack oldStack, ItemStack newStack) {
+                int i = newStack.getCount() - oldStack.getCount();
+                if (i > 0) {
+                    tile.onCraft(i);
+                }
+            }
+
+            @Override
+            public ItemStack onTake(PlayerEntity Player, ItemStack stack) {
+                tile.onCraft(1);
+
+                return super.onTake(player, stack);
+            }
+        });
 
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 9; j++) {
@@ -56,25 +80,51 @@ public class AssemblyTableContainer extends Container {
         for (int i = 0; i < 9; i++) {
             addSlot(new SlotItemHandler(playerInventory, i, 8 + i *18, 162));
         }
-    }
 
-    private void onCraftingSlotChanged(ItemStack oldStack, ItemStack newStack) {
-        if (!oldStack.isItemEqual(newStack) && oldStack.getCount() != newStack.getCount()) {
-            Techworks.LOGGER.debug("Crafting matrix changed!");
-            outputInv.insertItem(0, new ItemStack(TechworksBlocks.BOILER.getItem(), 64), false);
-        }
-    }
-
-    private void onOutputSlotChanged(ItemStack oldStack, ItemStack newStack) {
-        if (!oldStack.isItemEqual(newStack)) {
-            if (oldStack.getCount() > newStack.getCount()) {
-                Techworks.LOGGER.debug("Consuming items!");
-            }
-        }
+        tile.addListener(this);
+        player = inventory.player;
     }
 
     @Override
-    public boolean canInteractWith(PlayerEntity playerIn) {
+    public @Nonnull ItemStack transferStackInSlot(@Nonnull PlayerEntity player, int index) {
+        Slot slot = inventorySlots.get(index);
+        ItemStack returnStack = ItemStack.EMPTY;
+
+        if (slot != null && slot.getHasStack()) {
+            ItemStack slotStack = slot.getStack();
+            returnStack = slotStack.copy();
+
+            if (index == 15) { // Output slot
+                tile.onCraftStack(player, windowId);
+                return ItemStack.EMPTY;
+            }
+        }
+
+        return returnStack;
+    }
+
+    @Override
+    public void onContainerClosed(PlayerEntity player) {
+        super.onContainerClosed(player);
+
+        tile.removeListener(this);
+    }
+
+    @Override
+    public boolean canInteractWith(PlayerEntity player) {
         return true;
+    }
+
+    @Override
+    public void syncOutputSlot() {
+        ((ServerPlayerEntity) player).connection.sendPacket(new SSetSlotPacket(windowId, outputSlot.slotNumber, outputSlot.getStack()));
+    }
+
+    @Override
+    public void syncCraftingSlots() {
+        for (int i = 0; i < 15; i++) {
+            Slot slot = inventorySlots.get(i);
+            ((ServerPlayerEntity) player).connection.sendPacket(new SSetSlotPacket(windowId, i, slot.getStack()));
+        }
     }
 }

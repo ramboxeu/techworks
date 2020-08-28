@@ -9,6 +9,7 @@ import io.github.ramboxeu.techworks.common.registry.ItemDeferredRegister;
 import io.github.ramboxeu.techworks.common.registry.ItemRegistryObject;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,10 +46,17 @@ public class TechworksItems {
     public static final ItemRegistryObject<BlueprintItem> ELECTRIC_FURNACE_BLUEPRINT = registerBlueprint("electric_furnace_blueprint", TechworksBlocks.ELECTRIC_FURNACE, BlueprintItem::new);
     public static final ItemRegistryObject<BlueprintItem> ELECTRIC_GRINDER_BLUEPRINT = registerBlueprint("electric_grinder_blueprint", TechworksBlocks.ELECTRIC_GRINDER, BlueprintItem::new);
 
-    private static ItemRegistryObject<BlueprintItem> registerBlueprint(String name, BlockRegistryObject<?, ?> machine, BiFunction<Item.Properties, Block, BlueprintItem> factory) {
-        ItemRegistryObject<BlueprintItem> object = ITEMS.register(name, props -> factory.apply(props, machine.getBlock()));
+    public static final ItemRegistryObject<Item> MACHINE_CASING = ITEMS.register("machine_casing", Item::new);
+
+    private static ItemRegistryObject<BlueprintItem> registerBlueprint(String name, BlockRegistryObject<?, ?> machine, IBlueprintItemFactory factory) {
+        ItemRegistryObject<BlueprintItem> object = ITEMS.register(name, props -> factory.create(props, machine.getBlock(), machine.getRegistryName()));
         BLUEPRINTS.add(object);
         return object;
+    }
+
+    @FunctionalInterface
+    private interface IBlueprintItemFactory {
+        BlueprintItem create(Item.Properties properties, Block block, ResourceLocation recipeId);
     }
 
     static {

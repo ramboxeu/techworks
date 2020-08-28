@@ -1,5 +1,7 @@
 package io.github.ramboxeu.techworks.common.util;
 
+import com.google.gson.JsonPrimitive;
+import com.google.gson.internal.$Gson$Preconditions;
 import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.api.component.ComponentItem;
 import io.github.ramboxeu.techworks.api.component.base.BaseBoilingComponent;
@@ -10,7 +12,7 @@ import io.github.ramboxeu.techworks.common.util.capability.EnergyBattery;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.*;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
@@ -23,11 +25,13 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.ForgeRegistry;
 import org.apache.commons.lang3.tuple.Pair;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -254,5 +258,44 @@ public class Utils {
 
     public static int getEnergyFromNBT(CompoundNBT nbt) {
         return nbt.getInt("Energy");
+    }
+
+    public static void writeInvToNbt(CompoundNBT nbt, String propName, IItemHandler inv) {
+        INBT prop = CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.writeNBT(inv, null);
+
+        if (prop != null) {
+            nbt.put(propName, prop);
+        } else {
+            Techworks.LOGGER.warn("Tried to write {} as '{}', but failed", inv, propName);
+        }
+    }
+
+    public static void readInvFromNbt(CompoundNBT nbt, String propName, IItemHandlerModifiable inv) {
+        if (nbt.contains(propName, Constants.NBT.TAG_LIST)) {
+            CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.readNBT(inv, null, nbt.get(propName));
+        } else {
+            Techworks.LOGGER.warn("Tried to read inventory from {}, but '{}' was not found or it's not a list", nbt, propName);
+        }
+    }
+
+    @Nullable
+    public static INBT getNbtFromJson(JsonPrimitive primitive) {
+        if (primitive.isString()) {
+            return StringNBT.valueOf(primitive.getAsString());
+        } else if (primitive.isBoolean()) {
+            return ByteNBT.valueOf(primitive.getAsBoolean());
+        } else if (primitive.isNumber()) {
+            try {
+                int number = primitive.getAsInt();
+                return IntNBT.valueOf(number);
+            } catch(NumberFormatException e) {
+                try {
+                    double number = primitive.getAsDouble();
+                    return DoubleNBT.valueOf(number);
+                } catch (NumberFormatException ignored) {}
+            }
+        }
+
+        return null;
     }
 }

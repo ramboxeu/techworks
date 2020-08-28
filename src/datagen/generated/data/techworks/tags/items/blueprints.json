@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "techworks:boiler_blueprint",
+    "techworks:steam_engine_blueprint",
+    "techworks:electric_furnace_blueprint",
+    "techworks:electric_grinder_blueprint"
+  ]
+}

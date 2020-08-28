@@ -1,0 +1,69 @@
+{
+  "type": "techworks:machine_assembly",
+  "pattern": [
+    "   ",
+    "WPS",
+    " F "
+  ],
+  "key": {
+    "W": {
+      "tag": "techworks:test",
+      "save": true
+    },
+    "P": {
+      "item": "minecraft:stick"
+    },
+    "S": {
+      "item": "minecraft:stone",
+      "save": true
+    },
+    "F": {
+      "item": "minecraft:furnace"
+    }
+  },
+  "tools": {
+    "wrench": true
+  },
+  "main_slot": [
+    {
+      "item": "techworks:boiler_blueprint"
+    },
+    {
+      "item": "techworks:boiler"
+    }
+  ],
+  "secondary_slot": {
+    "item": "minecraft:smooth_stone"
+  },
+  "result": {
+    "item": "techworks:boiler",
+    "count": 25,
+    "nbt": {
+      "TestTag": "test string of doom"
+    },
+    "data": {
+      "SteamTank": {
+        "Capacity": 5000,
+        "Transfer": 150,
+        "Blah": 1.1111111111122121
+      },
+      "WaterTank": {
+        "Capacity": {
+          "function": "switch",
+          "key": "W",
+          "minecraft:cobblestone": 5000,
+          "minecraft:dirt": 10000
+        },
+        "Transfer": 150
+      },
+      "EnergyBattery": {
+        "Capacity": {
+          "function": "copy",
+          "key": "P",
+          "path": "Durability"
+        },
+        "Prop": "String of doom!"
+      }
+    }
+  }
+}

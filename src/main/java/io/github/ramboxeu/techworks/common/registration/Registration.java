@@ -1,40 +1,22 @@
 package io.github.ramboxeu.techworks.common.registration;
 
 import io.github.ramboxeu.techworks.Techworks;
-import io.github.ramboxeu.techworks.client.container.machine.BoilerContainer;
-import io.github.ramboxeu.techworks.client.container.machine.ElectricFurnaceContainer;
-import io.github.ramboxeu.techworks.client.container.machine.ElectricGrinderContainer;
-import io.github.ramboxeu.techworks.client.container.machine.SteamEngineContainer;
-import io.github.ramboxeu.techworks.client.screen.*;
-import io.github.ramboxeu.techworks.common.block.BoilerBlock;
-import io.github.ramboxeu.techworks.common.block.ElectricFurnaceBlock;
-import io.github.ramboxeu.techworks.common.block.ElectricGrinderBlock;
-import io.github.ramboxeu.techworks.common.block.SteamEngineBlock;
 import io.github.ramboxeu.techworks.common.block.cable.BasicGasPipeBlock;
 import io.github.ramboxeu.techworks.common.debug.DebuggerItem;
 import io.github.ramboxeu.techworks.common.gas.EmptyGas;
 import io.github.ramboxeu.techworks.common.gas.Gas;
 import io.github.ramboxeu.techworks.common.gas.SteamGas;
-import io.github.ramboxeu.techworks.common.item.GroundItem;
 import io.github.ramboxeu.techworks.common.recipe.ElectricGrinderRecipe;
-import io.github.ramboxeu.techworks.common.tile.*;
+import io.github.ramboxeu.techworks.common.recipe.MachineAssemblyRecipe;
 import io.github.ramboxeu.techworks.common.tile.cable.BasicGasPipeTile;
-import io.github.ramboxeu.techworks.common.tile.machine.BoilerTile;
-import io.github.ramboxeu.techworks.common.tile.machine.ElectricFurnaceTile;
-import io.github.ramboxeu.techworks.common.tile.machine.ElectricGrinderTile;
-import io.github.ramboxeu.techworks.common.tile.machine.SteamEngineTile;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
@@ -73,6 +55,8 @@ public class Registration {
 
     public static final IRecipeType<ElectricGrinderRecipe> GRINDING_RECIPE = IRecipeType.register("techworks:grinding");
     public static final IRecipeSerializer<ElectricGrinderRecipe> GRINDING_RECIPE_SERIALIZER = IRecipeSerializer.register("techworks:grinding", new ElectricGrinderRecipe.Serializer());
+    public static final IRecipeType<MachineAssemblyRecipe> MACHINE_ASSEMBLY_RECIPE = IRecipeType.register(new ResourceLocation(Techworks.MOD_ID, "machine_assembly").toString());
+    public static final IRecipeSerializer<MachineAssemblyRecipe> MACHINE_ASSEMBLY_RECIPE_SERIALIZER = IRecipeSerializer.register(new ResourceLocation(Techworks.MOD_ID, "machine_assembly").toString(), new MachineAssemblyRecipe.Serializer());
 
     public static Gas getGasByString(String name) {
         return GAS_REGISTRY.getValue(new ResourceLocation(name));

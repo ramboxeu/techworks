@@ -5,6 +5,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.*;
 import net.minecraft.world.World;
 
@@ -15,11 +16,14 @@ public class BlueprintItem extends Item {
     private static final Style TOOLTIP_STYLE = Style.EMPTY.setColor(Color.func_240744_a_(TextFormatting.GOLD));
 
     private final Item machineItem;
+    private final ResourceLocation recipeId;
 
-    public BlueprintItem(Properties properties, Block machineBlock) {
+    //recipeId should match machine this blueprint is tied to, so machine registry id can be directly converted to recipe
+    public BlueprintItem(Properties properties, Block machineBlock, ResourceLocation recipeId) {
         super(properties.maxStackSize(1));
 
         machineItem = machineBlock.asItem();
+        this.recipeId = recipeId;
     }
 
     @Override
@@ -44,6 +48,10 @@ public class BlueprintItem extends Item {
 
     public Item getMachine() {
         return machineItem;
+    }
+
+    public ResourceLocation getRecipeId() {
+        return recipeId;
     }
 
     private static ITextComponent makeTooltipEntry(String type) {

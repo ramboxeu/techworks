@@ -20,6 +20,7 @@ public class TechworksItemTagProvider extends TagsProvider<Item> {
     @Override
     protected void registerTags() {
         func_240522_a_(TechworksItemTags.BLUEPRINTS).func_240534_a_(Utils.unpackItemObjectsArray(DataConstants.Items.BLUEPRINTS));
+        func_240522_a_(TechworksItemTags.MACHINES).func_240534_a_(Utils.unpackBlockItemArray(DataConstants.Blocks.MACHINES));
     }
 
     @Override
