@@ -31,6 +31,13 @@ public class TechworksBlockStateProvider extends BlockStateProvider {
         }
 
         horizontalBlock(TechworksBlocks.BLUEPRINT_TABLE);
+
+        horizontalBlock(
+                TechworksBlocks.ASSEMBLY_TABLE.getBlock(),
+                machineBlockModel("assembly_table", modLoc("block/assembly_table_front"))
+        );
+
+        blockItem("assembly_table");
     }
 
     private void machineBlock(Block machineBlock, String name) {

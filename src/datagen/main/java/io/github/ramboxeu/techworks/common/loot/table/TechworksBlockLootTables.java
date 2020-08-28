@@ -1,5 +1,6 @@
 package io.github.ramboxeu.techworks.common.loot.table;
 
+import io.github.ramboxeu.techworks.common.DataConstants;
 import io.github.ramboxeu.techworks.common.block.BaseMachineBlock;
 import io.github.ramboxeu.techworks.common.registration.TechworksBlocks;
 import io.github.ramboxeu.techworks.common.registry.BlockRegistryObject;
@@ -27,8 +28,8 @@ public class TechworksBlockLootTables extends BlockLootTables {
 
     @Override
     protected void addTables() {
-        for (BlockRegistryObject<? extends BaseMachineBlock, BlockItem> machine : TechworksBlocks.MACHINES) {
-            registerDropSelfLootTable(machine.getBlock());
+        for (BlockRegistryObject<?, ?> block : DataConstants.Blocks.DROPPING_SELF) {
+            registerDropSelfLootTable(block.getBlock());
         }
     }
 }

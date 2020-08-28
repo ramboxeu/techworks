@@ -27,5 +27,9 @@ public class DataConstants {
         public static final BlockRegistryObject<?, ?>[] MACHINES = new BlockRegistryObject[]{
                 BOILER, STEAM_ENGINE, ELECTRIC_FURNACE, ELECTRIC_GRINDER
         };
+
+        public static final BlockRegistryObject<?, ?>[] DROPPING_SELF = new BlockRegistryObject[] {
+                BOILER, STEAM_ENGINE, ELECTRIC_FURNACE, ELECTRIC_GRINDER, BLUEPRINT_TABLE, ASSEMBLY_TABLE
+        };
     }
 }
