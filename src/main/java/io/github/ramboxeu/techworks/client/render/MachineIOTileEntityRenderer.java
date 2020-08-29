@@ -3,7 +3,7 @@ package io.github.ramboxeu.techworks.client.render;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import io.github.ramboxeu.techworks.client.util.TechworksRenderTypes;
-import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
+import io.github.ramboxeu.techworks.common.tile.BaseIOTile;
 import io.github.ramboxeu.techworks.common.tile.machine.MachineIO;
 import io.github.ramboxeu.techworks.common.tile.machine.MachinePort;
 import net.minecraft.client.Minecraft;
@@ -18,18 +18,23 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Vector3f;
 
-public class MachineTileEntityRenderer extends TileEntityRenderer<BaseMachineTile> {
+public class MachineIOTileEntityRenderer extends TileEntityRenderer<BaseIOTile> {
     private static final Minecraft MC = Minecraft.getInstance();
 
-    public MachineTileEntityRenderer(TileEntityRendererDispatcher dispatcher) {
+    public MachineIOTileEntityRenderer(TileEntityRendererDispatcher dispatcher) {
         super(dispatcher);
     }
 
     @Override
-    public void render(BaseMachineTile tile, float partialTicks, MatrixStack stack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
+    public void render(BaseIOTile tile, float partialTicks, MatrixStack stack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
+        MachineIO machineIO = tile.getMachineIO();
+
+        if (machineIO.isDisabled()) {
+            return;
+        }
+
         IVertexBuilder builder = buffer.getBuffer(TechworksRenderTypes.MACHINE);
         MC.textureManager.bindTexture(PlayerContainer.LOCATION_BLOCKS_TEXTURE);
-        MachineIO machineIO = tile.getMachineIO();
 
         for (Direction facing : Direction.values()) {
             MachinePort port = machineIO.getPort(facing);

@@ -21,6 +21,8 @@ public class TechworksBlocks {
 
     public static final BlockRegistryObject<BlueprintTableBlock, BlockItem> BLUEPRINT_TABLE = BLOCKS.register("blueprint_table", BlueprintTableBlock::new);
 
+    public static final BlockRegistryObject<CreativeEnergyBatteryBlock, BlockItem> CREATIVE_ENERGY_BATTERY = BLOCKS.register("creative_battery", CreativeEnergyBatteryBlock::new);
+
     static {
         MACHINES.add(BOILER);
         MACHINES.add(STEAM_ENGINE);

@@ -19,13 +19,23 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.github.ramboxeu.techworks.common.tile.machine.MachinePort.DISABLED;
-
 public class MachineIO {
+    public static final MachineIO DISABLED = new MachineIO();
+
     //                                                 down       up      north      south     west      east
-    private MachinePort[] ports = new MachinePort[]{ DISABLED, DISABLED, DISABLED, DISABLED, DISABLED, DISABLED };
+    private MachinePort[] ports = new MachinePort[]{ MachinePort.DISABLED, MachinePort.DISABLED, MachinePort.DISABLED, MachinePort.DISABLED, MachinePort.DISABLED, MachinePort.DISABLED };
     private Map<Type, PortConfig> portConfigs;
     private int disabledFaces = 0;
+
+    private MachineIO() {
+        portConfigs = new HashMap<>();
+        portConfigs.put(Type.ITEM, PortConfig.EMPTY);
+        portConfigs.put(Type.LIQUID, PortConfig.EMPTY);
+        portConfigs.put(Type.GAS, PortConfig.EMPTY);
+        portConfigs.put(Type.ENERGY, PortConfig.EMPTY);
+
+        disabledFaces = 0b111111;
+    }
 
     private MachineIO(HashMap<Type, PortConfig> portConfigs) {
         this.portConfigs = portConfigs;
@@ -36,7 +46,7 @@ public class MachineIO {
 
         if (port.getType() != type || port.getMode() != mode) {
             if (type == Type.NONE) {
-                ports[index] = DISABLED;
+                ports[index] = MachinePort.DISABLED;
             } else {
                 PortConfig config = portConfigs.get(type);
                 if (config != null) {
@@ -106,7 +116,7 @@ public class MachineIO {
             if (type != Type.NONE) {
                 ports[i] = portConfigs.get(type).fromMode(Mode.valueOf(portTag.getString("Mode")));
             } else {
-                ports[i] = DISABLED;
+                ports[i] = MachinePort.DISABLED;
             }
         }
     }
@@ -151,13 +161,17 @@ public class MachineIO {
         configurePort(direction.getIndex(), newType, newMode);
     }
 
+    public boolean isDisabled() {
+        return this == DISABLED;
+    }
+
     public static class PortConfig {
         private MachinePort bothPort;
         private MachinePort inputPort;
         private MachinePort outputPort;
         private Type type;
 
-        private static final PortConfig EMPTY = new PortConfig(DISABLED, DISABLED, DISABLED, Type.NONE);
+        private static final PortConfig EMPTY = new PortConfig(MachinePort.DISABLED, MachinePort.DISABLED, MachinePort.DISABLED, Type.NONE);
 
         public PortConfig(MachinePort bothPort, MachinePort inputPort, MachinePort outputPort, Type type) {
             this.bothPort = bothPort;
@@ -176,7 +190,7 @@ public class MachineIO {
                     return bothPort;
             }
 
-            return DISABLED;
+            return MachinePort.DISABLED;
         }
 
         // NONE type should not be used

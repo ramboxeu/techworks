@@ -2,7 +2,6 @@ package io.github.ramboxeu.techworks.common.tile;
 
 import io.github.ramboxeu.techworks.api.component.ComponentStackHandler;
 import io.github.ramboxeu.techworks.client.container.machine.ComponentsContainer;
-import io.github.ramboxeu.techworks.common.tile.machine.MachineIO;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -29,8 +28,7 @@ import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class BaseMachineTile extends BaseTechworksTile implements INamedContainerProvider {
-    protected MachineIO machineIO;
+public abstract class BaseMachineTile extends BaseIOTile implements INamedContainerProvider {
     protected final ComponentStackHandler components;
 
     public BaseMachineTile(TileEntityType<?> tileEntityType, ComponentStackHandler.Builder builder) {
@@ -60,10 +58,6 @@ public abstract class BaseMachineTile extends BaseTechworksTile implements IName
     }
 
     protected abstract ITextComponent getComponentsGuiName();
-
-    public MachineIO getMachineIO() {
-        return machineIO;
-    }
 
     @Override
     protected void readUpdateTag(CompoundNBT nbt, BlockState state) {

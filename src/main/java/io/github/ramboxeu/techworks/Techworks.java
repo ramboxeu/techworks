@@ -1,6 +1,5 @@
 package io.github.ramboxeu.techworks;
 
-import io.github.ramboxeu.techworks.api.gas.CapabilityGas;
 import io.github.ramboxeu.techworks.client.model.CableModelLoader;
 import io.github.ramboxeu.techworks.common.TechworksItemGroup;
 import io.github.ramboxeu.techworks.common.capability.CapabilityExtendedListenerProvider;
@@ -48,7 +47,6 @@ public class Techworks {
     }
 
     public void setup(FMLCommonSetupEvent event) {
-        CapabilityGas.register();
         CapabilityExtendedListenerProvider.register();
         TechworksPacketHandler.register();
     }
