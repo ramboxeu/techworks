@@ -5,11 +5,11 @@ import io.github.ramboxeu.techworks.api.component.base.BaseEnergyStorageComponen
 import io.github.ramboxeu.techworks.api.component.base.BaseGasStorageComponent;
 import io.github.ramboxeu.techworks.api.component.base.BaseSteamTurbineComponent;
 import io.github.ramboxeu.techworks.client.container.machine.SteamEngineContainer;
+import io.github.ramboxeu.techworks.common.capability.impl.EnergyBattery;
 import io.github.ramboxeu.techworks.common.registration.TechworksTiles;
 import io.github.ramboxeu.techworks.common.tag.TechworksFluidTags;
 import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
 import io.github.ramboxeu.techworks.common.util.Utils;
-import io.github.ramboxeu.techworks.common.util.capability.*;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -20,18 +20,16 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import javax.annotation.Nullable;
-
 import java.util.Optional;
 
-import static io.github.ramboxeu.techworks.api.component.ComponentStackHandler.*;
+import static io.github.ramboxeu.techworks.api.component.ComponentStackHandler.Builder;
+import static io.github.ramboxeu.techworks.api.component.ComponentStackHandler.Slot;
 
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public class SteamEngineTile extends BaseMachineTile {

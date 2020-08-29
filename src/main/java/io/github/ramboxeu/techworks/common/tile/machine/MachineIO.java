@@ -1,9 +1,8 @@
 package io.github.ramboxeu.techworks.common.tile.machine;
 
-import io.github.ramboxeu.techworks.common.capability.CapsNames;
-import io.github.ramboxeu.techworks.common.capability.handler.ConfigurableEnergyHandler;
-import io.github.ramboxeu.techworks.common.capability.handler.ConfigurableFluidHandler;
-import io.github.ramboxeu.techworks.common.capability.handler.ConfigurableItemHandler;
+import io.github.ramboxeu.techworks.common.capability.impl.ConfigurableEnergyHandler;
+import io.github.ramboxeu.techworks.common.capability.impl.ConfigurableFluidHandler;
+import io.github.ramboxeu.techworks.common.capability.impl.ConfigurableItemHandler;
 import io.github.ramboxeu.techworks.common.tile.machine.MachinePort.Mode;
 import io.github.ramboxeu.techworks.common.tile.machine.MachinePort.Type;
 import io.github.ramboxeu.techworks.common.util.Utils;

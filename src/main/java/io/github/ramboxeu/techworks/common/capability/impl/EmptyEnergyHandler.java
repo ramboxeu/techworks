@@ -1,4 +1,4 @@
-package io.github.ramboxeu.techworks.common.util.capability;
+package io.github.ramboxeu.techworks.common.capability.impl;
 
 import net.minecraftforge.energy.IEnergyStorage;
 

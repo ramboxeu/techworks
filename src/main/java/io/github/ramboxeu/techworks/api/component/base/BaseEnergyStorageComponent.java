@@ -2,8 +2,8 @@ package io.github.ramboxeu.techworks.api.component.base;
 
 import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.api.component.ComponentItem;
+import io.github.ramboxeu.techworks.common.capability.impl.EmptyEnergyHandler;
 import io.github.ramboxeu.techworks.common.util.RenderUtils;
-import io.github.ramboxeu.techworks.common.util.capability.EmptyEnergyHandler;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

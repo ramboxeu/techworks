@@ -1,4 +1,4 @@
-package io.github.ramboxeu.techworks.common.capability.handler;
+package io.github.ramboxeu.techworks.common.capability.impl;
 
 import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.common.tile.machine.MachinePort;
