@@ -1,16 +1,16 @@
 package io.github.ramboxeu.techworks.common.tile;
 
 import io.github.ramboxeu.techworks.api.component.ComponentStackHandler;
-import io.github.ramboxeu.techworks.client.container.machine.ComponentsContainer;
+import io.github.ramboxeu.techworks.api.wrench.IWrenchable;
+import io.github.ramboxeu.techworks.common.network.TechworksPacketHandler;
+import io.github.ramboxeu.techworks.common.tile.machine.MachineIO;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
@@ -21,14 +21,15 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class BaseMachineTile extends BaseIOTile implements INamedContainerProvider {
+import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
+
+public abstract class BaseMachineTile extends BaseIOTile implements INamedContainerProvider, IWrenchable {
     protected final ComponentStackHandler components;
 
     public BaseMachineTile(TileEntityType<?> tileEntityType, ComponentStackHandler.Builder builder) {
@@ -89,23 +90,32 @@ public abstract class BaseMachineTile extends BaseIOTile implements INamedContai
         super.read(state, compound);
     }
 
-    public void openComponentsScreen(ServerPlayerEntity player) {
-        NetworkHooks.openGui(player, new INamedContainerProvider() {
-            @Override
-            public ITextComponent getDisplayName() {
-                return getComponentsGuiName();
-            }
-
-            @Nullable
-            @Override
-            public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
-                return new ComponentsContainer(id, inv, components);
-            }
-        }, pos);
-    }
-
     public ComponentStackHandler getComponents() {
         return components;
+    }
+
+    @Override
+    public boolean rotate(BlockState state, BlockPos pos, @Nullable Direction face, World world) {
+        if (face != null && face.getAxis() != Direction.Axis.Y) {
+            Direction facing = state.get(HORIZONTAL_FACING);
+            Direction rotated = facing.rotateY();
+            world.setBlockState(pos, state.with(HORIZONTAL_FACING, rotated));
+
+            if (!world.isRemote) {
+                TileEntity te = world.getTileEntity(pos);
+
+                if (te instanceof BaseMachineTile) {
+                    MachineIO machineIO = ((BaseMachineTile) te).getMachineIO();
+                    machineIO.setFaceStatus(facing, false);
+                    machineIO.setFaceStatus(rotated, true);
+                    TechworksPacketHandler.sendMachinePortUpdatePacket(pos, rotated.getIndex(), machineIO.getPort(rotated), world.getChunkAt(pos));
+                }
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
     @Nonnull

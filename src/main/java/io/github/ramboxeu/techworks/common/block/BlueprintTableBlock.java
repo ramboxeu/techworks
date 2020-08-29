@@ -105,18 +105,12 @@ public class BlueprintTableBlock extends Block implements IWrenchable {
     }
 
     @Override
-    public void rotate(BlockState state, BlockPos pos, @Nullable Direction face, World world) {
+    public boolean rotate(BlockState state, BlockPos pos, @Nullable Direction face, World world) {
         if (face != null && face.getAxis().isHorizontal()) {
             world.setBlockState(pos, state.rotate(world, pos, Rotation.CLOCKWISE_90));
+            return true;
         }
+
+        return false;
     }
-
-    @Override
-    public void dismantle(BlockState state, BlockPos pos, World world) {}
-
-    @Override
-    public void configure(World world, BlockPos pos, Direction face) {}
-
-    @Override
-    public void openComponents(BlockPos pos, PlayerEntity player, World world) {}
 }

@@ -1,97 +1,187 @@
 package io.github.ramboxeu.techworks.common.item;
 
 import io.github.ramboxeu.techworks.Techworks;
-import io.github.ramboxeu.techworks.api.component.ComponentStackHandler;
 import io.github.ramboxeu.techworks.api.wrench.IWrenchable;
-import io.github.ramboxeu.techworks.client.container.machine.ComponentsContainer;
-import io.github.ramboxeu.techworks.common.component.IComponentsContainerProvider;
-import jdk.nashorn.internal.ir.BlockStatement;
+import io.github.ramboxeu.techworks.api.wrench.WrenchAction;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.HopperBlock;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceContext;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.fml.network.NetworkHooks;
-
-import javax.annotation.Nullable;
-import java.util.List;
+import net.minecraftforge.eventbus.api.Event;
 
 public class WrenchItem extends Item {
 
     public WrenchItem() {
-        super(new Item.Properties().maxStackSize(1).group(Techworks.ITEM_GROUP));
+        super(new Item.Properties().maxDamage(320).group(Techworks.ITEM_GROUP));
     }
 
-    // Called by event for consistency, return true to cancel
-    public boolean onLeftClickBlock(PlayerEntity player, World world, BlockPos pos, Direction face, ItemStack stack) {
+    // Called by event for consistency
+    public Result onLeftClickBlock(PlayerEntity player, World world, BlockPos pos, Direction face, ItemStack stack) {
         BlockState state = world.getBlockState(pos);
         Block block = state.getBlock();
-
-        if (player.isSneaking()) {
-            if (block instanceof IWrenchable) {
-                ((IWrenchable) block).dismantle(state, pos, world);
-            }
-        } else {
-            if (block instanceof IWrenchable) {
-                ((IWrenchable) block).rotate(state, pos, face, world);
-            } else {
-                BlockState rotatedState;
-
-                if (block.isIn(Tags.Blocks.CHESTS)) {
-                    rotatedState = block.rotate(state, world, pos, Rotation.CLOCKWISE_90);
-                } else if (block == Blocks.HOPPER) {
-                    int dirIndex = state.get(HopperBlock.FACING).getIndex() + 1;
-                    rotatedState = state.with(HopperBlock.FACING, Direction.byIndex(dirIndex > 5 ? 0 : (dirIndex == 1 ? 2 : dirIndex)));
-                } else {
-                    return false;
-                }
-
-                world.setBlockState(pos, rotatedState);
-            }
-        }
-
-        return true;
-    }
-
-    // Called by event for consistency and flexibility, return false to pass allow Block#onBlockActivated to run
-    public boolean onRightClick(PlayerEntity player, World world, BlockPos pos, Direction face, ItemStack stack) {
-        BlockState state = world.getBlockState(pos);
-        Block block = state.getBlock();
+        TileEntity tile = world.getTileEntity(pos);
+        boolean flag = tile instanceof IWrenchable;
 
         if (block instanceof IWrenchable) {
-            IWrenchable wrenchable = (IWrenchable) block;
+            IWrenchable blockWrenchable = ((IWrenchable) block);
+            IWrenchable tileWrenchable = null;
 
-            if (player.isSneaking()) {
-                wrenchable.openComponents(pos, player, world);
-            } else {
-                // There will a special case for pipes (and possibly other things) that require hit vector to
-                // determine which portion (rather than face) user clicked
-                wrenchable.configure(world, pos, face);
+            if (flag) {
+                tileWrenchable = (IWrenchable) tile;
+            }
+
+            if (!player.isSneaking()) {
+                if (blockWrenchable.configure(world, pos, face)){
+                    return Result.SUCCESS;
+                } else {
+                    if (flag && tileWrenchable.configure(world, pos, face)) {
+                        return Result.SUCCESS;
+                    }
+                }
             }
         }
 
-        return true;
+        return Result.BLOCK;
+    }
+
+    // Called by event for consistency and flexibility
+    public Result onRightClick(PlayerEntity player, World world, BlockPos pos, Direction face, ItemStack stack) {
+        BlockState state = world.getBlockState(pos);
+        Block block = state.getBlock();
+        TileEntity tile = world.getTileEntity(pos);
+        boolean flag = tile instanceof IWrenchable;
+
+        if (block instanceof IWrenchable) {
+            IWrenchable blockWrenchable = (IWrenchable) block;
+            IWrenchable tileWrenchable = null;
+
+            if (flag) {
+                tileWrenchable = (IWrenchable) tile;
+            }
+
+            if (player.isSneaking()) {
+                ItemStack blockStack = blockWrenchable.dismantle(state, pos, world);
+
+                if (!blockStack.isEmpty()) {
+                    Block.spawnAsEntity(world, pos, blockStack);
+                    return Result.SUCCESS;
+                } else {
+                    if (flag) {
+                        ItemStack tileStack = tileWrenchable.dismantle(state, pos, world);
+
+                        if (!tileStack.isEmpty()) {
+                            Block.spawnAsEntity(world, pos, tileStack);
+                            return Result.SUCCESS;
+                        }
+                    }
+                }
+            } else {
+                if (blockWrenchable.rotate(state, pos, face, world)) {
+                    return Result.SUCCESS;
+                } else {
+                    if (flag && tileWrenchable.rotate(state, pos, face, world)) {
+                        return Result.SUCCESS;
+                    }
+                }
+            }
+        }
+
+        return Result.BLOCK;
+    }
+
+    public static Result useExternalWrench(WrenchAction action, World world, BlockPos pos, Direction face, ItemStack stack) {
+        BlockState state = world.getBlockState(pos);
+        Block block = state.getBlock();
+        TileEntity tile = world.getTileEntity(pos);
+        boolean flag = tile instanceof IWrenchable;
+
+        if (block instanceof IWrenchable) {
+            IWrenchable blockWrenchable = (IWrenchable) block;
+            IWrenchable tileWrenchable = null;
+
+            if (flag) {
+                tileWrenchable = (IWrenchable) tile;
+            }
+
+            switch (action) {
+                case NONE:
+                    return Result.BLOCK_ITEM;
+                case ROTATE:
+                    if (blockWrenchable.rotate(state, pos, face, world)) {
+                        return Result.SUCCESS;
+                    } else {
+                        if (flag && tileWrenchable.rotate(state, pos, face, world)) {
+                            return Result.SUCCESS;
+                        }
+                    }
+                case DISMANTLE:
+                    ItemStack blockStack = blockWrenchable.dismantle(state, pos, world);
+
+                    if (!blockStack.isEmpty()) {
+                        Block.spawnAsEntity(world, pos, blockStack);
+                        return Result.SUCCESS;
+                    } else {
+                        if (flag) {
+                            ItemStack tileStack = tileWrenchable.dismantle(state, pos, world);
+
+                            if (!tileStack.isEmpty()) {
+                                Block.spawnAsEntity(world, pos, tileStack);
+                                return Result.SUCCESS;
+                            }
+                        }
+                    }
+                case CONFIGURE:
+                    if (blockWrenchable.configure(world, pos, face)){
+                        return Result.SUCCESS;
+                    } else {
+                        if (flag && tileWrenchable.configure(world, pos, face)) {
+                            return Result.SUCCESS;
+                        }
+                    }
+            }
+        }
+
+        return Result.BLOCK_ITEM;
+    }
+
+    public enum Result {
+        SUCCESS(true, ActionResultType.SUCCESS, Event.Result.DENY, Event.Result.DENY), // cancels the event
+        BLOCK(false, ActionResultType.PASS, Event.Result.ALLOW, Event.Result.DENY), // allows block, denys item
+        ITEM(false, ActionResultType.PASS, Event.Result.DENY, Event.Result.ALLOW), // allows item, denys block
+        BLOCK_ITEM(false, ActionResultType.PASS, Event.Result.ALLOW, Event.Result.ALLOW); // allows both
+
+        private final boolean cancel;
+        private final ActionResultType resultType;
+        private final Event.Result blockResult;
+        private final Event.Result itemResult;
+
+        Result(boolean cancel, ActionResultType resultType, Event.Result blockResult, Event.Result itemResult) {
+            this.cancel = cancel;
+            this.resultType = resultType;
+            this.blockResult = blockResult;
+            this.itemResult = itemResult;
+        }
+
+        public boolean cancelsEvent() {
+            return cancel;
+        }
+
+        public ActionResultType getResultType() {
+            return resultType;
+        }
+
+        public Event.Result getBlockResult() {
+            return blockResult;
+        }
+
+        public Event.Result getItemResult() {
+            return itemResult;
+        }
     }
 }

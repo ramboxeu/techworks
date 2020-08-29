@@ -27,12 +27,12 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.fml.network.NetworkHooks;
 
-import static io.github.ramboxeu.techworks.common.property.TechworksBlockStateProperties.*;
-import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
-import static net.minecraftforge.common.util.Constants.NBT.TAG_COMPOUND;
-
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+
+import static io.github.ramboxeu.techworks.common.property.TechworksBlockStateProperties.RUNNING;
+import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
+import static net.minecraftforge.common.util.Constants.NBT.TAG_COMPOUND;
 
 public abstract class BaseMachineBlock extends Block implements IWrenchable {
     public BaseMachineBlock() {
@@ -117,27 +117,7 @@ public abstract class BaseMachineBlock extends Block implements IWrenchable {
     }
 
     @Override
-    public void rotate(BlockState state, BlockPos pos, @Nullable Direction face, World world) {
-        if (face != null && face.getAxis() != Direction.Axis.Y) {
-            Direction facing = state.get(HORIZONTAL_FACING);
-            Direction rotated = facing.rotateY();
-            world.setBlockState(pos, state.with(HORIZONTAL_FACING, rotated));
-
-            if (!world.isRemote) {
-                TileEntity te = world.getTileEntity(pos);
-
-                if (te instanceof BaseMachineTile) {
-                    MachineIO machineIO = ((BaseMachineTile) te).getMachineIO();
-                    machineIO.setFaceStatus(facing, false);
-                    machineIO.setFaceStatus(rotated, true);
-                    TechworksPacketHandler.sendMachinePortUpdatePacket(pos, rotated.getIndex(), machineIO.getPort(rotated), world.getChunkAt(pos));
-                }
-            }
-        }
-    }
-
-    @Override
-    public void dismantle(BlockState state, BlockPos pos, World world) {
+    public ItemStack dismantle(BlockState state, BlockPos pos, World world) {
         if (!world.isRemote) {
             TileEntity te = world.getTileEntity(pos);
             ItemStack blockStack = new ItemStack(getSelf().asItem());
@@ -147,24 +127,15 @@ public abstract class BaseMachineBlock extends Block implements IWrenchable {
                 world.removeTileEntity(pos);
             }
 
-            spawnAsEntity(world, pos, blockStack);
             world.removeBlock(pos, false);
+            return blockStack;
         }
+
+        return ItemStack.EMPTY;
     }
 
     @Override
-    public void openComponents(BlockPos pos, PlayerEntity player, World world) {
-        if (!world.isRemote) {
-            TileEntity te = world.getTileEntity(pos);
-
-            if (te instanceof BaseMachineTile) {
-                ((BaseMachineTile) te).openComponentsScreen((ServerPlayerEntity) player);
-            }
-        }
-    }
-
-    @Override
-    public void configure(World world, BlockPos pos, Direction face) {
+    public boolean configure(World world, BlockPos pos, Direction face) {
         if (!world.isRemote) {
             TileEntity te = world.getTileEntity(pos);
 
@@ -177,5 +148,7 @@ public abstract class BaseMachineBlock extends Block implements IWrenchable {
                 }
             }
         }
+
+        return true;
     }
 }
