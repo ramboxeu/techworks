@@ -7,10 +7,13 @@ import io.github.ramboxeu.techworks.api.component.base.BaseEnergyStorageComponen
 import io.github.ramboxeu.techworks.api.component.base.BaseGasStorageComponent;
 import io.github.ramboxeu.techworks.api.component.base.BaseLiquidStorageComponent;
 import io.github.ramboxeu.techworks.common.capability.impl.EnergyBattery;
+import io.github.ramboxeu.techworks.common.util.machineio.config.HandlerConfig;
+import io.github.ramboxeu.techworks.common.util.machineio.data.HandlerData;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
@@ -276,6 +279,29 @@ public class Utils {
         }
     }
 
+    public static void writeBatteryToNbt(CompoundNBT nbt, String propName, EnergyBattery battery) {
+        CompoundNBT batteryTag = new CompoundNBT();
+        batteryTag.putInt("Capacity", battery.getMaxEnergyStored());
+//        batteryTag.putInt("MaxReceive", battery.getMaxReceive());
+//        batteryTag.putInt("MaxExtract", battery.getMaxExtract());
+        batteryTag.putInt("Energy", battery.getEnergyStored());
+
+        nbt.put(propName, batteryTag);
+    }
+
+    public static void readBatteryFromNbt(CompoundNBT nbt, String propName, EnergyBattery battery) {
+        if (nbt.contains(propName, Constants.NBT.TAG_COMPOUND)) {
+            CompoundNBT batteryTag = nbt.getCompound(propName);
+
+            battery.setCapacity(batteryTag.getInt("Capacity"));
+//            battery.setTransfer(batteryTag.getInt("MaxReceive"), batteryTag.getInt("MaxExtract"));
+            battery.setEnergy(batteryTag.getInt("Energy"));
+        } else {
+            Techworks.LOGGER.warn("Tried to read battery from {}, but '{}' was not found or it's not a compound", nbt, propName);
+        }
+    }
+
+
     @Nullable
     public static INBT getNbtFromJson(JsonPrimitive primitive) {
         if (primitive.isString()) {
@@ -295,5 +321,14 @@ public class Utils {
         }
 
         return null;
+    }
+
+    public static Direction getFacingFromPos(World world, BlockPos pos) {
+        return world.getBlockState(pos).get(BlockStateProperties.HORIZONTAL_FACING);
+    }
+
+    @Nullable
+    public static <T extends HandlerConfig> T getExistingConfig(List<T> configs, HandlerData data) {
+        return configs.stream().filter(config -> config.getBaseData() == data).findFirst().orElse(null);
     }
 }

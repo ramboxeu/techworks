@@ -1,9 +1,7 @@
 package io.github.ramboxeu.techworks.common.block;
 
 import io.github.ramboxeu.techworks.api.wrench.IWrenchable;
-import io.github.ramboxeu.techworks.common.network.TechworksPacketHandler;
 import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
-import io.github.ramboxeu.techworks.common.tile.machine.MachineIO;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
@@ -18,7 +16,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -132,23 +129,5 @@ public abstract class BaseMachineBlock extends Block implements IWrenchable {
         }
 
         return ItemStack.EMPTY;
-    }
-
-    @Override
-    public boolean configure(World world, BlockPos pos, Direction face) {
-        if (!world.isRemote) {
-            TileEntity te = world.getTileEntity(pos);
-
-            if (te instanceof BaseMachineTile) {
-                MachineIO machineIO = ((BaseMachineTile) te).getMachineIO();
-                if (!machineIO.isFaceDisabled(face)) {
-                    machineIO.cyclePort(face);
-                    machineIO.getPort(face);
-                    TechworksPacketHandler.sendMachinePortUpdatePacket(pos, face.getIndex(), machineIO.getPort(face), world.getChunkAt(pos));
-                }
-            }
-        }
-
-        return true;
     }
 }

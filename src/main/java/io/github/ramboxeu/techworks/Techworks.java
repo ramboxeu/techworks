@@ -62,13 +62,14 @@ public class Techworks {
     public void onPreStitch(TextureStitchEvent.Pre event) {
         if (!event.getMap().getTextureLocation().equals(AtlasTexture.LOCATION_BLOCKS_TEXTURE)) return;
 
-        // Stitch all of this onto blocks atlas until creation of custom atlases is possible
-        Techworks.LOGGER.debug("Stitching!");
         event.addSprite(new ResourceLocation(Techworks.MOD_ID, "machine/port/gas_input"));
         event.addSprite(new ResourceLocation(Techworks.MOD_ID, "machine/port/gas_output"));
         event.addSprite(new ResourceLocation(Techworks.MOD_ID, "machine/port/gas_both"));
         event.addSprite(new ResourceLocation(Techworks.MOD_ID, "machine/port/liquid_input"));
         event.addSprite(new ResourceLocation(Techworks.MOD_ID, "machine/port/liquid_output"));
         event.addSprite(new ResourceLocation(Techworks.MOD_ID, "machine/port/liquid_both"));
+        event.addSprite(new ResourceLocation(Techworks.MOD_ID, "white"));
+        event.addSprite(new ResourceLocation(Techworks.MOD_ID, "block/port"));
+        event.addSprite(new ResourceLocation(Techworks.MOD_ID, "block/port_new"));
     }
 }

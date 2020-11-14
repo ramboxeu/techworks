@@ -1,7 +1,6 @@
 package io.github.ramboxeu.techworks.common.network;
 
 import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
-import io.github.ramboxeu.techworks.common.tile.machine.MachinePort;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
@@ -47,8 +46,9 @@ public class SMachinePortSyncPacket {
             if (world.isAreaLoaded(tilePos, 1)) {
                 TileEntity te = world.getTileEntity(tilePos);
                 if (te instanceof BaseMachineTile) {
-                    BaseMachineTile machineTile = (BaseMachineTile) te;
-                    machineTile.getMachineIO().configurePort(packet.index, MachinePort.Type.values()[packet.type], MachinePort.Mode.values()[packet.mode]);
+                    // FIXME: 10/10/2020
+//                    BaseMachineTile machineTile = (BaseMachineTile) te;
+//                    machineTile.getMachineIO().configurePort(packet.index, MachinePort.Type.values()[packet.type], MachinePort.Mode.values()[packet.mode]);
                 }
             }
         });

@@ -1,8 +1,11 @@
 package io.github.ramboxeu.techworks.common.network;
 
 import io.github.ramboxeu.techworks.Techworks;
-import io.github.ramboxeu.techworks.common.tile.machine.MachinePort;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
+import io.github.ramboxeu.techworks.common.util.Side;
+import io.github.ramboxeu.techworks.common.util.machineio.MachinePort;
+import io.github.ramboxeu.techworks.common.util.machineio.StorageMode;
+import io.github.ramboxeu.techworks.common.util.machineio.config.HandlerConfig;
+import io.github.ramboxeu.techworks.common.util.machineio.data.HandlerData;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -30,6 +33,8 @@ public class TechworksPacketHandler {
         CHANNEL.registerMessage(id++, SObjectUpdatePacket.class, SObjectUpdatePacket::encode, SObjectUpdatePacket::decode, SObjectUpdatePacket::handle);
         CHANNEL.registerMessage(id++, SMachinePortSyncPacket.class, SMachinePortSyncPacket::encode, SMachinePortSyncPacket::decode, SMachinePortSyncPacket::handle);
         CHANNEL.registerMessage(id++, CBlueprintCraftPacket.class, CBlueprintCraftPacket::encode, CBlueprintCraftPacket::decode, CBlueprintCraftPacket::handle);
+        CHANNEL.registerMessage(id++, SyncHandlerStatus.class, SyncHandlerStatus::encode, SyncHandlerStatus::decode, SyncHandlerStatus::handle);
+        CHANNEL.registerMessage(id++, SyncHandlerConfigMode.class, SyncHandlerConfigMode::encode, SyncHandlerConfigMode::decode, SyncHandlerConfigMode::handle);
     }
 
     public static void sendObjectUpdatePacket(SObjectUpdatePacket packet, ServerPlayerEntity entity) {
@@ -37,12 +42,13 @@ public class TechworksPacketHandler {
     }
 
     public static void sendMachinePortUpdatePacket(BlockPos pos, int index, MachinePort port, Chunk chunk) {
-        CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> chunk), new SMachinePortSyncPacket(
-                pos,
-                index,
-                port.getType().ordinal(),
-                port.getMode().ordinal()
-        ));
+        // FIXME: 10/10/2020 
+//        CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> chunk), new SMachinePortSyncPacket(
+//                pos,
+//                index,
+//                port.getType().ordinal(),
+//                port.getMode().ordinal()
+//        ));
     }
 
     public static void sendCableSyncPacket(Chunk chunk, CableSyncShapePacket packet) {
@@ -63,5 +69,13 @@ public class TechworksPacketHandler {
 
     public static void sendDebugResponsePacket(ServerPlayerEntity playerEntity, DebugResponsePacket packet) {
         CHANNEL.send(PacketDistributor.PLAYER.with(() -> playerEntity), packet);
+    }
+
+    public static void syncHandlerStatus(BlockPos pos, HandlerData data, Side side, StorageMode mode, boolean enabled) {
+        CHANNEL.sendToServer(new SyncHandlerStatus(data.getIdentity(), side, data.getType(), mode, pos, enabled));
+    }
+
+    public static void syncHandlerConfigMode(BlockPos pos, StorageMode mode, HandlerConfig config, Side side) {
+        CHANNEL.sendToServer(new SyncHandlerConfigMode(pos, config.getBaseData().getIdentity(), side, mode, config.getBaseData().getType()));
     }
 }

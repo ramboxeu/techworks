@@ -69,10 +69,18 @@ public class SteamEngineTile extends BaseMachineTile {
                         )
         );
 
-        machineIO = MachineIO.create(
-                MachineIO.PortConfig.create(MachinePort.Type.GAS, steamTank),
-                MachineIO.PortConfig.create(MachinePort.Type.ENERGY, energyStorage)
-        );
+        // FIXME: 10/10/2020 
+//        machineIO = MachineIO.create(
+//                MachineIO.PortConfig.create(MachinePort.Type.GAS, steamTank),
+//                MachineIO.PortConfig.create(MachinePort.Type.ENERGY, energyStorage)
+//        );
+    }
+
+    @Override
+    protected void onFirstTick() {
+        super.onFirstTick();
+
+//        machineIO.setFacing(getFacing());
     }
 
     @Override
@@ -200,6 +208,6 @@ public class SteamEngineTile extends BaseMachineTile {
     @Nullable
     @Override
     public Container createMenu(int id, PlayerInventory inventory, PlayerEntity entity) {
-        return new SteamEngineContainer(id, inventory, this);
+        return new SteamEngineContainer(id, inventory, this, machineIO.createDataMap());
     }
 }

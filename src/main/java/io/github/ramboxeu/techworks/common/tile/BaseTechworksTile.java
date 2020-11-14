@@ -17,7 +17,7 @@ public abstract class BaseTechworksTile extends TileEntity implements ITickableT
     @Override
     public void tick() {
         if (world != null) {
-            if (!firstTicked) {
+            if(!firstTicked) {
                 onFirstTick();
                 firstTicked = true;
             }

@@ -2,15 +2,11 @@ package io.github.ramboxeu.techworks.common.tile;
 
 import io.github.ramboxeu.techworks.api.component.ComponentStackHandler;
 import io.github.ramboxeu.techworks.api.wrench.IWrenchable;
-import io.github.ramboxeu.techworks.common.network.TechworksPacketHandler;
-import io.github.ramboxeu.techworks.common.tile.machine.MachineIO;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
@@ -19,10 +15,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
@@ -40,9 +34,9 @@ public abstract class BaseMachineTile extends BaseIOTile implements INamedContai
 
     @Override
     protected void onFirstTick() {
-        if (!world.isRemote && machineIO != null) {
-            machineIO.setFaceStatus(world.getBlockState(pos).get(BlockStateProperties.HORIZONTAL_FACING), true);
-        }
+//        if (!world.isRemote && machineIO != null) {
+////            machineIO.setSideStatus(Side.FRONT, true);
+//        }
     }
 
     // PASS continues the execution on the block side
@@ -61,20 +55,6 @@ public abstract class BaseMachineTile extends BaseIOTile implements INamedContai
     protected abstract ITextComponent getComponentsGuiName();
 
     @Override
-    protected void readUpdateTag(CompoundNBT nbt, BlockState state) {
-        machineIO.deserializeNBT(nbt.getCompound("MachineIO"));
-
-        super.readUpdateTag(nbt, state);
-    }
-
-    @Override
-    protected CompoundNBT writeUpdateTag(CompoundNBT nbt) {
-        nbt.put("MachineIO", machineIO.serializeNBT());
-
-        return super.writeUpdateTag(nbt);
-    }
-
-    @Override
     public CompoundNBT write(CompoundNBT compound) {
         compound.put("ComponentInv", components.serializeNBT());
         compound.put("MachineIO", machineIO.serializeNBT());
@@ -90,6 +70,18 @@ public abstract class BaseMachineTile extends BaseIOTile implements INamedContai
         super.read(state, compound);
     }
 
+    @Override
+    protected CompoundNBT writeUpdateTag(CompoundNBT nbt) {
+        nbt.put("MachineIO", machineIO.serializeNBT());
+        return super.writeUpdateTag(nbt);
+    }
+
+    @Override
+    protected void readUpdateTag(CompoundNBT nbt, BlockState state) {
+        super.readUpdateTag(nbt, state);
+        machineIO.deserializeNBT(nbt.getCompound("MachineIO"));
+    }
+
     public ComponentStackHandler getComponents() {
         return components;
     }
@@ -101,16 +93,16 @@ public abstract class BaseMachineTile extends BaseIOTile implements INamedContai
             Direction rotated = facing.rotateY();
             world.setBlockState(pos, state.with(HORIZONTAL_FACING, rotated));
 
-            if (!world.isRemote) {
-                TileEntity te = world.getTileEntity(pos);
-
-                if (te instanceof BaseMachineTile) {
-                    MachineIO machineIO = ((BaseMachineTile) te).getMachineIO();
-                    machineIO.setFaceStatus(facing, false);
-                    machineIO.setFaceStatus(rotated, true);
-                    TechworksPacketHandler.sendMachinePortUpdatePacket(pos, rotated.getIndex(), machineIO.getPort(rotated), world.getChunkAt(pos));
-                }
-            }
+//            if (!world.isRemote) {
+//                TileEntity te = world.getTileEntity(pos);
+//
+//                if (te instanceof BaseMachineTile) {
+//                    MachineIO machineIO = ((BaseMachineTile) te).getMachineIO();
+////                    machineIO.setSideStatus(facing, false);
+////                    machineIO.setSideStatus(rotated, true);
+//                    TechworksPacketHandler.sendMachinePortUpdatePacket(pos, rotated.getIndex(), machineIO.getPort(rotated), world.getChunkAt(pos));
+//                }
+//            }
 
             return true;
         }
@@ -118,10 +110,8 @@ public abstract class BaseMachineTile extends BaseIOTile implements INamedContai
         return false;
     }
 
-    @Nonnull
-    @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        LazyOptional<T> holder = machineIO.getCapability(cap, side);
-        return holder != null ? holder : super.getCapability(cap, side);
+    @NotNull
+    public Direction getFacing() {
+        return world != null ? world.getBlockState(pos).get(HORIZONTAL_FACING) : Direction.NORTH;
     }
 }

@@ -66,4 +66,39 @@ public class Color {
                 ((green & 0xFF) << 8)  |
                 ((blue & 0xFF)  << 0);
     }
+
+    public static int HSVtoRGB(float hue, float saturation, float value) {
+        int h = (int)(hue * 6);
+        float f = hue * 6 - h;
+        float p = value * (1 - saturation);
+        float q = value * (1 - f * saturation);
+        float t = value * (1 - (1 - f) * saturation);
+
+        float r = 0;
+        float g = 0;
+        float b = 0;
+
+        switch (h) {
+            case 0:
+                r = value; g = t; b = p;
+                break;
+            case 1:
+                r = q; g = value; b = p;
+                break;
+            case 2:
+                r = p; g = value; b = t;
+                break;
+            case 3:
+                r = p; g = q; b = value;
+                break;
+            case 4:
+                r = t; g = p; b = value;
+                break;
+            case 5:
+                r = value; g = p; b = value;
+                break;
+        }
+
+        return 0xFF000000 | ((int)(r * 256) << 16) | ((int)(g * 256) << 8) | (int)(b * 256);
+    }
 }

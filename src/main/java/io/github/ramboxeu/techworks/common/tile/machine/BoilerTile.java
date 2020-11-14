@@ -12,8 +12,6 @@ import io.github.ramboxeu.techworks.common.registration.TechworksFluids;
 import io.github.ramboxeu.techworks.common.registration.TechworksTiles;
 import io.github.ramboxeu.techworks.common.tag.TechworksFluidTags;
 import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
-import io.github.ramboxeu.techworks.common.tile.machine.MachineIO.PortConfig;
-import io.github.ramboxeu.techworks.common.tile.machine.MachinePort.Type;
 import io.github.ramboxeu.techworks.common.util.PredicateUtils;
 import io.github.ramboxeu.techworks.common.util.Utils;
 import net.minecraft.block.BlockState;
@@ -98,10 +96,12 @@ public class BoilerTile extends BaseMachineTile {
                         )
         );
 
-        machineIO = MachineIO.create(
-                PortConfig.create(Type.GAS, steamTank),
-                PortConfig.create(Type.LIQUID, waterTank)
-        );
+//        machineIO = MachineIO.create(
+//                PortConfig.create(Type.GAS, steamTank),
+//                PortConfig.create(Type.LIQUID, waterTank)
+//        );
+
+//        machineIO = new MachineIO(this::getFacing);
 
         fuelInventory = new ItemStackHandler() {
             @Override
@@ -317,7 +317,7 @@ public class BoilerTile extends BaseMachineTile {
     @Nullable
     @Override
     public Container createMenu(int id, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-        return new BoilerContainer(id, playerInventory, this);
+        return new BoilerContainer(id, playerInventory, this, machineIO.createDataMap());
     }
 
     @Override
