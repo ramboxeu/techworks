@@ -1,12 +1,9 @@
 package io.github.ramboxeu.techworks.common.loot.table;
 
 import io.github.ramboxeu.techworks.common.DataConstants;
-import io.github.ramboxeu.techworks.common.block.BaseMachineBlock;
-import io.github.ramboxeu.techworks.common.registration.TechworksBlocks;
 import io.github.ramboxeu.techworks.common.registry.BlockRegistryObject;
 import net.minecraft.block.Block;
 import net.minecraft.data.loot.BlockLootTables;
-import net.minecraft.item.BlockItem;
 import net.minecraft.loot.LootTable;
 
 import java.util.HashSet;

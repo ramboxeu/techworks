@@ -1,0 +1,12 @@
+{
+  "type": "techworks:smelting",
+  "ingredient": {
+    "item": "minecraft:cobblestone"
+  },
+  "result": {
+    "item": "minecraft:stone"
+  },
+  "cookTime": 100,
+  "energy": 200,
+  "experience": 10.0
+}

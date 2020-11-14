@@ -39,8 +39,8 @@ sourceSets {
         }
 
         resources {
-            include '**/**'
-            srcDirs += 'src/datagen/generated'
+            srcDirs 'src/main/resources',
+                    'src/datagen/generated'
             exclude '.cache'
         }
     }
@@ -48,11 +48,11 @@ sourceSets {
     // Datagens
     datagen {
         java {
-            srcDirs = ['src/datagen/main/java']
+            srcDir 'src/datagen/java'
         }
 
         resources {
-            srcDirs = ['src/datagen/main/resources']
+            srcDir 'src/datagen/resources'
         }
 
         compileClasspath += project.sourceSets.main.output
@@ -60,17 +60,10 @@ sourceSets {
     }
 }
 
-// Configurations
-configurations {
-    datagen.extendsFrom(compile)
-    datagen.extendsFrom(compileOnly)
-    datagen.extendsFrom(runtimeOnly)
-}
-
 // Run configurations
 
 minecraft {
-    mappings channel: 'snapshot', version: '20200707-1.16.1'
+    mappings channel: 'snapshot', version: '20200820-1.16.1'
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
     
     // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
@@ -79,10 +72,7 @@ minecraft {
         client {
             workingDirectory project.file('run')
 
-            // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-
-            // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
 
             mods {
@@ -95,10 +85,7 @@ minecraft {
         server {
             workingDirectory project.file('run')
 
-            // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-
-            // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
 
             mods {
@@ -129,7 +116,7 @@ minecraft {
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.16.1-32.0.67' // there's no stable version
-    compile 'org.jetbrains:annotations:16.0.2'
+    implementation 'org.jetbrains:annotations:16.0.2'
 }
 
 jar {

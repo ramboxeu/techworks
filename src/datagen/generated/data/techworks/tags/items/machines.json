@@ -1,9 +1,0 @@
-{
-  "replace": false,
-  "values": [
-    "techworks:boiler",
-    "techworks:steam_engine",
-    "techworks:electric_furnace",
-    "techworks:electric_grinder"
-  ]
-}
