@@ -3,6 +3,7 @@ package io.github.ramboxeu.techworks.common.util;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
 public class PredicateUtils {
@@ -16,5 +17,13 @@ public class PredicateUtils {
 
     public static boolean isEnergyStorage(ItemStack itemStack) {
         return itemStack.getCapability(CapabilityEnergy.ENERGY).isPresent();
+    }
+
+    public static boolean isLiquid(FluidStack stack) {
+        return !stack.getFluid().getAttributes().isGaseous(stack);
+    }
+
+    public static boolean isGas(FluidStack stack) {
+        return stack.getFluid().getAttributes().isGaseous(stack);
     }
 }

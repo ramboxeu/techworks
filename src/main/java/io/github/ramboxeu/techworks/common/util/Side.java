@@ -87,4 +87,17 @@ public enum Side {
 
         return null;
     }
+
+    private static final Side[] EXTERNALS = new Side[]{
+            BOTTOM,
+            TOP,
+            FRONT,
+            RIGHT,
+            BACK,
+            LEFT
+    };
+
+    public static Side[] external() {
+        return EXTERNALS;
+    }
 }
