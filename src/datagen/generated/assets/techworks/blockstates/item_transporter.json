@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "techworks:block/item_transporter"
+    }
+  }
+}

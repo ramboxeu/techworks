@@ -4,6 +4,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -27,7 +28,7 @@ public interface IWrenchable {
      * @param pos the position of block that was clicked
      * @param face the face of block that was clicked
      * @param world the world of block that was clicked
-     * @return {@code true} if the block was rotated; {@code false} will continue execution
+     * @return {@code true} if the block was rotated; {@code false} will continue normal execution
      */
     default boolean rotate(BlockState state, BlockPos pos, @Nullable Direction face, World world) {
         return false;
@@ -40,10 +41,11 @@ public interface IWrenchable {
      * @param state the state of block that was clicked
      * @param pos the position of block that was clicked
      * @param world the world of block that was clicked
-     * @return {@code ItemStack} to be placed into the world; @code ItemStack.EMPTY} will continue execution
+     * @return {@code ItemStack} to be placed into the world; {@code null} will continue normal execution
      */
+    @Nullable
     default ItemStack dismantle(BlockState state, BlockPos pos, World world) {
-        return ItemStack.EMPTY;
+        return null;
     }
 
     /**
@@ -55,8 +57,7 @@ public interface IWrenchable {
      * @param face the face that was clicked
      * @return {@code true} if the block was configured; {@code false} will continue execution
      */
-    // TODO: Hit vector
-    default boolean configure(World world, BlockPos pos, Direction face) {
+    default boolean configure(World world, BlockPos pos, Direction face, Vector3d hitVec) {
         return false;
     }
 

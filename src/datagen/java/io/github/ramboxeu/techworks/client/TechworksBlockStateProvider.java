@@ -12,7 +12,13 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.generators.*;
+import net.minecraftforge.client.model.generators.BlockModelBuilder;
+import net.minecraftforge.client.model.generators.BlockStateProvider;
+import net.minecraftforge.client.model.generators.ConfiguredModel;
+import net.minecraftforge.client.model.generators.ModelFile;
+import net.minecraftforge.common.data.ExistingFileHelper;
+
+import java.util.Arrays;
 
 public class TechworksBlockStateProvider extends BlockStateProvider {
     private final ExistingFileHelper helper;
@@ -25,6 +31,8 @@ public class TechworksBlockStateProvider extends BlockStateProvider {
 
     @Override
     protected void registerStatesAndModels() {
+        Techworks.LOGGER.debug("Generating...");
+
         for (BlockRegistryObject<? extends BaseMachineBlock, BlockItem> machine : TechworksBlocks.MACHINES) {
             machineBlock(machine.getBlock(), machine.getRegistryName().getPath());
             machineBlockItem(machine.getRegistryName().getPath());
@@ -36,8 +44,32 @@ public class TechworksBlockStateProvider extends BlockStateProvider {
                 TechworksBlocks.ASSEMBLY_TABLE.getBlock(),
                 machineBlockModel("assembly_table", modLoc("block/assembly_table_front"))
         );
-
         blockItem("assembly_table");
+
+        blockAndItem(TechworksBlocks.DEV_BLOCK);
+
+        Arrays.stream(DataConstants.Blocks.CABLES).forEach(this::cableBlockAndItem);
+    }
+
+    private void cableBlockAndItem(BlockRegistryObject<?, ?> cable) {
+        String name = cable.getRegistryName().getPath();
+
+        getVariantBuilder(cable.getBlock()).partialState()
+                .addModels(ConfiguredModel.builder()
+                        .modelFile(cableBlockModel("block/" + name))
+                        .build()
+                );
+
+        blockItem(name);
+    }
+
+    private BlockModelBuilder cableBlockModel(String name) {
+        return models().getBuilder(modLoc(name).toString())
+                .customLoader(CableModelBuilder::new)
+                .particle(name)
+                .base(name)
+                .connector(name + "_connector")
+                .end();
     }
 
     private void machineBlock(Block machineBlock, String name) {
@@ -58,16 +90,6 @@ public class TechworksBlockStateProvider extends BlockStateProvider {
         models().withExistingParent("item/" + name, modLoc("block/" + name + "_off"));
     }
 
-    private void horizontalBlock(BlockRegistryObject<?, ?> object) {
-        String name = object.getRegistryName().getPath();
-        horizontalBlock(object.getBlock(), new ModelFile.ExistingModelFile(modLoc("block/" + name), helper));
-        blockItem(name);
-    }
-
-    private void blockItem(String name) {
-        models().withExistingParent("item/" + name, modLoc("block/" + name));
-    }
-
     private BlockModelBuilder machineBlockModel(String name, ResourceLocation frontTex) {
         return models().cube(name,
                 DataConstants.Textures.MACHINE_BOTTOM,
@@ -77,6 +99,25 @@ public class TechworksBlockStateProvider extends BlockStateProvider {
                 DataConstants.Textures.MACHINE_SIDE,
                 DataConstants.Textures.MACHINE_SIDE
         ).texture("particle", DataConstants.Textures.MACHINE_SIDE);
+    }
+
+    private void horizontalBlock(BlockRegistryObject<?, ?> object) {
+        String name = object.getRegistryName().getPath();
+        horizontalBlock(object.getBlock(), new ModelFile.ExistingModelFile(modLoc("block/" + name), helper));
+        blockItem(name);
+    }
+
+    private void blockAndItem(BlockRegistryObject<?, ?> block) {
+        simpleBlock(block);
+        blockItem(block.getRegistryName().getPath());
+    }
+
+    private void simpleBlock(BlockRegistryObject<?, ?> block) {
+        simpleBlock(block.getBlock());
+    }
+
+    private void blockItem(String name) {
+        models().withExistingParent("item/" + name, modLoc("block/" + name));
     }
 
     private int getHorizontalRotation(Direction facing) {

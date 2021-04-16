@@ -1,18 +1,8 @@
 package io.github.ramboxeu.techworks.common.network;
 
-import io.github.ramboxeu.techworks.Techworks;
-import io.github.ramboxeu.techworks.common.tile.cable.AbstractCableTile;
-import io.github.ramboxeu.techworks.common.util.NBTUtils;
-import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraft.world.DimensionType;
-import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.LogicalSidedProvider;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;

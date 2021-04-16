@@ -29,7 +29,16 @@ public class DataConstants {
         };
 
         public static final BlockRegistryObject<?, ?>[] DROPPING_SELF = new BlockRegistryObject[] {
-                BOILER, STEAM_ENGINE, ELECTRIC_FURNACE, ELECTRIC_GRINDER, BLUEPRINT_TABLE, ASSEMBLY_TABLE
+                BOILER, STEAM_ENGINE, ELECTRIC_FURNACE, ELECTRIC_GRINDER, BLUEPRINT_TABLE, ASSEMBLY_TABLE,
+                ENERGY_CABLE, LIQUID_PIPE, GAS_PIPE, ITEM_TRANSPORTER
         };
+
+        public static final BlockRegistryObject<?, ?>[] CABLES = new BlockRegistryObject[] {
+                ENERGY_CABLE, LIQUID_PIPE, GAS_PIPE, ITEM_TRANSPORTER
+        };
+    }
+
+    public static class Misc {
+        public static final ResourceLocation CABLE_LOADER = new ResourceLocation(Techworks.MOD_ID, "cable");
     }
 }

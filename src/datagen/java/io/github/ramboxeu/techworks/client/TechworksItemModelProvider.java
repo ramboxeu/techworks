@@ -5,9 +5,9 @@ import io.github.ramboxeu.techworks.common.DataConstants;
 import io.github.ramboxeu.techworks.common.registration.TechworksItems;
 import io.github.ramboxeu.techworks.common.registry.ItemRegistryObject;
 import net.minecraft.data.DataGenerator;
-import net.minecraftforge.client.model.generators.ExistingFileHelper;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.client.model.generators.ModelBuilder;
+import net.minecraftforge.common.data.ExistingFileHelper;
 
 public class TechworksItemModelProvider extends ItemModelProvider {
     public TechworksItemModelProvider(DataGenerator generator, ExistingFileHelper existingFileHelper) {

@@ -2,71 +2,121 @@ package io.github.ramboxeu.techworks;
 
 import io.github.ramboxeu.techworks.api.wrench.IWrench;
 import io.github.ramboxeu.techworks.common.capability.ExtendedListenerProvider;
+import io.github.ramboxeu.techworks.common.command.CablesCommand;
+import io.github.ramboxeu.techworks.common.command.CapabilitiesCommand;
 import io.github.ramboxeu.techworks.common.item.WrenchItem;
 import io.github.ramboxeu.techworks.common.item.WrenchItem.Result;
 import io.github.ramboxeu.techworks.common.registration.TechworksItems;
+import io.github.ramboxeu.techworks.common.util.cable.network.CableNetworkManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+// Events must be public, otherwise HotSwap won't work
 public class TechworksEvents {
 
     @SubscribeEvent
-    static void attachCapabilitiesToEntities(AttachCapabilitiesEvent<Entity> event) {
+    public static void attachCapabilitiesToEntities(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof ServerPlayerEntity) {
             event.addCapability(new ResourceLocation(Techworks.MOD_ID, "extended_listener_provider"), new ExtendedListenerProvider());
         }
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGH)
-    static void onLeftClickBlock(PlayerInteractEvent.LeftClickBlock event) {
-        PlayerEntity player = event.getPlayer();
+//    @SubscribeEvent
+//    public static void onWorldLoad(WorldEvent.Load event) {
+//        IWorld world = event.getWorld();
+//
+//        if (world instanceof ServerWorld) {
+//            ServerWorld serverWorld = (ServerWorld) world;
+//
+//            serverWorld.loadedTileEntityList.stream()
+//                    .filter(te -> te instanceof CableTile)
+//                    .forEach(te -> ((CableTile) te).onWorldLoad());
+//        }
+//    }
 
-        // Hand is always MAIN_HAND
-        ItemStack stack = player.getHeldItem(event.getHand());
-        Item item = stack.getItem();
-        Result result = null;
-
-        if (item == TechworksItems.WRENCH.getItem()) {
-            result = ((WrenchItem) stack.getItem()).onLeftClickBlock(player, event.getWorld(), event.getPos(), event.getFace(), stack);
-        } else if (item instanceof IWrench) {
-            result = WrenchItem.useExternalWrench(((IWrench) item).leftClick(player), event.getWorld(), event.getPos(), event.getFace(), stack);
-        }
-
-        if (result != null) {
-            event.setCanceled(result.cancelsEvent());
-            event.setCancellationResult(result.getResultType());
-            event.setUseBlock(result.getBlockResult());
-            event.setUseItem(result.getItemResult());
+    @SubscribeEvent
+    public static void onWorldTick(TickEvent.WorldTickEvent event) {
+        if (event.side.isServer() && event.phase == TickEvent.Phase.START) {
+            CableNetworkManager.get(event.world).tickNetworks();
         }
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
-    static void onRightClick(PlayerInteractEvent.RightClickBlock event) {
+    public static void onLeftClickBlock(PlayerInteractEvent.LeftClickBlock event) {
         PlayerEntity player = event.getPlayer();
 
-        ItemStack stack = player.getHeldItem(event.getHand());
-        Item item = stack.getItem();
-        Result result = null;
+        double reach = player.getAttribute(ForgeMod.REACH_DISTANCE.get()).getValue();
+        RayTraceResult traceResult = player.pick(reach, 1.0f, false);
 
-        if (item == TechworksItems.WRENCH.getItem()) {
-            result = ((WrenchItem) item).onRightClick(player, event.getWorld(), event.getPos(), event.getFace(), stack);
-        } else if (item instanceof IWrench) {
-            result = WrenchItem.useExternalWrench(((IWrench) item).rightClick(player), event.getWorld(), event.getPos(), event.getFace(), stack);
-        }
+        if (traceResult.getType() != RayTraceResult.Type.MISS) {
+            // Hand is always MAIN_HAND
+            ItemStack stack = player.getHeldItem(event.getHand());
+            Item item = stack.getItem();
+            Result result = null;
+            BlockPos pos = event.getPos();
+            Vector3d hitVec = traceResult.getHitVec().subtract(pos.getX(), pos.getY(), pos.getZ());
 
-        if (result != null) {
-            event.setCanceled(result.cancelsEvent());
-            event.setCancellationResult(result.getResultType());
-            event.setUseBlock(result.getBlockResult());
-            event.setUseItem(result.getItemResult());
+            if (item == TechworksItems.WRENCH.getItem()) {
+                result = ((WrenchItem) stack.getItem()).onLeftClickBlock(player, event.getWorld(), pos, event.getFace(), hitVec, stack);
+            } else if (item instanceof IWrench) {
+                result = WrenchItem.useExternalWrench(((IWrench) item).leftClick(player), event.getWorld(), pos, event.getFace(), hitVec, stack);
+            }
+
+            if (result != null) {
+                event.setCanceled(result.cancelsEvent());
+                event.setCancellationResult(result.getResultType());
+                event.setUseBlock(result.getBlockResult());
+                event.setUseItem(result.getItemResult());
+            }
         }
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGH)
+    public static void onRightClick(PlayerInteractEvent.RightClickBlock event) {
+        PlayerEntity player = event.getPlayer();
+
+        double reach = player.getAttribute(ForgeMod.REACH_DISTANCE.get()).getValue();
+        RayTraceResult traceResult = player.pick(reach, 1.0f, false);
+
+        if (traceResult.getType() != RayTraceResult.Type.MISS) {
+            ItemStack stack = player.getHeldItem(event.getHand());
+            Item item = stack.getItem();
+            Result result = null;
+            BlockPos pos = event.getPos();
+            Vector3d hitVec = traceResult.getHitVec().subtract(pos.getX(), pos.getY(), pos.getZ());
+
+            if (item == TechworksItems.WRENCH.getItem()) {
+                result = ((WrenchItem) item).onRightClick(player, event.getWorld(), pos, event.getFace(), hitVec, stack);
+            } else if (item instanceof IWrench) {
+                result = WrenchItem.useExternalWrench(((IWrench) item).rightClick(player), event.getWorld(), pos, event.getFace(), hitVec, stack);
+            }
+
+            if (result != null) {
+                event.setCanceled(result.cancelsEvent());
+                event.setCancellationResult(result.getResultType());
+                event.setUseBlock(result.getBlockResult());
+                event.setUseItem(result.getItemResult());
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onCommandRegister(RegisterCommandsEvent event) {
+        CapabilitiesCommand.register(event.getDispatcher());
+        CablesCommand.register(event.getDispatcher());
     }
 }

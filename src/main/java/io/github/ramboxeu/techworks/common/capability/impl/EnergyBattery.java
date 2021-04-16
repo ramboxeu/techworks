@@ -1,15 +1,21 @@
 package io.github.ramboxeu.techworks.common.capability.impl;
 
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.energy.IEnergyStorage;
 
-public class EnergyBattery implements IEnergyStorage {
-    protected int energy = 0;
+public class EnergyBattery implements IEnergyStorage, INBTSerializable<CompoundNBT> {
+    protected int energy;
     protected int capacity;
     protected int maxReceive;
     protected int maxExtract;
 
     public EnergyBattery(int capacity) {
         this(capacity, capacity, capacity);
+    }
+
+    public EnergyBattery(int capacity, int transfer) {
+        this(capacity, transfer, transfer);
     }
 
     public EnergyBattery(int capacity, int maxReceive, int maxExtract) {
@@ -24,7 +30,7 @@ public class EnergyBattery implements IEnergyStorage {
             return 0;
         }
 
-        int received = Math.min(energy, Math.max(this.maxReceive, maxReceive));
+        int received = Math.min(capacity - energy, Math.min(this.maxReceive, maxReceive));
         if (!simulate) {
             energy += received;
             onContentsChanged();
@@ -39,13 +45,13 @@ public class EnergyBattery implements IEnergyStorage {
             return 0;
         }
 
-        int received = Math.min(energy, Math.max(this.maxExtract, maxExtract));
+        int extracted = Math.min(energy, Math.min(this.maxExtract, maxExtract));
         if (!simulate) {
-            energy -= received;
+            energy -= extracted;
             onContentsChanged();
         }
 
-        return received;
+        return extracted;
     }
 
     @Override
@@ -78,8 +84,26 @@ public class EnergyBattery implements IEnergyStorage {
         this.energy = energy;
     }
 
-    public void setTransfer(int maxReceive, int maxExtract) {
-        this.maxExtract = maxExtract;
-        this.maxReceive = maxReceive;
+    public int getMaxReceive() {
+        return maxReceive;
+    }
+
+    public int getMaxExtract() {
+        return maxExtract;
+    }
+
+
+    @Override
+    public CompoundNBT serializeNBT() {
+        CompoundNBT tag = new CompoundNBT();
+
+        tag.putInt("Energy", energy);
+
+        return tag;
+    }
+
+    @Override
+    public void deserializeNBT(CompoundNBT nbt) {
+        energy = nbt.getInt("Energy");
     }
 }

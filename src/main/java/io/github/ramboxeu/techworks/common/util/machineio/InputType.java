@@ -55,6 +55,10 @@ public enum InputType {
         return false;
     }
 
+    public Capability<?> getCapability() {
+        return cap;
+    }
+
     /**
      * Converts capability to input type
      * @param cap capability to convert from

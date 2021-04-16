@@ -13,7 +13,7 @@ import java.nio.file.Path;
 
 public class TechworksItemTagProvider extends TagsProvider<Item> {
     public TechworksItemTagProvider(DataGenerator generator) {
-        super(generator, Registry.ITEM, Techworks.MOD_ID);
+        super(generator, Registry.ITEM, Techworks.MOD_ID, null);
     }
 
     @Override

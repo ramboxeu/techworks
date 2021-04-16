@@ -12,6 +12,6 @@ public class AssemblyTableScreen extends BaseScreen<AssemblyTableContainer> {
         super(screenContainer, inv, titleIn, BACKGROUND);
 
         ySize = 186;
-        field_238745_s_ = ySize - 94; // Recalculate players inv title y with the new ySize
+        playerInventoryTitleY = ySize - 94; // Recalculate players inv title y with the new ySize
     }
 }

@@ -27,7 +27,7 @@ public class DevEnergyStorage implements IEnergyStorage, INBTSerializable<Compou
 
     @Override
     public int getEnergyStored() {
-        return Integer.MAX_VALUE;
+        return Short.MAX_VALUE;
     }
 
     @Override

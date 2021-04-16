@@ -8,6 +8,7 @@
   "block.techworks.gas_pipe_basic": "Basic Gas Pipe",
   "block.techworks.blueprint_table": "Blueprint Table",
   "block.techworks.assembly_table": "Assembly Table",
+  "block.techworks.item_transporter": "Item Transporter",
 
   "item.techworks.ground_iron": "Ground Iron",
   "item.techworks.ground_gold": "Ground Gold",
@@ -52,6 +53,7 @@
   "tooltip.techworks.blueprint.steam_engine": "Steam Engine",
   "tooltip.techworks.blueprint.electric_furnace": "Electric Furnace",
   "tooltip.techworks.blueprint.electric_grinder": "Electric Grinder",
+  "tooltip.techworks.widget.fluid_display": "%s %d/%dmb",
 
   "gui.techworks.widget.search_blueprints": "Search"
 }

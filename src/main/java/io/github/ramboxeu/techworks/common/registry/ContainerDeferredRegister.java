@@ -3,6 +3,8 @@ package io.github.ramboxeu.techworks.common.registry;
 import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.client.container.BaseMachineContainer;
 import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
+import io.github.ramboxeu.techworks.common.util.Side;
+import io.github.ramboxeu.techworks.common.util.machineio.config.HandlerConfig;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
@@ -14,6 +16,8 @@ import net.minecraftforge.fml.network.IContainerFactory;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 public class ContainerDeferredRegister {
@@ -25,9 +29,9 @@ public class ContainerDeferredRegister {
             BlockPos pos = buf.readBlockPos();
             TileEntity te = inv.player.world.getTileEntity(pos);
             if (te instanceof BaseMachineTile) {
-                return factory.create(id, inv, (TILE) te);
+                return factory.create(id, inv, (TILE) te, ((BaseMachineTile) te).getMachineIO().createDataMap());
             } else {
-                throw new IllegalStateException("Expected BaseMachineTile on " + buf + " but it was not found!");
+                throw new IllegalStateException("Expected BaseMachineTile on " + pos + " but it was not found!");
             }
         });
     }
@@ -40,7 +44,7 @@ public class ContainerDeferredRegister {
             if (te != null) {
                 return factory.create(id, inv, (TILE) te);
             } else {
-                throw new IllegalStateException("Expected TileEntity on " + buf + " but it was not found!");
+                throw new IllegalStateException("Expected TileEntity on " + pos + " but it was not found!");
             }
         });
     }
@@ -58,7 +62,7 @@ public class ContainerDeferredRegister {
     }
 
     public interface IMachineContainerFactory<TILE extends BaseMachineTile, CONTAINER extends BaseMachineContainer<TILE>> {
-        CONTAINER create(int id, PlayerInventory inventory, TILE tile);
+        CONTAINER create(int id, PlayerInventory inventory, TILE tile, Map<Side, List<HandlerConfig>> configMap);
     }
 
     public interface ITileContainerFactory<TILE extends TileEntity, CONTAINER extends Container> {

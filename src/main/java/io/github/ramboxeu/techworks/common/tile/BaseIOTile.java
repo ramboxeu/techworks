@@ -8,6 +8,7 @@ import io.github.ramboxeu.techworks.common.util.machineio.MachinePort;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -50,7 +51,7 @@ public abstract class BaseIOTile extends BaseTechworksTile implements IWrenchabl
     }
 
     @Override
-    public boolean configure(World world, BlockPos pos, Direction face) {
+    public boolean configure(World world, BlockPos pos, Direction face, Vector3d hitVec) {
         MachinePort port = machineIO.getPort(face);
 
         Techworks.LOGGER.debug("Disabled: {}", port.isDisabled());

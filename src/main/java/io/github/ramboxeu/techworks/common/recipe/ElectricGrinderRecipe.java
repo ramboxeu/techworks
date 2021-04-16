@@ -55,7 +55,7 @@ public class ElectricGrinderRecipe implements IRecipe<IInventory> {
 
     @Override
     public IRecipeSerializer<?> getSerializer() {
-        return Registration.GRINDING_RECIPE_SERIALIZER;
+        return Registration.GRINDING_RECIPE_SERIALIZER.get();
     }
 
     @Override

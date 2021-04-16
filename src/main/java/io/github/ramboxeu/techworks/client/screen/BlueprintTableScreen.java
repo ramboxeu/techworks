@@ -40,7 +40,7 @@ public class BlueprintTableScreen extends BaseScreen<BlueprintTableContainer> {
         super(screenContainer, inv, title, TEXTURE);
 
         ySize = 216;
-        field_238745_s_ = ySize - 94; // Recalculate players inv title y with the new ySize
+        playerInventoryTitleY = ySize - 94; // Recalculate players inv title y with the new ySize
 
         for (int i = 0; i < BLUEPRINTS.size(); i++) {
             buttons.add(0, new BlueprintButton(

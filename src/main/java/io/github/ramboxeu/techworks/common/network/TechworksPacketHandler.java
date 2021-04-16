@@ -7,6 +7,8 @@ import io.github.ramboxeu.techworks.common.network.dev.DevBlockItemSyncPacket;
 import io.github.ramboxeu.techworks.common.network.dev.DevBlockLiquidSyncPacket;
 import io.github.ramboxeu.techworks.common.tile.DevBlockTile;
 import io.github.ramboxeu.techworks.common.util.Side;
+import io.github.ramboxeu.techworks.common.util.cable.connection.CableConnections;
+import io.github.ramboxeu.techworks.common.util.cable.network.ICablePacket;
 import io.github.ramboxeu.techworks.common.util.machineio.MachinePort;
 import io.github.ramboxeu.techworks.common.util.machineio.StorageMode;
 import io.github.ramboxeu.techworks.common.util.machineio.config.HandlerConfig;
@@ -36,7 +38,7 @@ public class TechworksPacketHandler {
     private static int id = 0;
 
     public static void register() {
-        CHANNEL.registerMessage(id++, CableSyncShapePacket.class, CableSyncShapePacket::encode, CableSyncShapePacket::decode, CableSyncShapePacket.Handler::handle);
+        CHANNEL.registerMessage(id++, SyncCableConnectionsPacket.class, SyncCableConnectionsPacket::encode, SyncCableConnectionsPacket::decode, SyncCableConnectionsPacket::handle);
         CHANNEL.registerMessage(id++, CableRequestSyncShapePacket.class, CableRequestSyncShapePacket::encode, CableRequestSyncShapePacket::decode, CableRequestSyncShapePacket.Handler::handle);
         CHANNEL.registerMessage(id++, DebugRequestPacket.class, DebugRequestPacket::encode, DebugRequestPacket::decode, DebugRequestPacket.Handler::handle);
         CHANNEL.registerMessage(id++, DebugResponsePacket.class, DebugResponsePacket::encode, DebugResponsePacket::decode, DebugResponsePacket.Handler::handle);
@@ -50,6 +52,8 @@ public class TechworksPacketHandler {
         CHANNEL.registerMessage(id++, DevBlockLiquidSyncPacket.class, DevBlockLiquidSyncPacket::encode, DevBlockLiquidSyncPacket::decode, DevBlockLiquidSyncPacket::handle);
         CHANNEL.registerMessage(id++, DevBlockGasSyncPacket.class, DevBlockGasSyncPacket::encode, DevBlockGasSyncPacket::decode, DevBlockGasSyncPacket::handle);
         CHANNEL.registerMessage(id++, DevBlockItemSyncPacket.class, DevBlockItemSyncPacket::encode, DevBlockItemSyncPacket::decode, DevBlockItemSyncPacket::handle);
+//        CHANNEL.registerMessage(id++, SyncTransportedItemPacket.class, SyncTransportedItemPacket::encode, SyncTransportedItemPacket::decode, SyncTransportedItemPacket::handle);
+        CHANNEL.registerMessage(id++, SyncCablePacket.class, SyncCablePacket::encode, SyncCablePacket::decode, SyncCablePacket::handle);
     }
 
     public static void sendObjectUpdatePacket(SObjectUpdatePacket packet, ServerPlayerEntity entity) {
@@ -66,8 +70,8 @@ public class TechworksPacketHandler {
 //        ));
     }
 
-    public static void sendCableSyncPacket(Chunk chunk, CableSyncShapePacket packet) {
-        CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> chunk), packet);
+    public static void syncCableConnections(Chunk chunk, BlockPos pos, CableConnections connections) {
+        CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> chunk), new SyncCableConnectionsPacket(pos, connections));
     }
 
     public static void sendBlueprintCraftPacket(CBlueprintCraftPacket packet) {
@@ -112,5 +116,13 @@ public class TechworksPacketHandler {
 
     public static void syncDevItem(BlockPos pos, List<ItemStack> inv, EnumSet<Side> sides, DevBlockTile.ActiveSignal signal) {
         CHANNEL.sendToServer(new DevBlockItemSyncPacket(pos, sides, signal, inv));
+    }
+
+    public static void onPacketDeparted(Chunk chunk, BlockPos pos, ICablePacket packet, int index) {
+        CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> chunk), new SyncCablePacket(packet, pos, index, false));
+    }
+
+    public static void onPacketArrived(Chunk chunk, BlockPos pos, ICablePacket packet, int index) {
+        CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> chunk), new SyncCablePacket(packet, pos, index, true));
     }
 }

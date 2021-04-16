@@ -4,7 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.client.container.DevBlockContainer;
-import io.github.ramboxeu.techworks.client.util.Utils;
+import io.github.ramboxeu.techworks.client.util.ClientUtils;
 import io.github.ramboxeu.techworks.common.tile.DevBlockTile;
 import io.github.ramboxeu.techworks.common.util.Side;
 import net.minecraft.client.gui.FontRenderer;
@@ -409,14 +409,14 @@ public class DevBlockScreen extends ContainerScreen<DevBlockContainer> {
         int maxPages = (int) Math.ceil(logs.size() / 10.0);
 
         String pageText = maxPages > 0 ? (page + 1) + "/" + maxPages : "0";
-        Utils.drawString(stack, font, pageText,325 + ((81 - font.getStringWidth(pageText)) / 2.0f), 244, 0xFFFFFFFF, false);
+        ClientUtils.drawString(stack, font, pageText,325 + ((81 - font.getStringWidth(pageText)) / 2.0f), 244, 0xFFFFFFFF, false);
 
         for (int i = 9 * page; i < 9 * page + 10; i++) {
             if (i >= size) {
                 break;
             }
 
-            Utils.drawString(stack, font, logs.get(i), 312, 145 + (9 * (i - (page * 9))), 0xFFFFFFFF, false);
+            ClientUtils.drawString(stack, font, logs.get(i), 312, 145 + (9 * (i - (page * 9))), 0xFFFFFFFF, false);
         }
     }
 
@@ -525,12 +525,12 @@ public class DevBlockScreen extends ContainerScreen<DevBlockContainer> {
         }
 
         public void renderSideLabels(MatrixStack stack, FontRenderer font) {
-            Utils.drawString(stack, font, "D", x + 8, y + 2, 0xFFFFFFFF, false);
-            Utils.drawString(stack, font, "T", x + 28, y + 2, 0xFFFFFFFF, false);
-            Utils.drawString(stack, font, "F", x + 48, y + 2, 0xFFFFFFFF, false);
-            Utils.drawString(stack, font, "R", x + 68, y + 2, 0xFFFFFFFF, false);
-            Utils.drawString(stack, font, "B", x + 88, y + 2, 0xFFFFFFFF, false);
-            Utils.drawString(stack, font, "L", x + 108, y + 2, 0xFFFFFFFF, false);
+            ClientUtils.drawString(stack, font, "D", x + 8, y + 2, 0xFFFFFFFF, false);
+            ClientUtils.drawString(stack, font, "T", x + 28, y + 2, 0xFFFFFFFF, false);
+            ClientUtils.drawString(stack, font, "F", x + 48, y + 2, 0xFFFFFFFF, false);
+            ClientUtils.drawString(stack, font, "R", x + 68, y + 2, 0xFFFFFFFF, false);
+            ClientUtils.drawString(stack, font, "B", x + 88, y + 2, 0xFFFFFFFF, false);
+            ClientUtils.drawString(stack, font, "L", x + 108, y + 2, 0xFFFFFFFF, false);
         }
 
         public void init(Function<CheckboxButton, CheckboxButton> addButton) {

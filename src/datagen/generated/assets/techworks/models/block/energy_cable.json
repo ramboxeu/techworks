@@ -1,0 +1,8 @@
+{
+  "textures": {
+    "particle": "techworks:block/energy_cable",
+    "base": "techworks:block/energy_cable",
+    "connector": "techworks:block/energy_cable_connector"
+  },
+  "loader": "techworks:cable"
+}

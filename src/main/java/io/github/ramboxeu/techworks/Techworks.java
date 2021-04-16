@@ -1,14 +1,18 @@
 package io.github.ramboxeu.techworks;
 
-import io.github.ramboxeu.techworks.client.model.CableModelLoader;
+import io.github.ramboxeu.techworks.client.TechworksClientEvents;
+import io.github.ramboxeu.techworks.client.model.cable.CableModelLoader;
 import io.github.ramboxeu.techworks.common.TechworksItemGroup;
 import io.github.ramboxeu.techworks.common.capability.CapabilityExtendedListenerProvider;
 import io.github.ramboxeu.techworks.common.debug.DebugInfoRenderer;
 import io.github.ramboxeu.techworks.common.network.TechworksPacketHandler;
 import io.github.ramboxeu.techworks.common.registration.*;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.MinecraftForge;
@@ -42,6 +46,7 @@ public class Techworks {
         modEventBus.addListener(this::setup);
         modEventBus.addListener(this::clientSetup);
         modEventBus.addListener(this::onPreStitch);
+        modEventBus.addListener(this::registerModelLoaders);
 
         MinecraftForge.EVENT_BUS.register(TechworksEvents.class);
     }
@@ -52,11 +57,14 @@ public class Techworks {
     }
 
     public void clientSetup(FMLClientSetupEvent event) {
-        ModelLoaderRegistry.registerLoader(new ResourceLocation("techworks:cable"), new CableModelLoader());
-        TechworksTiles.bindMachineRenderers();
+        TechworksTiles.bindRenderers();
         TechworksContainers.registerScreenFactories();
 
+        RenderTypeLookup.setRenderLayer(TechworksBlocks.ITEM_TRANSPORTER.getBlock(), RenderType.getTranslucent());
+        RenderTypeLookup.setRenderLayer(TechworksBlocks.LIQUID_PIPE.getBlock(), RenderType.getTranslucent());
+
         MinecraftForge.EVENT_BUS.addListener(DebugInfoRenderer::render);
+        MinecraftForge.EVENT_BUS.register(TechworksClientEvents.class);
     }
 
     public void onPreStitch(TextureStitchEvent.Pre event) {
@@ -71,5 +79,10 @@ public class Techworks {
         event.addSprite(new ResourceLocation(Techworks.MOD_ID, "white"));
         event.addSprite(new ResourceLocation(Techworks.MOD_ID, "block/port"));
         event.addSprite(new ResourceLocation(Techworks.MOD_ID, "block/port_new"));
+    }
+
+    public void registerModelLoaders(ModelRegistryEvent event) {
+        LOGGER.debug("Registering model loader!");
+        ModelLoaderRegistry.registerLoader(new ResourceLocation(Techworks.MOD_ID, "cable"), new CableModelLoader());
     }
 }

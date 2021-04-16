@@ -1,11 +1,8 @@
-# The name of the mod loader type to load - for regular FML @Mod mods it should be javafml
 modLoader="javafml"
-# A version range to match for said mod loader - for regular FML @Mod it will be the forge version
-loaderVersion="[32,)"
-# A URL to refer people to when problems occur with this mod
+loaderVersion="[35.1,)" # 1.16.4 stable
 issueTrackerURL="https://github.com/ramboxeu/techworks/issues"
-# If the mods defined in this file should show as seperate resource packs
 showAsResourcePack=false
+license="MIT"
 
 [[mods]]
   modId="techworks"
@@ -29,6 +26,6 @@ showAsResourcePack=false
 [[dependencies.techworks]]
   modId="minecraft"
   mandatory=true
-  versionRange="[1.16.1]"
+  versionRange="[1.16.4]"
   ordering="NONE"
   side="BOTH"

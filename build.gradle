@@ -23,12 +23,16 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
 version = '1.0-1.16.x'
-group = 'io.ramboxeu.techworks'
+group = 'io.github.ramboxeu.techworks'
 archivesBaseName = 'techworks'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
+
+idea {
+
+}
 
 // Source sets
 
@@ -39,8 +43,8 @@ sourceSets {
         }
 
         resources {
-            srcDirs 'src/main/resources',
-                    'src/datagen/generated'
+            srcDir 'src/main/resources'
+            srcDir 'src/datagen/generated'
             exclude '.cache'
         }
     }
@@ -49,21 +53,27 @@ sourceSets {
     datagen {
         java {
             srcDir 'src/datagen/java'
+//            include 'java'
+//            exclude 'generated', 'resources'
         }
 
         resources {
             srcDir 'src/datagen/resources'
+//            include 'resources'
+//            exclude 'generated', 'java'
         }
 
         compileClasspath += project.sourceSets.main.output
         compileClasspath += project.sourceSets.main.compileClasspath
+        runtimeClasspath += project.sourceSets.main.output
+        runtimeClasspath += project.sourceSets.main.runtimeClasspath
     }
 }
 
 // Run configurations
 
 minecraft {
-    mappings channel: 'snapshot', version: '20200820-1.16.1'
+    mappings channel: 'snapshot', version: "${mappings_version}"
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
     
     // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
@@ -115,8 +125,8 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.16.1-32.0.67' // there's no stable version
-    implementation 'org.jetbrains:annotations:16.0.2'
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}" // stable 1.16.4
+    implementation "org.jetbrains:annotations:${jb_annotations_version}"
 }
 
 jar {

@@ -12,6 +12,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.eventbus.api.Event;
 
@@ -22,13 +23,13 @@ public class WrenchItem extends Item {
     }
 
     // Called by event for consistency
-    public Result onLeftClickBlock(PlayerEntity player, World world, BlockPos pos, Direction face, ItemStack stack) {
+    public Result onLeftClickBlock(PlayerEntity player, World world, BlockPos pos, Direction face, Vector3d hitVec, ItemStack stack) {
         BlockState state = world.getBlockState(pos);
         Block block = state.getBlock();
         TileEntity tile = world.getTileEntity(pos);
         boolean flag = tile instanceof IWrenchable;
 
-        if (block instanceof IWrenchable) {
+        if (block instanceof IWrenchable) { // make so block doesn't have to IWrenchable
             IWrenchable blockWrenchable = ((IWrenchable) block);
             IWrenchable tileWrenchable = null;
 
@@ -37,10 +38,10 @@ public class WrenchItem extends Item {
             }
 
             if (!player.isSneaking()) {
-                if (blockWrenchable.configure(world, pos, face)){
+                if (blockWrenchable.configure(world, pos, face, hitVec)){
                     return Result.SUCCESS;
                 } else {
-                    if (flag && tileWrenchable.configure(world, pos, face)) {
+                    if (flag && tileWrenchable.configure(world, pos, face, hitVec)) {
                         return Result.SUCCESS;
                     }
                 }
@@ -51,7 +52,7 @@ public class WrenchItem extends Item {
     }
 
     // Called by event for consistency and flexibility
-    public Result onRightClick(PlayerEntity player, World world, BlockPos pos, Direction face, ItemStack stack) {
+    public Result onRightClick(PlayerEntity player, World world, BlockPos pos, Direction face, Vector3d hitVec, ItemStack stack) {
         BlockState state = world.getBlockState(pos);
         Block block = state.getBlock();
         TileEntity tile = world.getTileEntity(pos);
@@ -68,14 +69,14 @@ public class WrenchItem extends Item {
             if (player.isSneaking()) {
                 ItemStack blockStack = blockWrenchable.dismantle(state, pos, world);
 
-                if (!blockStack.isEmpty()) {
+                if (blockStack != null) {
                     Block.spawnAsEntity(world, pos, blockStack);
                     return Result.SUCCESS;
                 } else {
                     if (flag) {
                         ItemStack tileStack = tileWrenchable.dismantle(state, pos, world);
 
-                        if (!tileStack.isEmpty()) {
+                        if (tileStack != null) {
                             Block.spawnAsEntity(world, pos, tileStack);
                             return Result.SUCCESS;
                         }
@@ -95,7 +96,7 @@ public class WrenchItem extends Item {
         return Result.BLOCK;
     }
 
-    public static Result useExternalWrench(WrenchAction action, World world, BlockPos pos, Direction face, ItemStack stack) {
+    public static Result useExternalWrench(WrenchAction action, World world, BlockPos pos, Direction face, Vector3d hitVec, ItemStack stack) {
         BlockState state = world.getBlockState(pos);
         Block block = state.getBlock();
         TileEntity tile = world.getTileEntity(pos);
@@ -137,10 +138,10 @@ public class WrenchItem extends Item {
                         }
                     }
                 case CONFIGURE:
-                    if (blockWrenchable.configure(world, pos, face)){
+                    if (blockWrenchable.configure(world, pos, face, hitVec)){
                         return Result.SUCCESS;
                     } else {
-                        if (flag && tileWrenchable.configure(world, pos, face)) {
+                        if (flag && tileWrenchable.configure(world, pos, face, hitVec)) {
                             return Result.SUCCESS;
                         }
                     }

@@ -2,35 +2,48 @@ package io.github.ramboxeu.techworks.client.screen;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import io.github.ramboxeu.techworks.Techworks;
-import io.github.ramboxeu.techworks.client.screen.widget.BaseWidget;
-import net.minecraft.client.Minecraft;
+import io.github.ramboxeu.techworks.client.container.BaseContainer;
+import io.github.ramboxeu.techworks.client.screen.widget.BaseContainerWidget;
+import io.github.ramboxeu.techworks.client.screen.widget.BaseScreenWidget;
+import io.github.ramboxeu.techworks.client.screen.widget.IScreenWidgetProvider;
+import io.github.ramboxeu.techworks.client.util.ClientUtils;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.ITextProperties;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-// Just a ContainerScreen with some probably hacky hacks
-public class BaseScreen<T extends Container> extends ContainerScreen<T> {
+public abstract class BaseScreen<T extends BaseContainer> extends ContainerScreen<T> {
     protected ResourceLocation background;
-    protected List<BaseWidget> baseWidgets = new ArrayList<>();
-    protected List<Widget> widgets = new ArrayList<>();
+    protected List<BaseScreenWidget> widgets = new ArrayList<>();
     protected final T container;
 
-    public BaseScreen(T screenContainer, PlayerInventory inv, ITextComponent titleIn, ResourceLocation background) {
-        super(screenContainer, inv, titleIn);
+    public BaseScreen(T container, PlayerInventory inv, ITextComponent titleIn, ResourceLocation background) {
+        super(container, inv, titleIn);
 
-        this.container = screenContainer;
+        this.container = container;
         this.background = background;
+
+        for (BaseContainerWidget widget : container.getWidgets()) {
+            if (widget instanceof IScreenWidgetProvider<?>) {
+                addWidget(((IScreenWidgetProvider<?>) widget).getScreenWidget(this));
+            }
+        }
+    }
+
+    protected <T extends BaseScreenWidget> T addWidget(T widget) {
+        if (!widgets.contains(widget)) {
+            widgets.add(widget);
+        }
+
+        return widget;
     }
 
     @Override
-    protected void func_230450_a_(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+    protected void drawGuiContainerBackgroundLayer(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
         minecraft.textureManager.bindTexture(background);
         int x = (width - xSize) / 2;
         int y = (height - ySize) / 2;
@@ -38,48 +51,27 @@ public class BaseScreen<T extends Container> extends ContainerScreen<T> {
     }
 
     @Override
-    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
-        super.render(stack, mouseX, mouseY, partialTicks);
-        func_230459_a_(stack, mouseX, mouseY);
+    protected void drawGuiContainerForegroundLayer(MatrixStack stack, int mouseX, int mouseY) {
+        super.drawGuiContainerForegroundLayer(stack, mouseX, mouseY);
+        super.renderHoveredTooltip(stack, mouseX - guiLeft, mouseY - guiTop);
     }
 
     @Override
-    protected void func_230451_b_(MatrixStack stack, int mouseX, int mouseY) {
-        for (Widget widget : baseWidgets) {
-            widget.render(stack, mouseX, mouseY, Minecraft.getInstance().getRenderPartialTicks());
-        }
-
-        for (Widget widget : widgets) {
-            widget.render(stack, mouseX, mouseY, Minecraft.getInstance().getRenderPartialTicks());
-        }
-
-        renderHoveredTooltip(stack, mouseX, mouseY);
-
-        super.func_230451_b_(stack, mouseX, mouseY);
+    protected void init() {
+        super.init();
+        buttons.addAll(widgets);
+        children.addAll(widgets);
+        reInitWidgets();
     }
 
-    protected void renderHoveredTooltip(MatrixStack stack, int mouseX, int mouseY) {
-        for (BaseWidget widget : baseWidgets) {
-            if (widget.isMouseOver(mouseX - guiLeft, mouseY - guiTop)) {
-                widget.renderTooltip(stack, mouseX - guiLeft, mouseY - guiTop, width, height);
-            }
+    protected void reInitWidgets() {
+        for (BaseScreenWidget widget : widgets) {
+            widget.onScreenInit(minecraft, guiLeft, guiTop, xSize, ySize);
         }
     }
 
-    protected void renderTooltip(MatrixStack stack, String text, int mouseX, int mouseY) {
-        renderTooltip(stack, ITextProperties.func_240652_a_(text), mouseX, mouseY);
-    }
-
-    protected <T extends BaseWidget> T addBaseWidget(T widget) {
-        this.baseWidgets.add(widget);
-        addListener(widget);
-        return widget;
-    }
-
-    protected <T extends Widget> T addWidget(T widget) {
-        this.widgets.add(widget);
-        addListener(widget);
-        return widget;
+    public void renderTooltip(MatrixStack stack, String text, int mouseX, int mouseY) {
+        renderTooltip(stack, Collections.singletonList(ClientUtils.processor(text)), mouseX, mouseY);
     }
 
     public static ResourceLocation guiTexture(String name) {

@@ -6,14 +6,13 @@ import io.github.ramboxeu.techworks.client.TechworksItemModelProvider;
 import io.github.ramboxeu.techworks.common.loot.TechworksLootProvider;
 import io.github.ramboxeu.techworks.common.tag.TechworksFluidTagProvider;
 import io.github.ramboxeu.techworks.common.tag.TechworksItemTagProvider;
-import io.github.ramboxeu.techworks.common.tag.TechworksItemTags;
 import net.minecraft.data.DataGenerator;
-import net.minecraftforge.client.model.generators.ExistingFileHelper;
+import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
 
-import static net.minecraftforge.fml.common.Mod.EventBusSubscriber.*;
+import static net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 
 @EventBusSubscriber(modid = Techworks.MOD_ID, bus = Bus.MOD)
 public class TechworksDataGenerator {

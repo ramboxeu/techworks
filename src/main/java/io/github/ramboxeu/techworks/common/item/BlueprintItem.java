@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class BlueprintItem extends Item {
-    private static final Style TOOLTIP_STYLE = Style.EMPTY.setColor(Color.func_240744_a_(TextFormatting.GOLD));
+    private static final Style TOOLTIP_STYLE = Style.EMPTY.setColor(Color.fromTextFormatting(TextFormatting.GOLD));
 
     private final Item machineItem;
     private final ResourceLocation recipeId;
@@ -55,6 +55,6 @@ public class BlueprintItem extends Item {
     }
 
     private static ITextComponent makeTooltipEntry(String type) {
-        return new TranslationTextComponent("tooltip.techworks.blueprint." + type).func_230530_a_(TOOLTIP_STYLE);
+        return new TranslationTextComponent("tooltip.techworks.blueprint." + type).setStyle(TOOLTIP_STYLE);
     }
 }

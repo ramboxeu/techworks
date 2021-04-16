@@ -1,5 +1,5 @@
 {
-  "parent": "block/cube",
+  "parent": "minecraft:block/cube",
   "textures": {
     "down": "techworks:block/machine_bottom",
     "up": "techworks:block/machine_top",

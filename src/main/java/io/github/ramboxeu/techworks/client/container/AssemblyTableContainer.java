@@ -6,7 +6,6 @@ import io.github.ramboxeu.techworks.common.util.inventory.SlotBuilder;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.server.SSetSlotPacket;
@@ -16,7 +15,7 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 
 import javax.annotation.Nonnull;
 
-public class AssemblyTableContainer extends Container implements AssemblyTableTile.IListener {
+public class AssemblyTableContainer extends BaseContainer implements AssemblyTableTile.IListener {
     private final AssemblyTableTile tile;
     private final PlayerEntity player;
     private final Slot outputSlot;

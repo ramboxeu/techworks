@@ -247,7 +247,7 @@ public class DevBlockTile extends BaseTechworksTile implements INamedContainerPr
                 int received = target.receiveEnergy(amount, false);
 
                 totalReceived += received;
-                if (received != amount) {
+                if (received != amount && size > 0) {
                     amount = (energyPerTick - totalReceived) / size; // same as above
                 }
             }
@@ -281,7 +281,7 @@ public class DevBlockTile extends BaseTechworksTile implements INamedContainerPr
                 int received = target.fill(new FluidStack(fluid, amount), IFluidHandler.FluidAction.EXECUTE);
 
                 totalReceived += received;
-                if (received != amount) {
+                if (received != amount && size > 0) {
                     amount = (liquidPerTick - totalReceived) / size;
                 }
             }
@@ -315,7 +315,7 @@ public class DevBlockTile extends BaseTechworksTile implements INamedContainerPr
                 int received = target.fill(new FluidStack(fluid, amount), IFluidHandler.FluidAction.EXECUTE);
 
                 totalReceived += received;
-                if (received != amount) {
+                if (received != amount && size > 0) {
                     amount = (gasPerTick - totalReceived) / size;
                 }
             }

@@ -1,0 +1,8 @@
+{
+  "textures": {
+    "particle": "techworks:block/item_transporter",
+    "base": "techworks:block/item_transporter",
+    "connector": "techworks:block/item_transporter_connector"
+  },
+  "loader": "techworks:cable"
+}

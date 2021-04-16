@@ -1,0 +1,8 @@
+{
+  "textures": {
+    "particle": "techworks:block/liquid_pipe",
+    "base": "techworks:block/liquid_pipe",
+    "connector": "techworks:block/liquid_pipe_connector"
+  },
+  "loader": "techworks:cable"
+}

@@ -20,7 +20,7 @@ public class ComponentsScreen extends ContainerScreen<ComponentsContainer> {
     }
 
     @Override // ComponentScreen.drawGuiBackgroundLayer
-    protected void func_230450_a_(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+    protected void drawGuiContainerBackgroundLayer(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         minecraft.textureManager.bindTexture(BACKGROUND_TEXTURE);
         int x = (width - xSize) / 2;
@@ -33,12 +33,12 @@ public class ComponentsScreen extends ContainerScreen<ComponentsContainer> {
     @Override // IRenderable.render
     public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         super.render(stack, mouseX, mouseY, partialTicks);
-        super.func_230459_a_(stack, mouseX, mouseY);
+        super.renderHoveredTooltip(stack, mouseX, mouseY);
     }
 
     @Override // ComponentScreen.drawGuiForegroundLayer
-    protected void func_230451_b_(MatrixStack stack, int mouseX, int mouseY) {
-        super.func_230451_b_(stack, mouseX, mouseY);
+    protected void drawGuiContainerForegroundLayer(MatrixStack stack, int mouseX, int mouseY) {
+        super.drawGuiContainerForegroundLayer(stack, mouseX, mouseY);
     }
 
     private void renderSlots(MatrixStack stack) {

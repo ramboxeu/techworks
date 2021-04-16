@@ -31,7 +31,7 @@ public class DevFluidHandler implements IFluidHandler, INBTSerializable<Compound
     @NotNull
     @Override
     public FluidStack getFluidInTank(int tank) {
-        return new FluidStack(fluid, Integer.MAX_VALUE);
+        return new FluidStack(fluid, Short.MAX_VALUE);
     }
 
     @Override
@@ -71,7 +71,7 @@ public class DevFluidHandler implements IFluidHandler, INBTSerializable<Compound
     @NotNull
     @Override
     public FluidStack drain(int maxDrain, FluidAction action) {
-        return new FluidStack(fluid, maxDrain);
+        return drain(new FluidStack(fluid, maxDrain), action);
     }
 
     public void setFluid(Fluid fluid) {

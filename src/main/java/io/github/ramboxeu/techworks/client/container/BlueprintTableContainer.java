@@ -6,7 +6,6 @@ import io.github.ramboxeu.techworks.common.tile.BlueprintTableTile;
 import io.github.ramboxeu.techworks.common.util.inventory.SlotBuilder;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IWorldPosCallable;
@@ -18,7 +17,7 @@ import net.minecraftforge.items.wrapper.RecipeWrapper;
 
 import javax.annotation.Nonnull;
 
-public class BlueprintTableContainer extends Container {
+public class BlueprintTableContainer extends BaseContainer {
     private final ItemStackHandler inventory;
     private final ItemStackHandler outputInv;
     private final IWorldPosCallable callable;

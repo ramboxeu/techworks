@@ -1,25 +1,25 @@
 package io.github.ramboxeu.techworks.client.container.machine;
 
 import io.github.ramboxeu.techworks.client.container.BaseMachineContainer;
-import io.github.ramboxeu.techworks.common.registration.Registration;
 import io.github.ramboxeu.techworks.common.registration.TechworksContainers;
-import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
-import io.github.ramboxeu.techworks.common.tile.machine.ElectricFurnaceTile;
 import io.github.ramboxeu.techworks.common.tile.machine.ElectricGrinderTile;
 import io.github.ramboxeu.techworks.common.util.PredicateUtils;
-import io.github.ramboxeu.techworks.common.util.inventory.InventoryBuilder;
-import io.github.ramboxeu.techworks.common.util.inventory.SlotBuilder;
+import io.github.ramboxeu.techworks.common.util.Side;
+import io.github.ramboxeu.techworks.common.util.machineio.config.HandlerConfig;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 
+import java.util.List;
+import java.util.Map;
+
 public class ElectricGrinderContainer extends BaseMachineContainer<ElectricGrinderTile> {
     private int workTime;
     private int workCounter;
 
-    public ElectricGrinderContainer(int id, PlayerInventory playerInventory, ElectricGrinderTile machineTile) {
-        super(TechworksContainers.ELECTRIC_GRINDER.getContainer(), id, playerInventory, machineTile);
+    public ElectricGrinderContainer(int id, PlayerInventory playerInventory, ElectricGrinderTile machineTile, Map<Side, List<HandlerConfig>> dataMap) {
+        super(TechworksContainers.ELECTRIC_GRINDER.getContainer(), id, playerInventory, machineTile, dataMap);
 
 //        this.trackInt(new IntReferenceHolder() {
 //            @Override

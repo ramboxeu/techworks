@@ -16,11 +16,13 @@ import org.lwjgl.opengl.GL11;
 * Some rendering tips:
 *  1. Vertex placement:
 *    Seems like vertexes need to be placed in a specific configuration to work properly.
-*    This configuration is as follows: (minX, maxY), (maxX, maxY), (maxX, minY), (minX, minY)
+*    This configuration is as follows: (minX, maxY) (left down), (maxX, maxY) (left up), (maxX, minY) (right up), (minX, minY) (right down)
 *
 */
 
 public class RenderUtils {
+    public static final ResourceLocation BLOCK_ATLAS_LOC = PlayerContainer.LOCATION_BLOCKS_TEXTURE;
+
     private static final Minecraft MC = Minecraft.getInstance();
 
     public static void drawFluid(MatrixStack stack, int x, int y, int width, int height, Color color, ResourceLocation stillTexture) {

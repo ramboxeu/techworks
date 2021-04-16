@@ -1,22 +1,23 @@
 package io.github.ramboxeu.techworks.client.container.machine;
 
 import io.github.ramboxeu.techworks.client.container.BaseMachineContainer;
-import io.github.ramboxeu.techworks.client.container.ObjectReferenceHolder;
 import io.github.ramboxeu.techworks.client.container.holder.FluidStackHolder;
-import io.github.ramboxeu.techworks.common.registration.Registration;
 import io.github.ramboxeu.techworks.common.registration.TechworksContainers;
 import io.github.ramboxeu.techworks.common.tile.machine.BoilerTile;
 import io.github.ramboxeu.techworks.common.util.PredicateUtils;
+import io.github.ramboxeu.techworks.common.util.Side;
 import io.github.ramboxeu.techworks.common.util.inventory.SlotBuilder;
+import io.github.ramboxeu.techworks.common.util.machineio.config.HandlerConfig;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.IntReferenceHolder;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandler;
+
+import java.util.List;
+import java.util.Map;
 
 public class BoilerContainer extends BaseMachineContainer<BoilerTile> {
     private int cookTime;
@@ -26,8 +27,8 @@ public class BoilerContainer extends BaseMachineContainer<BoilerTile> {
     private FluidStack waterStack = FluidStack.EMPTY;
     private FluidStack steamStack = FluidStack.EMPTY;
 
-    public BoilerContainer(int id, PlayerInventory playerInventory, BoilerTile tile) {
-        super(TechworksContainers.BOILER.getContainer(), id, playerInventory, tile);
+    public BoilerContainer(int id, PlayerInventory playerInventory, BoilerTile tile, Map<Side, List<HandlerConfig>> dataMap) {
+        super(TechworksContainers.BOILER.getContainer(), id, playerInventory, tile, dataMap);
 
         trackInt(new IntReferenceHolder() {
             @Override
