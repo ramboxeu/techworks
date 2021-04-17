@@ -1,27 +1,24 @@
 package io.github.ramboxeu.techworks.common.util;
 
-import com.google.gson.JsonPrimitive;
 import io.github.ramboxeu.techworks.Techworks;
-import io.github.ramboxeu.techworks.api.component.ComponentItem;
 import io.github.ramboxeu.techworks.api.component.base.BaseEnergyStorageComponent;
 import io.github.ramboxeu.techworks.api.component.base.BaseGasStorageComponent;
 import io.github.ramboxeu.techworks.api.component.base.BaseLiquidStorageComponent;
-import io.github.ramboxeu.techworks.common.capability.impl.EnergyBattery;
+import io.github.ramboxeu.techworks.common.energy.EnergyBattery;
 import io.github.ramboxeu.techworks.common.util.machineio.config.HandlerConfig;
 import io.github.ramboxeu.techworks.common.util.machineio.data.HandlerData;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.*;
-import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -35,11 +32,8 @@ import org.apache.commons.lang3.tuple.Pair;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.Random;
 
 public class Utils {
-    private static final Random RANDOM = new Random();
 
     public static Direction distributeFluid(IFluidHandler sourceTank, Direction next, TileEntity sourceTe) {
         if (!sourceTe.hasWorld()) {
@@ -94,34 +88,6 @@ public class Utils {
         return next != null ? next.rotateY() : null;
     }
 
-    public static void damageComponent(ItemStack componentStack) {
-        if (!(componentStack.getItem() instanceof ComponentItem) || !componentStack.isDamageable()) {
-            return;
-        }
-
-        ComponentItem component = (ComponentItem) componentStack.getItem();
-        float chance = 1 - ((component.getLevel() * 2) / 10.0F);
-        Techworks.LOGGER.debug("Component: {}{Level: {}, Durability: {}); Chance: {}", component, component.getLevel(), componentStack.getDamage(), chance);
-
-        float rand = RANDOM.nextFloat();
-
-        Techworks.LOGGER.debug("Rand: {}", rand);
-        if (rand <= chance) {
-            if (componentStack.getDamage() != componentStack.getMaxDamage() - 1) {
-                componentStack.setDamage(componentStack.getDamage() + 1);
-            }
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <T> T castOrDefault(Object value, T other) {
-        try {
-            return (T)value;
-        } catch (ClassCastException e) {
-            return other;
-        }
-    }
-
     public static String stringifyFluidStack(FluidStack stack) {
         try {
             return String.format("Fluid: %s, %dmb",
@@ -130,58 +96,6 @@ public class Utils {
         } catch (NullPointerException e) {
             return "Fluid: null";
         }
-    }
-
-    public static ITextComponent getFluidName(FluidStack stack) {
-        if (stack.isEmpty()) {
-            // Technically this could be fluid.minecraft.empty,
-            // but to avoid any possible problems techworks namespace is used
-            return new TranslationTextComponent("fluid.techworks.empty");
-        } else {
-            return stack.getFluid().getAttributes().getDisplayName(stack);
-        }
-    }
-
-    public static float clampFloat(float a) {
-        if (a > 1) {
-            return 1;
-        } else if (a < 0) {
-            return 0;
-        } else {
-            return a;
-        }
-    }
-
-    public static List<ItemStack> concatItemHandlers(IItemHandler ...handlers) {
-        ArrayList<ItemStack> stacks = new ArrayList<>();
-
-        for (IItemHandler handler : handlers) {
-            for (int i = 0; i < handler.getSlots(); i++) {
-                stacks.add(handler.getStackInSlot(i));
-            }
-        }
-
-        return stacks;
-    }
-
-    public static int getDirectionBinIndex(Direction direction) {
-        switch (direction) {
-            case DOWN:
-                return 1;
-            case UP:
-                return 2;
-            case NORTH:
-                return 4;
-            case SOUTH:
-                return 8;
-            case WEST:
-                return 16;
-            case EAST:
-                return 32;
-        }
-
-        // This shouldn't happen, ever
-        return -1;
     }
 
     public static void readComponentTank(ItemStack stack, FluidTank tank) {
@@ -258,10 +172,6 @@ public class Utils {
         return new FluidStack(fluid, amount);
     }
 
-    public static int getEnergyFromNBT(CompoundNBT nbt) {
-        return nbt.getInt("Energy");
-    }
-
     public static void writeInvToNbt(CompoundNBT nbt, String propName, IItemHandler inv) {
         INBT prop = CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.writeNBT(inv, null);
 
@@ -280,54 +190,6 @@ public class Utils {
         }
     }
 
-    public static void writeBatteryToNbt(CompoundNBT nbt, String propName, EnergyBattery battery) {
-        CompoundNBT batteryTag = new CompoundNBT();
-        batteryTag.putInt("Capacity", battery.getMaxEnergyStored());
-//        batteryTag.putInt("MaxReceive", battery.getMaxReceive());
-//        batteryTag.putInt("MaxExtract", battery.getMaxExtract());
-        batteryTag.putInt("Energy", battery.getEnergyStored());
-
-        nbt.put(propName, batteryTag);
-    }
-
-    public static void readBatteryFromNbt(CompoundNBT nbt, String propName, EnergyBattery battery) {
-        if (nbt.contains(propName, Constants.NBT.TAG_COMPOUND)) {
-            CompoundNBT batteryTag = nbt.getCompound(propName);
-
-            battery.setCapacity(batteryTag.getInt("Capacity"));
-//            battery.setTransfer(batteryTag.getInt("MaxReceive"), batteryTag.getInt("MaxExtract"));
-            battery.setEnergy(batteryTag.getInt("Energy"));
-        } else {
-            Techworks.LOGGER.warn("Tried to read battery from {}, but '{}' was not found or it's not a compound", nbt, propName);
-        }
-    }
-
-
-    @Nullable
-    public static INBT getNbtFromJson(JsonPrimitive primitive) {
-        if (primitive.isString()) {
-            return StringNBT.valueOf(primitive.getAsString());
-        } else if (primitive.isBoolean()) {
-            return ByteNBT.valueOf(primitive.getAsBoolean());
-        } else if (primitive.isNumber()) {
-            try {
-                int number = primitive.getAsInt();
-                return IntNBT.valueOf(number);
-            } catch(NumberFormatException e) {
-                try {
-                    double number = primitive.getAsDouble();
-                    return DoubleNBT.valueOf(number);
-                } catch (NumberFormatException ignored) {}
-            }
-        }
-
-        return null;
-    }
-
-    public static Direction getFacingFromPos(World world, BlockPos pos) {
-        return world.getBlockState(pos).get(BlockStateProperties.HORIZONTAL_FACING);
-    }
-
     @Nullable
     public static <T extends HandlerConfig> T getExistingConfig(List<T> configs, HandlerData data) {
         return configs.stream().filter(config -> config.getBaseData() == data).findFirst().orElse(null);
@@ -342,42 +204,7 @@ public class Utils {
         return Math.min(Math.max(0.0f, progress), 1.0f);
     }
 
-    public static Direction getDirectionFromPos(BlockPos a, BlockPos b) {
-        if (a.equals(b)) {
-            return null;
-        }
-
-        BlockPos c = a.add(-b.getX(), -b.getY(), -b.getZ());
-
-        int horizontalAngle = (int) Math.toDegrees(Math.atan2(c.getX(), c.getZ()));
-        int verticalAngle = (int) Math.toDegrees(Math.atan(c.getY()));
-
-        if (verticalAngle == 0) {
-            switch (horizontalAngle) {
-                case 0: return Direction.NORTH;
-                case 90: return Direction.WEST;
-                case -90: return Direction.EAST;
-                case 180: return Direction.SOUTH;
-            }
-        } else {
-            switch (verticalAngle) {
-                case -45: return Direction.UP;
-                case 45: return Direction.DOWN;
-            }
-        }
-
-        return null;
-    }
-
-    public static <T extends Enum<T>> Optional<T> deserializeEnum(CompoundNBT nbt, String key, Class<T> clazz) {
-        try {
-            return Optional.of(Enum.valueOf(clazz, nbt.getString(key)));
-        } catch (IllegalArgumentException ignored) {
-            return Optional.empty();
-        }
-    }
-
-    public static <T extends Enum<T>> void serializeEnum(CompoundNBT nbt, String key, T value) {
-        nbt.putString(key, value.name());
+    public static <T> T unpack(LazyOptional<T> holder) {
+        return holder.orElseThrow(() -> new RuntimeException("Present LazyOptional with no value"));
     }
 }

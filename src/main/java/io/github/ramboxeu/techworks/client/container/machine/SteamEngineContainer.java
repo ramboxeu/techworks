@@ -2,7 +2,7 @@ package io.github.ramboxeu.techworks.client.container.machine;
 import io.github.ramboxeu.techworks.client.container.BaseMachineContainer;
 import io.github.ramboxeu.techworks.common.registration.TechworksContainers;
 import io.github.ramboxeu.techworks.common.tile.machine.SteamEngineTile;
-import io.github.ramboxeu.techworks.common.util.PredicateUtils;
+import io.github.ramboxeu.techworks.common.util.Predicates;
 import io.github.ramboxeu.techworks.common.util.Side;
 import io.github.ramboxeu.techworks.common.util.machineio.config.HandlerConfig;
 import net.minecraft.entity.player.PlayerEntity;
@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class SteamEngineContainer extends BaseMachineContainer<SteamEngineTile> {
     public SteamEngineContainer(int id, PlayerInventory playerInventory, SteamEngineTile machineTile, Map<Side, List<HandlerConfig>> dataMap) {
-        super(TechworksContainers.STEAM_ENGINE.getContainer(), id, playerInventory, machineTile, dataMap);
+        super(TechworksContainers.STEAM_ENGINE.get(), id, playerInventory, machineTile, dataMap);
     }
 
 //    @Override
@@ -40,7 +40,7 @@ public class SteamEngineContainer extends BaseMachineContainer<SteamEngineTile> 
             slotItemStack = slot.getStack();
             itemStack = slotItemStack.copy();
             if (index < 36) {
-                if (PredicateUtils.isEnergyStorage(itemStack)) {
+                if (Predicates.isEnergyStorage(itemStack)) {
                     Slot energyOutput = this.inventorySlots.get(37);
 
                     ItemStack itemStack1 = ItemStack.EMPTY;

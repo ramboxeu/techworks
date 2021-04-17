@@ -1,7 +1,7 @@
 package io.github.ramboxeu.techworks.common.recipe;
 
 import com.google.gson.JsonObject;
-import io.github.ramboxeu.techworks.common.registration.Registration;
+import io.github.ramboxeu.techworks.common.registration.TechworksRecipes;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
@@ -59,12 +59,12 @@ public class TechworksSmeltingRecipe implements IRecipe<IInventory> {
 
     @Override
     public IRecipeSerializer<?> getSerializer() {
-        return Registration.TECHWORKS_SMELTING_RECIPE_SERIALIZER.get();
+        return TechworksRecipes.SMELTING.getSerializer();
     }
 
     @Override
     public IRecipeType<?> getType() {
-        return Registration.TECHWORKS_SMELTING_RECIPE;
+        return TechworksRecipes.SMELTING.get();
     }
 
     public int getEnergy() {

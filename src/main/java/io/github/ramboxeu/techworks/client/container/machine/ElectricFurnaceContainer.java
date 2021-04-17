@@ -6,7 +6,7 @@ import io.github.ramboxeu.techworks.client.screen.widget.inventory.SlotWidget;
 import io.github.ramboxeu.techworks.client.screen.widget.progress.ArrowProgressWidget;
 import io.github.ramboxeu.techworks.common.registration.TechworksContainers;
 import io.github.ramboxeu.techworks.common.tile.machine.ElectricFurnaceTile;
-import io.github.ramboxeu.techworks.common.util.PredicateUtils;
+import io.github.ramboxeu.techworks.common.util.Predicates;
 import io.github.ramboxeu.techworks.common.util.Side;
 import io.github.ramboxeu.techworks.common.util.machineio.config.HandlerConfig;
 import net.minecraft.entity.item.ExperienceOrbEntity;
@@ -30,7 +30,7 @@ public class ElectricFurnaceContainer extends BaseMachineContainer<ElectricFurna
     }
 
     public ElectricFurnaceContainer(int id, PlayerInventory playerInventory, ElectricFurnaceTile tile, Map<Side, List<HandlerConfig>> dataMap, IWorldPosCallable callable) {
-        super(TechworksContainers.ELECTRIC_FURNACE.getContainer(), id, playerInventory, tile, dataMap);
+        super(TechworksContainers.ELECTRIC_FURNACE.get(), id, playerInventory, tile, dataMap);
 
 //        addWidget(new EnergyDisplayWidget(this, 8, 14, tile.getBatteryData()));
         addWidget(new SlotWidget(this, 55, 34, 0, false, tile.getInvData()));
@@ -85,7 +85,7 @@ public class ElectricFurnaceContainer extends BaseMachineContainer<ElectricFurna
             slotItemStack = slot.getStack();
             itemStack = slotItemStack.copy();
             if (index < 36) {
-                if (PredicateUtils.isEnergyStorage(itemStack)) {
+                if (Predicates.isEnergyStorage(itemStack)) {
                     Slot energyOutput = this.inventorySlots.get(37);
 
                     ItemStack itemStack1 = ItemStack.EMPTY;

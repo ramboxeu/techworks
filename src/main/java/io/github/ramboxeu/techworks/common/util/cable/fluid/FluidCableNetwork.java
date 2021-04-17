@@ -1,7 +1,7 @@
 package io.github.ramboxeu.techworks.common.util.cable.fluid;
 
-import io.github.ramboxeu.techworks.common.util.FluidUtils;
 import io.github.ramboxeu.techworks.common.util.Pair;
+import io.github.ramboxeu.techworks.common.util.Predicates;
 import io.github.ramboxeu.techworks.common.util.cable.network.*;
 import io.github.ramboxeu.techworks.common.util.cable.pathfinding.Pathfinding;
 import net.minecraft.fluid.Fluid;
@@ -53,7 +53,7 @@ public class FluidCableNetwork extends BaseCableNetwork {
             return true;
 
         if (!stack.isEmpty()) {
-            if (FluidUtils.isLiquid(stack))
+            if (Predicates.isLiquid(stack))
                 return type == NetworkType.LIQUID;
 
             return stack.getFluid() == fluid;

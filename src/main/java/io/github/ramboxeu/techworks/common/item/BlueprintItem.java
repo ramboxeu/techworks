@@ -33,13 +33,13 @@ public class BlueprintItem extends Item {
 
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        if (this == TechworksItems.BOILER_BLUEPRINT.getItem()) {
+        if (this == TechworksItems.BOILER_BLUEPRINT.get()) {
             tooltip.add(makeTooltipEntry("boiler"));
-        } else if (this == TechworksItems.STEAM_ENGINE_BLUEPRINT.getItem()) {
+        } else if (this == TechworksItems.STEAM_ENGINE_BLUEPRINT.get()) {
             tooltip.add(makeTooltipEntry("steam_engine"));
-        } else if (this == TechworksItems.ELECTRIC_FURNACE_BLUEPRINT.getItem()) {
+        } else if (this == TechworksItems.ELECTRIC_FURNACE_BLUEPRINT.get()) {
             tooltip.add(makeTooltipEntry("electric_furnace"));
-        } else if (this == TechworksItems.ELECTRIC_GRINDER_BLUEPRINT.getItem()) {
+        } else if (this == TechworksItems.ELECTRIC_GRINDER_BLUEPRINT.get()) {
             tooltip.add(makeTooltipEntry("electric_grinder"));
         }
 

@@ -2,8 +2,7 @@ package io.github.ramboxeu.techworks.common.recipe;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import io.github.ramboxeu.techworks.Techworks;
-import io.github.ramboxeu.techworks.common.registration.Registration;
+import io.github.ramboxeu.techworks.common.registration.TechworksRecipes;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
@@ -55,18 +54,15 @@ public class ElectricGrinderRecipe implements IRecipe<IInventory> {
 
     @Override
     public IRecipeSerializer<?> getSerializer() {
-        return Registration.GRINDING_RECIPE_SERIALIZER.get();
+        return TechworksRecipes.GRINDING.getSerializer();
     }
 
     @Override
     public IRecipeType<?> getType() {
-        return Registration.GRINDING_RECIPE;
+        return TechworksRecipes.GRINDING.get();
     }
 
     public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<ElectricGrinderRecipe> {
-        public Serializer() {
-            setRegistryName(new ResourceLocation(Techworks.MOD_ID, "grinding"));
-        }
 
         @Override
         public ElectricGrinderRecipe read(ResourceLocation recipeId, JsonObject json) {

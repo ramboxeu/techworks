@@ -1,6 +1,6 @@
 package io.github.ramboxeu.techworks.common.util.machineio.config;
 
-import io.github.ramboxeu.techworks.common.capability.impl.IGasTank;
+import io.github.ramboxeu.techworks.common.fluid.handler.IGasTank;
 import io.github.ramboxeu.techworks.common.util.machineio.StorageMode;
 import io.github.ramboxeu.techworks.common.util.machineio.data.GasHandlerData;
 

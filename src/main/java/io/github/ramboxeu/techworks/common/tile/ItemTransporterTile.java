@@ -4,7 +4,7 @@ import io.github.ramboxeu.techworks.common.network.TechworksPacketHandler;
 import io.github.ramboxeu.techworks.common.registration.TechworksTiles;
 import io.github.ramboxeu.techworks.common.util.HandlerStorage;
 import io.github.ramboxeu.techworks.common.util.ItemUtils;
-import io.github.ramboxeu.techworks.common.util.PredicateUtils;
+import io.github.ramboxeu.techworks.common.util.Predicates;
 import io.github.ramboxeu.techworks.common.util.cable.item.ItemNetworkHolder;
 import io.github.ramboxeu.techworks.common.util.cable.item.ItemPacket;
 import io.github.ramboxeu.techworks.common.util.cable.network.*;
@@ -24,7 +24,7 @@ public class ItemTransporterTile extends BaseCableTile {
     private ItemNetworkHolder network;
 
     public ItemTransporterTile() {
-        super(TechworksTiles.ITEM_TRANSPORTER.getTileType(), NetworkType.ITEM);
+        super(TechworksTiles.ITEM_TRANSPORTER.get(), NetworkType.ITEM);
     }
 
     @Override
@@ -60,7 +60,7 @@ public class ItemTransporterTile extends BaseCableTile {
 
     @Override
     protected boolean isTileValid(Direction side, TileEntity tile) {
-        return PredicateUtils.isItemHandler(side, tile);
+        return Predicates.isItemHandler(side, tile);
     }
 
     @Override

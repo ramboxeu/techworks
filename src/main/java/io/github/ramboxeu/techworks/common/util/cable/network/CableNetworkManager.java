@@ -1,6 +1,6 @@
 package io.github.ramboxeu.techworks.common.util.cable.network;
 
-import io.github.ramboxeu.techworks.common.util.Utils;
+import io.github.ramboxeu.techworks.common.util.NBTUtils;
 import io.github.ramboxeu.techworks.common.util.cable.energy.EnergyCableNetwork;
 import io.github.ramboxeu.techworks.common.util.cable.energy.EnergyNetworkHolder;
 import io.github.ramboxeu.techworks.common.util.cable.fluid.FluidCableNetwork;
@@ -36,7 +36,7 @@ public class CableNetworkManager extends WorldSavedData {
         for (int i = 0; i < listTag.size(); i++) {
             CompoundNBT networkTag = listTag.getCompound(i);
             UUID id = networkTag.getUniqueId("Id");
-            NetworkType type = Utils.deserializeEnum(networkTag, "NetworkType", NetworkType.class).get();
+            NetworkType type = NBTUtils.deserializeEnum(networkTag, "NetworkType", NetworkType.class).get();
             networks.put(id, type.createNetwork(id));
         }
     }
@@ -51,7 +51,7 @@ public class CableNetworkManager extends WorldSavedData {
             ICableNetwork network = entry.getValue();
 
             networkTag.putUniqueId("Id", entry.getKey());
-            Utils.serializeEnum(networkTag, "NetworkType", network.getType());
+            NBTUtils.serializeEnum(networkTag, "NetworkType", network.getType());
             listTag.set(i++, networkTag);
         }
 

@@ -2,7 +2,7 @@ package io.github.ramboxeu.techworks.common.tile;
 
 import io.github.ramboxeu.techworks.client.container.AssemblyTableContainer;
 import io.github.ramboxeu.techworks.common.recipe.MachineAssemblyRecipe;
-import io.github.ramboxeu.techworks.common.registration.Registration;
+import io.github.ramboxeu.techworks.common.registration.TechworksRecipes;
 import io.github.ramboxeu.techworks.common.registration.TechworksTiles;
 import io.github.ramboxeu.techworks.common.tag.TechworksItemTags;
 import io.github.ramboxeu.techworks.common.util.Utils;
@@ -37,7 +37,7 @@ public class AssemblyTableTile extends BaseTechworksTile implements INamedContai
     private final List<IListener> listeners;
 
     public AssemblyTableTile() {
-        super(TechworksTiles.ASSEMBLY_TABLE.getTileType());
+        super(TechworksTiles.ASSEMBLY_TABLE.get());
 
         inventory = new ItemStackHandler(15) {
             @Override
@@ -74,7 +74,7 @@ public class AssemblyTableTile extends BaseTechworksTile implements INamedContai
 
     private void craftingInventoryChanged() {
         if (world != null && !world.isRemote) {
-            Optional<MachineAssemblyRecipe> optional = world.getRecipeManager().getRecipe(Registration.MACHINE_ASSEMBLY_RECIPE, recipeInv, world);
+            Optional<MachineAssemblyRecipe> optional = world.getRecipeManager().getRecipe(TechworksRecipes.MACHINE_ASSEMBLY.get(), recipeInv, world);
 
             if (optional.isPresent()) {
                 if (outputInv.extractItem(0, 1, true).isEmpty()) {

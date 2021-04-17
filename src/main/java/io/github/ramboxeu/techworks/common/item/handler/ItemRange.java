@@ -1,4 +1,4 @@
-package io.github.ramboxeu.techworks.common.capability.impl;
+package io.github.ramboxeu.techworks.common.item.handler;
 
 import net.minecraftforge.items.IItemHandler;
 

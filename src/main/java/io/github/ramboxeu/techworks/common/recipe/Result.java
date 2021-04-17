@@ -1,8 +1,11 @@
 package io.github.ramboxeu.techworks.common.recipe;
 
-import com.google.gson.*;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSyntaxException;
 import io.github.ramboxeu.techworks.Techworks;
-import io.github.ramboxeu.techworks.common.util.Utils;
+import io.github.ramboxeu.techworks.common.util.NBTUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
@@ -160,7 +163,7 @@ public class Result {
                             continue;
                         }
 
-                        switchMap.put(entry.getKey(), Utils.getNbtFromJson(entry.getValue().getAsJsonPrimitive()));
+                        switchMap.put(entry.getKey(), NBTUtils.getNbtFromJson(entry.getValue().getAsJsonPrimitive()));
                     }
 
                     parent.addChild((nbt, map) -> {

@@ -36,12 +36,12 @@ public class Techworks {
 
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        Registration.addToEventBus();
         TechworksBlocks.BLOCKS.register(modEventBus);
         TechworksTiles.TILES.register(modEventBus);
         TechworksItems.ITEMS.register(modEventBus);
         TechworksContainers.CONTAINERS.register(modEventBus);
-        TechworksFluids.addToEventBus();
+        TechworksFluids.FLUIDS.register(modEventBus);
+        TechworksRecipes.RECIPES.register(modEventBus);
 
         modEventBus.addListener(this::setup);
         modEventBus.addListener(this::clientSetup);
@@ -60,8 +60,8 @@ public class Techworks {
         TechworksTiles.bindRenderers();
         TechworksContainers.registerScreenFactories();
 
-        RenderTypeLookup.setRenderLayer(TechworksBlocks.ITEM_TRANSPORTER.getBlock(), RenderType.getTranslucent());
-        RenderTypeLookup.setRenderLayer(TechworksBlocks.LIQUID_PIPE.getBlock(), RenderType.getTranslucent());
+        RenderTypeLookup.setRenderLayer(TechworksBlocks.ITEM_TRANSPORTER.get(), RenderType.getTranslucent());
+        RenderTypeLookup.setRenderLayer(TechworksBlocks.LIQUID_PIPE.get(), RenderType.getTranslucent());
 
         MinecraftForge.EVENT_BUS.addListener(DebugInfoRenderer::render);
         MinecraftForge.EVENT_BUS.register(TechworksClientEvents.class);

@@ -5,7 +5,7 @@ import io.github.ramboxeu.techworks.api.component.base.BaseEnergyStorageComponen
 import io.github.ramboxeu.techworks.api.component.base.BaseGasStorageComponent;
 import io.github.ramboxeu.techworks.api.component.base.BaseSteamTurbineComponent;
 import io.github.ramboxeu.techworks.client.container.machine.SteamEngineContainer;
-import io.github.ramboxeu.techworks.common.capability.impl.EnergyBattery;
+import io.github.ramboxeu.techworks.common.energy.EnergyBattery;
 import io.github.ramboxeu.techworks.common.registration.TechworksTiles;
 import io.github.ramboxeu.techworks.common.tag.TechworksFluidTags;
 import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
@@ -56,7 +56,7 @@ public class SteamEngineTile extends BaseMachineTile {
     private int workTime = 1;
 
     public SteamEngineTile() {
-        super(TechworksTiles.STEAM_ENGINE.getTileType(), new Builder(3)
+        super(TechworksTiles.STEAM_ENGINE.get(), new Builder(3)
                         .slot(0, new Slot()
                                 .predicate(stack -> stack.getItem() instanceof BaseGasStorageComponent)
                                 .texture(new ResourceLocation(Techworks.MOD_ID, "textures/gui/slot/gas_storage_component_overlay.png"))

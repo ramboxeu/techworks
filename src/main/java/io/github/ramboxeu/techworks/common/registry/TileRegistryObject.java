@@ -5,18 +5,18 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.RegistryObject;
 
-public class TileRegistryObject<TILE extends TileEntity> {
-    private final RegistryObject<TileEntityType<TILE>> tileTypeRegistryObject;
+public final class TileRegistryObject<T extends TileEntity> {
+    private final RegistryObject<TileEntityType<T>> tile;
 
-    public TileRegistryObject(RegistryObject<TileEntityType<TILE>> tileTypeRegistryObject) {
-        this.tileTypeRegistryObject = tileTypeRegistryObject;
+    public TileRegistryObject(RegistryObject<TileEntityType<T>> tile) {
+        this.tile = tile;
     }
 
-    public TileEntityType<TILE> getTileType() {
-        return tileTypeRegistryObject.get();
+    public TileEntityType<T> get() {
+        return tile.get();
     }
 
-    public ResourceLocation getRegistryName() {
-        return tileTypeRegistryObject.getId();
+    public ResourceLocation getId() {
+        return tile.getId();
     }
 }

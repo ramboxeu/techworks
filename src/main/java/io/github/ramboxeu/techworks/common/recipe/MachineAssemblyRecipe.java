@@ -4,8 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import io.github.ramboxeu.techworks.Techworks;
-import io.github.ramboxeu.techworks.common.registration.Registration;
+import io.github.ramboxeu.techworks.common.registration.TechworksRecipes;
 import io.github.ramboxeu.techworks.common.tag.TechworksItemTags;
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.inventory.IInventory;
@@ -172,12 +171,12 @@ public class MachineAssemblyRecipe implements IRecipe<IInventory> {
 
     @Override
     public IRecipeSerializer<?> getSerializer() {
-        return Registration.MACHINE_ASSEMBLY_RECIPE_SERIALIZER.get();
+        return TechworksRecipes.MACHINE_ASSEMBLY.getSerializer();
     }
 
     @Override
     public IRecipeType<?> getType() {
-        return Registration.MACHINE_ASSEMBLY_RECIPE;
+        return TechworksRecipes.MACHINE_ASSEMBLY.get();
     }
 
     @Override
@@ -187,9 +186,6 @@ public class MachineAssemblyRecipe implements IRecipe<IInventory> {
 
     @MethodsReturnNonnullByDefault
     public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<MachineAssemblyRecipe> {
-        public Serializer() {
-            setRegistryName(new ResourceLocation(Techworks.MOD_ID, "machine_assembly"));
-        }
 
         @Override
         @ParametersAreNonnullByDefault

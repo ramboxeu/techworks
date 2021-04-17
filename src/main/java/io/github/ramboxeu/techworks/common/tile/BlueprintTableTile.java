@@ -25,7 +25,7 @@ public class BlueprintTableTile extends BaseTechworksTile implements INamedConta
     private final ItemStackHandler inventory;
 
     public BlueprintTableTile() {
-        super(TechworksTiles.BLUEPRINT_TABLE.getTileType());
+        super(TechworksTiles.BLUEPRINT_TABLE.get());
 
         inventory = new ItemStackHandler(2) {
             @Override
@@ -37,7 +37,7 @@ public class BlueprintTableTile extends BaseTechworksTile implements INamedConta
             public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
                 return slot == 0 ?
                         stack.getItem().isIn(Tags.Items.DYES_WHITE) :
-                        stack.getItem() == TechworksItems.EMPTY_BLUEPRINT.getItem();
+                        stack.getItem() == TechworksItems.EMPTY_BLUEPRINT.get();
             }
         };
     }

@@ -22,6 +22,7 @@ import org.lwjgl.opengl.GL11;
 
 public class RenderUtils {
     public static final ResourceLocation BLOCK_ATLAS_LOC = PlayerContainer.LOCATION_BLOCKS_TEXTURE;
+    public static final ResourceLocation MISSING_TEXTURE = new ResourceLocation("missingno");
 
     private static final Minecraft MC = Minecraft.getInstance();
 

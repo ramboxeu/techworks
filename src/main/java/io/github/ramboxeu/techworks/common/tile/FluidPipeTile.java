@@ -3,7 +3,7 @@ package io.github.ramboxeu.techworks.common.tile;
 import io.github.ramboxeu.techworks.common.registry.TileRegistryObject;
 import io.github.ramboxeu.techworks.common.util.FluidUtils;
 import io.github.ramboxeu.techworks.common.util.HandlerStorage;
-import io.github.ramboxeu.techworks.common.util.PredicateUtils;
+import io.github.ramboxeu.techworks.common.util.Predicates;
 import io.github.ramboxeu.techworks.common.util.cable.fluid.FluidNetworkHolder;
 import io.github.ramboxeu.techworks.common.util.cable.network.ICableNetworkHolder;
 import io.github.ramboxeu.techworks.common.util.cable.network.IEndpointNode;
@@ -21,7 +21,7 @@ public class FluidPipeTile extends BaseCableTile {
     private FluidNetworkHolder network;
 
     public FluidPipeTile(TileRegistryObject<FluidPipeTile> tileType, NetworkType type) {
-        super(tileType.getTileType(), type);
+        super(tileType.get(), type);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class FluidPipeTile extends BaseCableTile {
 
     @Override
     protected boolean isTileValid(Direction side, TileEntity tile) {
-        return PredicateUtils.isFluidHandler(side, tile);
+        return Predicates.isFluidHandler(side, tile);
     }
 
     @Override

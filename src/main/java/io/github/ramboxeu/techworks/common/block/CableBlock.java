@@ -4,7 +4,7 @@ import io.github.ramboxeu.techworks.api.wrench.IWrenchable;
 import io.github.ramboxeu.techworks.client.model.cable.CableModel;
 import io.github.ramboxeu.techworks.common.registry.TileRegistryObject;
 import io.github.ramboxeu.techworks.common.tile.BaseCableTile;
-import io.github.ramboxeu.techworks.common.util.Utils;
+import io.github.ramboxeu.techworks.common.util.MathUtils;
 import io.github.ramboxeu.techworks.common.util.cable.connection.CableConnections;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -42,7 +42,7 @@ public class CableBlock extends Block implements IWrenchable {
     @Nullable
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return tile.getTileType().create();
+        return tile.get().create();
     }
 
     @Override
@@ -67,7 +67,7 @@ public class CableBlock extends Block implements IWrenchable {
 
     @Override
     public void neighborChanged(BlockState state, World world, BlockPos pos, Block block, BlockPos neighbourPos, boolean isMoving) {
-        Direction direction = Utils.getDirectionFromPos(pos, neighbourPos);
+        Direction direction = MathUtils.getDirectionFromPos(pos, neighbourPos);
 
         if (direction != null)
             updateConnections(direction, world, pos);

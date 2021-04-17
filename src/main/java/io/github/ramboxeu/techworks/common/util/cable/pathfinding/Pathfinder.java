@@ -1,6 +1,6 @@
 package io.github.ramboxeu.techworks.common.util.cable.pathfinding;
 
-import io.github.ramboxeu.techworks.common.util.Utils;
+import io.github.ramboxeu.techworks.common.util.MathUtils;
 import io.github.ramboxeu.techworks.common.util.cable.network.IEndpointNode;
 import io.github.ramboxeu.techworks.common.util.cable.network.INode;
 import net.minecraft.util.Direction;
@@ -71,7 +71,7 @@ public class Pathfinder {
             if (parent == null)
                 return Collections.emptyList();
 
-            offsets.add(Utils.getDirectionFromPos(parent.pos(), node.pos()));
+            offsets.add(MathUtils.getDirectionFromPos(parent.pos(), node.pos()));
             node = parent;
         }
 

@@ -34,8 +34,8 @@ public class TechworksBlockStateProvider extends BlockStateProvider {
         Techworks.LOGGER.debug("Generating...");
 
         for (BlockRegistryObject<? extends BaseMachineBlock, BlockItem> machine : TechworksBlocks.MACHINES) {
-            machineBlock(machine.getBlock(), machine.getRegistryName().getPath());
-            machineBlockItem(machine.getRegistryName().getPath());
+            machineBlock(machine.getBlock(), machine.getId().getPath());
+            machineBlockItem(machine.getId().getPath());
         }
 
         horizontalBlock(TechworksBlocks.BLUEPRINT_TABLE);
@@ -52,7 +52,7 @@ public class TechworksBlockStateProvider extends BlockStateProvider {
     }
 
     private void cableBlockAndItem(BlockRegistryObject<?, ?> cable) {
-        String name = cable.getRegistryName().getPath();
+        String name = cable.getId().getPath();
 
         getVariantBuilder(cable.getBlock()).partialState()
                 .addModels(ConfiguredModel.builder()
@@ -102,14 +102,14 @@ public class TechworksBlockStateProvider extends BlockStateProvider {
     }
 
     private void horizontalBlock(BlockRegistryObject<?, ?> object) {
-        String name = object.getRegistryName().getPath();
+        String name = object.getId().getPath();
         horizontalBlock(object.getBlock(), new ModelFile.ExistingModelFile(modLoc("block/" + name), helper));
         blockItem(name);
     }
 
     private void blockAndItem(BlockRegistryObject<?, ?> block) {
         simpleBlock(block);
-        blockItem(block.getRegistryName().getPath());
+        blockItem(block.getId().getPath());
     }
 
     private void simpleBlock(BlockRegistryObject<?, ?> block) {

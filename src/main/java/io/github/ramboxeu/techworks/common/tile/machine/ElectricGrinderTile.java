@@ -14,7 +14,7 @@ import javax.annotation.Nullable;
 
 public class ElectricGrinderTile extends BaseMachineTile {
     public ElectricGrinderTile() {
-        super(TechworksTiles.ELECTRIC_GRINDER.getTileType(), new ComponentStackHandler.Builder(0));
+        super(TechworksTiles.ELECTRIC_GRINDER.get(), new ComponentStackHandler.Builder(0));
     }
 
     @Override

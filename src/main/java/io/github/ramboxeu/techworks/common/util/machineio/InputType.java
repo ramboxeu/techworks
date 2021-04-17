@@ -1,8 +1,8 @@
 package io.github.ramboxeu.techworks.common.util.machineio;
 
-import io.github.ramboxeu.techworks.common.capability.impl.EnergyHandlerContainer;
-import io.github.ramboxeu.techworks.common.capability.impl.FluidHandlerContainer;
-import io.github.ramboxeu.techworks.common.capability.impl.ItemHandlerContainer;
+import io.github.ramboxeu.techworks.common.energy.EnergyHandlerContainer;
+import io.github.ramboxeu.techworks.common.fluid.handler.FluidHandlerContainer;
+import io.github.ramboxeu.techworks.common.item.handler.ItemHandlerContainer;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;

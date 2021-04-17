@@ -9,29 +9,22 @@ import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class BlockDeferredRegister {
+public final class BlockDeferredRegister {
     private final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, Techworks.MOD_ID);
     private final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Techworks.MOD_ID);
-    private final List<BlockRegistryObject<?, ?>> REGISTERED_BLOCKS = new ArrayList<>();
 
-    public <BLOCK extends Block> BlockRegistryObject<BLOCK, BlockItem> register(String name, Supplier<BLOCK> blockSupplier) {
+    public <T extends Block> BlockRegistryObject<T, BlockItem> register(String name, Supplier<T> blockSupplier) {
         return register(name, blockSupplier, block -> new BlockItem(block, ItemDeferredRegister.getDefaultProperties()));
     }
 
-    public <BLOCK extends Block, ITEM extends Item> BlockRegistryObject<BLOCK, ITEM> register(String name, Supplier<BLOCK> blockSupplier, Function<BLOCK, ITEM> itemFactory) {
-        RegistryObject<BLOCK> block = BLOCKS.register(name, blockSupplier);
-        BlockRegistryObject<BLOCK, ITEM> object = new BlockRegistryObject<>(block, ITEMS.register(name, () -> itemFactory.apply(block.get())));
-        REGISTERED_BLOCKS.add(object);
-        return object;
-    }
+    public <T extends Block, U extends Item> BlockRegistryObject<T, U> register(String name, Supplier<T> blockSupplier, Function<T, U> itemFactory) {
+        RegistryObject<T> block = BLOCKS.register(name, blockSupplier);
+        RegistryObject<U> item = ITEMS.register(name, () -> itemFactory.apply(block.get()));
 
-    public List<BlockRegistryObject<?, ?>> getRegisteredBlocks() {
-        return REGISTERED_BLOCKS;
+        return new BlockRegistryObject<>(block, item);
     }
 
     public void register(IEventBus bus) {

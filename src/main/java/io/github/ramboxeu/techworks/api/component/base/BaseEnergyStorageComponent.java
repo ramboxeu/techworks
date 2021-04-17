@@ -2,8 +2,8 @@ package io.github.ramboxeu.techworks.api.component.base;
 
 import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.api.component.ComponentItem;
-import io.github.ramboxeu.techworks.common.capability.impl.EmptyEnergyHandler;
 import io.github.ramboxeu.techworks.common.util.RenderUtils;
+import io.github.ramboxeu.techworks.common.util.Utils;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -62,7 +62,7 @@ public class BaseEnergyStorageComponent extends ComponentItem {
         LazyOptional<IEnergyStorage> capability = stack.getCapability(CapabilityEnergy.ENERGY);
 
         if (capability.isPresent()) {
-            IEnergyStorage storage = capability.orElse(EmptyEnergyHandler.INSTANCE);
+            IEnergyStorage storage = Utils.unpack(capability);
             return 1 - (storage.getEnergyStored() / (double) capacity);
         } else {
             return 1;

@@ -1,4 +1,4 @@
-package io.github.ramboxeu.techworks.common.util;
+package io.github.ramboxeu.techworks.common.util.model;
 
 import net.minecraft.util.math.vector.Vector3d;
 

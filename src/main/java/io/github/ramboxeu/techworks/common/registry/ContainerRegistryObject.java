@@ -5,18 +5,18 @@ import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.RegistryObject;
 
-public class ContainerRegistryObject<CONTAINER extends Container> {
-    private final RegistryObject<ContainerType<CONTAINER>> containerRegistryObject;
+public final class ContainerRegistryObject<T extends Container> {
+    private final RegistryObject<ContainerType<T>> container;
 
-    public ContainerRegistryObject(RegistryObject<ContainerType<CONTAINER>> containerRegistryObject) {
-        this.containerRegistryObject = containerRegistryObject;
+    ContainerRegistryObject(RegistryObject<ContainerType<T>> container) {
+        this.container = container;
     }
 
-    public ContainerType<CONTAINER> getContainer() {
-        return containerRegistryObject.get();
+    public ContainerType<T> get() {
+        return container.get();
     }
 
-    public ResourceLocation getRegistryName() {
-        return containerRegistryObject.getId();
+    public ResourceLocation getId() {
+        return container.getId();
     }
 }

@@ -1,6 +1,6 @@
 package io.github.ramboxeu.techworks.common.debug;
 
-import io.github.ramboxeu.techworks.common.registration.Registration;
+import io.github.ramboxeu.techworks.common.registration.TechworksItems;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
@@ -25,7 +25,7 @@ public class DebugInfoRenderer {
             ClientWorld world = Minecraft.getInstance().world;
             FontRenderer font = Minecraft.getInstance().fontRenderer;
 
-            if (player.getHeldItemMainhand().getItem().equals(Registration.DEBUGGER_ITEM.get())) {
+            if (player.getHeldItemMainhand().getItem().equals(TechworksItems.DEBUGGER_ITEM.get())) {
                 BlockRayTraceResult result = (BlockRayTraceResult) player.pick(20.0D, 0.0F, true);
                 if (result.getType() == RayTraceResult.Type.BLOCK) {
                     if (cachedPos.compareTo(result.getPos()) != 0) {

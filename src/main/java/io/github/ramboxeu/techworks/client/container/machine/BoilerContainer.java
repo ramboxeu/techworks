@@ -4,7 +4,7 @@ import io.github.ramboxeu.techworks.client.container.BaseMachineContainer;
 import io.github.ramboxeu.techworks.client.container.holder.FluidStackHolder;
 import io.github.ramboxeu.techworks.common.registration.TechworksContainers;
 import io.github.ramboxeu.techworks.common.tile.machine.BoilerTile;
-import io.github.ramboxeu.techworks.common.util.PredicateUtils;
+import io.github.ramboxeu.techworks.common.util.Predicates;
 import io.github.ramboxeu.techworks.common.util.Side;
 import io.github.ramboxeu.techworks.common.util.inventory.SlotBuilder;
 import io.github.ramboxeu.techworks.common.util.machineio.config.HandlerConfig;
@@ -28,7 +28,7 @@ public class BoilerContainer extends BaseMachineContainer<BoilerTile> {
     private FluidStack steamStack = FluidStack.EMPTY;
 
     public BoilerContainer(int id, PlayerInventory playerInventory, BoilerTile tile, Map<Side, List<HandlerConfig>> dataMap) {
-        super(TechworksContainers.BOILER.getContainer(), id, playerInventory, tile, dataMap);
+        super(TechworksContainers.BOILER.get(), id, playerInventory, tile, dataMap);
 
         trackInt(new IntReferenceHolder() {
             @Override
@@ -104,7 +104,7 @@ public class BoilerContainer extends BaseMachineContainer<BoilerTile> {
 
         IItemHandler fuelInv = machineTile.getFuelInventory();
         for (int i = 0; i < fuelInv.getSlots(); i++) {
-            addSlot(new SlotBuilder(fuelInv, i).pos(80, 54).predicate(PredicateUtils::isFuel));
+            addSlot(new SlotBuilder(fuelInv, i).pos(80, 54).predicate(Predicates::isFuel));
         }
     }
 
@@ -123,7 +123,7 @@ public class BoilerContainer extends BaseMachineContainer<BoilerTile> {
             slotItemStack = slot.getStack();
             itemStack = slotItemStack.copy();
             if (index < 36) {
-                if (PredicateUtils.isFuel(itemStack)) {
+                if (Predicates.isFuel(itemStack)) {
                     if (!this.mergeItemStack(itemStack, 36, 37, false)) {
                         return ItemStack.EMPTY;
                     }

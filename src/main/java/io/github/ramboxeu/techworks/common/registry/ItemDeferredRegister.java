@@ -9,14 +9,14 @@ import net.minecraftforge.registries.ForgeRegistries;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class ItemDeferredRegister {
+public final class ItemDeferredRegister {
     private final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Techworks.MOD_ID);
 
-    public <ITEM extends Item> ItemRegistryObject<ITEM> register(String name, Function<Item.Properties, ITEM> itemFactory) {
+    public <T extends Item> ItemRegistryObject<T> register(String name, Function<Item.Properties, T> itemFactory) {
         return register(name, () -> itemFactory.apply(getDefaultProperties()));
     }
 
-    public <ITEM extends Item> ItemRegistryObject<ITEM> register(String name, Supplier<ITEM> itemSupplier) {
+    public <T extends Item> ItemRegistryObject<T> register(String name, Supplier<T> itemSupplier) {
         return new ItemRegistryObject<>(ITEMS.register(name, itemSupplier));
     }
 

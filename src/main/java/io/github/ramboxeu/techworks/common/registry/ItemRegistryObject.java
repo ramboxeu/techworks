@@ -4,18 +4,18 @@ import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.RegistryObject;
 
-public class ItemRegistryObject<ITEM extends Item> {
-    private final RegistryObject<ITEM> itemRegistryObject;
+public class ItemRegistryObject<T extends Item> {
+    private final RegistryObject<T> item;
 
-    public ItemRegistryObject(RegistryObject<ITEM> itemRegistryObject) {
-        this.itemRegistryObject = itemRegistryObject;
+    ItemRegistryObject(RegistryObject<T> item) {
+        this.item = item;
     }
 
-    public Item getItem() {
-        return itemRegistryObject.get();
+    public T get() {
+        return item.get();
     }
 
-    public ResourceLocation getRegistryName() {
-        return itemRegistryObject.getId();
+    public ResourceLocation getId() {
+        return item.getId();
     }
 }

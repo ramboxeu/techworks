@@ -3,7 +3,6 @@ package io.github.ramboxeu.techworks.common.tile;
 import io.github.ramboxeu.techworks.api.wrench.IWrenchable;
 import io.github.ramboxeu.techworks.client.model.cable.CableModel;
 import io.github.ramboxeu.techworks.common.network.TechworksPacketHandler;
-import io.github.ramboxeu.techworks.common.util.CuboidGroup;
 import io.github.ramboxeu.techworks.common.util.HandlerStorage;
 import io.github.ramboxeu.techworks.common.util.NBTUtils;
 import io.github.ramboxeu.techworks.common.util.RedstoneMode;
@@ -11,6 +10,7 @@ import io.github.ramboxeu.techworks.common.util.cable.connection.CableConnection
 import io.github.ramboxeu.techworks.common.util.cable.connection.ConnectionMode;
 import io.github.ramboxeu.techworks.common.util.cable.connection.ConnectionStatus;
 import io.github.ramboxeu.techworks.common.util.cable.network.*;
+import io.github.ramboxeu.techworks.common.util.model.CuboidGroup;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;

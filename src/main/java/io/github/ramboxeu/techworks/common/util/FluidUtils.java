@@ -15,12 +15,4 @@ public class FluidUtils {
 
         return FluidStack.EMPTY;
     }
-
-    public static boolean isGas(FluidStack stack) {
-        return stack.getFluid().getAttributes().isGaseous(stack);
-    }
-
-    public static boolean isLiquid(FluidStack stack) {
-        return !stack.getFluid().getAttributes().isGaseous(stack);
-    }
 }

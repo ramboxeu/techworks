@@ -1,4 +1,4 @@
-package io.github.ramboxeu.techworks.common.util;
+package io.github.ramboxeu.techworks.common.util.model;
 
 import io.github.ramboxeu.techworks.common.util.cable.connection.CableConnection;
 import net.minecraft.util.math.shapes.VoxelShape;

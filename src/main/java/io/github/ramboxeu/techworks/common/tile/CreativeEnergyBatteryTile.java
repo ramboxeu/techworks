@@ -15,7 +15,7 @@ public class CreativeEnergyBatteryTile extends BaseIOTile implements IEnergyStor
     private final LazyOptional<IEnergyStorage> holder;
 
     public CreativeEnergyBatteryTile() {
-        super(TechworksTiles.CREATIVE_ENERGY_BATTERY.getTileType());
+        super(TechworksTiles.CREATIVE_ENERGY_BATTERY.get());
 
         holder = LazyOptional.of(() -> this);
     }

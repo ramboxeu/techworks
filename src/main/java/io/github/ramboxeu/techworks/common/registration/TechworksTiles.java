@@ -31,14 +31,13 @@ public class TechworksTiles {
     public static final TileRegistryObject<EnergyCableTile> ENERGY_CABLE = TILES.register(TechworksBlocks.ENERGY_CABLE, EnergyCableTile::new);
 
     public static final TileRegistryObject<DevBlockTile> DEV_BLOCK = TILES.register(TechworksBlocks.DEV_BLOCK, DevBlockTile::new);
-    public static final TileRegistryObject<ItemExporterTile> ITEM_EXPORTER_TILE = TILES.register(TechworksBlocks.ITEM_EXPORTER, ItemExporterTile::new);
 
     public static void bindRenderers() {
 //        ClientRegistry.bindTileEntityRenderer(BOILER.getTileType(), MachineIOTileEntityRenderer::new);
 //        ClientRegistry.bindTileEntityRenderer(STEAM_ENGINE.getTileType(), MachineIOTileEntityRenderer::new);
 //        ClientRegistry.bindTileEntityRenderer(ELECTRIC_GRINDER.getTileType(), MachineIOTileEntityRenderer::new);
-        ClientRegistry.bindTileEntityRenderer(ELECTRIC_FURNACE.getTileType(), MachineIOTileEntityRenderer::new);
-        ClientRegistry.bindTileEntityRenderer(ITEM_TRANSPORTER.getTileType(), CableTileEntityRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(ELECTRIC_FURNACE.get(), MachineIOTileEntityRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(ITEM_TRANSPORTER.get(), CableTileEntityRenderer::new);
 //        ClientRegistry.bindTileEntityRenderer(CREATIVE_ENERGY_BATTERY.getTileType(), MachineIOTileEntityRenderer::new);
     }
 }

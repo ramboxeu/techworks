@@ -1,7 +1,7 @@
 package io.github.ramboxeu.techworks.common.util.cable.pathfinding;
 
+import io.github.ramboxeu.techworks.common.util.MathUtils;
 import io.github.ramboxeu.techworks.common.util.Pair;
-import io.github.ramboxeu.techworks.common.util.Utils;
 import io.github.ramboxeu.techworks.common.util.cable.network.IEndpointNode;
 import io.github.ramboxeu.techworks.common.util.cable.network.INode;
 import net.minecraft.util.Direction;
@@ -20,7 +20,7 @@ public class Pathfinding {
             BlockPos pos1 = nodes.get(nodes.size() - 1).pos();
             BlockPos pos2 = nodes.get(nodes.size() - 2).pos();
 
-            Direction side = Utils.getDirectionFromPos(pos2, pos1);
+            Direction side = MathUtils.getDirectionFromPos(pos2, pos1);
 
             return Pair.of(time, side);
         }
@@ -34,6 +34,6 @@ public class Pathfinding {
         BlockPos pos1 = nodes.get(nodes.size() - 1).pos();
         BlockPos pos2 = nodes.get(nodes.size() - 2).pos();
 
-        return Utils.getDirectionFromPos(pos2, pos1);
+        return MathUtils.getDirectionFromPos(pos2, pos1);
     }
 }

@@ -2,7 +2,7 @@ package io.github.ramboxeu.techworks.common.tile;
 
 import io.github.ramboxeu.techworks.common.registration.TechworksTiles;
 import io.github.ramboxeu.techworks.common.util.HandlerStorage;
-import io.github.ramboxeu.techworks.common.util.PredicateUtils;
+import io.github.ramboxeu.techworks.common.util.Predicates;
 import io.github.ramboxeu.techworks.common.util.cable.energy.EnergyNetworkHolder;
 import io.github.ramboxeu.techworks.common.util.cable.network.ICableNetworkHolder;
 import io.github.ramboxeu.techworks.common.util.cable.network.IEndpointNode;
@@ -19,7 +19,7 @@ public class EnergyCableTile extends BaseCableTile {
     private EnergyNetworkHolder network;
 
     public EnergyCableTile() {
-        super(TechworksTiles.ENERGY_CABLE.getTileType(), NetworkType.ENERGY);
+        super(TechworksTiles.ENERGY_CABLE.get(), NetworkType.ENERGY);
     }
 
     @Override
@@ -32,7 +32,7 @@ public class EnergyCableTile extends BaseCableTile {
 
     @Override
     protected boolean isTileValid(Direction side, TileEntity tile) {
-        return PredicateUtils.isEnergyHandler(side, tile);
+        return Predicates.isEnergyHandler(side, tile);
     }
 
     @Override

@@ -9,7 +9,7 @@ public class Utils {
         Item[] items = new Item[objects.length];
 
         for (int i = 0; i < objects.length; i++) {
-            items[i] = objects[i].getItem();
+            items[i] = objects[i].get();
         }
 
         return items;

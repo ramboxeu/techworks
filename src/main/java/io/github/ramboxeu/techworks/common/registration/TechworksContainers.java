@@ -54,13 +54,13 @@ public class TechworksContainers {
     public static final ContainerRegistryObject<DevBlockContainer> DEV_BLOCK = CONTAINERS.registerTileContainer("dev_block", (id, inv, tile) -> new DevBlockContainer(id, (DevBlockTile) tile));
 
     public static void registerScreenFactories(){
-        ScreenManager.registerFactory(BOILER.getContainer(), BoilerScreen::new);
-        ScreenManager.registerFactory(STEAM_ENGINE.getContainer(), SteamEngineScreen::new);
-        ScreenManager.registerFactory(ELECTRIC_GRINDER.getContainer(), ElectricGrinderScreen::new);
-        ScreenManager.registerFactory(ELECTRIC_FURNACE.getContainer(), ElectricFurnaceScreen::new);
-        ScreenManager.registerFactory(COMPONENTS.getContainer(), ComponentsScreen::new);
-        ScreenManager.registerFactory(BLUEPRINT_TABLE.getContainer(), BlueprintTableScreen::new);
-        ScreenManager.registerFactory(ASSEMBLY_TABLE.getContainer(), AssemblyTableScreen::new);
-        ScreenManager.registerFactory(DEV_BLOCK.getContainer(), DevBlockScreen::new);
+        ScreenManager.registerFactory(BOILER.get(), BoilerScreen::new);
+        ScreenManager.registerFactory(STEAM_ENGINE.get(), SteamEngineScreen::new);
+        ScreenManager.registerFactory(ELECTRIC_GRINDER.get(), ElectricGrinderScreen::new);
+        ScreenManager.registerFactory(ELECTRIC_FURNACE.get(), ElectricFurnaceScreen::new);
+        ScreenManager.registerFactory(COMPONENTS.get(), ComponentsScreen::new);
+        ScreenManager.registerFactory(BLUEPRINT_TABLE.get(), BlueprintTableScreen::new);
+        ScreenManager.registerFactory(ASSEMBLY_TABLE.get(), AssemblyTableScreen::new);
+        ScreenManager.registerFactory(DEV_BLOCK.get(), DevBlockScreen::new);
     }
 }

@@ -45,7 +45,7 @@ public class BlueprintTableScreen extends BaseScreen<BlueprintTableContainer> {
         for (int i = 0; i < BLUEPRINTS.size(); i++) {
             buttons.add(0, new BlueprintButton(
                     this::onBlueprintButtonPressed,
-                    (BlueprintItem) BLUEPRINTS.get(i).getItem(),
+                    (BlueprintItem) BLUEPRINTS.get(i).get(),
                     i
             ));
         }

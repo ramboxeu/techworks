@@ -1,4 +1,4 @@
-package io.github.ramboxeu.techworks.common.util;
+package io.github.ramboxeu.techworks.common.network;
 
 import net.minecraft.network.PacketBuffer;
 

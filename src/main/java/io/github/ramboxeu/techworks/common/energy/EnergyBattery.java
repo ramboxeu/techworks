@@ -1,4 +1,4 @@
-package io.github.ramboxeu.techworks.common.capability.impl;
+package io.github.ramboxeu.techworks.common.energy;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.util.INBTSerializable;

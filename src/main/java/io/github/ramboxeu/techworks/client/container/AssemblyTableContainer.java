@@ -21,7 +21,7 @@ public class AssemblyTableContainer extends BaseContainer implements AssemblyTab
     private final Slot outputSlot;
 
     public AssemblyTableContainer(int id, PlayerInventory inventory, AssemblyTableTile tile) {
-        super(TechworksContainers.ASSEMBLY_TABLE.getContainer(), id);
+        super(TechworksContainers.ASSEMBLY_TABLE.get(), id);
 
         InvWrapper playerInventory = new InvWrapper(inventory);
         IItemHandler inv = tile.getInventory();

@@ -32,4 +32,5 @@ public class RenderUtils {
     public static final class FontColors {
         public static final int DEFAULT_SCREEN = 4210752;
     }
+
 }

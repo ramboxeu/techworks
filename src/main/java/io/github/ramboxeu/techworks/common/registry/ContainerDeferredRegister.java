@@ -20,16 +20,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class ContainerDeferredRegister {
+public final class ContainerDeferredRegister {
     private final DeferredRegister<ContainerType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS, Techworks.MOD_ID);
 
     @SuppressWarnings("unchecked")
-    public  <TILE extends BaseMachineTile, CONTAINER extends BaseMachineContainer<TILE>> ContainerRegistryObject<CONTAINER> registerMachineContainer(String name, IMachineContainerFactory<TILE, CONTAINER> factory) {
+    public  <T extends BaseMachineTile, U extends BaseMachineContainer<T>> ContainerRegistryObject<U> registerMachineContainer(String name, IMachineContainerFactory<T, U> factory) {
         return register(name, (id, inv, buf) -> {
             BlockPos pos = buf.readBlockPos();
             TileEntity te = inv.player.world.getTileEntity(pos);
             if (te instanceof BaseMachineTile) {
-                return factory.create(id, inv, (TILE) te, ((BaseMachineTile) te).getMachineIO().createDataMap());
+                return factory.create(id, inv, (T) te, ((BaseMachineTile) te).getMachineIO().createDataMap());
             } else {
                 throw new IllegalStateException("Expected BaseMachineTile on " + pos + " but it was not found!");
             }
@@ -37,23 +37,23 @@ public class ContainerDeferredRegister {
     }
 
     @SuppressWarnings("unchecked")
-    public  <TILE extends TileEntity, CONTAINER extends Container> ContainerRegistryObject<CONTAINER> registerTileContainer(String name, ITileContainerFactory<TILE, CONTAINER> factory) {
+    public  <T extends TileEntity, U extends Container> ContainerRegistryObject<U> registerTileContainer(String name, ITileContainerFactory<T, U> factory) {
         return register(name, (id, inv, buf) -> {
             BlockPos pos = buf.readBlockPos();
             TileEntity te = inv.player.world.getTileEntity(pos);
             if (te != null) {
-                return factory.create(id, inv, (TILE) te);
+                return factory.create(id, inv, (T) te);
             } else {
                 throw new IllegalStateException("Expected TileEntity on " + pos + " but it was not found!");
             }
         });
     }
 
-    public <CONTAINER extends Container> ContainerRegistryObject<CONTAINER> register(String name, IContainerFactory<CONTAINER> factory) {
+    public <T extends Container> ContainerRegistryObject<T> register(String name, IContainerFactory<T> factory) {
         return register(name, () -> IForgeContainerType.create(factory));
     }
 
-    public <CONTAINER extends Container> ContainerRegistryObject<CONTAINER> register(String name, Supplier<ContainerType<CONTAINER>> containerSupplier) {
+    public <T extends Container> ContainerRegistryObject<T> register(String name, Supplier<ContainerType<T>> containerSupplier) {
         return new ContainerRegistryObject<>(CONTAINERS.register(name, containerSupplier));
     }
 
@@ -61,11 +61,11 @@ public class ContainerDeferredRegister {
         CONTAINERS.register(bus);
     }
 
-    public interface IMachineContainerFactory<TILE extends BaseMachineTile, CONTAINER extends BaseMachineContainer<TILE>> {
-        CONTAINER create(int id, PlayerInventory inventory, TILE tile, Map<Side, List<HandlerConfig>> configMap);
+    public interface IMachineContainerFactory<T extends BaseMachineTile, U extends BaseMachineContainer<T>> {
+        U create(int id, PlayerInventory inventory, T tile, Map<Side, List<HandlerConfig>> configMap);
     }
 
-    public interface ITileContainerFactory<TILE extends TileEntity, CONTAINER extends Container> {
-        CONTAINER create(int id, PlayerInventory inventory, TILE tile);
+    public interface ITileContainerFactory<T extends TileEntity, U extends Container> {
+        U create(int id, PlayerInventory inventory, T tile);
     }
 }

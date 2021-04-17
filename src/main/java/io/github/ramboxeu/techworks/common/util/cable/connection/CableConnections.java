@@ -1,7 +1,7 @@
 package io.github.ramboxeu.techworks.common.util.cable.connection;
 
-import io.github.ramboxeu.techworks.common.util.IPacketSerializable;
-import io.github.ramboxeu.techworks.common.util.Utils;
+import io.github.ramboxeu.techworks.common.network.IPacketSerializable;
+import io.github.ramboxeu.techworks.common.util.NBTUtils;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.Direction;
@@ -99,8 +99,8 @@ public class CableConnections implements INBTSerializable<CompoundNBT>, IPacketS
         CableConnection connection = connections.get(direction);
         CompoundNBT tag = new CompoundNBT();
 
-        Utils.serializeEnum(tag, "Mode", connection.getMode());
-        Utils.serializeEnum(tag, "Status", connection.getStatus());
+        NBTUtils.serializeEnum(tag, "Mode", connection.getMode());
+        NBTUtils.serializeEnum(tag, "Status", connection.getStatus());
 
         rootTag.put(direction.getName2(), tag);
     }
@@ -115,8 +115,8 @@ public class CableConnections implements INBTSerializable<CompoundNBT>, IPacketS
     private void deserializeDir(CompoundNBT rootTag, Direction direction) {
         CompoundNBT tag = rootTag.getCompound(direction.getName2());
 
-        ConnectionMode mode = Utils.deserializeEnum(tag, "Mode", ConnectionMode.class).orElse(ConnectionMode.BOTH);
-        ConnectionStatus status = Utils.deserializeEnum(tag, "Status", ConnectionStatus.class).orElse(ConnectionStatus.DISCONNECTED);
+        ConnectionMode mode = NBTUtils.deserializeEnum(tag, "Mode", ConnectionMode.class).orElse(ConnectionMode.BOTH);
+        ConnectionStatus status = NBTUtils.deserializeEnum(tag, "Status", ConnectionStatus.class).orElse(ConnectionStatus.DISCONNECTED);
 
         connections.put(direction, new CableConnection(mode, status));
     }

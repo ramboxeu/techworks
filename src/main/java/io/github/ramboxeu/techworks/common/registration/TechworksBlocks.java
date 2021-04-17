@@ -30,7 +30,6 @@ public class TechworksBlocks {
     public static final BlockRegistryObject<CableBlock, BlockItem> ENERGY_CABLE = BLOCKS.register("energy_cable", () -> new CableBlock(TechworksTiles.ENERGY_CABLE));
 
     // More testing
-    public static final BlockRegistryObject<ItemExporterBlock, BlockItem> ITEM_EXPORTER = BLOCKS.register("item_exporter", ItemExporterBlock::new);
     public static final BlockRegistryObject<DevBlockBlock, BlockItem> DEV_BLOCK = BLOCKS.register("dev_block", DevBlockBlock::new, block -> new BlockItem(block, new Item.Properties()));
 
 

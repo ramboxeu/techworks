@@ -1,6 +1,7 @@
 package io.github.ramboxeu.techworks.common.registration;
 
 import io.github.ramboxeu.techworks.api.component.base.*;
+import io.github.ramboxeu.techworks.common.debug.DebuggerItem;
 import io.github.ramboxeu.techworks.common.item.BlueprintItem;
 import io.github.ramboxeu.techworks.common.item.GroundItem;
 import io.github.ramboxeu.techworks.common.item.WrenchItem;
@@ -47,8 +48,10 @@ public class TechworksItems {
 
     public static final ItemRegistryObject<Item> MACHINE_CASING = ITEMS.register("machine_casing", Item::new);
 
+    public static final ItemRegistryObject<DebuggerItem> DEBUGGER_ITEM = ITEMS.register("debugger", DebuggerItem::new);
+
     private static ItemRegistryObject<BlueprintItem> registerBlueprint(String name, BlockRegistryObject<?, ?> machine, IBlueprintItemFactory factory) {
-        ItemRegistryObject<BlueprintItem> object = ITEMS.register(name, props -> factory.create(props, machine.getBlock(), machine.getRegistryName()));
+        ItemRegistryObject<BlueprintItem> object = ITEMS.register(name, props -> factory.create(props, machine.get(), machine.getId()));
         BLUEPRINTS.add(object);
         return object;
     }

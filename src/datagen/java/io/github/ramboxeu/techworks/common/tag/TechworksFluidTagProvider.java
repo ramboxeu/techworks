@@ -11,6 +11,6 @@ public class TechworksFluidTagProvider extends FluidTagsProvider {
 
     @Override
     protected void registerTags() {
-        getOrCreateBuilder(TechworksFluidTags.STEAM).add(TechworksFluids.STEAM.getRight().get(), TechworksFluids.STEAM.getLeft().get());
+        getOrCreateBuilder(TechworksFluidTags.STEAM).add(TechworksFluids.STEAM.get());
     }
 }

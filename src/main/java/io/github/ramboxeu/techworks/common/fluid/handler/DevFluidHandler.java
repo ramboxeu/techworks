@@ -1,4 +1,4 @@
-package io.github.ramboxeu.techworks.common.capability.impl;
+package io.github.ramboxeu.techworks.common.fluid.handler;
 
 import io.github.ramboxeu.techworks.common.tile.DevBlockTile;
 import net.minecraft.fluid.Fluid;

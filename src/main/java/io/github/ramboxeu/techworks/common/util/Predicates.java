@@ -11,8 +11,9 @@ import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nullable;
 
-public class PredicateUtils {
-    static public boolean isFuel(ItemStack itemStack) {
+public class Predicates {
+
+    public static boolean isFuel(ItemStack itemStack) {
         return ForgeHooks.getBurnTime(itemStack) > 0;
     }
 
@@ -47,4 +48,5 @@ public class PredicateUtils {
     public static boolean isEnergyHandler(@Nullable Direction side, @Nullable TileEntity tile) {
         return tile != null && tile.getCapability(CapabilityEnergy.ENERGY, side).isPresent();
     }
+
 }

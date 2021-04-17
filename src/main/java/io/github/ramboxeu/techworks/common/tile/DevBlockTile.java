@@ -2,12 +2,12 @@ package io.github.ramboxeu.techworks.common.tile;
 
 import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.client.container.DevBlockContainer;
-import io.github.ramboxeu.techworks.common.capability.impl.DevEnergyStorage;
-import io.github.ramboxeu.techworks.common.capability.impl.DevFluidHandler;
-import io.github.ramboxeu.techworks.common.capability.impl.DevItemHandler;
+import io.github.ramboxeu.techworks.common.energy.DevEnergyStorage;
+import io.github.ramboxeu.techworks.common.fluid.handler.DevFluidHandler;
+import io.github.ramboxeu.techworks.common.item.handler.DevItemHandler;
 import io.github.ramboxeu.techworks.common.network.TechworksPacketHandler;
 import io.github.ramboxeu.techworks.common.registration.TechworksTiles;
-import io.github.ramboxeu.techworks.common.util.PredicateUtils;
+import io.github.ramboxeu.techworks.common.util.Predicates;
 import io.github.ramboxeu.techworks.common.util.Side;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -72,18 +72,18 @@ public class DevBlockTile extends BaseTechworksTile implements INamedContainerPr
     private EnumSet<Side> invSides;
 
     public DevBlockTile() {
-        super(TechworksTiles.DEV_BLOCK.getTileType());
+        super(TechworksTiles.DEV_BLOCK.get());
         energy = new DevEnergyStorage(this);
         energyHolder = LazyOptional.of(() -> energy);
         energyActiveSignal = ActiveSignal.NEVER;
         energySides = EnumSet.noneOf(Side.class);
 
-        liquid = new DevFluidHandler(this, PredicateUtils::isLiquid);
+        liquid = new DevFluidHandler(this, Predicates::isLiquid);
         liquidHolder = LazyOptional.of(() -> liquid);
         liquidActiveSignal = ActiveSignal.NEVER;
         liquidSides = EnumSet.noneOf(Side.class);
 
-        gas = new DevFluidHandler(this, PredicateUtils::isGas);
+        gas = new DevFluidHandler(this, Predicates::isGas);
         gasHolder = LazyOptional.of(() -> gas);
         gasActiveSignal = ActiveSignal.NEVER;
         gasSides = EnumSet.noneOf(Side.class);

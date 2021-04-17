@@ -15,7 +15,7 @@ public class DevBlockContainer extends BaseContainer {
     private final DevBlockTile tile;
 
     public DevBlockContainer(int id, DevBlockTile tile) {
-        super(TechworksContainers.DEV_BLOCK.getContainer(), id);
+        super(TechworksContainers.DEV_BLOCK.get(), id);
         this.tile = tile;
     }
 

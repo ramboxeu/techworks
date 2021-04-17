@@ -1,12 +1,15 @@
 package io.github.ramboxeu.techworks.common.registration;
 
-import io.github.ramboxeu.techworks.Techworks;
+import io.github.ramboxeu.techworks.common.recipe.ElectricGrinderRecipe;
 import io.github.ramboxeu.techworks.common.recipe.MachineAssemblyRecipe;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.util.ResourceLocation;
+import io.github.ramboxeu.techworks.common.recipe.TechworksSmeltingRecipe;
+import io.github.ramboxeu.techworks.common.registry.RecipeDeferredRegister;
+import io.github.ramboxeu.techworks.common.registry.RecipeRegistryObject;
 
 public class TechworksRecipes {
-    public static final IRecipeType<MachineAssemblyRecipe> MACHINE_ASSEMBLY_RECIPE = IRecipeType.register(new ResourceLocation(Techworks.MOD_ID, "machine_assembly").toString());
-    public static final IRecipeSerializer<MachineAssemblyRecipe> MACHINE_ASSEMBLY_RECIPE_SERIALIZER = IRecipeSerializer.register(new ResourceLocation(Techworks.MOD_ID, "machine_assembly").toString(), new MachineAssemblyRecipe.Serializer());
+    public static final RecipeDeferredRegister RECIPES = new RecipeDeferredRegister();
+
+    public static final RecipeRegistryObject<MachineAssemblyRecipe, MachineAssemblyRecipe.Serializer> MACHINE_ASSEMBLY = RECIPES.register("machine_assembly", MachineAssemblyRecipe.Serializer::new);
+    public static final RecipeRegistryObject<ElectricGrinderRecipe, ElectricGrinderRecipe.Serializer> GRINDING = RECIPES.register("grinding", ElectricGrinderRecipe.Serializer::new);
+    public static final RecipeRegistryObject<TechworksSmeltingRecipe, TechworksSmeltingRecipe.Serializer> SMELTING = RECIPES.register("smelting", TechworksSmeltingRecipe.Serializer::new);
 }

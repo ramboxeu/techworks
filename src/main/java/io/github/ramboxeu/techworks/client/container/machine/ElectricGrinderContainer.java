@@ -3,7 +3,7 @@ package io.github.ramboxeu.techworks.client.container.machine;
 import io.github.ramboxeu.techworks.client.container.BaseMachineContainer;
 import io.github.ramboxeu.techworks.common.registration.TechworksContainers;
 import io.github.ramboxeu.techworks.common.tile.machine.ElectricGrinderTile;
-import io.github.ramboxeu.techworks.common.util.PredicateUtils;
+import io.github.ramboxeu.techworks.common.util.Predicates;
 import io.github.ramboxeu.techworks.common.util.Side;
 import io.github.ramboxeu.techworks.common.util.machineio.config.HandlerConfig;
 import net.minecraft.entity.player.PlayerEntity;
@@ -19,7 +19,7 @@ public class ElectricGrinderContainer extends BaseMachineContainer<ElectricGrind
     private int workCounter;
 
     public ElectricGrinderContainer(int id, PlayerInventory playerInventory, ElectricGrinderTile machineTile, Map<Side, List<HandlerConfig>> dataMap) {
-        super(TechworksContainers.ELECTRIC_GRINDER.getContainer(), id, playerInventory, machineTile, dataMap);
+        super(TechworksContainers.ELECTRIC_GRINDER.get(), id, playerInventory, machineTile, dataMap);
 
 //        this.trackInt(new IntReferenceHolder() {
 //            @Override
@@ -76,7 +76,7 @@ public class ElectricGrinderContainer extends BaseMachineContainer<ElectricGrind
             slotItemStack = slot.getStack();
             itemStack = slotItemStack.copy();
             if (index < 36) {
-                if (PredicateUtils.isEnergyStorage(itemStack)) {
+                if (Predicates.isEnergyStorage(itemStack)) {
                     Slot energyOutput = this.inventorySlots.get(37);
 
                     ItemStack itemStack1 = ItemStack.EMPTY;

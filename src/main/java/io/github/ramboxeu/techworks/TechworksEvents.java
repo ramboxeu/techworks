@@ -35,19 +35,6 @@ public class TechworksEvents {
         }
     }
 
-//    @SubscribeEvent
-//    public static void onWorldLoad(WorldEvent.Load event) {
-//        IWorld world = event.getWorld();
-//
-//        if (world instanceof ServerWorld) {
-//            ServerWorld serverWorld = (ServerWorld) world;
-//
-//            serverWorld.loadedTileEntityList.stream()
-//                    .filter(te -> te instanceof CableTile)
-//                    .forEach(te -> ((CableTile) te).onWorldLoad());
-//        }
-//    }
-
     @SubscribeEvent
     public static void onWorldTick(TickEvent.WorldTickEvent event) {
         if (event.side.isServer() && event.phase == TickEvent.Phase.START) {
@@ -70,7 +57,7 @@ public class TechworksEvents {
             BlockPos pos = event.getPos();
             Vector3d hitVec = traceResult.getHitVec().subtract(pos.getX(), pos.getY(), pos.getZ());
 
-            if (item == TechworksItems.WRENCH.getItem()) {
+            if (item == TechworksItems.WRENCH.get()) {
                 result = ((WrenchItem) stack.getItem()).onLeftClickBlock(player, event.getWorld(), pos, event.getFace(), hitVec, stack);
             } else if (item instanceof IWrench) {
                 result = WrenchItem.useExternalWrench(((IWrench) item).leftClick(player), event.getWorld(), pos, event.getFace(), hitVec, stack);
@@ -99,7 +86,7 @@ public class TechworksEvents {
             BlockPos pos = event.getPos();
             Vector3d hitVec = traceResult.getHitVec().subtract(pos.getX(), pos.getY(), pos.getZ());
 
-            if (item == TechworksItems.WRENCH.getItem()) {
+            if (item == TechworksItems.WRENCH.get()) {
                 result = ((WrenchItem) item).onRightClick(player, event.getWorld(), pos, event.getFace(), hitVec, stack);
             } else if (item instanceof IWrench) {
                 result = WrenchItem.useExternalWrench(((IWrench) item).rightClick(player), event.getWorld(), pos, event.getFace(), hitVec, stack);

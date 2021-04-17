@@ -1,18 +1,13 @@
 package io.github.ramboxeu.techworks.client.container.machine;
 
-import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.api.component.ComponentStackHandler;
 import io.github.ramboxeu.techworks.common.registration.TechworksContainers;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
-import net.minecraftforge.items.wrapper.InvWrapper;
 
 public class ComponentsContainer extends Container {
     private final ComponentStackHandler components;
@@ -27,7 +22,7 @@ public class ComponentsContainer extends Container {
     private static final int HEIGHT = 166;
 
     public ComponentsContainer(int id, PlayerInventory inventory, ComponentStackHandler components) {
-        super(TechworksContainers.COMPONENTS.getContainer(), id);
+        super(TechworksContainers.COMPONENTS.get(), id);
 
         this.components = components;
 

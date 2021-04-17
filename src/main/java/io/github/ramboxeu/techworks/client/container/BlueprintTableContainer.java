@@ -27,7 +27,7 @@ public class BlueprintTableContainer extends BaseContainer {
     }
 
     public BlueprintTableContainer(int id, PlayerInventory inv, BlueprintTableTile tile, IWorldPosCallable callable) {
-        super(TechworksContainers.BLUEPRINT_TABLE.getContainer(), id);
+        super(TechworksContainers.BLUEPRINT_TABLE.get(), id);
 
         this.callable = callable;
 
@@ -46,7 +46,7 @@ public class BlueprintTableContainer extends BaseContainer {
         };
 
         addSlot(new SlotBuilder(inventory, 0).pos(9, 46).predicate(stack -> stack.getItem().isIn(Tags.Items.DYES_WHITE)).build());
-        addSlot(new SlotBuilder(inventory, 1).pos(39, 46).predicate(stack -> stack.getItem() == TechworksItems.EMPTY_BLUEPRINT.getItem()).build());
+        addSlot(new SlotBuilder(inventory, 1).pos(39, 46).predicate(stack -> stack.getItem() == TechworksItems.EMPTY_BLUEPRINT.get()).build());
         addSlot(new SlotBuilder(outputInv, 0).pos(24, 92).output(true).build());
 
         InvWrapper playerInv = new InvWrapper(inv);

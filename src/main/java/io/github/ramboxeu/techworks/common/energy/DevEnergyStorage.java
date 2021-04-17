@@ -1,4 +1,4 @@
-package io.github.ramboxeu.techworks.common.capability.impl;
+package io.github.ramboxeu.techworks.common.energy;
 
 import io.github.ramboxeu.techworks.common.tile.DevBlockTile;
 import net.minecraft.nbt.CompoundNBT;

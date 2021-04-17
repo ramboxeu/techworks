@@ -17,11 +17,11 @@ public class TechworksItemModelProvider extends ItemModelProvider {
     @Override
     protected void registerModels() {
         for (ItemRegistryObject<?> component : TechworksItems.COMPONENTS) {
-            itemGenerated(component.getRegistryName().getPath());
+            itemGenerated(component.getId().getPath());
         }
 
         for (ItemRegistryObject<?> blueprint : DataConstants.Items.BLUEPRINTS) {
-            singleTexture(blueprint.getRegistryName().getPath(), DataConstants.Textures.ITEM_GENERATED, "layer0", modLoc("item/blueprint"));
+            singleTexture(blueprint.getId().getPath(), DataConstants.Textures.ITEM_GENERATED, "layer0", modLoc("item/blueprint"));
         }
 
         singleTexture("wrench", DataConstants.Textures.ITEM_GENERATED, "layer0", modLoc("item/wrench")).transforms()
