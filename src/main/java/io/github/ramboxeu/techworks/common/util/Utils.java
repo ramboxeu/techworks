@@ -207,4 +207,9 @@ public class Utils {
     public static <T> T unpack(LazyOptional<T> holder) {
         return holder.orElseThrow(() -> new RuntimeException("Present LazyOptional with no value"));
     }
+
+    @SuppressWarnings("unchecked") // oh well to bad so sad
+    public static <T> Class<T> cast(Class<?> clazz) {
+        return (Class<T>) clazz;
+    }
 }

@@ -4,6 +4,8 @@ import io.github.ramboxeu.techworks.api.wrench.IWrench;
 import io.github.ramboxeu.techworks.common.capability.ExtendedListenerProvider;
 import io.github.ramboxeu.techworks.common.command.CablesCommand;
 import io.github.ramboxeu.techworks.common.command.CapabilitiesCommand;
+import io.github.ramboxeu.techworks.common.component.Component;
+import io.github.ramboxeu.techworks.common.component.ComponentManager;
 import io.github.ramboxeu.techworks.common.item.WrenchItem;
 import io.github.ramboxeu.techworks.common.item.WrenchItem.Result;
 import io.github.ramboxeu.techworks.common.registration.TechworksItems;
@@ -17,13 +19,21 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.Color;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.Style;
 import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+
+import java.util.List;
 
 // Events must be public, otherwise HotSwap won't work
 public class TechworksEvents {
@@ -105,5 +115,28 @@ public class TechworksEvents {
     public static void onCommandRegister(RegisterCommandsEvent event) {
         CapabilitiesCommand.register(event.getDispatcher());
         CablesCommand.register(event.getDispatcher());
+    }
+
+    @SubscribeEvent
+    public static void onResourceReload(AddReloadListenerEvent event) {
+        Techworks.LOGGER.debug("Resource reload fired!");
+
+        ComponentManager.INSTANCE = new ComponentManager();
+        event.addListener(ComponentManager.INSTANCE);
+    }
+
+    private static final Style COMPONENT_NAME = Style.EMPTY.setColor(Color.fromInt(0x555555));
+
+    @SubscribeEvent
+    public static void onGetItemTooltip(ItemTooltipEvent event) {
+        Item item = event.getItemStack().getItem();
+
+        if (item.isIn(ComponentManager.getInstance().getItemComponentTag())) {
+            Component component = ComponentManager.getInstance().getComponent(item);
+            String name = component.getType().getName();
+
+            List<ITextComponent> toolTip = event.getToolTip();
+            toolTip.add(new StringTextComponent(name).setStyle(COMPONENT_NAME));
+        }
     }
 }

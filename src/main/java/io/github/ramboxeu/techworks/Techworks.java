@@ -16,6 +16,7 @@ import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -42,13 +43,19 @@ public class Techworks {
         TechworksContainers.CONTAINERS.register(modEventBus);
         TechworksFluids.FLUIDS.register(modEventBus);
         TechworksRecipes.RECIPES.register(modEventBus);
+        TechworksComponents.TYPES.register(modEventBus);
 
         modEventBus.addListener(this::setup);
         modEventBus.addListener(this::clientSetup);
         modEventBus.addListener(this::onPreStitch);
         modEventBus.addListener(this::registerModelLoaders);
+        modEventBus.addListener(this::makeRegistries);
 
         MinecraftForge.EVENT_BUS.register(TechworksEvents.class);
+    }
+
+    private void makeRegistries(RegistryEvent.NewRegistry event) {
+        TechworksRegistries.register();
     }
 
     public void setup(FMLCommonSetupEvent event) {
