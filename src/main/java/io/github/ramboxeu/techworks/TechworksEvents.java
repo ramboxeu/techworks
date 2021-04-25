@@ -119,10 +119,7 @@ public class TechworksEvents {
 
     @SubscribeEvent
     public static void onResourceReload(AddReloadListenerEvent event) {
-        Techworks.LOGGER.debug("Resource reload fired!");
-
-        ComponentManager.INSTANCE = new ComponentManager();
-        event.addListener(ComponentManager.INSTANCE);
+        event.addListener(ComponentManager.createListener());
     }
 
     private static final Style COMPONENT_NAME = Style.EMPTY.setColor(Color.fromInt(0x555555));

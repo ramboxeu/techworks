@@ -10,18 +10,20 @@ import io.github.ramboxeu.techworks.common.registration.TechworksRegistries;
 import net.minecraft.client.resources.JsonReloadListener;
 import net.minecraft.item.Item;
 import net.minecraft.profiler.IProfiler;
+import net.minecraft.resources.IFutureReloadListener;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.tags.ITag;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
 
+import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class ComponentManager extends JsonReloadListener {
 
-    public static ComponentManager INSTANCE;
+    private static ComponentManager INSTANCE;
 
     private static final String DIR_NAME = "components";
     private static final Gson GSON = new GsonBuilder().create();
@@ -59,11 +61,13 @@ public class ComponentManager extends JsonReloadListener {
     }
 
     @SuppressWarnings("unchecked")
+    @Nullable
     public <T extends Component> T getComponent(ResourceLocation id) {
         return (T) components.get(id);
     }
 
     @SuppressWarnings("unchecked")
+    @Nullable
     public <T extends Component> T getComponent(Item item) {
         return (T) componentToItem.get(item);
     }
@@ -77,5 +81,14 @@ public class ComponentManager extends JsonReloadListener {
             throw new IllegalStateException("Can not retrieve ComponentManager until resources have loaded once.");
 
         return INSTANCE;
+    }
+
+    public static IFutureReloadListener createListener() {
+        INSTANCE = new ComponentManager();
+        return INSTANCE;
+    }
+
+    public boolean isItemComponent(Item item) {
+        return componentToItem.containsKey(item);
     }
 }
