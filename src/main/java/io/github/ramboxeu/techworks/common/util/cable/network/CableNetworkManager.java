@@ -36,7 +36,7 @@ public class CableNetworkManager extends WorldSavedData {
         for (int i = 0; i < listTag.size(); i++) {
             CompoundNBT networkTag = listTag.getCompound(i);
             UUID id = networkTag.getUniqueId("Id");
-            NetworkType type = NBTUtils.deserializeEnum(networkTag, "NetworkType", NetworkType.class).get();
+            NetworkType type = NBTUtils.deserializeEnum(networkTag, "NetworkType", NetworkType.class);
             networks.put(id, type.createNetwork(id));
         }
     }

@@ -115,8 +115,8 @@ public class CableConnections implements INBTSerializable<CompoundNBT>, IPacketS
     private void deserializeDir(CompoundNBT rootTag, Direction direction) {
         CompoundNBT tag = rootTag.getCompound(direction.getName2());
 
-        ConnectionMode mode = NBTUtils.deserializeEnum(tag, "Mode", ConnectionMode.class).orElse(ConnectionMode.BOTH);
-        ConnectionStatus status = NBTUtils.deserializeEnum(tag, "Status", ConnectionStatus.class).orElse(ConnectionStatus.DISCONNECTED);
+        ConnectionMode mode = NBTUtils.deserializeEnum(tag, "Mode", ConnectionMode.class);
+        ConnectionStatus status = NBTUtils.deserializeEnum(tag, "Status", ConnectionStatus.class);
 
         connections.put(direction, new CableConnection(mode, status));
     }

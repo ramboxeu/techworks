@@ -1,10 +1,12 @@
 package io.github.ramboxeu.techworks.common.util;
 
 import com.google.gson.JsonPrimitive;
+import io.github.ramboxeu.techworks.common.component.ComponentType;
+import io.github.ramboxeu.techworks.common.registration.TechworksRegistries;
 import net.minecraft.nbt.*;
+import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
-import java.util.Optional;
 import java.util.UUID;
 
 public class NBTUtils {
@@ -18,16 +20,28 @@ public class NBTUtils {
         return null;
     }
 
-    public static <T extends Enum<T>> Optional<T> deserializeEnum(CompoundNBT nbt, String key, Class<T> clazz) {
+    public static <T extends Enum<T>> void serializeEnum(CompoundNBT nbt, String key, T value) {
+        nbt.putString(key, value.name());
+    }
+
+    @Nullable
+    public static <T extends Enum<T>> T deserializeEnum(CompoundNBT nbt, String key, Class<T> clazz) {
         try {
-            return Optional.of(Enum.valueOf(clazz, nbt.getString(key)));
+            return Enum.valueOf(clazz, nbt.getString(key));
         } catch (IllegalArgumentException ignored) {
-            return Optional.empty();
+            return null;
         }
     }
 
-    public static <T extends Enum<T>> void serializeEnum(CompoundNBT nbt, String key, T value) {
-        nbt.putString(key, value.name());
+    public static void serializeComponentType(CompoundNBT nbt, String key, ComponentType<?> type) {
+        ResourceLocation id = TechworksRegistries.COMPONENT_TYPES.getKey(type);
+        nbt.putString(key, id.toString());
+    }
+
+    @Nullable
+    public static ComponentType<?> deserializeComponentType(CompoundNBT tag, String key) {
+        String id = tag.getString(key);
+        return TechworksRegistries.COMPONENT_TYPES.getValue(new ResourceLocation(id));
     }
 
     @Nullable
