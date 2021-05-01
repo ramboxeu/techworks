@@ -1,9 +1,10 @@
 package io.github.ramboxeu.techworks.common.component;
 
 import net.minecraft.item.Item;
+import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
 
-public abstract class Component {
+public abstract class Component implements IItemProvider {
 
     private final ComponentType<?> type;
     protected final ResourceLocation id;
@@ -13,6 +14,11 @@ public abstract class Component {
         this.type = type;
         this.id = id;
         this.item = item;
+    }
+
+    @Override
+    public Item asItem() {
+        return item;
     }
 
     public ComponentType<?> getType() {
@@ -25,5 +31,9 @@ public abstract class Component {
 
     public Item getItem() {
         return item;
+    }
+
+    public boolean isBase() {
+        return this.id.equals(type.getBaseComponentId());
     }
 }

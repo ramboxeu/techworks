@@ -1,0 +1,8 @@
+{
+  "type": "techworks:smelting",
+  "item": "minecraft:blast_furnace",
+  "parameters": {
+    "energy": 0.75,
+    "time": 0.5
+  }
+}

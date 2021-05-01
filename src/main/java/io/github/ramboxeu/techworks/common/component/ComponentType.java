@@ -18,5 +18,7 @@ public abstract class ComponentType<T extends Component> extends ForgeRegistryEn
 
     protected abstract T readComponent(ResourceLocation id, Item item, JsonObject parameters);
 
+    public abstract ResourceLocation getBaseComponentId();
+
     public abstract String getName();
 }

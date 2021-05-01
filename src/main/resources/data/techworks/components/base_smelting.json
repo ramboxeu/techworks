@@ -2,7 +2,7 @@
   "type": "techworks:smelting",
   "item": "minecraft:furnace",
   "parameters": {
-    "energy": 1000,
-    "time": 150
+    "energy": 1.0,
+    "time": 1.0
   }
 }
