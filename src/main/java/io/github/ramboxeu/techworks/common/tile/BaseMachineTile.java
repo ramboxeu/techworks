@@ -1,6 +1,5 @@
 package io.github.ramboxeu.techworks.common.tile;
 
-import io.github.ramboxeu.techworks.api.component.ComponentStackHandler;
 import io.github.ramboxeu.techworks.api.wrench.IWrenchable;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -24,12 +23,12 @@ import java.util.List;
 import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
 public abstract class BaseMachineTile extends BaseIOTile implements INamedContainerProvider, IWrenchable {
-    protected final ComponentStackHandler components;
+//    protected final ComponentStackHandler components;
 
-    public BaseMachineTile(TileEntityType<?> tileEntityType, ComponentStackHandler.Builder builder) {
+    public BaseMachineTile(TileEntityType<?> tileEntityType) {
         super(tileEntityType);
 
-        this.components = ComponentStackHandler.withBuilder(builder.onChanged(this::refreshComponents));
+//        this.components = ComponentStackHandler.withBuilder(builder.onChanged(this::refreshComponents));
     }
 
     @Override
@@ -46,6 +45,7 @@ public abstract class BaseMachineTile extends BaseIOTile implements INamedContai
 
     public void onLeftClick(BlockState state, World worldIn, BlockPos pos, PlayerEntity player) {}
 
+    @Deprecated
     protected void refreshComponents(ItemStack stack, boolean input) {}
 
     public List<ItemStack> getDrops() {
@@ -56,7 +56,7 @@ public abstract class BaseMachineTile extends BaseIOTile implements INamedContai
 
     @Override
     public CompoundNBT write(CompoundNBT compound) {
-        compound.put("ComponentInv", components.serializeNBT());
+//        compound.put("ComponentInv", components.serializeNBT());
         compound.put("MachineIO", machineIO.serializeNBT());
 
         return super.write(compound);
@@ -64,7 +64,7 @@ public abstract class BaseMachineTile extends BaseIOTile implements INamedContai
 
     @Override
     public void read(BlockState state, CompoundNBT compound) {
-        components.deserializeNBT(compound.getCompound("ComponentInv"));
+//        components.deserializeNBT(compound.getCompound("ComponentInv"));
         machineIO.deserializeNBT(compound.getCompound("MachineIO"));
 
         super.read(state, compound);
@@ -80,10 +80,6 @@ public abstract class BaseMachineTile extends BaseIOTile implements INamedContai
     protected void readUpdateTag(CompoundNBT nbt, BlockState state) {
         super.readUpdateTag(nbt, state);
         machineIO.deserializeNBT(nbt.getCompound("MachineIO"));
-    }
-
-    public ComponentStackHandler getComponents() {
-        return components;
     }
 
     @Override

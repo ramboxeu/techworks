@@ -1,6 +1,5 @@
 package io.github.ramboxeu.techworks.common.registration;
 
-import io.github.ramboxeu.techworks.api.component.base.*;
 import io.github.ramboxeu.techworks.common.debug.DebuggerItem;
 import io.github.ramboxeu.techworks.common.item.BlueprintItem;
 import io.github.ramboxeu.techworks.common.item.GroundItem;
@@ -18,22 +17,7 @@ import java.util.List;
 public class TechworksItems {
     public static final ItemDeferredRegister ITEMS = new ItemDeferredRegister();
 
-    // Components
-    public static final List<ItemRegistryObject<?>> COMPONENTS = new ArrayList<>();
     public static final List<ItemRegistryObject<BlueprintItem>> BLUEPRINTS = new ArrayList<>();
-
-    public static final ItemRegistryObject<BaseBoilingComponent> BASIC_BOILING_COMPONENT = ITEMS.register("basic_boiling_component", () -> new BaseBoilingComponent(1, 500, 100, 300, 30));
-    public static final ItemRegistryObject<BaseBoilingComponent> ADVANCED_BOILING_COMPONENT = ITEMS.register("advanced_boiling_component", () -> new BaseBoilingComponent(2, 1000, 50, 2000, 200));
-
-    public static final ItemRegistryObject<BaseLiquidStorageComponent> BASIC_LIQUID_STORAGE_COMPONENT = ITEMS.register("basic_liquid_storage_component", () -> new BaseLiquidStorageComponent(1, 5000));
-    public static final ItemRegistryObject<BaseLiquidStorageComponent> ADVANCED_LIQUID_STORAGE_COMPONENT = ITEMS.register("advanced_liquid_storage_component", () -> new BaseLiquidStorageComponent(2, 10000));
-
-    public static final ItemRegistryObject<BaseGasStorageComponent> BASIC_GAS_STORAGE_COMPONENT = ITEMS.register("basic_gas_storage_component", () -> new BaseGasStorageComponent(1, 5000));
-    public static final ItemRegistryObject<BaseGasStorageComponent> ADVANCED_GAS_STORAGE_COMPONENT = ITEMS.register("advanced_gas_storage_component", () -> new BaseGasStorageComponent(2, 10000));
-
-    public static final ItemRegistryObject<BaseSteamTurbineComponent> BASIC_STEAM_TURBINE_COMPONENT = ITEMS.register("basic_steam_turbine_component", () -> new BaseSteamTurbineComponent(1, 500, 100, 150, 15));
-
-    public static final ItemRegistryObject<BaseEnergyStorageComponent> BASIC_ENERGY_STORAGE_COMPONENT = ITEMS.register("basic_energy_storage_component", () -> new BaseEnergyStorageComponent(1, 5000));
 
     public static final ItemRegistryObject<WrenchItem> WRENCH = ITEMS.register("wrench", WrenchItem::new);
 
@@ -59,16 +43,5 @@ public class TechworksItems {
     @FunctionalInterface
     private interface IBlueprintItemFactory {
         BlueprintItem create(Item.Properties properties, Block block, ResourceLocation recipeId);
-    }
-
-    static {
-        COMPONENTS.add(BASIC_BOILING_COMPONENT);
-        COMPONENTS.add(ADVANCED_BOILING_COMPONENT);
-        COMPONENTS.add(BASIC_LIQUID_STORAGE_COMPONENT);
-        COMPONENTS.add(ADVANCED_LIQUID_STORAGE_COMPONENT);
-        COMPONENTS.add(BASIC_GAS_STORAGE_COMPONENT);
-        COMPONENTS.add(ADVANCED_GAS_STORAGE_COMPONENT);
-        COMPONENTS.add(BASIC_STEAM_TURBINE_COMPONENT);
-        COMPONENTS.add(BASIC_ENERGY_STORAGE_COMPONENT);
     }
 }

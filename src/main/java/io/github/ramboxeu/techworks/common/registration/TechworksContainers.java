@@ -1,14 +1,14 @@
 package io.github.ramboxeu.techworks.common.registration;
 
-import io.github.ramboxeu.techworks.Techworks;
-import io.github.ramboxeu.techworks.api.component.ComponentStackHandler;
 import io.github.ramboxeu.techworks.client.container.AssemblyTableContainer;
 import io.github.ramboxeu.techworks.client.container.BlueprintTableContainer;
 import io.github.ramboxeu.techworks.client.container.DevBlockContainer;
-import io.github.ramboxeu.techworks.client.container.machine.*;
+import io.github.ramboxeu.techworks.client.container.machine.BoilerContainer;
+import io.github.ramboxeu.techworks.client.container.machine.ElectricFurnaceContainer;
+import io.github.ramboxeu.techworks.client.container.machine.ElectricGrinderContainer;
+import io.github.ramboxeu.techworks.client.container.machine.SteamEngineContainer;
 import io.github.ramboxeu.techworks.client.screen.AssemblyTableScreen;
 import io.github.ramboxeu.techworks.client.screen.BlueprintTableScreen;
-import io.github.ramboxeu.techworks.client.screen.ComponentsScreen;
 import io.github.ramboxeu.techworks.client.screen.DevBlockScreen;
 import io.github.ramboxeu.techworks.client.screen.machine.BoilerScreen;
 import io.github.ramboxeu.techworks.client.screen.machine.ElectricFurnaceScreen;
@@ -17,13 +17,10 @@ import io.github.ramboxeu.techworks.client.screen.machine.SteamEngineScreen;
 import io.github.ramboxeu.techworks.common.registry.ContainerDeferredRegister;
 import io.github.ramboxeu.techworks.common.registry.ContainerRegistryObject;
 import io.github.ramboxeu.techworks.common.tile.AssemblyTableTile;
-import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
 import io.github.ramboxeu.techworks.common.tile.BlueprintTableTile;
 import io.github.ramboxeu.techworks.common.tile.DevBlockTile;
 import io.github.ramboxeu.techworks.common.tile.machine.ElectricFurnaceTile;
 import net.minecraft.client.gui.ScreenManager;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
 
 public class TechworksContainers {
     public static final ContainerDeferredRegister CONTAINERS = new ContainerDeferredRegister();
@@ -32,22 +29,6 @@ public class TechworksContainers {
     public static final ContainerRegistryObject<SteamEngineContainer> STEAM_ENGINE = CONTAINERS.registerMachineContainer("steam_engine", SteamEngineContainer::new);
     public static final ContainerRegistryObject<ElectricGrinderContainer> ELECTRIC_GRINDER = CONTAINERS.registerMachineContainer("electric_grinder", ElectricGrinderContainer::new);
     public static final ContainerRegistryObject<ElectricFurnaceContainer> ELECTRIC_FURNACE = CONTAINERS.<ElectricFurnaceTile, ElectricFurnaceContainer>registerMachineContainer("electric_furnace", ElectricFurnaceContainer::new); // Java for some reason won't infer types on its own
-
-    public static final ContainerRegistryObject<ComponentsContainer> COMPONENTS = CONTAINERS.register("components", (id, inv, buf) -> {
-                ComponentStackHandler components = ComponentStackHandler.empty();
-
-                BlockPos pos = buf.readBlockPos();
-                TileEntity te = inv.player.world.getTileEntity(pos);
-
-                if (te instanceof BaseMachineTile) {
-                    components = ((BaseMachineTile) te).getComponents();
-                } else {
-                    // Should this crash, or something?
-                    Techworks.LOGGER.error("Expected BaseMachineTile on {}, but it was not found!", pos);
-                }
-
-                return new ComponentsContainer(id, inv, components);
-            });
 
     public static final ContainerRegistryObject<BlueprintTableContainer> BLUEPRINT_TABLE = CONTAINERS.registerTileContainer("blueprint_table", (id, inv, tile) -> new BlueprintTableContainer(id, inv, (BlueprintTableTile) tile));
     public static final ContainerRegistryObject<AssemblyTableContainer> ASSEMBLY_TABLE = CONTAINERS.registerTileContainer("assembly_table", (id, inv, tile) -> new AssemblyTableContainer(id, inv, (AssemblyTableTile) tile));
@@ -58,7 +39,6 @@ public class TechworksContainers {
         ScreenManager.registerFactory(STEAM_ENGINE.get(), SteamEngineScreen::new);
         ScreenManager.registerFactory(ELECTRIC_GRINDER.get(), ElectricGrinderScreen::new);
         ScreenManager.registerFactory(ELECTRIC_FURNACE.get(), ElectricFurnaceScreen::new);
-        ScreenManager.registerFactory(COMPONENTS.get(), ComponentsScreen::new);
         ScreenManager.registerFactory(BLUEPRINT_TABLE.get(), BlueprintTableScreen::new);
         ScreenManager.registerFactory(ASSEMBLY_TABLE.get(), AssemblyTableScreen::new);
         ScreenManager.registerFactory(DEV_BLOCK.get(), DevBlockScreen::new);

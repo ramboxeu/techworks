@@ -1,6 +1,5 @@
 package io.github.ramboxeu.techworks.common.tile.machine;
 
-import io.github.ramboxeu.techworks.api.component.ComponentStackHandler;
 import io.github.ramboxeu.techworks.client.container.machine.ElectricGrinderContainer;
 import io.github.ramboxeu.techworks.common.registration.TechworksTiles;
 import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
@@ -14,7 +13,7 @@ import javax.annotation.Nullable;
 
 public class ElectricGrinderTile extends BaseMachineTile {
     public ElectricGrinderTile() {
-        super(TechworksTiles.ELECTRIC_GRINDER.get(), new ComponentStackHandler.Builder(0));
+        super(TechworksTiles.ELECTRIC_GRINDER.get());
     }
 
     @Override

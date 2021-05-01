@@ -1,15 +1,9 @@
 package io.github.ramboxeu.techworks.common.util;
 
 import io.github.ramboxeu.techworks.Techworks;
-import io.github.ramboxeu.techworks.api.component.base.BaseEnergyStorageComponent;
-import io.github.ramboxeu.techworks.api.component.base.BaseGasStorageComponent;
-import io.github.ramboxeu.techworks.api.component.base.BaseLiquidStorageComponent;
-import io.github.ramboxeu.techworks.common.energy.EnergyBattery;
 import io.github.ramboxeu.techworks.common.util.machineio.config.HandlerConfig;
 import io.github.ramboxeu.techworks.common.util.machineio.data.HandlerData;
 import net.minecraft.fluid.Fluid;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.tileentity.TileEntity;
@@ -22,7 +16,6 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -95,73 +88,6 @@ public class Utils {
                     stack.getAmount());
         } catch (NullPointerException e) {
             return "Fluid: null";
-        }
-    }
-
-    public static void readComponentTank(ItemStack stack, FluidTank tank) {
-        if (stack.hasTag()) {
-            CompoundNBT nbt = stack.getTag();
-
-            if (nbt.contains("FluidTank", Constants.NBT.TAG_COMPOUND)) {
-                CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.readNBT(tank, null, nbt.getCompound("FluidTank"));
-
-                int volume = 0;
-                Item item = stack.getItem();
-
-                if (item instanceof BaseGasStorageComponent) {
-                    volume = ((BaseGasStorageComponent) item).getVolume();
-                } else if (item instanceof BaseLiquidStorageComponent) {
-                    volume = ((BaseLiquidStorageComponent) item).getVolume();
-                }
-
-                tank.setCapacity(volume);
-
-                Techworks.LOGGER.debug("Read: Tag: {} | Tank: {}", nbt.getCompound("FluidTank"), tank.writeToNBT(new CompoundNBT()));
-            }
-        }
-    }
-
-    @SuppressWarnings("ConstantConditions")
-    public static void writeComponentTank(ItemStack stack, FluidTank tank, boolean empty) {
-        CompoundNBT stackTag = stack.getOrCreateTag();
-        stackTag.put("FluidTank", CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.writeNBT(tank, null));
-
-        Techworks.LOGGER.debug("Write: {}", stackTag.getCompound("FluidTank"));
-
-        if (empty) {
-            tank.setCapacity(0);
-            tank.setFluid(FluidStack.EMPTY);
-        }
-    }
-
-    public static void readComponentBattery(ItemStack stack, EnergyBattery battery) {
-        if (stack.hasTag()) {
-            CompoundNBT nbt = stack.getTag();
-
-            if (nbt.contains("EnergyBattery", Constants.NBT.TAG_COMPOUND)) {
-                int energy = nbt.getCompound("EnergyBattery").getInt("Energy");
-
-                battery.setEnergy(energy);
-
-                Item item = stack.getItem();
-                if (item instanceof BaseEnergyStorageComponent) {
-                    battery.setCapacity(((BaseEnergyStorageComponent) item).getCapacity());
-                }
-            }
-        }
-    }
-
-    public static void writeComponentBattery(ItemStack stack, EnergyBattery battery, boolean empty) {
-        CompoundNBT stackTag = stack.getOrCreateTag();
-
-        CompoundNBT nbt = new CompoundNBT();
-        nbt.putInt("Energy", battery.getEnergyStored());
-
-        stackTag.put("EnergyBattery", nbt);
-
-        if (empty) {
-            battery.setCapacity(0);
-            battery.setEnergy(0);
         }
     }
 

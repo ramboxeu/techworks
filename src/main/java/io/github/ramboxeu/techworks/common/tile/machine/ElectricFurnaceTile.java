@@ -1,7 +1,6 @@
 package io.github.ramboxeu.techworks.common.tile.machine;
 
 import io.github.ramboxeu.techworks.Techworks;
-import io.github.ramboxeu.techworks.api.component.ComponentStackHandler;
 import io.github.ramboxeu.techworks.client.container.machine.ElectricFurnaceContainer;
 import io.github.ramboxeu.techworks.common.energy.EnergyBattery;
 import io.github.ramboxeu.techworks.common.fluid.handler.LiquidTank;
@@ -56,7 +55,7 @@ public class ElectricFurnaceTile extends BaseMachineTile {
     private List<EnergyHandlerData> energyHandlerDataList;
 
     public ElectricFurnaceTile() {
-        super(TechworksTiles.ELECTRIC_FURNACE.get(), new ComponentStackHandler.Builder(0));
+        super(TechworksTiles.ELECTRIC_FURNACE.get());
 
         inv = new ItemStackHandler(1) {
             @Override
