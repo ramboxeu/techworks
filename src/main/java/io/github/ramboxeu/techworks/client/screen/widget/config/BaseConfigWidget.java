@@ -23,7 +23,7 @@ public abstract class BaseConfigWidget extends BaseScreenWidget {
     protected final IReorderingProcessor tooltip;
 
     public BaseConfigWidget(BaseMachineScreen<?, ?> screen, IReorderingProcessor tooltip) {
-        super(screen, -22, 0, 155, 166);
+        super(screen, 0, 0, 155, 166);
         this.tooltip = tooltip;
 
         render = false;
@@ -41,13 +41,17 @@ public abstract class BaseConfigWidget extends BaseScreenWidget {
     protected void renderWidget(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         minecraft.textureManager.bindTexture(GUI_LOCATION);
 
-        stack.push();
-        stack.translate(-22, 0, 0);
-        blit(stack, 0, tabY, 133, 0, 22, 22);
-        stack.pop();
+        if (machineScreen.isConfigOpen()) {
+            stack.push();
+            stack.translate(CONFIG_GUI_WIDTH, 0, 0);
+            blit(stack, 0, tabY, 133, 0, 22, 22);
+            stack.pop();
+        } else {
+            blit(stack, 0, tabY, 133, 0, 22, 22);
+        }
 
         if (render) {
-            blit(stack, 0, 0, 0, 0, 133, 166);
+            blit(stack, -3, 0, 0, 0, 133, 166);
             renderConfig(stack, mouseX, mouseY, partialTicks);
         }
     }
@@ -56,24 +60,15 @@ public abstract class BaseConfigWidget extends BaseScreenWidget {
     public void renderToolTip(MatrixStack stack, int mouseX, int mouseY) {
         int x = (mouseX - guiLeft);
         int y = (mouseY - guiTop);
-//        Techworks.LOGGER.debug("x = {} y = {} tX = {} tY = {}", x, y, tabX, tabY);
 
-//        if (machineScreen.getRenderConfig()) {
-//            x += CONFIG_GUI_WIDTH;
-//        }
-
-        if (x + 22 >= tabX && y >= tabY && x + 22 <= tabX + 22 && y <= tabY + 22) {
+        if (x >= tabX && y >= tabY && x <= tabX + 22 && y <= tabY + 22) {
             screen.renderTooltip(stack, Collections.singletonList(tooltip), x, y);
         }
     }
 
     @Override
     public void onScreenInit(Minecraft minecraft, int guiLeft, int guiTop, int guiWidth, int guiHeight) {
-        if (machineScreen.getRenderConfig()) {
-            guiLeft -= CONFIG_GUI_WIDTH;
-        }
-
-        super.onScreenInit(minecraft, guiLeft, guiTop, guiWidth, guiHeight);
+        super.onScreenInit(minecraft, guiLeft + guiWidth, guiTop, guiWidth, guiHeight);
     }
 
     // stack is translated
@@ -84,12 +79,7 @@ public abstract class BaseConfigWidget extends BaseScreenWidget {
         int x = (int) (mouseX - guiLeft);
         int y = (int) (mouseY - guiTop);
 
-//        if (machineScreen.getRenderConfig()) {
-//            x += CONFIG_GUI_WIDTH;
-//        }
-
-//        Techworks.LOGGER.debug("x = {} y = {} tX = {} tY = {}", x, y, tabX, tabY);
-        if (x + 22 >= tabX && y >= tabY && x + 22 <= tabX + 22 && y <= tabY + 22) {
+        if (x >= tabX && y >= tabY && x <= tabX + 22 && y <= tabY + 22) {
             machineScreen.tabClicked(index);
             playDownSound(Minecraft.getInstance().getSoundHandler());
             return true;
@@ -103,5 +93,10 @@ public abstract class BaseConfigWidget extends BaseScreenWidget {
     }
 
     public void updatePos() {
+        if (machineScreen.isConfigOpen()) {
+            tabX += CONFIG_GUI_WIDTH;
+        } else {
+            tabX -= CONFIG_GUI_WIDTH;
+        }
     }
 }

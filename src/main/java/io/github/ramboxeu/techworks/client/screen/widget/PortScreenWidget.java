@@ -22,7 +22,7 @@ public abstract class PortScreenWidget extends BaseScreenWidget {
 
     @Override
     protected void renderWidget(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
-        if (machineScreen.getRenderConfig()) {
+        if (machineScreen.isConfigOpen()) {
             int x = this.x - 1;
             int y = this.y - 1;
 

@@ -61,7 +61,7 @@ public abstract class BaseMachineScreen<TILE extends BaseMachineTile, CONTAINER 
     protected void drawGuiContainerBackgroundLayer(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
         if (renderConfig) {
             stack.push();
-            stack.translate((CONFIG_SCREEN_WIDTH / 2.0F), 0, 0);
+            stack.translate(-(CONFIG_SCREEN_WIDTH / 2.0F), 0, 0);
             super.drawGuiContainerBackgroundLayer(stack, partialTicks, mouseX, mouseY);
             stack.pop();
         } else {
@@ -74,7 +74,7 @@ public abstract class BaseMachineScreen<TILE extends BaseMachineTile, CONTAINER 
         super.init();
 
         if (renderConfig) {
-            guiLeft += CONFIG_SCREEN_WIDTH / 2;
+            guiLeft -= CONFIG_SCREEN_WIDTH / 2;
             reInitWidgets();
         }
     }
@@ -86,13 +86,13 @@ public abstract class BaseMachineScreen<TILE extends BaseMachineTile, CONTAINER 
         if (config == widget) {
             widget.toggle();
             config = null;
-            guiLeft -= (CONFIG_SCREEN_WIDTH / 2);
+            guiLeft += (CONFIG_SCREEN_WIDTH / 2);
             renderConfig = false;
             configWidgets.forEach(BaseConfigWidget::updatePos);
             reInitWidgets();
         } else {
             if (!renderConfig) {
-                guiLeft += (CONFIG_SCREEN_WIDTH / 2);
+                guiLeft -= (CONFIG_SCREEN_WIDTH / 2);
                 renderConfig = true;
                 configWidgets.forEach(BaseConfigWidget::updatePos);
                 reInitWidgets();
@@ -107,7 +107,7 @@ public abstract class BaseMachineScreen<TILE extends BaseMachineTile, CONTAINER 
         }
     }
 
-    public boolean getRenderConfig() {
+    public boolean isConfigOpen() {
         return renderConfig;
     }
 }
