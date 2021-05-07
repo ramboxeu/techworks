@@ -54,6 +54,7 @@ public class TechworksPacketHandler {
         CHANNEL.registerMessage(id++, DevBlockItemSyncPacket.class, DevBlockItemSyncPacket::encode, DevBlockItemSyncPacket::decode, DevBlockItemSyncPacket::handle);
 //        CHANNEL.registerMessage(id++, SyncTransportedItemPacket.class, SyncTransportedItemPacket::encode, SyncTransportedItemPacket::decode, SyncTransportedItemPacket::handle);
         CHANNEL.registerMessage(id++, SyncCablePacket.class, SyncCablePacket::encode, SyncCablePacket::decode, SyncCablePacket::handle);
+        CHANNEL.registerMessage(id++, ContainerButtonClicked.class, ContainerButtonClicked::encode, ContainerButtonClicked::decode, ContainerButtonClicked::handle);
     }
 
     public static void sendObjectUpdatePacket(SObjectUpdatePacket packet, ServerPlayerEntity entity) {
@@ -124,5 +125,9 @@ public class TechworksPacketHandler {
 
     public static void onPacketArrived(Chunk chunk, BlockPos pos, ICablePacket packet, int index) {
         CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> chunk), new SyncCablePacket(packet, pos, index, true));
+    }
+
+    public static void sendContainerButtonClicked(int widgetId, int buttonId) {
+        CHANNEL.sendToServer(new ContainerButtonClicked(widgetId, buttonId));
     }
 }

@@ -15,6 +15,8 @@ public abstract class BaseContainerWidget {
 
     public void init(BaseContainer container, Builder builder) {}
 
+    public void onButtonClicked(int buttonId) {}
+
     public static class Builder {
         private final List<Slot> slots = new ArrayList<>();
         private final List<ObjectReferenceHolder> objectTrackers = new ArrayList<>();

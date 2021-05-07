@@ -3,6 +3,7 @@ package io.github.ramboxeu.techworks.client.container;
 import io.github.ramboxeu.techworks.client.gui.element.GuiElement;
 import io.github.ramboxeu.techworks.client.screen.widget.BaseContainerWidget;
 import io.github.ramboxeu.techworks.common.capability.CapabilityExtendedListenerProvider;
+import io.github.ramboxeu.techworks.common.network.TechworksPacketHandler;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.Container;
@@ -52,6 +53,32 @@ public abstract class BaseContainer extends Container {
             detectAndSendChanges();
         }
     }
+
+    public void buttonClicked(BaseContainerWidget widget, int buttonId) {
+        buttonClicked(widgets.indexOf(widget), buttonId);
+    }
+
+    public void buttonClicked(int buttonId) {
+        buttonClicked(-1, buttonId);
+    }
+
+    public final void buttonClicked(int widgetId, int buttonId) {
+        TechworksPacketHandler.sendContainerButtonClicked(widgetId, buttonId);
+    }
+
+    public final void onButtonClicked(int widgetId, int buttonId) {
+        if (widgetId == -1) {
+            onButtonClicked(buttonId);
+        } else {
+            BaseContainerWidget widget = widgets.get(widgetId);
+
+            if (widget != null) {
+                widget.onButtonClicked(buttonId);
+            }
+        }
+    }
+
+    protected void onButtonClicked(int buttonId) {}
 
     @Override
     public void detectAndSendChanges() {
