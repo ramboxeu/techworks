@@ -55,6 +55,7 @@ public class TechworksPacketHandler {
 //        CHANNEL.registerMessage(id++, SyncTransportedItemPacket.class, SyncTransportedItemPacket::encode, SyncTransportedItemPacket::decode, SyncTransportedItemPacket::handle);
         CHANNEL.registerMessage(id++, SyncCablePacket.class, SyncCablePacket::encode, SyncCablePacket::decode, SyncCablePacket::handle);
         CHANNEL.registerMessage(id++, ContainerButtonClicked.class, ContainerButtonClicked::encode, ContainerButtonClicked::decode, ContainerButtonClicked::handle);
+        CHANNEL.registerMessage(id++, SyncToggleableButtonState.class, SyncToggleableButtonState::encode, SyncToggleableButtonState::decode, SyncToggleableButtonState::handle);
     }
 
     public static void sendObjectUpdatePacket(SObjectUpdatePacket packet, ServerPlayerEntity entity) {
@@ -129,5 +130,9 @@ public class TechworksPacketHandler {
 
     public static void sendContainerButtonClicked(int widgetId, int buttonId) {
         CHANNEL.sendToServer(new ContainerButtonClicked(widgetId, buttonId));
+    }
+
+    public static void syncTaggableSlotState(int slotId, boolean enabled) {
+        CHANNEL.sendToServer(new SyncToggleableButtonState(slotId, enabled));
     }
 }

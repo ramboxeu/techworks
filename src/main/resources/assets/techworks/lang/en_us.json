@@ -55,5 +55,18 @@
   "tooltip.techworks.blueprint.electric_grinder": "Electric Grinder",
   "tooltip.techworks.widget.fluid_display": "%s %d/%dmb",
 
-  "gui.techworks.widget.search_blueprints": "Search"
+  "tooltip.component.techworks.smelting_time_modifier": " - Time modifier: %d",
+  "tooltip.component.techworks.smelting_energy_modifier": " - Energy modifier: %d",
+  "tooltip.component.techworks.energy_capacity": " - Capacity: %d",
+  "tooltip.component.techworks.energy_max_input": " - Max input: %d",
+  "tooltip.component.techworks.energy_max_output": " - Max output: %d",
+
+  "gui.techworks.widget.search_blueprints": "Search",
+
+  "component.techworks.advanced_energy_storage": "Advanced Energy Storage Component",
+  "component.techworks.base_energy_storage": "Base Energy Storage Component",
+  "component.techworks.advanced_smelting": "Advanced Smelting Component",
+  "component.techworks.base_smelting": "Base Smelting Component",
+  "component_type.techworks.smelting": "Smelting Component",
+  "component_type.techworks.energy_storage": "Energy Storage Component"
 }

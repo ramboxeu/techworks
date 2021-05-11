@@ -1,0 +1,9 @@
+{
+  "type": "techworks:energy_storage",
+  "item": "minecraft:observer",
+  "parameters": {
+    "storage": 50000,
+    "maxInput": 1500,
+    "maxOutput": 1500
+  }
+}

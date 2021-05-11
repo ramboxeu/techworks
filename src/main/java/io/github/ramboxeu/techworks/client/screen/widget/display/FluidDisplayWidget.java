@@ -112,7 +112,7 @@ public class FluidDisplayWidget extends PortContainerWidget implements IPortScre
 
         @Override
         protected void renderWidgetTooltip(MatrixStack stack, int mouseX, int mouseY) {
-            ClientUtils.renderTooltip(screen, stack, getFluidName(fluid), mouseX, mouseY, minecraft.fontRenderer);
+            ClientUtils.renderTooltip(screen, minecraft.fontRenderer, stack, getFluidName(fluid), mouseX, mouseY);
         }
 
         public ITextComponent getFluidName(FluidStack stack) {

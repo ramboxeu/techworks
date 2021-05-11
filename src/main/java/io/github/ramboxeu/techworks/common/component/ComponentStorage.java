@@ -9,11 +9,9 @@ import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class ComponentStorage implements IItemHandler, INBTSerializable<CompoundNBT> {
 
@@ -35,6 +33,7 @@ public class ComponentStorage implements IItemHandler, INBTSerializable<Compound
         CompoundNBT tag = new CompoundNBT();
 
         tag.putInt("WaitTimer", waitTimer);
+        tag.putBoolean("Finished", finished);
         tag.put("PendingStack", pendingStack.serializeNBT());
         tag.put("Storage", serializeStorage());
         NBTUtils.serializeEnum(tag, "Operation", operation);
@@ -62,6 +61,7 @@ public class ComponentStorage implements IItemHandler, INBTSerializable<Compound
     @Override
     public void deserializeNBT(CompoundNBT tag) {
         waitTimer = tag.getInt("WaitTimer");
+        finished = tag.getBoolean("Finished");
         pendingStack = ItemStack.read(tag.getCompound("PendingStack"));
         deserializeStorage(tag.getCompound("Storage"));
 
@@ -100,6 +100,15 @@ public class ComponentStorage implements IItemHandler, INBTSerializable<Compound
     @Nonnull
     @Override
     public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
+        if (stack.isEmpty()) {
+            if (!simulate) {
+                clear();
+                return ItemStack.EMPTY;
+            }
+
+            return stack.copy();
+        }
+
         if (canInstall(stack)) {
             if (!simulate) {
                 waitTimer = 0;
@@ -128,11 +137,7 @@ public class ComponentStorage implements IItemHandler, INBTSerializable<Compound
         if (operation == Operation.INSTALL) {
             if (!simulate) {
                 ItemStack stack = pendingStack;
-                pendingStack = ItemStack.EMPTY;
-                waitTimer = 0;
-                operation = Operation.NONE;
-                finished = false;
-
+                clear();
                 return stack;
             }
 
@@ -140,17 +145,17 @@ public class ComponentStorage implements IItemHandler, INBTSerializable<Compound
         }
 
         if (operation == Operation.UNINSTALL) {
-            if (finished) {
-                if (!simulate) {
-                    ItemStack stack = pendingStack;
-                    finished = false;
-                    pendingStack = ItemStack.EMPTY;
-                    operation = Operation.NONE;
-                    return stack;
-                }
+            return ItemStack.EMPTY;
+        }
 
-                return pendingStack.copy();
+        if (finished) {
+            if (!simulate) {
+                ItemStack stack = pendingStack;
+                clear();
+                return stack;
             }
+
+            return pendingStack.copy();
         }
 
         return ItemStack.EMPTY;
@@ -167,20 +172,22 @@ public class ComponentStorage implements IItemHandler, INBTSerializable<Compound
     }
 
     public void tick() {
-        if (waitTimer == 200) {
-            finished = true;
-            waitTimer = 0;
+        if (!finished) {
+            if (waitTimer == 200) {
+                finished = true;
+                waitTimer = 0;
 
-            if (operation == Operation.INSTALL)
-                insert();
+                if (operation == Operation.INSTALL)
+                    insert();
 
-            if (operation == Operation.UNINSTALL)
-                extract();
+                if (operation == Operation.UNINSTALL)
+                    extract();
 
-            operation = Operation.NONE;
-        } else {
-            if (operation.canTick()) {
-                waitTimer++;
+                operation = Operation.NONE;
+            } else {
+                if (operation.canTick()) {
+                    waitTimer++;
+                }
             }
         }
     }
@@ -210,6 +217,25 @@ public class ComponentStorage implements IItemHandler, INBTSerializable<Compound
         return false;
     }
 
+    public List<Component> getComponents() {
+        return storage.values().stream().map(e -> e.component).collect(Collectors.toList());
+    }
+
+    public Collection<ComponentType<?>> getSupportedTypes() {
+        return Collections.unmodifiableSet(storage.keySet());
+    }
+
+    public boolean isFinished() {
+        return finished;
+    }
+
+    private void clear() {
+        pendingStack = ItemStack.EMPTY;
+        waitTimer = 0;
+        operation = Operation.NONE;
+        finished = false;
+    }
+
     private boolean canInstall(ItemStack stack) {
         Component component = ComponentManager.getInstance().getComponent(stack.getItem());
 
@@ -217,7 +243,8 @@ public class ComponentStorage implements IItemHandler, INBTSerializable<Compound
             return storage.values().stream().noneMatch(entry -> entry.component == component)
                     && storage.get(component.getType()).component.isBase()
                     && operation.canProcess()
-                    && pendingStack.isEmpty();
+                    && pendingStack.isEmpty()
+                    && !finished;
         }
 
         return false;
@@ -241,7 +268,9 @@ public class ComponentStorage implements IItemHandler, INBTSerializable<Compound
             Entry entry = storage.get(component.getType());
             entry.setComponent(component);
         }
+
         pendingStack = ItemStack.EMPTY;
+        finished = false;
     }
 
     private void extract() {
@@ -251,11 +280,24 @@ public class ComponentStorage implements IItemHandler, INBTSerializable<Compound
         pendingComponent = null;
     }
 
-    public void emptyPendingStack() {
-        pendingStack = ItemStack.EMPTY;
+    public float getOperationProgress() {
+        return waitTimer / 200.0f;
     }
 
-    private enum Operation {
+    public boolean isProcessing() {
+        return operation != Operation.NONE;
+    }
+
+    // INTERNAL
+    public void putSlotStack(ItemStack stack) {
+        pendingStack = stack;
+    }
+
+    public Operation getOperation() {
+        return operation;
+    }
+
+    public enum Operation {
         NONE,
         INSTALL,
         UNINSTALL;

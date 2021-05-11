@@ -5,22 +5,35 @@ import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.common.registration.TechworksComponents;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SmeltingComponent extends Component {
-    private final int energy;
-    private final int time;
+    private final float energy;
+    private final float time;
 
-    public SmeltingComponent(ResourceLocation id, Item item, int energy, int time) {
+    public SmeltingComponent(ResourceLocation id, Item item, float energy, float time) {
         super(TechworksComponents.SMELTING.get(), id, item);
         this.energy = energy;
         this.time = time;
     }
 
-    public int getEnergy() {
+    @Override
+    protected List<ITextComponent> collectTooltip() {
+        List<ITextComponent> tooltip = new ArrayList<>(2);
+        tooltip.add(new TranslationTextComponent("tooltip.component.techworks.smelting_time_modifier", time).setStyle(Component.TOOLTIP_STYLE));
+        tooltip.add(new TranslationTextComponent("tooltip.component.techworks.smelting_energy_modifier", energy).setStyle(Component.TOOLTIP_STYLE));
+        return tooltip;
+    }
+
+    public float getEnergy() {
         return energy;
     }
 
-    public int getTime() {
+    public float getTime() {
         return time;
     }
 
@@ -30,14 +43,9 @@ public class SmeltingComponent extends Component {
 
         @Override
         protected SmeltingComponent readComponent(ResourceLocation id, Item item, JsonObject parameters) {
-            int energy = parameters.get("energy").getAsInt();
-            int time = parameters.get("time").getAsInt();
+            float energy = parameters.get("energy").getAsFloat();
+            float time = parameters.get("time").getAsFloat();
             return new SmeltingComponent(id, item, energy, time);
-        }
-
-        @Override
-        public String getName() {
-            return "Smelting Component";
         }
 
         @Override

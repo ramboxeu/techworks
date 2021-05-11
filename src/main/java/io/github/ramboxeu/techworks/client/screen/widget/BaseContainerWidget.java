@@ -8,6 +8,7 @@ import net.minecraft.util.IntReferenceHolder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 
 public abstract class BaseContainerWidget {
     public BaseContainerWidget() {
@@ -21,10 +22,19 @@ public abstract class BaseContainerWidget {
         private final List<Slot> slots = new ArrayList<>();
         private final List<ObjectReferenceHolder> objectTrackers = new ArrayList<>();
         private final List<IntReferenceHolder> intTrackers = new ArrayList<>();
+        private final Function<Slot, BaseContainer.ToggleableSlot> wrapperMaker;
+
+        public Builder(Function<Slot, BaseContainer.ToggleableSlot> wrapperMaker) {
+            this.wrapperMaker = wrapperMaker;
+        }
 
         public Builder slot(Slot slot) {
             slots.add(slot);
             return this;
+        }
+
+        public BaseContainer.ToggleableSlot toggleableSlot(Slot slot) {
+            return wrapperMaker.apply(slot);
         }
 
         public Builder slots(Slot slot, Slot... slots) {

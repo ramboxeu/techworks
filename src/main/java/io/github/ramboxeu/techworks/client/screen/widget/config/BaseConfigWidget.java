@@ -58,9 +58,13 @@ public abstract class BaseConfigWidget extends BaseScreenWidget {
 
     @Override
     public void renderToolTip(MatrixStack stack, int mouseX, int mouseY) {
-        int x = (mouseX - guiLeft);
-        int y = (mouseY - guiTop);
+        if (render) {
+            super.renderToolTip(stack, mouseX, mouseY);
+        }
+    }
 
+    @Override
+    protected void renderWidgetTooltip(MatrixStack stack, int x, int y) {
         if (x >= tabX && y >= tabY && x <= tabX + 22 && y <= tabY + 22) {
             screen.renderTooltip(stack, Collections.singletonList(tooltip), x, y);
         }

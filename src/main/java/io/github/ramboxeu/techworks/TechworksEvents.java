@@ -130,7 +130,7 @@ public class TechworksEvents {
 
         if (item.isIn(ComponentManager.getInstance().getItemComponentTag())) {
             Component component = ComponentManager.getInstance().getComponent(item);
-            String name = component.getType().getName();
+            String name = component.getType().getName().getString();
 
             List<ITextComponent> toolTip = event.getToolTip();
             toolTip.add(new StringTextComponent(name).setStyle(COMPONENT_NAME));
