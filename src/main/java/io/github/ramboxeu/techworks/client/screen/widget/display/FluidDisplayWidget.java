@@ -3,7 +3,7 @@ package io.github.ramboxeu.techworks.client.screen.widget.display;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import io.github.ramboxeu.techworks.client.container.BaseContainer;
 import io.github.ramboxeu.techworks.client.container.BaseMachineContainer;
-import io.github.ramboxeu.techworks.client.container.holder.FluidStackHolder;
+import io.github.ramboxeu.techworks.client.container.sync.FluidStackHolder;
 import io.github.ramboxeu.techworks.client.screen.BaseMachineScreen;
 import io.github.ramboxeu.techworks.client.screen.widget.IPortScreenWidgetProvider;
 import io.github.ramboxeu.techworks.client.screen.widget.PortContainerWidget;
@@ -47,18 +47,10 @@ public class FluidDisplayWidget extends PortContainerWidget implements IPortScre
 
     @Override
     public void init(BaseContainer container, Builder builder) {
-        builder.track(new FluidStackHolder() {
-            @Override
-            public Object get() {
-                return handler.getFluid();
-            }
-
-            @Override
-            public void set(Object value) {
-                fluid = (FluidStack) value;
-                screenWidgetInstance.updateFluid(fluid, capacity);
-            }
-        });
+        builder.track(new FluidStackHolder(handler::getFluid, value -> {
+            fluid = value;
+            screenWidgetInstance.updateFluid(fluid, capacity);
+        }));
 
         builder.track(new IntReferenceHolder() {
             @Override

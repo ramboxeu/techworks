@@ -1,19 +1,19 @@
 package io.github.ramboxeu.techworks.client.container;
 
 import com.mojang.datafixers.util.Pair;
+import io.github.ramboxeu.techworks.client.container.sync.IExtendedContainerListener;
+import io.github.ramboxeu.techworks.client.container.sync.ObjectHolder;
+import io.github.ramboxeu.techworks.client.container.sync.PlayerListenerWrapper;
 import io.github.ramboxeu.techworks.client.gui.element.GuiElement;
 import io.github.ramboxeu.techworks.client.screen.widget.BaseContainerWidget;
-import io.github.ramboxeu.techworks.common.capability.CapabilityExtendedListenerProvider;
 import io.github.ramboxeu.techworks.common.network.TechworksPacketHandler;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class BaseContainer extends Container {
-    private final List<ObjectReferenceHolder> trackedObjects = new ArrayList<>();
+    private final List<ObjectHolder<?>> trackedObjects = new ArrayList<>();
     private final List<IExtendedContainerListener> extendedListeners = new ArrayList<>();
     private final List<GuiElement> elements = new ArrayList<>();
     private final List<BaseContainerWidget> widgets = new ArrayList<>();
@@ -44,7 +44,7 @@ public abstract class BaseContainer extends Container {
         return widget;
     }
 
-    protected ObjectReferenceHolder trackObject(ObjectReferenceHolder holder) {
+    protected <T> ObjectHolder<T> trackObject(ObjectHolder<T> holder) {
         trackedObjects.add(holder);
         return holder;
     }
@@ -54,11 +54,6 @@ public abstract class BaseContainer extends Container {
         addSlot(slot);
         toggleableSlots.add(slot);
         return slot;
-    }
-
-    public void updateObject(int objectId, CompoundNBT tag) {
-        ObjectReferenceHolder holder = trackedObjects.get(objectId);
-        holder.set(holder.deserialize(tag));
     }
 
     public void addListener(IExtendedContainerListener listener) {
@@ -114,21 +109,19 @@ public abstract class BaseContainer extends Container {
     public void detectAndSendChanges() {
         super.detectAndSendChanges();
 
-        for (int i = 0; i < trackedObjects.size(); i++) {
-            ObjectReferenceHolder holder = trackedObjects.get(i);
-            if (holder.isDirty()) {
+        for (int i = 0, size = trackedObjects.size(); i < size; i++) {
+            ObjectHolder<?> holder = trackedObjects.get(i);
+
+            if (holder != null && holder.isDirty()) {
                 for (IExtendedContainerListener listener : extendedListeners) {
-                    listener.sendObjectUpdate(this, i, holder.serialize(holder.get()));
+                    listener.sendObjectUpdate(i, holder);
                 }
             }
         }
     }
 
     protected void addPlayerListener(PlayerEntity player) {
-        if (player instanceof ServerPlayerEntity) {
-            player.getCapability(CapabilityExtendedListenerProvider.EXTENDED_LISTENER_PROVIDER)
-                    .ifPresent(provider -> addListener(provider.create((ServerPlayerEntity) player)));
-        }
+        PlayerListenerWrapper.wrap(player, this::addListener);
     }
 
     public List<GuiElement> getElements() {
@@ -137,6 +130,14 @@ public abstract class BaseContainer extends Container {
 
     public List<BaseContainerWidget> getWidgets() {
         return widgets;
+    }
+
+    public void updateObjectHolder(int holderId, ObjectHolder<?> synced) {
+        ObjectHolder<?> holder = trackedObjects.get(holderId);
+
+        if (holder != null) {
+            holder.setTo(synced);
+        }
     }
 
     public static class ToggleableSlot extends Slot {

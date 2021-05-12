@@ -1,7 +1,6 @@
 package io.github.ramboxeu.techworks;
 
 import io.github.ramboxeu.techworks.api.wrench.IWrench;
-import io.github.ramboxeu.techworks.common.capability.ExtendedListenerProvider;
 import io.github.ramboxeu.techworks.common.command.CablesCommand;
 import io.github.ramboxeu.techworks.common.command.CapabilitiesCommand;
 import io.github.ramboxeu.techworks.common.component.Component;
@@ -10,12 +9,9 @@ import io.github.ramboxeu.techworks.common.item.WrenchItem;
 import io.github.ramboxeu.techworks.common.item.WrenchItem.Result;
 import io.github.ramboxeu.techworks.common.registration.TechworksItems;
 import io.github.ramboxeu.techworks.common.util.cable.network.CableNetworkManager;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
@@ -25,7 +21,6 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.event.AddReloadListenerEvent;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -37,13 +32,6 @@ import java.util.List;
 
 // Events must be public, otherwise HotSwap won't work
 public class TechworksEvents {
-
-    @SubscribeEvent
-    public static void attachCapabilitiesToEntities(AttachCapabilitiesEvent<Entity> event) {
-        if (event.getObject() instanceof ServerPlayerEntity) {
-            event.addCapability(new ResourceLocation(Techworks.MOD_ID, "extended_listener_provider"), new ExtendedListenerProvider());
-        }
-    }
 
     @SubscribeEvent
     public static void onWorldTick(TickEvent.WorldTickEvent event) {

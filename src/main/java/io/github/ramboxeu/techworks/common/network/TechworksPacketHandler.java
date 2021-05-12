@@ -1,6 +1,7 @@
 package io.github.ramboxeu.techworks.common.network;
 
 import io.github.ramboxeu.techworks.Techworks;
+import io.github.ramboxeu.techworks.client.container.sync.ObjectHolder;
 import io.github.ramboxeu.techworks.common.network.dev.DevBlockEnergySyncPacket;
 import io.github.ramboxeu.techworks.common.network.dev.DevBlockGasSyncPacket;
 import io.github.ramboxeu.techworks.common.network.dev.DevBlockItemSyncPacket;
@@ -42,7 +43,6 @@ public class TechworksPacketHandler {
         CHANNEL.registerMessage(id++, CableRequestSyncShapePacket.class, CableRequestSyncShapePacket::encode, CableRequestSyncShapePacket::decode, CableRequestSyncShapePacket.Handler::handle);
         CHANNEL.registerMessage(id++, DebugRequestPacket.class, DebugRequestPacket::encode, DebugRequestPacket::decode, DebugRequestPacket.Handler::handle);
         CHANNEL.registerMessage(id++, DebugResponsePacket.class, DebugResponsePacket::encode, DebugResponsePacket::decode, DebugResponsePacket.Handler::handle);
-        CHANNEL.registerMessage(id++, SObjectUpdatePacket.class, SObjectUpdatePacket::encode, SObjectUpdatePacket::decode, SObjectUpdatePacket::handle);
         CHANNEL.registerMessage(id++, SMachinePortSyncPacket.class, SMachinePortSyncPacket::encode, SMachinePortSyncPacket::decode, SMachinePortSyncPacket::handle);
         CHANNEL.registerMessage(id++, CBlueprintCraftPacket.class, CBlueprintCraftPacket::encode, CBlueprintCraftPacket::decode, CBlueprintCraftPacket::handle);
         CHANNEL.registerMessage(id++, SyncHandlerStatus.class, SyncHandlerStatus::encode, SyncHandlerStatus::decode, SyncHandlerStatus::handle);
@@ -56,10 +56,7 @@ public class TechworksPacketHandler {
         CHANNEL.registerMessage(id++, SyncCablePacket.class, SyncCablePacket::encode, SyncCablePacket::decode, SyncCablePacket::handle);
         CHANNEL.registerMessage(id++, ContainerButtonClicked.class, ContainerButtonClicked::encode, ContainerButtonClicked::decode, ContainerButtonClicked::handle);
         CHANNEL.registerMessage(id++, SyncToggleableButtonState.class, SyncToggleableButtonState::encode, SyncToggleableButtonState::decode, SyncToggleableButtonState::handle);
-    }
-
-    public static void sendObjectUpdatePacket(SObjectUpdatePacket packet, ServerPlayerEntity entity) {
-        CHANNEL.send(PacketDistributor.PLAYER.with(() -> entity), packet);
+        CHANNEL.registerMessage(id++, SyncObjectHolder.class, SyncObjectHolder::encode, SyncObjectHolder::decode, SyncObjectHolder::handle);
     }
 
     public static void sendMachinePortUpdatePacket(BlockPos pos, int index, MachinePort port, Chunk chunk) {
@@ -134,5 +131,9 @@ public class TechworksPacketHandler {
 
     public static void syncTaggableSlotState(int slotId, boolean enabled) {
         CHANNEL.sendToServer(new SyncToggleableButtonState(slotId, enabled));
+    }
+
+    public static void syncObjectHolder(ServerPlayerEntity player, int holderId, ObjectHolder<?> holder) {
+        CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new SyncObjectHolder(holderId, holder));
     }
 }

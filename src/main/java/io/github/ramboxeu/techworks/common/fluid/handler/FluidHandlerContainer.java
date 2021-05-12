@@ -85,6 +85,9 @@ public class FluidHandlerContainer implements IFluidHandler, IHandlerContainer {
 
     @Override
     public int fill(FluidStack resource, FluidAction action) {
+        if (resource.isEmpty())
+            return 0;
+
         int maxFill = resource.getAmount();
         int filled = 0;
 

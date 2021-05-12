@@ -1,7 +1,7 @@
 package io.github.ramboxeu.techworks.client.screen.widget;
 
 import io.github.ramboxeu.techworks.client.container.BaseContainer;
-import io.github.ramboxeu.techworks.client.container.ObjectReferenceHolder;
+import io.github.ramboxeu.techworks.client.container.sync.ObjectHolder;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.util.IntReferenceHolder;
 
@@ -20,7 +20,7 @@ public abstract class BaseContainerWidget {
 
     public static class Builder {
         private final List<Slot> slots = new ArrayList<>();
-        private final List<ObjectReferenceHolder> objectTrackers = new ArrayList<>();
+        private final List<ObjectHolder<?>> objectTrackers = new ArrayList<>();
         private final List<IntReferenceHolder> intTrackers = new ArrayList<>();
         private final Function<Slot, BaseContainer.ToggleableSlot> wrapperMaker;
 
@@ -43,15 +43,9 @@ public abstract class BaseContainerWidget {
             return this;
         }
 
-        public Builder track(ObjectReferenceHolder objectTracker) {
-            objectTrackers.add(objectTracker);
-            return this;
-        }
-
-        public Builder track(ObjectReferenceHolder objectTracker, ObjectReferenceHolder... objectTrackers) {
-            this.objectTrackers.add(objectTracker);
-            this.objectTrackers.addAll(Arrays.asList(objectTrackers));
-            return this;
+        public <T extends ObjectHolder<?>> T track(T object) {
+            objectTrackers.add(object);
+            return object;
         }
 
         public Builder track(IntReferenceHolder intTracker) {
@@ -69,7 +63,7 @@ public abstract class BaseContainerWidget {
             return slots;
         }
 
-        public List<ObjectReferenceHolder> getObjectTrackers() {
+        public List<ObjectHolder<?>> getObjectTrackers() {
             return objectTrackers;
         }
 

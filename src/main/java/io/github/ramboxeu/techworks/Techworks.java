@@ -3,7 +3,6 @@ package io.github.ramboxeu.techworks;
 import io.github.ramboxeu.techworks.client.TechworksClientEvents;
 import io.github.ramboxeu.techworks.client.model.cable.CableModelLoader;
 import io.github.ramboxeu.techworks.common.TechworksItemGroup;
-import io.github.ramboxeu.techworks.common.capability.CapabilityExtendedListenerProvider;
 import io.github.ramboxeu.techworks.common.debug.DebugInfoRenderer;
 import io.github.ramboxeu.techworks.common.network.TechworksPacketHandler;
 import io.github.ramboxeu.techworks.common.registration.*;
@@ -59,7 +58,6 @@ public class Techworks {
     }
 
     public void setup(FMLCommonSetupEvent event) {
-        CapabilityExtendedListenerProvider.register();
         TechworksPacketHandler.register();
     }
 

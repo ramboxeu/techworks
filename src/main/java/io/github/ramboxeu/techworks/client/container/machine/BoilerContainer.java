@@ -1,7 +1,6 @@
 package io.github.ramboxeu.techworks.client.container.machine;
 
 import io.github.ramboxeu.techworks.client.container.BaseMachineContainer;
-import io.github.ramboxeu.techworks.client.container.holder.FluidStackHolder;
 import io.github.ramboxeu.techworks.common.registration.TechworksContainers;
 import io.github.ramboxeu.techworks.common.tile.machine.BoilerTile;
 import io.github.ramboxeu.techworks.common.util.Predicates;
@@ -78,29 +77,29 @@ public class BoilerContainer extends BaseMachineContainer<BoilerTile> {
             }
         });
 
-        trackObject(new FluidStackHolder() {
-            @Override
-            public Object get() {
-                return machineTile.getWater();
-            }
-
-            @Override
-            public void set(Object value) {
-                waterStack = (FluidStack) value;
-            }
-        });
-
-        trackObject(new FluidStackHolder() {
-            @Override
-            public Object get() {
-                return machineTile.getSteam();
-            }
-
-            @Override
-            public void set(Object value) {
-                steamStack = (FluidStack) value;
-            }
-        });
+//        trackObject(new FluidStackHolder() {
+//            @Override
+//            public Object get() {
+//                return machineTile.getWater();
+//            }
+//
+//            @Override
+//            public void set(Object value) {
+//                waterStack = (FluidStack) value;
+//            }
+//        });
+//
+//        trackObject(new FluidStackHolder() {
+//            @Override
+//            public Object get() {
+//                return machineTile.getSteam();
+//            }
+//
+//            @Override
+//            public void set(Object value) {
+//                steamStack = (FluidStack) value;
+//            }
+//        });
 
         IItemHandler fuelInv = machineTile.getFuelInventory();
         for (int i = 0; i < fuelInv.getSlots(); i++) {
