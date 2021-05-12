@@ -89,7 +89,7 @@ public class ArrowProgressWidget extends BaseContainerWidget implements IScreenW
         }
 
         @Override
-        protected void renderWidget(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+        protected void renderBaseWidget(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
             int texWidth = Math.round(width * progress);
 
             if (reversed) {

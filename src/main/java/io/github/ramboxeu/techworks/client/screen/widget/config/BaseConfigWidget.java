@@ -38,7 +38,7 @@ public abstract class BaseConfigWidget extends BaseScreenWidget {
     }
 
     @Override
-    protected void renderWidget(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+    protected void renderBaseWidget(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         minecraft.textureManager.bindTexture(GUI_LOCATION);
 
         if (machineScreen.isConfigOpen()) {

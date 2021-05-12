@@ -43,7 +43,7 @@ public abstract class BaseScreenWidget extends Widget {
 
         stack.push();
         stack.translate(guiLeft, guiTop, 0);
-        renderWidget(stack, mouseX, mouseY, partialTicks);
+        renderBaseWidget(stack, mouseX, mouseY, partialTicks);
 
         if (this.isHovered()) {
             renderToolTip(stack, mouseX, mouseY);
@@ -58,7 +58,7 @@ public abstract class BaseScreenWidget extends Widget {
     }
 
     // stack is adjusted to guLeft, guiTop
-    protected void renderWidget(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {}
+    protected void renderBaseWidget(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {}
 
     // mouseX, mouseY are adjusted
     protected void renderWidgetTooltip(MatrixStack stack, int mouseX, int mouseY) {}

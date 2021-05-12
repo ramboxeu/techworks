@@ -17,7 +17,7 @@ public class ConfigProgressBarWidget extends BaseScreenWidget {
     }
 
     @Override
-    protected void renderWidget(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+    protected void renderBaseWidget(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         hLine(stack, x, x + width, y, 0x474545);
         hLine(stack, x, x + width, (y + height) - 1, 0x474545);
         vLine(stack, x, y, y + height, 0x474545);

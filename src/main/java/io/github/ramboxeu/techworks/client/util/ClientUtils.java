@@ -28,15 +28,15 @@ public class ClientUtils {
 
     public static void drawString(MatrixStack stack, FontRenderer font, ITextComponent text, float x, float y, boolean shadow) {
         if (shadow) {
-            font.func_243246_a(stack, text, x, y, 0);
+            font.drawTextWithShadow(stack, text, x, y, 0);
         } else {
-            font.func_243248_b(stack, text, x, y, 0);
+            font.drawText(stack, text, x, y, 0);
         }
     }
 
     public static void drawString(MatrixStack stack, FontRenderer font, IReorderingProcessor text, float x, float y, boolean shadow) {
         if (shadow) {
-            font.func_238407_a_(stack, text, x, y, 0);
+            font.drawTextWithShadow(stack, text, x, y, 0);
         } else {
             font.func_238422_b_(stack, text, x, y, 0);
         }

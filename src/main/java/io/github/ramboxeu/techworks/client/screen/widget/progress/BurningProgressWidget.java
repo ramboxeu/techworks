@@ -88,7 +88,7 @@ public class BurningProgressWidget extends BaseContainerWidget implements IScree
         }
 
         @Override
-        protected void renderWidget(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+        protected void renderBaseWidget(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
             int height = Math.round(this.height * progress);
             int texHeight = this.height - height;
 

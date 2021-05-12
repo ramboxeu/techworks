@@ -69,8 +69,8 @@ public class SlotGroupWidget extends PortContainerWidget implements IPortScreenW
         }
 
         @Override
-        protected void renderWidget(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
-            super.renderWidget(stack, mouseX, mouseY, partialTicks);
+        protected void renderBaseWidget(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+            super.renderBaseWidget(stack, mouseX, mouseY, partialTicks);
 
             minecraft.textureManager.bindTexture(TEX);
             for (int i = 0; i < rows; i++) {

@@ -94,14 +94,14 @@ public class EnergyDisplayWidget extends PortContainerWidget implements IPortScr
         }
 
         @Override
-        protected void renderWidget(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+        protected void renderBaseWidget(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
             int height = Math.round(this.height * fillRatio);
             int texHeight = this.height - height;
 
             minecraft.textureManager.bindTexture(TEX);
             blit(stack, x + 1, y + texHeight, width - 2, height, 18, texHeight, 16, height, 34, 56);
 
-            super.renderWidget(stack, mouseX, mouseY, partialTicks);
+            super.renderBaseWidget(stack, mouseX, mouseY, partialTicks);
         }
 
         @Override

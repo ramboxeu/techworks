@@ -89,7 +89,7 @@ public class FluidDisplayWidget extends PortContainerWidget implements IPortScre
         }
 
         @Override
-        protected void renderWidget(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+        protected void renderBaseWidget(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
             if (fluid != null && !fluid.isEmpty()) {
                 stack.push();
                 int tankHeight = Math.round((height - 2) * progress);
@@ -99,7 +99,7 @@ public class FluidDisplayWidget extends PortContainerWidget implements IPortScre
                 stack.pop();
             }
 
-            super.renderWidget(stack, mouseX, mouseY, partialTicks);
+            super.renderBaseWidget(stack, mouseX, mouseY, partialTicks);
         }
 
         @Override
