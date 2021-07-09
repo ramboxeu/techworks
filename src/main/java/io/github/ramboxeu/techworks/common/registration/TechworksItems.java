@@ -3,6 +3,7 @@ package io.github.ramboxeu.techworks.common.registration;
 import io.github.ramboxeu.techworks.common.debug.DebuggerItem;
 import io.github.ramboxeu.techworks.common.item.BlueprintItem;
 import io.github.ramboxeu.techworks.common.item.GroundItem;
+import io.github.ramboxeu.techworks.common.item.SmeltingComponentItem;
 import io.github.ramboxeu.techworks.common.item.WrenchItem;
 import io.github.ramboxeu.techworks.common.registry.BlockRegistryObject;
 import io.github.ramboxeu.techworks.common.registry.ItemDeferredRegister;
@@ -29,6 +30,9 @@ public class TechworksItems {
     public static final ItemRegistryObject<BlueprintItem> STEAM_ENGINE_BLUEPRINT = registerBlueprint("steam_engine_blueprint", TechworksBlocks.STEAM_ENGINE, BlueprintItem::new);
     public static final ItemRegistryObject<BlueprintItem> ELECTRIC_FURNACE_BLUEPRINT = registerBlueprint("electric_furnace_blueprint", TechworksBlocks.ELECTRIC_FURNACE, BlueprintItem::new);
     public static final ItemRegistryObject<BlueprintItem> ELECTRIC_GRINDER_BLUEPRINT = registerBlueprint("electric_grinder_blueprint", TechworksBlocks.ELECTRIC_GRINDER, BlueprintItem::new);
+
+    public static final ItemRegistryObject<SmeltingComponentItem> ELECTRIFIED_FURNACE = ITEMS.register("electrified_furnace", SmeltingComponentItem::new);
+    public static final ItemRegistryObject<SmeltingComponentItem> REINFORCED_ELECTRIFIED_FURNACE = ITEMS.register("reinforced_electrified_furnace", SmeltingComponentItem::new);
 
     public static final ItemRegistryObject<Item> MACHINE_CASING = ITEMS.register("machine_casing", Item::new);
 

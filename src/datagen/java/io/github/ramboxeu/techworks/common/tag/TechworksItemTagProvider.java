@@ -8,12 +8,13 @@ import net.minecraft.data.TagsProvider;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
+import net.minecraftforge.common.data.ExistingFileHelper;
 
 import java.nio.file.Path;
 
 public class TechworksItemTagProvider extends TagsProvider<Item> {
-    public TechworksItemTagProvider(DataGenerator generator) {
-        super(generator, Registry.ITEM, Techworks.MOD_ID, null);
+    public TechworksItemTagProvider(DataGenerator generator, ExistingFileHelper helper) {
+        super(generator, Registry.ITEM, Techworks.MOD_ID, helper);
     }
 
     @Override

@@ -32,4 +32,13 @@ public class MathUtils {
         return null;
     }
 
+    public static float calcProgress(int value, int max) {
+        if (max <= 0 || value <= 0) {
+            return 0;
+        }
+
+        float progress = value / (float)max;
+        return Math.min(Math.max(0.0f, progress), 1.0f);
+    }
+
 }

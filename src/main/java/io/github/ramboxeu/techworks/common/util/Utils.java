@@ -121,15 +121,6 @@ public class Utils {
         return configs.stream().filter(config -> config.getBaseData() == data).findFirst().orElse(null);
     }
 
-    public static float calcProgress(int value, int max) {
-        if (max < 0 || value < 0) {
-            return 0;
-        }
-
-        float progress = value / (float)max;
-        return Math.min(Math.max(0.0f, progress), 1.0f);
-    }
-
     public static <T> T unpack(LazyOptional<T> holder) {
         return holder.orElseThrow(() -> new RuntimeException("Present LazyOptional with no value"));
     }

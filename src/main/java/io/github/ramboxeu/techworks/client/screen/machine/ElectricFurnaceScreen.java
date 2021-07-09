@@ -21,6 +21,7 @@ public class ElectricFurnaceScreen extends BaseMachineScreen<ElectricFurnaceTile
 
 //        progressBar = addBaseWidget(new ProgressWidget(80, 34));
         addConfigWidget(new IOConfigWidget(this, MACHINE_FRONT));
+        addConfigWidget(screenContainer.getComponentsWidget().getScreenWidget(this));
     }
 
     @Override

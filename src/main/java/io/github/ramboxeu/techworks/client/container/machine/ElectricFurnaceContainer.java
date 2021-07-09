@@ -1,7 +1,8 @@
 package io.github.ramboxeu.techworks.client.container.machine;
 
 import io.github.ramboxeu.techworks.client.container.BaseMachineContainer;
-import io.github.ramboxeu.techworks.client.screen.widget.display.FluidDisplayWidget;
+import io.github.ramboxeu.techworks.client.screen.widget.config.ComponentsWidget;
+import io.github.ramboxeu.techworks.client.screen.widget.display.EnergyDisplayWidget;
 import io.github.ramboxeu.techworks.client.screen.widget.inventory.SlotWidget;
 import io.github.ramboxeu.techworks.client.screen.widget.progress.ArrowProgressWidget;
 import io.github.ramboxeu.techworks.common.registration.TechworksContainers;
@@ -25,6 +26,8 @@ public class ElectricFurnaceContainer extends BaseMachineContainer<ElectricFurna
     private int workTime;
     private int cookTime;
 
+    private final ComponentsWidget componentsWidget;
+
     public ElectricFurnaceContainer(int id, PlayerInventory inv, ElectricFurnaceTile tile, Map<Side, List<HandlerConfig>> dataMap) {
         this(id, inv, tile, dataMap, IWorldPosCallable.DUMMY);
     }
@@ -47,14 +50,14 @@ public class ElectricFurnaceContainer extends BaseMachineContainer<ElectricFurna
                     public ItemStack onTake(PlayerEntity player, ItemStack stack) {
                         callable.consume((world, pos) -> {
                             if (!world.isRemote) {
-                                int xp = tile.resetXP();
+                                float xp = tile.resetXP();
 
                                 double x = pos.getX();
                                 double y = pos.getY();
                                 double z = pos.getZ();
 
                                 while (xp > 0) {
-                                    int orbXP = ExperienceOrbEntity.getXPSplit(xp);
+                                    int orbXP = ExperienceOrbEntity.getXPSplit((int) xp);
                                     xp -= orbXP;
                                     world.addEntity(new ExperienceOrbEntity(world, x, y, z, orbXP));
                                 }
@@ -66,8 +69,9 @@ public class ElectricFurnaceContainer extends BaseMachineContainer<ElectricFurna
                 })
         );
 
-        addWidget(new ArrowProgressWidget(81, 36, false, tile::getCookTime, tile::getWorkTime));
-        addWidget(new FluidDisplayWidget(this, 8, 14, 18, 56, tile.getTankData()));
+        addWidget(new ArrowProgressWidget(81, 36, false, tile::getNeededEnergy, tile::getExtractedEnergy));
+        addWidget(new EnergyDisplayWidget(this, 8, 14, 18, 56, tile.getBatteryData()));
+        componentsWidget = addWidget(new ComponentsWidget(tile.getComponentStorage()));
     }
 
     @Override
@@ -76,7 +80,7 @@ public class ElectricFurnaceContainer extends BaseMachineContainer<ElectricFurna
     }
 
     @Override
-    public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
+    public ItemStack transferStackInSlot(PlayerEntity player, int index) {
         ItemStack itemStack = ItemStack.EMPTY;
         ItemStack slotItemStack = ItemStack.EMPTY;
         Slot slot = this.inventorySlots.get(index);
@@ -97,15 +101,13 @@ public class ElectricFurnaceContainer extends BaseMachineContainer<ElectricFurna
                         slot.putStack(itemStack);
                         return ItemStack.EMPTY;
                     }
-                } else {
-                    if (!this.mergeItemStack(itemStack, 36, 37, false)) {
-                        return ItemStack.EMPTY;
-                    }
                 }
             } else {
                 if (!this.mergeItemStack(itemStack, 0, 36, false)) {
                     return ItemStack.EMPTY;
                 }
+
+                slot.onSlotChanged();
             }
         }
 
@@ -120,5 +122,9 @@ public class ElectricFurnaceContainer extends BaseMachineContainer<ElectricFurna
 
     public int getCookTime() {
         return cookTime;
+    }
+
+    public ComponentsWidget getComponentsWidget() {
+        return componentsWidget;
     }
 }

@@ -7,7 +7,7 @@ import io.github.ramboxeu.techworks.client.screen.BaseScreen;
 import io.github.ramboxeu.techworks.client.screen.widget.BaseContainerWidget;
 import io.github.ramboxeu.techworks.client.screen.widget.BaseScreenWidget;
 import io.github.ramboxeu.techworks.client.screen.widget.IScreenWidgetProvider;
-import io.github.ramboxeu.techworks.common.util.Utils;
+import io.github.ramboxeu.techworks.common.util.MathUtils;
 import net.minecraft.util.IntReferenceHolder;
 import net.minecraft.util.ResourceLocation;
 
@@ -53,7 +53,7 @@ public class BurningProgressWidget extends BaseContainerWidget implements IScree
 
             @Override
             public void set(int value) {
-                screenWidgetInstance.progress = Utils.calcProgress(value, time);
+                screenWidgetInstance.progress = MathUtils.calcProgress(value, time);
             }
         });
     }

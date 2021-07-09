@@ -1,0 +1,9 @@
+{
+  "type": "techworks:smelting",
+  "item": "techworks:reinforced_electrified_furnace",
+  "parameters": {
+    "modifier": 1.5,
+    "cap": 50,
+    "bonus": 20
+  }
+}

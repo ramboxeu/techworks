@@ -1,6 +1,8 @@
 package io.github.ramboxeu.techworks.common.util;
 
 import com.google.gson.JsonPrimitive;
+import io.github.ramboxeu.techworks.common.component.Component;
+import io.github.ramboxeu.techworks.common.component.ComponentManager;
 import io.github.ramboxeu.techworks.common.component.ComponentType;
 import io.github.ramboxeu.techworks.common.registration.TechworksRegistries;
 import net.minecraft.nbt.*;
@@ -66,4 +68,13 @@ public class NBTUtils {
         return null;
     }
 
+    @Nullable
+    public static Component deserializeComponent(CompoundNBT tag, String key) {
+        ResourceLocation id = new ResourceLocation(tag.getString(key));
+        return ComponentManager.getInstance().getComponent(id);
+    }
+
+    public static void serializeComponent(CompoundNBT tag, String key, Component component) {
+        tag.putString(key, component.getId().toString());
+    }
 }

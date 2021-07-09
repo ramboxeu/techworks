@@ -1,6 +1,7 @@
 package io.github.ramboxeu.techworks.common.tile;
 
 import io.github.ramboxeu.techworks.api.wrench.IWrenchable;
+import io.github.ramboxeu.techworks.common.component.ComponentStorage;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.INamedContainerProvider;
@@ -12,7 +13,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,19 +23,10 @@ import java.util.List;
 import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
 public abstract class BaseMachineTile extends BaseIOTile implements INamedContainerProvider, IWrenchable {
-//    protected final ComponentStackHandler components;
+    protected ComponentStorage components;
 
     public BaseMachineTile(TileEntityType<?> tileEntityType) {
         super(tileEntityType);
-
-//        this.components = ComponentStackHandler.withBuilder(builder.onChanged(this::refreshComponents));
-    }
-
-    @Override
-    protected void onFirstTick() {
-//        if (!world.isRemote && machineIO != null) {
-////            machineIO.setSideStatus(Side.FRONT, true);
-//        }
     }
 
     // PASS continues the execution on the block side
@@ -45,41 +36,49 @@ public abstract class BaseMachineTile extends BaseIOTile implements INamedContai
 
     public void onLeftClick(BlockState state, World worldIn, BlockPos pos, PlayerEntity player) {}
 
-    @Deprecated
-    protected void refreshComponents(ItemStack stack, boolean input) {}
-
     public List<ItemStack> getDrops() {
         return Collections.emptyList();
     }
 
-    protected abstract ITextComponent getComponentsGuiName();
+    @Deprecated
+    protected abstract void buildComponentStorage(ComponentStorage.Builder builder);
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
-//        compound.put("ComponentInv", components.serializeNBT());
-        compound.put("MachineIO", machineIO.serializeNBT());
-
-        return super.write(compound);
+    public void tick() {
+        super.tick();
+        components.tick();
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
-//        components.deserializeNBT(compound.getCompound("ComponentInv"));
-        machineIO.deserializeNBT(compound.getCompound("MachineIO"));
+    public CompoundNBT write(CompoundNBT tag) {
+        tag.put("MachineIO", machineIO.serializeNBT());
+        tag.put("Components", components.serializeNBT());
 
-        super.read(state, compound);
+        return super.write(tag);
     }
 
     @Override
-    protected CompoundNBT writeUpdateTag(CompoundNBT nbt) {
-        nbt.put("MachineIO", machineIO.serializeNBT());
-        return super.writeUpdateTag(nbt);
+    public void read(BlockState state, CompoundNBT tag) {
+        machineIO.deserializeNBT(tag.getCompound("MachineIO"));
+        components.deserializeNBT(tag.getCompound("Components"));
+
+        super.read(state, tag);
+    }
+
+    @Override
+    protected CompoundNBT writeUpdateTag(CompoundNBT tag) {
+        tag.put("MachineIO", machineIO.serializeNBT());
+        tag.put("Components", components.serializeNBT());
+
+        return super.writeUpdateTag(tag);
     }
 
     @Override
     protected void readUpdateTag(CompoundNBT nbt, BlockState state) {
-        super.readUpdateTag(nbt, state);
         machineIO.deserializeNBT(nbt.getCompound("MachineIO"));
+        components.deserializeNBT(nbt.getCompound("Components"));
+
+        super.readUpdateTag(nbt, state);
     }
 
     @Override
@@ -108,6 +107,6 @@ public abstract class BaseMachineTile extends BaseIOTile implements INamedContai
 
     @NotNull
     public Direction getFacing() {
-        return world != null ? world.getBlockState(pos).get(HORIZONTAL_FACING) : Direction.NORTH;
+        return world != null ? getBlockState().get(HORIZONTAL_FACING) : Direction.NORTH;
     }
 }

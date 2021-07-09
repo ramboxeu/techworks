@@ -1,20 +1,21 @@
 package io.github.ramboxeu.techworks.common.tile.machine;
 
-import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.client.container.machine.ElectricFurnaceContainer;
+import io.github.ramboxeu.techworks.common.component.ComponentStorage;
 import io.github.ramboxeu.techworks.common.energy.EnergyBattery;
-import io.github.ramboxeu.techworks.common.fluid.handler.LiquidTank;
+import io.github.ramboxeu.techworks.common.recipe.ITechworksSmeltingRecipe;
+import io.github.ramboxeu.techworks.common.recipe.TechworksSmeltingRecipe;
+import io.github.ramboxeu.techworks.common.recipe.VanillaSmeltingRecipeWrapper;
+import io.github.ramboxeu.techworks.common.registration.TechworksComponents;
+import io.github.ramboxeu.techworks.common.registration.TechworksRecipes;
 import io.github.ramboxeu.techworks.common.registration.TechworksTiles;
 import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
-import io.github.ramboxeu.techworks.common.util.Utils;
 import io.github.ramboxeu.techworks.common.util.machineio.data.EnergyHandlerData;
 import io.github.ramboxeu.techworks.common.util.machineio.data.ItemHandlerData;
-import io.github.ramboxeu.techworks.common.util.machineio.data.LiquidHandlerData;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
-import net.minecraft.item.crafting.FurnaceRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.IWorldPosCallable;
@@ -24,12 +25,11 @@ import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.Optional;
 
 public class ElectricFurnaceTile extends BaseMachineTile {
-    private int workTime = 0;
     private boolean isWorking = false;
+    private boolean shouldCheck;
 
     private final ItemStackHandler inv;
     private final ItemHandlerData invData;
@@ -42,32 +42,22 @@ public class ElectricFurnaceTile extends BaseMachineTile {
     private final EnergyBattery battery;
     private final EnergyHandlerData batteryData;
 
-    private FurnaceRecipe cachedRecipe;
-    private int cookTime;
+    private ITechworksSmeltingRecipe cachedRecipe;
+    private int energyCap;
     private int energy;
-    private int experience;
-
-    private final LiquidTank tank = new LiquidTank(5000);
-    private final LiquidHandlerData tankData;
-
-    private int handlerIndex;
-
-    private List<EnergyHandlerData> energyHandlerDataList;
+    private int extractedEnergy;
+    private float experience;
+    private float energyModifier;
 
     public ElectricFurnaceTile() {
         super(TechworksTiles.ELECTRIC_FURNACE.get());
 
         inv = new ItemStackHandler(1) {
             @Override
-            protected void onContentsChanged(int slot) {
+            protected void onContentsChanged(int slot) { // putting stack into a slot resets operation
                 markDirty();
-
-                if (!checkRecipe()) {
-                    workTime = 0;
-                    isWorking = false;
-                }
-
-                update();
+//                checkAndUpdateRecipe();
+                shouldCheck = true;
             }
         };
         invData = machineIO.getHandlerData(inv);
@@ -76,103 +66,141 @@ public class ElectricFurnaceTile extends BaseMachineTile {
             @Override
             protected void onContentsChanged(int slot) {
                 markDirty();
+                shouldCheck = true;
             }
         };
         outputInvData = machineIO.getHandlerData(outputInv);
 
         recipeInv = new RecipeWrapper(inv);
 
-        battery = new EnergyBattery(5000, 100);
+        battery = new EnergyBattery(5000,   100) {
+            @Override
+            protected void onContentsChanged() {
+                shouldCheck = true;
+            }
+        };
         batteryData = machineIO.getHandlerData(battery);
 
-        tankData = machineIO.getHandlerData(tank);
+        components = new ComponentStorage.Builder()
+                .component(TechworksComponents.SMELTING.get(), (smelting, stack) -> {
+                    energyModifier = smelting.getModifier();
+                    energyCap = smelting.getCap(stack);
+                    shouldCheck = true;
+//                    checkAndUpdateRecipe();
+                })
+                .component(TechworksComponents.ENERGY_STORAGE.get(), (storage, stack) -> {
+                    battery.setCapacity(storage.getStorage());
+                })
+                .build();
     }
 
-    public boolean checkRecipe() {
+    private void checkAndUpdateRecipe() {
+        if (!checkRecipe()) {
+            isWorking = false;
+            shouldCheck = false;
+        } else {
+            shouldCheck = true;
+            update();
+        }
+    }
+
+    private boolean checkRecipe() {
         if (world != null) {
             if (cachedRecipe != null && cachedRecipe.matches(recipeInv, world)) {
                 return true;
             } else {
-                Optional<FurnaceRecipe> recipe = world.getRecipeManager().getRecipe(/*Registration.TECHWORKS_SMELTING_RECIPE*/ IRecipeType.SMELTING, recipeInv, world);
+                Optional<TechworksSmeltingRecipe> recipe = world.getRecipeManager().getRecipe(TechworksRecipes.SMELTING.get(), recipeInv, world);
 
-                cachedRecipe = recipe.orElse(null);
-                return recipe.isPresent();
+                if (recipe.isPresent()) {
+                    cachedRecipe = recipe.get();
+                    return true;
+                } else {
+                    Optional<VanillaSmeltingRecipeWrapper> wrapper = world.getRecipeManager().getRecipe(IRecipeType.SMELTING, recipeInv, world).map(VanillaSmeltingRecipeWrapper::new);
+                    cachedRecipe = wrapper.orElse(null);
+                    return wrapper.isPresent();
+                }
             }
         }
 
         return false;
     }
 
-    public void update() {
+    private void update() {
         if (cachedRecipe != null) {
-//            energy = cachedRecipe.getEnergy();
-            energy = 100;
-            cookTime = cachedRecipe.getCookTime();
-
-            Techworks.LOGGER.debug("Energy: {}, CookTime: {}, Experience: {}", energy, cookTime, cachedRecipe.getExperience());
+            energy = (int) (cachedRecipe.getEnergy() * energyModifier);
         }
+    }
+
+    @Override
+    protected void buildComponentStorage(ComponentStorage.Builder builder) {
+
     }
 
     @Override
     protected void onFirstTick() {
         super.onFirstTick();
-
-        if (!checkRecipe()) {
-            workTime = 0;
-            isWorking = false;
-        }
-
-        update();
+//        checkAndUpdateRecipe();
     }
 
     @Override
     protected void serverTick() {
-        if (!isWorking && checkRecipe()) {
-            update();
-
-            if (outputInv.insertItem(0, cachedRecipe.getCraftingResult(recipeInv), true).isEmpty() /*&& battery.extractEnergy(ENERGY, true) == ENERGY*/) {
-                workTime = 0;
+        if (shouldCheck) {
+            if (checkRecipe() && outputInv.insertItem(0, cachedRecipe.getCraftingResult(recipeInv), true).isEmpty() && battery.getEnergyStored() >= energy - extractedEnergy) {
                 isWorking = true;
+            } else {
+                isWorking = false;
+                extractedEnergy = 0;
             }
+
+            update();
+            shouldCheck = false;
         }
 
         if (isWorking) {
-            if (workTime == cookTime) {
+            if (extractedEnergy < energy) {
+                extractedEnergy += battery.extractEnergy(energyCap, false); // possibly suppress updates
+            }
+
+            if (extractedEnergy >= energy) {
                 isWorking = false;
+                shouldCheck = true;
+                extractedEnergy = 0;
+
                 outputInv.insertItem(0, cachedRecipe.getCraftingResult(recipeInv), false);
                 experience += cachedRecipe.getExperience();
-            } else {
-                workTime++;
-                battery.extractEnergy(energy / cookTime, false);
+                inv.extractItem(0, 1, false);
+
+                markDirty();
             }
         }
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT nbt) {
-        Utils.writeInvToNbt(nbt, "Inv", inv);
-        Utils.writeInvToNbt(nbt, "OutputInv", outputInv);
-        nbt.put("Battery", battery.serializeNBT());
-        nbt.putInt("WorkTime", workTime);
-        nbt.putBoolean("IsWorking", isWorking);
+    public CompoundNBT write(CompoundNBT tag) {
+        tag.put("Inv", inv.serializeNBT());
+        tag.put("OutputInv", outputInv.serializeNBT());
+        tag.put("Battery", battery.serializeNBT());
+        tag.put("Components", components.serializeNBT());
+        tag.putInt("ExtractedEnergy", extractedEnergy);
+        tag.putFloat("Experience", experience);
+//        tag.putInt("WorkTime", workTime);
+        tag.putBoolean("IsWorking", isWorking);
 
-        return super.write(nbt);
+        return super.write(tag);
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT nbt) {
-        Utils.readInvFromNbt(nbt, "Inv", inv);
-        Utils.readInvFromNbt(nbt, "OutputInv", outputInv);
-        battery.deserializeNBT(nbt);
-        workTime = nbt.getInt("WorkTime");
-        isWorking = nbt.getBoolean("IsWorking");
+    public void read(BlockState state, CompoundNBT tag) {
+        inv.deserializeNBT(tag.getCompound("Inv"));
+        outputInv.deserializeNBT(tag.getCompound("OutputInv"));
+        battery.deserializeNBT(tag.getCompound("Battery"));
+        components.deserializeNBT(tag.getCompound("Components"));
+        extractedEnergy = tag.getInt("ExtractedEnergy");
+        experience = tag.getFloat("Experience");
+//        workTime = tag.getInt("WorkTime");
+        isWorking = tag.getBoolean("IsWorking");
 
-        super.read(state, nbt);
-    }
-
-    @Override
-    protected ITextComponent getComponentsGuiName() {
-        return null;
+        super.read(state, tag);
     }
 
     @Override
@@ -206,24 +234,24 @@ public class ElectricFurnaceTile extends BaseMachineTile {
         return outputInv;
     }
 
-    public LiquidHandlerData getTankData() {
-        return tankData;
+    public ComponentStorage getComponentStorage() {
+        return components;
     }
 
-    public int getWorkTime() {
-        return workTime;
+    public int getExtractedEnergy() {
+        return extractedEnergy;
     }
 
-    public int getCookTime() {
-        return cookTime;
+    public int getNeededEnergy() {
+        return energy;
     }
 
     public int getEnergy() {
         return battery.getEnergyStored();
     }
 
-    public int resetXP() {
-        int xp = experience;
+    public float resetXP() {
+        float xp = experience;
         experience = 0;
         return xp;
     }

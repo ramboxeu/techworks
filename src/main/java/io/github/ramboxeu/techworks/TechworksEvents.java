@@ -117,11 +117,16 @@ public class TechworksEvents {
         Item item = event.getItemStack().getItem();
 
         if (item.isIn(ComponentManager.getInstance().getItemComponentTag())) {
+            ItemStack stack = event.getItemStack();
             Component component = ComponentManager.getInstance().getComponent(item);
             String name = component.getType().getName().getString();
 
             List<ITextComponent> toolTip = event.getToolTip();
             toolTip.add(new StringTextComponent(name).setStyle(COMPONENT_NAME));
+
+            for (ITextComponent line : component.getTooltipInfo(stack)) {
+                toolTip.add(new StringTextComponent(" - ").setStyle(COMPONENT_NAME).appendSibling(line));
+            }
         }
     }
 }

@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "techworks:item/basic_boiling_component"
+    "layer0": "techworks:item/electrified_furnace"
   }
 }

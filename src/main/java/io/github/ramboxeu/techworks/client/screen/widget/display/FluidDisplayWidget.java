@@ -11,7 +11,7 @@ import io.github.ramboxeu.techworks.client.screen.widget.PortScreenWidget;
 import io.github.ramboxeu.techworks.client.util.ClientUtils;
 import io.github.ramboxeu.techworks.client.util.Color;
 import io.github.ramboxeu.techworks.client.util.RenderUtils;
-import io.github.ramboxeu.techworks.common.util.Utils;
+import io.github.ramboxeu.techworks.common.util.MathUtils;
 import io.github.ramboxeu.techworks.common.util.machineio.data.FluidHandlerData;
 import io.github.ramboxeu.techworks.common.util.machineio.data.HandlerData;
 import net.minecraft.util.IntReferenceHolder;
@@ -130,7 +130,7 @@ public class FluidDisplayWidget extends PortContainerWidget implements IPortScre
 
                 color = Color.fromRGBA(attributes.getColor(fluid));
                 tex = attributes.getStillTexture(fluid);
-                progress = Utils.calcProgress(fluid.getAmount(), capacity);
+                progress = MathUtils.calcProgress(fluid.getAmount(), capacity);
             }
 
             this.fluid = fluid;

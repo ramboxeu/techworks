@@ -1,6 +1,7 @@
 package io.github.ramboxeu.techworks.common.component;
 
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
@@ -62,13 +63,17 @@ public abstract class Component implements IItemProvider {
 
     public List<ITextComponent> getTooltipInfo() {
         if (tooltip == null) {
-            tooltip = collectTooltip();
+            tooltip = collectTooltip(ItemStack.EMPTY);
         }
 
         return tooltip;
     }
 
-    protected List<ITextComponent> collectTooltip() {
+    public List<ITextComponent> getTooltipInfo(ItemStack stack) {
+        return collectTooltip(stack);
+    }
+
+    protected List<ITextComponent> collectTooltip(ItemStack stack) {
         return Collections.emptyList();
     }
 

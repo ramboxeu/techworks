@@ -8,7 +8,7 @@ import io.github.ramboxeu.techworks.client.screen.BaseMachineScreen;
 import io.github.ramboxeu.techworks.client.screen.widget.IPortScreenWidgetProvider;
 import io.github.ramboxeu.techworks.client.screen.widget.PortContainerWidget;
 import io.github.ramboxeu.techworks.client.screen.widget.PortScreenWidget;
-import io.github.ramboxeu.techworks.common.util.Utils;
+import io.github.ramboxeu.techworks.common.util.MathUtils;
 import io.github.ramboxeu.techworks.common.util.machineio.data.EnergyHandlerData;
 import io.github.ramboxeu.techworks.common.util.machineio.data.HandlerData;
 import net.minecraft.util.IntReferenceHolder;
@@ -55,7 +55,7 @@ public class EnergyDisplayWidget extends PortContainerWidget implements IPortScr
             @Override
             public void set(int value) {
                 energy = value;
-                screenWidgetInstance.fillRatio = Utils.calcProgress(value, capacity);
+                screenWidgetInstance.fillRatio = MathUtils.calcProgress(value, capacity);
             }
         });
 

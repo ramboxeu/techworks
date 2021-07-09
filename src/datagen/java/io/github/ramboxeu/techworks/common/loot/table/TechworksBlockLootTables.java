@@ -26,7 +26,7 @@ public class TechworksBlockLootTables extends BlockLootTables {
     @Override
     protected void addTables() {
         for (BlockRegistryObject<?, ?> block : DataConstants.Blocks.DROPPING_SELF) {
-            registerDropSelfLootTable(block.getBlock());
+            registerDropSelfLootTable(block.get());
         }
     }
 }

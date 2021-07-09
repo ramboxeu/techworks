@@ -21,6 +21,9 @@ public class DataConstants {
         public static final ItemRegistryObject<?>[] BLUEPRINTS = new ItemRegistryObject[]{
                 BOILER_BLUEPRINT, STEAM_ENGINE_BLUEPRINT, ELECTRIC_FURNACE_BLUEPRINT, ELECTRIC_GRINDER_BLUEPRINT
         };
+        public static final ItemRegistryObject<?>[] ITEM_GENERATED = new ItemRegistryObject[] {
+                ELECTRIFIED_FURNACE, REINFORCED_ELECTRIFIED_FURNACE
+        };
     }
 
     public static class Blocks {

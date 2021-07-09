@@ -1,19 +1,20 @@
 package io.github.ramboxeu.techworks.common.component;
 
-import io.github.ramboxeu.techworks.common.registration.TechworksRegistries;
+import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.common.util.NBTUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.nbt.INBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public class ComponentStorage implements IItemHandler, INBTSerializable<CompoundNBT> {
+public class ComponentStorage implements IItemHandler, INBTSerializable<CompoundNBT>, Iterable<ComponentStorage.Entry> {
 
     private final Map<ComponentType<?>, Entry> storage;
     private ComponentType<?> pendingComponent;
@@ -44,18 +45,30 @@ public class ComponentStorage implements IItemHandler, INBTSerializable<Compound
         return tag;
     }
 
-    private CompoundNBT serializeStorage() {
-        CompoundNBT tag = new CompoundNBT();
+    private ListNBT serializeStorage() {
+//        CompoundNBT tag = new CompoundNBT();
+//
+//        for (Map.Entry<ComponentType<?>, Entry> entry : storage.entrySet()) {
+//            ComponentType<?> type = entry.getKey();
+//            ResourceLocation id = entry.getValue().component.getId();
+//            ResourceLocation typeId = TechworksRegistries.COMPONENT_TYPES.getKey(type);
+//
+//            tag.putString(typeId.toString(), id.toString());
+//        }
+//
+//        return tag;
 
-        for (Map.Entry<ComponentType<?>, Entry> entry : storage.entrySet()) {
-            ComponentType<?> type = entry.getKey();
-            ResourceLocation id = entry.getValue().component.getId();
-            ResourceLocation typeId = TechworksRegistries.COMPONENT_TYPES.getKey(type);
+        ListNBT componentsTag = new ListNBT();
 
-            tag.putString(typeId.toString(), id.toString());
+        int i = 0;
+        for (Entry entry : storage.values()) {
+            CompoundNBT componentTag = new CompoundNBT();
+            NBTUtils.serializeComponent(componentTag, "Component", entry.getComponent());
+            componentTag.put("Item", entry.getItemStack().write(new CompoundNBT()));
+            componentsTag.add(i++, componentTag);
         }
 
-        return tag;
+        return componentsTag;
     }
 
     @Override
@@ -63,7 +76,7 @@ public class ComponentStorage implements IItemHandler, INBTSerializable<Compound
         waitTimer = tag.getInt("WaitTimer");
         finished = tag.getBoolean("Finished");
         pendingStack = ItemStack.read(tag.getCompound("PendingStack"));
-        deserializeStorage(tag.getCompound("Storage"));
+        deserializeStorage(tag.getList("Storage", Constants.NBT.TAG_COMPOUND));
 
         operation = NBTUtils.deserializeEnum(tag, "Operation", Operation.class);
 
@@ -73,16 +86,26 @@ public class ComponentStorage implements IItemHandler, INBTSerializable<Compound
         pendingComponent = NBTUtils.deserializeComponentType(tag, "PendingComponent");
     }
 
-    private void deserializeStorage(CompoundNBT tag) {
-        for (String key : tag.keySet()) {
-            String value = tag.getString(key);
+    private void deserializeStorage(ListNBT componentsTag) {
+//        for (String key : tag.keySet()) {
+//            CompoundNBT componentTag = tag.getCompound(key);
+//
+//            ComponentType<?> type = TechworksRegistries.COMPONENT_TYPES.getValue(new ResourceLocation(key));
+//
+//            String id = componentTag.getString("ComponentId");
+//            Component component = ComponentManager.getInstance().getComponent(new ResourceLocation(id));
+//            ItemStack stack = ItemStack.read(componentTag.getCompound("ItemStack"));
+//
+//            if (component != null) {
+//                storage.get(type).update(component, stack);
+//            }
+//        }
 
-            ComponentType<?> type = TechworksRegistries.COMPONENT_TYPES.getValue(new ResourceLocation(key));
-            Component component = ComponentManager.getInstance().getComponent(new ResourceLocation(value));
-
-            if (component != null) {
-                storage.get(type).setComponent(component);
-            }
+        for (INBT tag : componentsTag) {
+            CompoundNBT componentTag = (CompoundNBT) tag;
+            Component component = NBTUtils.deserializeComponent(componentTag, "Component");
+            ItemStack stack = ItemStack.read(componentTag.getCompound("Item"));
+            storage.get(component.getType()).update(component, stack);
         }
     }
 
@@ -171,6 +194,12 @@ public class ComponentStorage implements IItemHandler, INBTSerializable<Compound
         return ComponentManager.getInstance().isItemComponent(stack.getItem());
     }
 
+    @Nonnull
+    @Override
+    public Iterator<Entry> iterator() {
+        return Collections.unmodifiableMap(storage).values().iterator();
+    }
+
     public void tick() {
         if (!finished) {
             if (waitTimer == 200) {
@@ -197,7 +226,7 @@ public class ComponentStorage implements IItemHandler, INBTSerializable<Compound
             Entry entry = storage.get(type);
 
             if (entry != null) {
-                if (entry.component.isBase())
+                if (entry.isBase())
                     return false;
 
                 if (operation == Operation.UNINSTALL)
@@ -205,7 +234,7 @@ public class ComponentStorage implements IItemHandler, INBTSerializable<Compound
 
                 finished = false;
                 pendingComponent = type;
-                pendingStack = entry.createItemStack();
+                pendingStack = entry.stack;
                 operation = Operation.UNINSTALL;
 
                 return true;
@@ -240,8 +269,8 @@ public class ComponentStorage implements IItemHandler, INBTSerializable<Compound
         Component component = ComponentManager.getInstance().getComponent(stack.getItem());
 
         if (component != null) {
-            return storage.values().stream().noneMatch(entry -> entry.component == component)
-                    && storage.get(component.getType()).component.isBase()
+            return storage.values().stream().noneMatch(entry -> entry.match(component, stack))
+                    && storage.get(component.getType()).isBase()
                     && operation.canProcess()
                     && pendingStack.isEmpty()
                     && !finished;
@@ -266,7 +295,7 @@ public class ComponentStorage implements IItemHandler, INBTSerializable<Compound
 
         if (component != null) {
             Entry entry = storage.get(component.getType());
-            entry.setComponent(component);
+            entry.update(component, pendingStack);
         }
 
         pendingStack = ItemStack.EMPTY;
@@ -275,7 +304,7 @@ public class ComponentStorage implements IItemHandler, INBTSerializable<Compound
 
     private void extract() {
         Entry entry = storage.get(pendingComponent);
-        entry.setComponent(ComponentManager.getInstance().getComponent(pendingComponent.getBaseComponentId()));
+        entry.update(ComponentManager.getInstance().getComponent(pendingComponent.getBaseComponentId()), null);
 
         pendingComponent = null;
     }
@@ -318,17 +347,17 @@ public class ComponentStorage implements IItemHandler, INBTSerializable<Compound
     public static class Builder {
 
         private final Map<ComponentType<?>, Component> typeMap = new HashMap<>();
-        private final Map<ComponentType<?>, Consumer<? extends Component>> changeListenerMap = new HashMap<>();
+        private final Map<ComponentType<?>, ComponentChangeListener<? extends Component>> changeListenerMap = new HashMap<>();
 
         public <T extends Component> Builder component(ComponentType<T> type) {
-            return component(type, c -> {});
+            return component(type, (c, s) -> {});
         }
 
-        public <T extends Component> Builder component(ComponentType<T> type, Consumer<T> changeListener) {
+        public <T extends Component> Builder component(ComponentType<T> type, ComponentChangeListener<T> changeListener) {
             return component(Objects.requireNonNull(ComponentManager.getInstance().getComponent(type.getBaseComponentId())), changeListener);
         }
 
-        public <T extends Component> Builder component(T component, Consumer<T> changeListener) {
+        public <T extends Component> Builder component(T component, ComponentChangeListener<T> changeListener) {
             ComponentType<?> type = component.getType();
 
             typeMap.put(type, component);
@@ -342,7 +371,7 @@ public class ComponentStorage implements IItemHandler, INBTSerializable<Compound
             for (Map.Entry<ComponentType<?>, Component> entry : typeMap.entrySet()) {
                 ComponentType<?> type = entry.getKey();
                 Component component = entry.getValue();
-                Consumer<Component> listener = (Consumer<Component>) changeListenerMap.get(type);
+                ComponentChangeListener<Component> listener = (ComponentChangeListener<Component>) changeListenerMap.get(type);
 
                 entryMap.put(type, new Entry(listener, component));
             }
@@ -352,26 +381,52 @@ public class ComponentStorage implements IItemHandler, INBTSerializable<Compound
 
     }
 
-    private static class Entry {
-        private final Consumer<Component> callback;
-        private Component component;
+    @FunctionalInterface
+    public interface ComponentChangeListener<T extends Component> {
+        void onChange(T component, ItemStack stack);
+    }
 
-        private Entry(Consumer<Component> callback, Component component) {
+    public static class Entry {
+        private final ComponentChangeListener<Component> callback;
+        private Component component;
+        private ItemStack stack;
+
+        private Entry(ComponentChangeListener<Component> callback, Component component) {
             this.callback = callback;
             this.component = component;
+            this.stack = createItemStack();
         }
 
         private void init() {
-            callback.accept(component);
+            callback.onChange(component, stack);
         }
 
-        private void setComponent(Component component) {
+        private void update(Component component, ItemStack stack) {
+            this.stack = stack == null || stack.isEmpty() ? createItemStack() : stack;
             this.component = component;
-            callback.accept(component);
+
+            Techworks.LOGGER.debug("Updating ComponentStorage.Entry component = {}, stack = {}", component::getId, () -> this.stack.write(new CompoundNBT()).toString());
+            callback.onChange(component, this.stack);
         }
 
-        public ItemStack createItemStack() {
+        private ItemStack createItemStack() {
             return new ItemStack(component);
+        }
+
+        private boolean match(Component component, ItemStack stack) {
+            return this.component == component && ItemStack.areItemStacksEqual(this.stack, stack);
+        }
+
+        private boolean isBase() {
+            return component.isBase() && ItemStack.areItemStacksEqual(this.stack, createItemStack());
+        }
+
+        public ItemStack getItemStack() {
+            return stack;
+        }
+
+        public Component getComponent() {
+            return component;
         }
     }
 }

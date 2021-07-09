@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "techworks:item/advanced_gas_storage_component"
-  }
-}

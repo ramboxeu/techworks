@@ -23,6 +23,8 @@
   "item.techworks.basic_energy_storage_component": "Basic Energy Storage Component",
   "item.techworks.blueprint": "Blueprint",
   "item.techworks.empty_blueprint": "Empty Blueprint",
+  "item.techworks.electrified_furnace": "Electrified Furnace",
+  "item.techworks.reinforced_electrified_furnace": "Reinforced Electrified Furnace",
 
   "container.techworks.boiler": "Boiler",
   "container.techworks.steam_engine": "Steam Engine",
@@ -55,18 +57,19 @@
   "tooltip.techworks.blueprint.electric_grinder": "Electric Grinder",
   "tooltip.techworks.widget.fluid_display": "%s %d/%dmb",
 
-  "tooltip.component.techworks.smelting_time_modifier": " - Time modifier: %d",
-  "tooltip.component.techworks.smelting_energy_modifier": " - Energy modifier: %d",
-  "tooltip.component.techworks.energy_capacity": " - Capacity: %d",
-  "tooltip.component.techworks.energy_max_input": " - Max input: %d",
-  "tooltip.component.techworks.energy_max_output": " - Max output: %d",
+  "tooltip.component.techworks.smelting_energy_cap": "Energy Cap: %dFE/t",
+  "tooltip.component.techworks.smelting_energy_bonus_cap": "Energy Cap: %dFE/t (+%d Efficiency Bonus)",
+  "tooltip.component.techworks.smelting_energy_modifier": "Energy Modifier: x%d",
+  "tooltip.component.techworks.energy_capacity": "Capacity: %d",
+  "tooltip.component.techworks.energy_max_input": "Max input: %d",
+  "tooltip.component.techworks.energy_max_output": "Max output: %d",
 
   "gui.techworks.widget.search_blueprints": "Search",
 
   "component.techworks.advanced_energy_storage": "Advanced Energy Storage Component",
   "component.techworks.base_energy_storage": "Base Energy Storage Component",
-  "component.techworks.advanced_smelting": "Advanced Smelting Component",
-  "component.techworks.base_smelting": "Base Smelting Component",
+  "component.techworks.electrified_furnace": "Electrified Furnace",
+  "component.techworks.reinforced_electrified_furnace": "Reinforced Electrified Furnace",
   "component_type.techworks.smelting": "Smelting Component",
   "component_type.techworks.energy_storage": "Energy Storage Component"
 }

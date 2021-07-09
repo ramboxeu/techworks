@@ -29,8 +29,8 @@ public class TechworksDataGenerator {
 
         if (event.includeServer()) {
             generator.addProvider(new TechworksLootProvider(generator));
-            generator.addProvider(new TechworksFluidTagProvider(generator));
-            generator.addProvider(new TechworksItemTagProvider(generator));
+            generator.addProvider(new TechworksFluidTagProvider(generator, existingFileHelper));
+            generator.addProvider(new TechworksItemTagProvider(generator, existingFileHelper));
         }
     }
 }

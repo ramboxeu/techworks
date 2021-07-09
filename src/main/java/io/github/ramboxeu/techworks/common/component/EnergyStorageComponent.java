@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.common.registration.TechworksComponents;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -37,7 +38,7 @@ public class EnergyStorageComponent extends Component {
     }
 
     @Override
-    protected List<ITextComponent> collectTooltip() {
+    protected List<ITextComponent> collectTooltip(ItemStack stack) {
         List<ITextComponent> tooltip = new ArrayList<>(2);
         tooltip.add(new TranslationTextComponent("tooltip.component.techworks.energy_capacity", storage).setStyle(Component.TOOLTIP_STYLE));
         tooltip.add(new TranslationTextComponent("tooltip.component.techworks.energy_max_input", maxInput).setStyle(Component.TOOLTIP_STYLE));

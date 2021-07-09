@@ -2,7 +2,6 @@ package io.github.ramboxeu.techworks.client;
 
 import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.common.DataConstants;
-import io.github.ramboxeu.techworks.common.registration.TechworksItems;
 import io.github.ramboxeu.techworks.common.registry.ItemRegistryObject;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
@@ -16,8 +15,8 @@ public class TechworksItemModelProvider extends ItemModelProvider {
 
     @Override
     protected void registerModels() {
-        for (ItemRegistryObject<?> component : TechworksItems.COMPONENTS) {
-            itemGenerated(component.getId().getPath());
+        for (ItemRegistryObject<?> itemGenerated : DataConstants.Items.ITEM_GENERATED) {
+            itemGenerated(itemGenerated.getId().getPath());
         }
 
         for (ItemRegistryObject<?> blueprint : DataConstants.Items.BLUEPRINTS) {

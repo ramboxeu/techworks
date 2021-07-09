@@ -75,17 +75,28 @@ public class ComponentsWidget extends BaseContainerWidget {
         protected void renderConfig(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
             blit(stack, 6, 139, 185, 9, 18, 18);
 
-            List<Component> components = widget.storage.getComponents();
+//            List<Component> components = widget.storage.getComponents();
+//
+//            for (int i = 0, len = components.size(); i < len && i < 6; i++) {
+//                Component component = components.get(i);
+//
+//                fill(stack, 6, 9 + (22 * i), 115 + 6, 9 + 18 + (22 * i), 0xFF2B2828);
+//                minecraft.getItemRenderer().renderItemAndEffectIntoGUI(new ItemStack(component.getItem()), guiLeft + 7, guiTop + 10 + (i * 22));
+//                ClientUtils.drawString(stack, minecraft.fontRenderer, component.getName().getStringTruncated(14), 26, 13.5f + (22 * i), 0xFF7F7F7F, false);
+//
+//                minecraft.textureManager.bindTexture(GUI_LOCATION);
+//                blit(stack, 106, 12 + (22 * i), 155, 9, 12, 12);
+//            }
 
-            for (int i = 0, len = components.size(); i < len && i < 6; i++) {
-                Component component = components.get(i);
-
+            int i = 0;
+            for (ComponentStorage.Entry entry : widget.storage) {
                 fill(stack, 6, 9 + (22 * i), 115 + 6, 9 + 18 + (22 * i), 0xFF2B2828);
-                minecraft.getItemRenderer().renderItemAndEffectIntoGUI(new ItemStack(component.getItem()), guiLeft + 7, guiTop + 10 + (i * 22));
-                ClientUtils.drawString(stack, minecraft.fontRenderer, component.getName().getStringTruncated(14), 26, 13.5f + (22 * i), 0xFF7F7F7F, false);
+                minecraft.getItemRenderer().renderItemAndEffectIntoGUI(entry.getItemStack(), guiLeft + 7, guiTop + 10 + (i * 22));
+                ClientUtils.drawString(stack, minecraft.fontRenderer, entry.getComponent().getName().getStringTruncated(14), 26, 13.5f + (22 * i), 0xFF7F7F7F, false);
 
                 minecraft.textureManager.bindTexture(GUI_LOCATION);
                 blit(stack, 106, 12 + (22 * i), 155, 9, 12, 12);
+                i++;
             }
 
             switch (widget.storage.getOperation()) {
@@ -148,19 +159,20 @@ public class ComponentsWidget extends BaseContainerWidget {
         protected void renderWidgetTooltip(MatrixStack stack, int x, int y) {
             super.renderWidgetTooltip(stack, x, y);
 
-            List<Component> components = widget.storage.getComponents();
-
-            for (int i = 0, len = components.size(); i < len; i++) {
+            int i = 0;
+            for (ComponentStorage.Entry entry : widget.storage) {
 //                if (x >= 26 && y >= 10 + (22 * i) && x <= 109 && y <= 26 + (22 * i)) {
                 if (x >= 10 && y >= 10 + (22 * i) && x <= 109 && y <= 26 + (22 * i)) {
-                    Component component = components.get(i);
+                    Component component = entry.getComponent();
                     List<ITextComponent> list = new ArrayList<>();
 
                     list.add(component.getName());
-                    list.addAll(component.getTooltipInfo());
+                    list.addAll(component.getTooltipInfo(entry.getItemStack()));
 
                     ClientUtils.renderTooltip(screen, minecraft.fontRenderer, stack, list, x, y);
                 }
+
+                i++;
             }
         }
 
