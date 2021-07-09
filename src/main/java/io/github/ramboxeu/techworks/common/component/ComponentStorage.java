@@ -1,7 +1,8 @@
 package io.github.ramboxeu.techworks.common.component;
 
-import io.github.ramboxeu.techworks.Techworks;
+import com.google.common.collect.ImmutableMap;
 import io.github.ramboxeu.techworks.common.util.NBTUtils;
+import it.unimi.dsi.fastutil.objects.Reference2ReferenceArrayMap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
@@ -46,18 +47,6 @@ public class ComponentStorage implements IItemHandler, INBTSerializable<Compound
     }
 
     private ListNBT serializeStorage() {
-//        CompoundNBT tag = new CompoundNBT();
-//
-//        for (Map.Entry<ComponentType<?>, Entry> entry : storage.entrySet()) {
-//            ComponentType<?> type = entry.getKey();
-//            ResourceLocation id = entry.getValue().component.getId();
-//            ResourceLocation typeId = TechworksRegistries.COMPONENT_TYPES.getKey(type);
-//
-//            tag.putString(typeId.toString(), id.toString());
-//        }
-//
-//        return tag;
-
         ListNBT componentsTag = new ListNBT();
 
         int i = 0;
@@ -87,20 +76,6 @@ public class ComponentStorage implements IItemHandler, INBTSerializable<Compound
     }
 
     private void deserializeStorage(ListNBT componentsTag) {
-//        for (String key : tag.keySet()) {
-//            CompoundNBT componentTag = tag.getCompound(key);
-//
-//            ComponentType<?> type = TechworksRegistries.COMPONENT_TYPES.getValue(new ResourceLocation(key));
-//
-//            String id = componentTag.getString("ComponentId");
-//            Component component = ComponentManager.getInstance().getComponent(new ResourceLocation(id));
-//            ItemStack stack = ItemStack.read(componentTag.getCompound("ItemStack"));
-//
-//            if (component != null) {
-//                storage.get(type).update(component, stack);
-//            }
-//        }
-
         for (INBT tag : componentsTag) {
             CompoundNBT componentTag = (CompoundNBT) tag;
             Component component = NBTUtils.deserializeComponent(componentTag, "Component");
@@ -197,7 +172,7 @@ public class ComponentStorage implements IItemHandler, INBTSerializable<Compound
     @Nonnull
     @Override
     public Iterator<Entry> iterator() {
-        return Collections.unmodifiableMap(storage).values().iterator();
+        return storage.values().iterator();
     }
 
     public void tick() {
@@ -251,7 +226,7 @@ public class ComponentStorage implements IItemHandler, INBTSerializable<Compound
     }
 
     public Collection<ComponentType<?>> getSupportedTypes() {
-        return Collections.unmodifiableSet(storage.keySet());
+        return storage.keySet();
     }
 
     public boolean isFinished() {
@@ -317,11 +292,6 @@ public class ComponentStorage implements IItemHandler, INBTSerializable<Compound
         return operation != Operation.NONE;
     }
 
-    // INTERNAL
-    public void putSlotStack(ItemStack stack) {
-        pendingStack = stack;
-    }
-
     public Operation getOperation() {
         return operation;
     }
@@ -346,7 +316,7 @@ public class ComponentStorage implements IItemHandler, INBTSerializable<Compound
 
     public static class Builder {
 
-        private final Map<ComponentType<?>, Component> typeMap = new HashMap<>();
+        private final Map<ComponentType<?>, Component> typeMap = new Reference2ReferenceArrayMap<>();
         private final Map<ComponentType<?>, ComponentChangeListener<? extends Component>> changeListenerMap = new HashMap<>();
 
         public <T extends Component> Builder component(ComponentType<T> type) {
@@ -366,7 +336,7 @@ public class ComponentStorage implements IItemHandler, INBTSerializable<Compound
         }
 
         public ComponentStorage build() {
-            Map<ComponentType<?>, Entry> entryMap = new HashMap<>();
+            ImmutableMap.Builder<ComponentType<?>, Entry> entryMap = new ImmutableMap.Builder<>();
 
             for (Map.Entry<ComponentType<?>, Component> entry : typeMap.entrySet()) {
                 ComponentType<?> type = entry.getKey();
@@ -376,7 +346,7 @@ public class ComponentStorage implements IItemHandler, INBTSerializable<Compound
                 entryMap.put(type, new Entry(listener, component));
             }
 
-            return new ComponentStorage(Collections.unmodifiableMap(entryMap));
+            return new ComponentStorage(entryMap.build());
         }
 
     }
@@ -402,10 +372,9 @@ public class ComponentStorage implements IItemHandler, INBTSerializable<Compound
         }
 
         private void update(Component component, ItemStack stack) {
-            this.stack = stack == null || stack.isEmpty() ? createItemStack() : stack;
             this.component = component;
+            this.stack = stack == null || stack.isEmpty() ? createItemStack() : stack;
 
-            Techworks.LOGGER.debug("Updating ComponentStorage.Entry component = {}, stack = {}", component::getId, () -> this.stack.write(new CompoundNBT()).toString());
             callback.onChange(component, this.stack);
         }
 
