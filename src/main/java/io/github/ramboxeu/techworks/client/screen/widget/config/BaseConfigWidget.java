@@ -5,10 +5,8 @@ import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.client.screen.BaseMachineScreen;
 import io.github.ramboxeu.techworks.client.screen.widget.BaseScreenWidget;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.IReorderingProcessor;
 import net.minecraft.util.ResourceLocation;
-
-import java.util.Collections;
+import net.minecraft.util.text.ITextComponent;
 
 public abstract class BaseConfigWidget extends BaseScreenWidget {
     public static final int CONFIG_GUI_WIDTH = 130;
@@ -20,9 +18,9 @@ public abstract class BaseConfigWidget extends BaseScreenWidget {
     protected int tabY;
     protected int index;
 
-    protected final IReorderingProcessor tooltip;
+    protected final ITextComponent tooltip;
 
-    public BaseConfigWidget(BaseMachineScreen<?, ?> screen, IReorderingProcessor tooltip) {
+    public BaseConfigWidget(BaseMachineScreen<?, ?> screen, ITextComponent tooltip) {
         super(screen, 0, 0, 155, 166);
         this.tooltip = tooltip;
 
@@ -58,15 +56,15 @@ public abstract class BaseConfigWidget extends BaseScreenWidget {
 
     @Override
     public void renderToolTip(MatrixStack stack, int mouseX, int mouseY) {
+        int x = mouseX - guiLeft;
+        int y = mouseY - guiTop;
+
+        if (x >= tabX && y >= tabY && x <= tabX + 22 && y <= tabY + 22) {
+            renderTooltip(stack, tooltip, x, y);
+        }
+
         if (render) {
             super.renderToolTip(stack, mouseX, mouseY);
-        }
-    }
-
-    @Override
-    protected void renderWidgetTooltip(MatrixStack stack, int x, int y) {
-        if (x >= tabX && y >= tabY && x <= tabX + 22 && y <= tabY + 22) {
-            screen.renderTooltip(stack, Collections.singletonList(tooltip), x, y);
         }
     }
 

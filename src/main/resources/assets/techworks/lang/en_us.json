@@ -65,6 +65,11 @@
   "tooltip.component.techworks.energy_max_output": "Max output: %d",
 
   "gui.techworks.widget.search_blueprints": "Search",
+  "gui.techworks.widget.components": "Components",
+  "gui.techworks.widget.components_idle_state": "Idle",
+  "gui.techworks.widget.components_installing_state": "Installing",
+  "gui.techworks.widget.components_uninstalling_state": "Uninstalling",
+  "gui.techworks.widget.io": "I/O",
 
   "component.techworks.advanced_energy_storage": "Advanced Energy Storage Component",
   "component.techworks.base_energy_storage": "Base Energy Storage Component",

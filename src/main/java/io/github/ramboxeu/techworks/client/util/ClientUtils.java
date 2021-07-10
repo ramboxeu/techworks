@@ -3,18 +3,17 @@ package io.github.ramboxeu.techworks.client.util;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.IReorderingProcessor;
-import net.minecraft.util.text.*;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.ITextProperties;
+import net.minecraft.util.text.Style;
+import net.minecraftforge.fml.client.gui.GuiUtils;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ClientUtils {
-    public static final IFormattableTextComponent INPUT_TEXT = new StringTextComponent("Input");
-
     public static final int GUI_WIDTH = 176;
     public static final int GUI_HEIGHT = 166;
 
@@ -65,11 +64,15 @@ public class ClientUtils {
         ).orElse(IReorderingProcessor.field_242232_a);
     }
 
-    public static void renderTooltip(Screen screen, FontRenderer font, MatrixStack stack, ITextProperties text, int mouseX, int mouseY) {
-        screen.renderToolTip(stack, Collections.singletonList(processor(text)), mouseX, mouseY, font);
+    public static List<IReorderingProcessor> processors(Collection<ITextComponent> properties) {
+        return properties.stream().map(ITextComponent::func_241878_f).collect(Collectors.toList());
     }
 
-    public static void renderTooltip(Screen screen, FontRenderer font, MatrixStack stack, List<ITextComponent> props, int mouseX, int mouseY) {
-        screen.renderToolTip(stack, props.stream().map(ITextComponent::func_241878_f).collect(Collectors.toList()), mouseX, mouseY, font);
+    public static void renderTooltip(Screen screen, FontRenderer font, MatrixStack stack, ITextProperties text, int mouseX, int mouseY) {
+        GuiUtils.drawHoveringText(ItemStack.EMPTY, stack, Collections.singletonList(text), mouseX, mouseY, screen.width, screen.height, -1, font);
+    }
+
+    public static void renderTooltip(Screen screen, FontRenderer font, MatrixStack stack, List<?  extends ITextProperties> props, int mouseX, int mouseY) {
+        GuiUtils.drawHoveringText(ItemStack.EMPTY, stack, props, mouseX, mouseY, screen.width, screen.height, -1, font);
     }
 }

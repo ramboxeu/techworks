@@ -51,9 +51,19 @@ public abstract class BaseScreen<T extends BaseContainer> extends ContainerScree
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(MatrixStack stack, int mouseX, int mouseY) {
-        super.drawGuiContainerForegroundLayer(stack, mouseX, mouseY);
-        super.renderHoveredTooltip(stack, mouseX - guiLeft, mouseY - guiTop);
+    public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+        super.render(stack, mouseX, mouseY, partialTicks);
+        renderHoveredTooltip(stack, mouseX, mouseY);
+    }
+
+    @Override
+    protected void renderHoveredTooltip(MatrixStack stack, int x, int y) {
+        for (BaseScreenWidget widget : widgets) {
+            if (widget.isHovered())
+                widget.renderToolTip(stack, x, y);
+        }
+
+        super.renderHoveredTooltip(stack, x, y);
     }
 
     @Override

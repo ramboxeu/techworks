@@ -18,6 +18,7 @@ import net.minecraft.util.IReorderingProcessor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.Color;
 import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import java.util.List;
 import java.util.function.Function;
@@ -48,6 +49,7 @@ public class IOConfigWidget extends BaseConfigWidget {
     private static final IReorderingProcessor INPUT_TEXT = IReorderingProcessor.fromString("Input", MODE_STYLE);
     private static final IReorderingProcessor OUTPUT_TEXT = IReorderingProcessor.fromString("Output", MODE_STYLE);
     private static final IReorderingProcessor BOTH_TEXT = IReorderingProcessor.fromString("Both", MODE_STYLE);
+    private static final TranslationTextComponent TITLE = new TranslationTextComponent("gui.techworks.widget.io");
 
     private final ResourceLocation frontTexture;
     private final BaseMachineContainer<?> container;
@@ -71,7 +73,7 @@ public class IOConfigWidget extends BaseConfigWidget {
     private HandlerConfig selectedConfig;
 
     public IOConfigWidget(BaseMachineScreen<?, ?> screen, ResourceLocation frontTexture) {
-        super(screen, ClientUtils.processor("I/O"));
+        super(screen, TITLE);
         this.frontTexture = frontTexture;
 
         container = screen.getContainer();

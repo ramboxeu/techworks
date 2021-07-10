@@ -9,7 +9,10 @@ import io.github.ramboxeu.techworks.common.component.Component;
 import io.github.ramboxeu.techworks.common.component.ComponentStorage;
 import io.github.ramboxeu.techworks.common.component.ComponentType;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.Color;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.items.SlotItemHandler;
 
 import javax.annotation.Nonnull;
@@ -19,6 +22,12 @@ import java.util.List;
 import static io.github.ramboxeu.techworks.client.util.ClientUtils.GUI_WIDTH;
 
 public class ComponentsWidget extends BaseContainerWidget {
+    private static final Style STYLE = Style.EMPTY.setColor(Color.fromInt(0xFF7F7F7F));
+    private static final ITextComponent IDLE_TEXT = new TranslationTextComponent("gui.techworks.widget.components_idle_state").setStyle(STYLE);
+    private static final ITextComponent INSTALLING_TEXT = new TranslationTextComponent("gui.techworks.widget.components_installing_state").setStyle(STYLE);
+    private static final ITextComponent UNINSTALLING_TEXT = new TranslationTextComponent("gui.techworks.widget.components_uninstalling_state").setStyle(STYLE);
+
+    private static final ITextComponent TITLE = new TranslationTextComponent("gui.techworks.widget.components");
 
     private final ComponentStorage storage;
     private final List<ComponentType<?>> typeLookup;
@@ -67,26 +76,13 @@ public class ComponentsWidget extends BaseContainerWidget {
         private final ComponentsWidget widget;
 
         public ScreenWidget(BaseMachineScreen<?, ?> screen, ComponentsWidget widget) {
-            super(screen, ClientUtils.processor("Components"));
+            super(screen, TITLE);
             this.widget = widget;
         }
 
         @Override
         protected void renderConfig(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
             blit(stack, 6, 139, 185, 9, 18, 18);
-
-//            List<Component> components = widget.storage.getComponents();
-//
-//            for (int i = 0, len = components.size(); i < len && i < 6; i++) {
-//                Component component = components.get(i);
-//
-//                fill(stack, 6, 9 + (22 * i), 115 + 6, 9 + 18 + (22 * i), 0xFF2B2828);
-//                minecraft.getItemRenderer().renderItemAndEffectIntoGUI(new ItemStack(component.getItem()), guiLeft + 7, guiTop + 10 + (i * 22));
-//                ClientUtils.drawString(stack, minecraft.fontRenderer, component.getName().getStringTruncated(14), 26, 13.5f + (22 * i), 0xFF7F7F7F, false);
-//
-//                minecraft.textureManager.bindTexture(GUI_LOCATION);
-//                blit(stack, 106, 12 + (22 * i), 155, 9, 12, 12);
-//            }
 
             int i = 0;
             for (ComponentStorage.Entry entry : widget.storage) {
@@ -101,13 +97,13 @@ public class ComponentsWidget extends BaseContainerWidget {
 
             switch (widget.storage.getOperation()) {
                 case NONE:
-                    ClientUtils.drawString(stack, minecraft.fontRenderer, "Idle", 30, 140f, 0xFF7F7F7F, false);
+                    ClientUtils.drawString(stack, minecraft.fontRenderer, IDLE_TEXT, 30, 140f, false);
                     break;
                 case INSTALL:
-                    ClientUtils.drawString(stack, minecraft.fontRenderer, "Installing", 30, 140f, 0xFF7F7F7F, false);
+                    ClientUtils.drawString(stack, minecraft.fontRenderer, INSTALLING_TEXT, 30, 140f, false);
                     break;
                 case UNINSTALL:
-                    ClientUtils.drawString(stack, minecraft.fontRenderer, "Uninstalling", 30, 140f, 0xFF7F7F7F, false);
+                    ClientUtils.drawString(stack, minecraft.fontRenderer, UNINSTALLING_TEXT, 30, 140f, false);
                     break;
             }
 
@@ -157,11 +153,8 @@ public class ComponentsWidget extends BaseContainerWidget {
 
         @Override
         protected void renderWidgetTooltip(MatrixStack stack, int x, int y) {
-            super.renderWidgetTooltip(stack, x, y);
-
             int i = 0;
             for (ComponentStorage.Entry entry : widget.storage) {
-//                if (x >= 26 && y >= 10 + (22 * i) && x <= 109 && y <= 26 + (22 * i)) {
                 if (x >= 10 && y >= 10 + (22 * i) && x <= 109 && y <= 26 + (22 * i)) {
                     Component component = entry.getComponent();
                     List<ITextComponent> list = new ArrayList<>();
@@ -169,7 +162,7 @@ public class ComponentsWidget extends BaseContainerWidget {
                     list.add(component.getName());
                     list.addAll(component.getTooltipInfo(entry.getItemStack()));
 
-                    ClientUtils.renderTooltip(screen, minecraft.fontRenderer, stack, list, x, y);
+                    renderTooltip(stack, list, x, y);
                 }
 
                 i++;

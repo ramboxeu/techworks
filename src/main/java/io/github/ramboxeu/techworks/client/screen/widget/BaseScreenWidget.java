@@ -2,15 +2,15 @@ package io.github.ramboxeu.techworks.client.screen.widget;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import io.github.ramboxeu.techworks.client.screen.BaseScreen;
+import io.github.ramboxeu.techworks.client.util.ClientUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.Widget;
+import net.minecraft.util.text.ITextProperties;
 import net.minecraft.util.text.StringTextComponent;
 
+import java.util.List;
+
 public abstract class BaseScreenWidget extends Widget {
-//    protected int x;
-//    protected int y;
-//    protected int width;
-//    protected int height;
     protected final BaseScreen<?> screen;
 
     protected Minecraft minecraft;
@@ -28,13 +28,6 @@ public abstract class BaseScreenWidget extends Widget {
         this.height = height;
     }
 
-//    protected boolean isMouseInPoint(int mouseX, int mouseY, int pointX, int pointY) {
-//        int mx = mouseX - guiLeft;
-//        int my = mouseY - guiTop;
-//
-//        return
-//    }
-
     @Override
     public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         int mx = mouseX - guiLeft;
@@ -44,17 +37,20 @@ public abstract class BaseScreenWidget extends Widget {
         stack.push();
         stack.translate(guiLeft, guiTop, 0);
         renderBaseWidget(stack, mouseX, mouseY, partialTicks);
-
-        if (this.isHovered()) {
-            renderToolTip(stack, mouseX, mouseY);
-        }
-
         stack.pop();
     }
 
     @Override
     public void renderToolTip(MatrixStack stack, int mouseX, int mouseY) {
         renderWidgetTooltip(stack, (mouseX - guiLeft), (mouseY - guiTop));
+    }
+
+    protected void renderTooltip(MatrixStack stack, List<? extends ITextProperties> tooltip, int mouseX, int mouseY) {
+        ClientUtils.renderTooltip(screen, minecraft.fontRenderer, stack, tooltip, mouseX + guiLeft, mouseY + guiTop);
+    }
+
+    protected void renderTooltip(MatrixStack stack, ITextProperties tooltip, int mouseX, int mouseY) {
+        ClientUtils.renderTooltip(screen, minecraft.fontRenderer, stack, tooltip, mouseX + guiLeft, mouseY + guiTop);
     }
 
     // stack is adjusted to guLeft, guiTop
