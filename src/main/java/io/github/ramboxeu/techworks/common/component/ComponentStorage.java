@@ -296,6 +296,12 @@ public class ComponentStorage implements IItemHandler, INBTSerializable<Compound
         return operation;
     }
 
+    public void onItemStackChange() {
+        if (pendingStack.isEmpty()) {
+            clear();
+        }
+    }
+
     public enum Operation {
         NONE,
         INSTALL,

@@ -7,13 +7,11 @@ import io.github.ramboxeu.techworks.client.screen.widget.inventory.SlotWidget;
 import io.github.ramboxeu.techworks.client.screen.widget.progress.ArrowProgressWidget;
 import io.github.ramboxeu.techworks.common.registration.TechworksContainers;
 import io.github.ramboxeu.techworks.common.tile.machine.ElectricFurnaceTile;
-import io.github.ramboxeu.techworks.common.util.Predicates;
 import io.github.ramboxeu.techworks.common.util.Side;
 import io.github.ramboxeu.techworks.common.util.machineio.config.HandlerConfig;
 import net.minecraft.entity.item.ExperienceOrbEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraftforge.items.SlotItemHandler;
@@ -77,43 +75,6 @@ public class ElectricFurnaceContainer extends BaseMachineContainer<ElectricFurna
     @Override
     public boolean canInteractWith(PlayerEntity player) {
         return true;
-    }
-
-    @Override
-    public ItemStack transferStackInSlot(PlayerEntity player, int index) {
-        ItemStack itemStack = ItemStack.EMPTY;
-        ItemStack slotItemStack = ItemStack.EMPTY;
-        Slot slot = this.inventorySlots.get(index);
-
-        if (slot != null) {
-            slotItemStack = slot.getStack();
-            itemStack = slotItemStack.copy();
-            if (index < 36) {
-                if (Predicates.isEnergyStorage(itemStack)) {
-                    Slot energyOutput = this.inventorySlots.get(37);
-
-                    ItemStack itemStack1 = ItemStack.EMPTY;
-
-                    itemStack1 = itemStack.split(1);
-
-                    if (!energyOutput.getHasStack() && energyOutput.isItemValid(itemStack)) {
-                        energyOutput.putStack(itemStack1);
-                        slot.putStack(itemStack);
-                        return ItemStack.EMPTY;
-                    }
-                }
-            } else {
-                if (!this.mergeItemStack(itemStack, 0, 36, false)) {
-                    return ItemStack.EMPTY;
-                }
-
-                slot.onSlotChanged();
-            }
-        }
-
-        slot.putStack(itemStack);
-
-        return ItemStack.EMPTY;
     }
 
     public int getWorkTime() {

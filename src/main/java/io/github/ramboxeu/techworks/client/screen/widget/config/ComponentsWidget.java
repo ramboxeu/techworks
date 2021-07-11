@@ -57,6 +57,11 @@ public class ComponentsWidget extends BaseContainerWidget {
             public void putStack(@Nonnull ItemStack stack) {
                 storage.insertItem(0, stack, false);
             }
+
+            @Override
+            public void onSlotChanged() {
+                storage.onItemStackChange();
+            }
         });
 
         slot.setEnabled(false);

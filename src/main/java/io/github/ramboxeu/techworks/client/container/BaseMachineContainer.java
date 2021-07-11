@@ -8,9 +8,11 @@ import io.github.ramboxeu.techworks.common.util.inventory.SlotBuilder;
 import io.github.ramboxeu.techworks.common.util.machineio.StorageMode;
 import io.github.ramboxeu.techworks.common.util.machineio.config.HandlerConfig;
 import io.github.ramboxeu.techworks.common.util.machineio.data.HandlerData;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
@@ -23,6 +25,7 @@ import java.util.Map;
 public abstract class BaseMachineContainer<T extends BaseMachineTile> extends BaseContainer {
     protected IItemHandler playerInventory;
     protected T machineTile;
+    private int firstPlayerSlot = 0;
 
     protected final List<HandlerData> dataList;
     protected final Map<Side, List<HandlerConfig>> dataMap;
@@ -46,6 +49,8 @@ public abstract class BaseMachineContainer<T extends BaseMachineTile> extends Ba
     }
 
     private void layoutPlayerSlots() {
+        firstPlayerSlot = inventorySlots.size();
+
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 9; j++) {
                 this.addSlot(new SlotItemHandler(playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
@@ -57,8 +62,66 @@ public abstract class BaseMachineContainer<T extends BaseMachineTile> extends Ba
         }
     }
 
-    public T getMachineTile() {
-        return machineTile;
+    @Override
+    public ItemStack transferStackInSlot(PlayerEntity player, int index) {
+        Slot source = inventorySlots.get(index);
+
+        if (source != null) {
+            ItemStack sourceStack = source.getStack();
+
+            if (index >= firstPlayerSlot && index < firstPlayerSlot + 36) {
+                ItemStack stack = sourceStack.copy();
+
+                for (int i = 0; i < inventorySlots.size(); i++) {
+                    if (i >= firstPlayerSlot && i < firstPlayerSlot + 36) {
+                        i = firstPlayerSlot + 36;
+                    }
+
+                    Slot target = inventorySlots.get(i);
+                    ItemStack targetStack = target.getStack().copy();
+
+                    if (!targetStack.isEmpty())  {
+                        if (ItemStack.areItemStacksEqual(stack, targetStack)) {
+                            int size = target.getItemStackLimit(stack) - targetStack.getCount();
+
+                            if (stack.getCount() <= size) {
+                                targetStack.grow(stack.getCount());
+                                target.putStack(targetStack);
+                                stack = ItemStack.EMPTY;
+                                break;
+                            } else {
+                                targetStack.grow(size);
+                                stack.shrink(size);
+                                target.putStack(targetStack);
+                            }
+                        }
+                    } else {
+                        if (target.isItemValid(stack)) {
+                            int size = target.getItemStackLimit(stack);
+
+                            if (stack.getCount() <= size) {
+                                target.putStack(stack);
+                                stack = ItemStack.EMPTY;
+                                break;
+                            } else {
+                                target.putStack(stack.split(size));
+                            }
+                        }
+                    }
+                }
+
+                source.putStack(stack);
+                return ItemStack.EMPTY;
+            } else {
+                if (!this.mergeItemStack(sourceStack, firstPlayerSlot, 36, false)) {
+                    return ItemStack.EMPTY;
+                }
+
+                source.onSlotChanged();
+            }
+        }
+
+        return ItemStack.EMPTY;
     }
 
     public void changeStatus(Side side, HandlerData data, StorageMode mode, boolean enabled) {
@@ -94,5 +157,9 @@ public abstract class BaseMachineContainer<T extends BaseMachineTile> extends Ba
 
     public Map<Side, List<HandlerConfig>> getDataMap() {
         return dataMap;
+    }
+
+    public T getMachineTile() {
+        return machineTile;
     }
 }
