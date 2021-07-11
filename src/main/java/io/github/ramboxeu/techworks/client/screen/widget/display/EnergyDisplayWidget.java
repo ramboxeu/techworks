@@ -13,6 +13,7 @@ import io.github.ramboxeu.techworks.common.util.machineio.data.EnergyHandlerData
 import io.github.ramboxeu.techworks.common.util.machineio.data.HandlerData;
 import net.minecraft.util.IntReferenceHolder;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.energy.IEnergyStorage;
 
 public class EnergyDisplayWidget extends PortContainerWidget implements IPortScreenWidgetProvider<EnergyDisplayWidget.ScreenWidget> {
@@ -106,7 +107,7 @@ public class EnergyDisplayWidget extends PortContainerWidget implements IPortScr
 
         @Override
         protected void renderWidgetTooltip(MatrixStack stack, int mouseX, int mouseY) {
-            screen.renderTooltip(stack, widget.energy + "/" + widget.capacity + "FE", mouseX, mouseY);
+            renderTooltip(stack, new TranslationTextComponent("tooltip.techworks.widget.energy_display_energy", widget.energy, widget.capacity), mouseX, mouseY);
         }
     }
 }

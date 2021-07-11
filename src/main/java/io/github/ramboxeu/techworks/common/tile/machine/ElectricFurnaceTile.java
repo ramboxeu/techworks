@@ -88,9 +88,7 @@ public class ElectricFurnaceTile extends BaseMachineTile {
                     shouldCheck = true;
 //                    checkAndUpdateRecipe();
                 })
-                .component(TechworksComponents.ENERGY_STORAGE.get(), (storage, stack) -> {
-                    battery.setCapacity(storage.getStorage());
-                })
+                .component(TechworksComponents.ENERGY_STORAGE.get(), battery::onComponentUpdate)
                 .build();
     }
 

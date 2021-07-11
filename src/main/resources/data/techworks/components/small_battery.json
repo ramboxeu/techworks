@@ -1,0 +1,8 @@
+{
+  "type": "techworks:energy_storage",
+  "item": "techworks:small_battery",
+  "parameters": {
+    "capacity": 20000,
+    "transfer": 100
+  }
+}

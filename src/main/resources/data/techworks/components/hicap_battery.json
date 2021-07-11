@@ -1,0 +1,8 @@
+{
+  "type": "techworks:energy_storage",
+  "item": "techworks:hicap_battery",
+  "parameters": {
+    "capacity": 640000,
+    "transfer": 3200
+  }
+}

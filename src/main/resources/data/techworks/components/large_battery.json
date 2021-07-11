@@ -1,0 +1,8 @@
+{
+  "type": "techworks:energy_storage",
+  "item": "techworks:large_battery",
+  "parameters": {
+    "capacity": 240000,
+    "transfer": 1200
+  }
+}

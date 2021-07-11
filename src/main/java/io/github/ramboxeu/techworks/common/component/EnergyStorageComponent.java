@@ -14,49 +14,41 @@ import java.util.List;
 
 public class EnergyStorageComponent extends Component {
 
-    private final int storage;
-    private final int maxInput;
-    private final int maxOutput;
+    private final int capacity;
+    private final int transfer;
 
-    public EnergyStorageComponent(ResourceLocation id, Item item, int storage, int maxInput, int maxOutput) {
+    public EnergyStorageComponent(ResourceLocation id, Item item, int capacity, int transfer) {
         super(TechworksComponents.ENERGY_STORAGE.get(), id, item);
-        this.storage = storage;
-        this.maxInput = maxInput;
-        this.maxOutput = maxOutput;
+        this.capacity = capacity;
+        this.transfer = transfer;
     }
 
-    public int getStorage() {
-        return storage;
+    public int getCapacity() {
+        return capacity;
     }
 
-    public int getMaxInput() {
-        return maxInput;
-    }
-
-    public int getMaxOutput() {
-        return maxOutput;
+    public int getTransfer() {
+        return transfer;
     }
 
     @Override
     protected List<ITextComponent> collectTooltip(ItemStack stack) {
         List<ITextComponent> tooltip = new ArrayList<>(2);
-        tooltip.add(new TranslationTextComponent("tooltip.component.techworks.energy_capacity", storage).setStyle(Component.TOOLTIP_STYLE));
-        tooltip.add(new TranslationTextComponent("tooltip.component.techworks.energy_max_input", maxInput).setStyle(Component.TOOLTIP_STYLE));
-        tooltip.add(new TranslationTextComponent("tooltip.component.techworks.energy_max_output", maxOutput).setStyle(Component.TOOLTIP_STYLE));
+        tooltip.add(new TranslationTextComponent("tooltip.component.techworks.energy_capacity", capacity).setStyle(Component.TOOLTIP_STYLE));
+        tooltip.add(new TranslationTextComponent("tooltip.component.techworks.energy_transfer_rate", transfer).setStyle(Component.TOOLTIP_STYLE));
         return tooltip;
     }
 
     public static class Type extends ComponentType<EnergyStorageComponent> {
 
-        public static final ResourceLocation BASE_ID = new ResourceLocation(Techworks.MOD_ID, "base_energy_storage");
+        public static final ResourceLocation BASE_ID = new ResourceLocation(Techworks.MOD_ID, "small_battery");
 
         @Override
         protected EnergyStorageComponent readComponent(ResourceLocation id, Item item, JsonObject parameters) {
-            int storage = parameters.get("storage").getAsInt();
-            int maxInput = parameters.get("maxInput").getAsInt();
-            int maxOutput = parameters.get("maxOutput").getAsInt();
+            int capacity = parameters.get("capacity").getAsInt();
+            int transfer = parameters.get("transfer").getAsInt();
 
-            return new EnergyStorageComponent(id, item, storage, maxInput, maxOutput);
+            return new EnergyStorageComponent(id, item, capacity, transfer);
         }
 
         @Override

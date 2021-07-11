@@ -34,6 +34,11 @@ public class TechworksItems {
     public static final ItemRegistryObject<SmeltingComponentItem> ELECTRIFIED_FURNACE = ITEMS.register("electrified_furnace", SmeltingComponentItem::new);
     public static final ItemRegistryObject<SmeltingComponentItem> REINFORCED_ELECTRIFIED_FURNACE = ITEMS.register("reinforced_electrified_furnace", SmeltingComponentItem::new);
 
+    public static final ItemRegistryObject<Item> SMALL_BATTERY = ITEMS.register("small_battery", props -> new Item(props.maxStackSize(1)));
+    public static final ItemRegistryObject<Item> MEDIUM_BATTERY = ITEMS.register("medium_battery", props -> new Item(props.maxStackSize(1)));
+    public static final ItemRegistryObject<Item> LARGE_BATTERY = ITEMS.register("large_battery", props -> new Item(props.maxStackSize(1)));
+    public static final ItemRegistryObject<Item> HICAP_BATTERY = ITEMS.register("hicap_battery", props -> new Item(props.maxStackSize(1)));
+
     public static final ItemRegistryObject<Item> MACHINE_CASING = ITEMS.register("machine_casing", Item::new);
 
     public static final ItemRegistryObject<DebuggerItem> DEBUGGER_ITEM = ITEMS.register("debugger", DebuggerItem::new);

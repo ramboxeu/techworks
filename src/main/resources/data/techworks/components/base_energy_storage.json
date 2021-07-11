@@ -1,9 +1,0 @@
-{
-  "type": "techworks:energy_storage",
-  "item": "minecraft:redstone_block",
-  "parameters": {
-    "storage": 10000,
-    "maxInput": 500,
-    "maxOutput": 500
-  }
-}

@@ -1,5 +1,7 @@
 package io.github.ramboxeu.techworks.common.energy;
 
+import io.github.ramboxeu.techworks.common.component.EnergyStorageComponent;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.energy.IEnergyStorage;
@@ -92,7 +94,6 @@ public class EnergyBattery implements IEnergyStorage, INBTSerializable<CompoundN
         return maxExtract;
     }
 
-
     @Override
     public CompoundNBT serializeNBT() {
         CompoundNBT tag = new CompoundNBT();
@@ -105,5 +106,12 @@ public class EnergyBattery implements IEnergyStorage, INBTSerializable<CompoundN
     @Override
     public void deserializeNBT(CompoundNBT nbt) {
         energy = nbt.getInt("Energy");
+    }
+
+    public void onComponentUpdate(EnergyStorageComponent component, ItemStack stack) {
+        capacity = component.getCapacity();
+        energy = Math.min(energy, capacity);
+        maxExtract = component.getTransfer();
+        maxReceive = component.getTransfer();
     }
 }

@@ -1,0 +1,8 @@
+{
+  "type": "techworks:energy_storage",
+  "item": "techworks:medium_battery",
+  "parameters": {
+    "capacity": 80000,
+    "transfer": 400
+  }
+}
