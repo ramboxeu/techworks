@@ -40,6 +40,10 @@ public abstract class BaseMachineTile extends BaseIOTile implements INamedContai
         return Collections.emptyList();
     }
 
+    public ComponentStorage getComponentStorage() {
+        return components;
+    }
+
     @Deprecated
     protected abstract void buildComponentStorage(ComponentStorage.Builder builder);
 

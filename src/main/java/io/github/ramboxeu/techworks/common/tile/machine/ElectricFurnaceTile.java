@@ -232,10 +232,6 @@ public class ElectricFurnaceTile extends BaseMachineTile {
         return outputInv;
     }
 
-    public ComponentStorage getComponentStorage() {
-        return components;
-    }
-
     public int getExtractedEnergy() {
         return extractedEnergy;
     }

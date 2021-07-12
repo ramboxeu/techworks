@@ -1,12 +1,12 @@
 package io.github.ramboxeu.techworks.client.screen;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.client.container.BaseMachineContainer;
 import io.github.ramboxeu.techworks.client.screen.widget.BaseContainerWidget;
 import io.github.ramboxeu.techworks.client.screen.widget.IPortScreenWidgetProvider;
 import io.github.ramboxeu.techworks.client.screen.widget.PortScreenWidget;
 import io.github.ramboxeu.techworks.client.screen.widget.config.BaseConfigWidget;
+import io.github.ramboxeu.techworks.client.screen.widget.config.IOConfigWidget;
 import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
@@ -24,12 +24,14 @@ public abstract class BaseMachineScreen<TILE extends BaseMachineTile, CONTAINER 
     protected final List<PortScreenWidget> portWidgets = new ArrayList<>();
     protected final List<BaseConfigWidget> configWidgets = new ArrayList<>();
 
-    public BaseMachineScreen(CONTAINER screenContainer, PlayerInventory inv, ITextComponent titleIn, ResourceLocation background, ResourceLocation machineFrontTex) {
-        super(screenContainer, inv, titleIn, background);
+    public BaseMachineScreen(CONTAINER container, PlayerInventory inv, ITextComponent title, ResourceLocation background, ResourceLocation machineFrontTex) {
+        super(container, inv, title, background);
+        addConfigWidget(new IOConfigWidget(this, machineFrontTex));
+        addConfigWidget(container.getComponentsWidget().getScreenWidget(this));
 
         renderConfig = false;
 
-        for (BaseContainerWidget widget : screenContainer.getWidgets()) {
+        for (BaseContainerWidget widget : container.getWidgets()) {
             if (widget instanceof IPortScreenWidgetProvider<?>) {
                 addPortWidget(((IPortScreenWidgetProvider<?>) widget).getPortScreenWidget(this));
             }
@@ -80,7 +82,6 @@ public abstract class BaseMachineScreen<TILE extends BaseMachineTile, CONTAINER 
     }
 
     public void tabClicked(int tabIndex) {
-        Techworks.LOGGER.debug("Tab {} was clicked!", tabIndex);
         BaseConfigWidget widget = configWidgets.get(tabIndex);
 
         if (config == widget) {

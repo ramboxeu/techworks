@@ -1,6 +1,6 @@
 package io.github.ramboxeu.techworks.client.container;
 
-import io.github.ramboxeu.techworks.Techworks;
+import io.github.ramboxeu.techworks.client.screen.widget.config.ComponentsWidget;
 import io.github.ramboxeu.techworks.common.network.TechworksPacketHandler;
 import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
 import io.github.ramboxeu.techworks.common.util.Side;
@@ -29,17 +29,19 @@ public abstract class BaseMachineContainer<T extends BaseMachineTile> extends Ba
 
     protected final List<HandlerData> dataList;
     protected final Map<Side, List<HandlerConfig>> dataMap;
+    protected final ComponentsWidget componentsWidget;
 
     public BaseMachineContainer(@Nullable ContainerType<?> containerType, int id, PlayerInventory playerInventory, T machineTile, @Deprecated Map<Side, List<HandlerConfig>> dataMap) {
         super(containerType, id);
         this.dataMap = dataMap;
-        Techworks.LOGGER.debug("Received data map: {}", dataMap);
 
         dataList = new ArrayList<>();
 
         this.machineTile = machineTile;
         this.playerInventory = new InvWrapper(playerInventory);
         addPlayerListener(playerInventory.player);
+
+        componentsWidget = addWidget(new ComponentsWidget(machineTile.getComponentStorage()));
 
         this.layoutPlayerSlots();
     }
@@ -161,5 +163,9 @@ public abstract class BaseMachineContainer<T extends BaseMachineTile> extends Ba
 
     public T getMachineTile() {
         return machineTile;
+    }
+
+    public ComponentsWidget getComponentsWidget() {
+        return componentsWidget;
     }
 }

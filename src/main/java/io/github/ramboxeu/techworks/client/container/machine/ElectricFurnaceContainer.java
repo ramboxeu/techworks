@@ -1,10 +1,7 @@
 package io.github.ramboxeu.techworks.client.container.machine;
 
 import io.github.ramboxeu.techworks.client.container.BaseMachineContainer;
-import io.github.ramboxeu.techworks.client.screen.widget.config.ComponentsWidget;
-import io.github.ramboxeu.techworks.client.screen.widget.display.EnergyDisplayWidget;
 import io.github.ramboxeu.techworks.client.screen.widget.inventory.SlotWidget;
-import io.github.ramboxeu.techworks.client.screen.widget.progress.ArrowProgressWidget;
 import io.github.ramboxeu.techworks.common.registration.TechworksContainers;
 import io.github.ramboxeu.techworks.common.tile.machine.ElectricFurnaceTile;
 import io.github.ramboxeu.techworks.common.util.Side;
@@ -21,10 +18,6 @@ import java.util.List;
 import java.util.Map;
 
 public class ElectricFurnaceContainer extends BaseMachineContainer<ElectricFurnaceTile> {
-    private int workTime;
-    private int cookTime;
-
-    private final ComponentsWidget componentsWidget;
 
     public ElectricFurnaceContainer(int id, PlayerInventory inv, ElectricFurnaceTile tile, Map<Side, List<HandlerConfig>> dataMap) {
         this(id, inv, tile, dataMap, IWorldPosCallable.DUMMY);
@@ -33,7 +26,6 @@ public class ElectricFurnaceContainer extends BaseMachineContainer<ElectricFurna
     public ElectricFurnaceContainer(int id, PlayerInventory playerInventory, ElectricFurnaceTile tile, Map<Side, List<HandlerConfig>> dataMap, IWorldPosCallable callable) {
         super(TechworksContainers.ELECTRIC_FURNACE.get(), id, playerInventory, tile, dataMap);
 
-//        addWidget(new EnergyDisplayWidget(this, 8, 14, tile.getBatteryData()));
         addWidget(new SlotWidget(this, 55, 34, 0, false, tile.getInvData()));
 
         // FIXME: not really dropping xp
@@ -66,26 +58,10 @@ public class ElectricFurnaceContainer extends BaseMachineContainer<ElectricFurna
                     }
                 })
         );
-
-        addWidget(new ArrowProgressWidget(81, 36, false, tile::getNeededEnergy, tile::getExtractedEnergy));
-        addWidget(new EnergyDisplayWidget(this, 8, 14, 18, 56, tile.getBatteryData()));
-        componentsWidget = addWidget(new ComponentsWidget(tile.getComponentStorage()));
     }
 
     @Override
     public boolean canInteractWith(PlayerEntity player) {
         return true;
-    }
-
-    public int getWorkTime() {
-        return workTime;
-    }
-
-    public int getCookTime() {
-        return cookTime;
-    }
-
-    public ComponentsWidget getComponentsWidget() {
-        return componentsWidget;
     }
 }
