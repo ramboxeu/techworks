@@ -2,13 +2,11 @@ package io.github.ramboxeu.techworks.client;
 
 import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.common.DataConstants;
-import io.github.ramboxeu.techworks.common.block.BaseMachineBlock;
 import io.github.ramboxeu.techworks.common.property.TechworksBlockStateProperties;
 import io.github.ramboxeu.techworks.common.registration.TechworksBlocks;
 import io.github.ramboxeu.techworks.common.registry.BlockRegistryObject;
 import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.item.BlockItem;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
@@ -31,18 +29,19 @@ public class TechworksBlockStateProvider extends BlockStateProvider {
 
     @Override
     protected void registerStatesAndModels() {
-        Techworks.LOGGER.debug("Generating...");
-
-        for (BlockRegistryObject<? extends BaseMachineBlock, BlockItem> machine : TechworksBlocks.MACHINES) {
+        for (BlockRegistryObject<?, ?> machine : DataConstants.Blocks.MACHINES) {
             machineBlock(machine.get(), machine.getId().getPath());
-            machineBlockItem(machine.getId().getPath());
+            directionalProcessingBlockItem(machine.getId().getPath());
         }
+
+        directionalProcessingBlock(TechworksBlocks.SOLID_FUEL_BURNER.get(), "solid_fuel_burner", modLoc("block/solid_fuel_burner_side"), modLoc("block/machine_bottom"), modLoc("block/machine_top"));
+        directionalProcessingBlockItem("solid_fuel_burner");
 
         horizontalBlock(TechworksBlocks.BLUEPRINT_TABLE);
 
         horizontalBlock(
                 TechworksBlocks.ASSEMBLY_TABLE.get(),
-                machineBlockModel("assembly_table", modLoc("block/assembly_table_front"))
+                directionalProcessingBlockModel("assembly_table", modLoc("block/assembly_table_front"), DataConstants.Textures.MACHINE_SIDE, DataConstants.Textures.MACHINE_BOTTOM, DataConstants.Textures.MACHINE_TOP)
         );
         blockItem("assembly_table");
 
@@ -72,32 +71,36 @@ public class TechworksBlockStateProvider extends BlockStateProvider {
                 .end();
     }
 
-    private void machineBlock(Block machineBlock, String name) {
+    private void machineBlock(Block block, String name) {
+        directionalProcessingBlock(block, name, DataConstants.Textures.MACHINE_SIDE, DataConstants.Textures.MACHINE_BOTTOM, DataConstants.Textures.MACHINE_TOP);
+    }
+
+    private void directionalProcessingBlock(Block block, String name, ResourceLocation sideTex, ResourceLocation bottomTex, ResourceLocation topTex) {
         ResourceLocation frontOffTex = modLoc("block/" + name + "_front_off");
         ResourceLocation frontOnTex = modLoc("block/" + name + "_front_on");
 
-        BlockModelBuilder offModel = machineBlockModel(name + "_off", frontOffTex);
-        BlockModelBuilder onModel = machineBlockModel(name + "_on", frontOnTex);
+        BlockModelBuilder offModel = directionalProcessingBlockModel(name + "_off", frontOffTex, sideTex, bottomTex, topTex);
+        BlockModelBuilder onModel = directionalProcessingBlockModel(name + "_on", frontOnTex, sideTex, bottomTex, topTex);
 
-        getVariantBuilder(machineBlock).forAllStates(state -> ConfiguredModel.builder()
+        getVariantBuilder(block).forAllStates(state -> ConfiguredModel.builder()
                 .modelFile(state.get(TechworksBlockStateProperties.RUNNING) ? onModel : offModel)
                 .rotationY(getHorizontalRotation(state.get(BlockStateProperties.HORIZONTAL_FACING)))
                 .build()
         );
     }
 
-    private void machineBlockItem(String name) {
+    private void directionalProcessingBlockItem(String name) {
         models().withExistingParent("item/" + name, modLoc("block/" + name + "_off"));
     }
 
-    private BlockModelBuilder machineBlockModel(String name, ResourceLocation frontTex) {
+    private BlockModelBuilder directionalProcessingBlockModel(String name, ResourceLocation frontTex, ResourceLocation sideTex, ResourceLocation bottomTex, ResourceLocation topTex) {
         return models().cube(name,
-                DataConstants.Textures.MACHINE_BOTTOM,
-                DataConstants.Textures.MACHINE_TOP,
+                bottomTex,
+                topTex,
                 frontTex,
-                DataConstants.Textures.MACHINE_SIDE,
-                DataConstants.Textures.MACHINE_SIDE,
-                DataConstants.Textures.MACHINE_SIDE
+                sideTex,
+                sideTex,
+                sideTex
         ).texture("particle", DataConstants.Textures.MACHINE_SIDE);
     }
 

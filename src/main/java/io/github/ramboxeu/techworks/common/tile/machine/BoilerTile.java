@@ -1,11 +1,19 @@
 package io.github.ramboxeu.techworks.common.tile.machine;
 
+import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.client.container.machine.BoilerContainer;
+import io.github.ramboxeu.techworks.common.component.ComponentStorage;
+import io.github.ramboxeu.techworks.common.fluid.handler.GasTank;
+import io.github.ramboxeu.techworks.common.fluid.handler.LiquidTank;
+import io.github.ramboxeu.techworks.common.heat.IHeater;
+import io.github.ramboxeu.techworks.common.registration.TechworksComponents;
+import io.github.ramboxeu.techworks.common.registration.TechworksFluids;
 import io.github.ramboxeu.techworks.common.registration.TechworksTiles;
 import io.github.ramboxeu.techworks.common.tag.TechworksFluidTags;
 import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
-import io.github.ramboxeu.techworks.common.util.Predicates;
 import io.github.ramboxeu.techworks.common.util.Utils;
+import io.github.ramboxeu.techworks.common.util.machineio.data.GasHandlerData;
+import io.github.ramboxeu.techworks.common.util.machineio.data.LiquidHandlerData;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -13,6 +21,7 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
@@ -21,156 +30,167 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.ArrayList;
+import java.util.Collection;
 
-@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public class BoilerTile extends BaseMachineTile {
-    private final IItemHandler fuelInventory;
+    private static final int HEATING_RATE = 10;
+    private static final int COOLING_RATE = 1;
 
-    private FluidTank waterTank = new FluidTank(0, stack -> stack.getFluid().isIn(FluidTags.WATER)) {
-        @Override
-        protected void onContentsChanged() {
-            markDirty();
-        }
-    };
+    private final LiquidTank waterTank;
+    private final LiquidHandlerData waterTankData;
+    private final GasTank steamTank;
+    private final GasHandlerData steamTankData;
+    private final Collection<SteamEngineTile> steamEngines;
+    private IHeater heater;
 
-    private FluidTank steamTank = new FluidTank(0, stack -> stack.getFluid().isIn(TechworksFluidTags.STEAM)){
-        @Override
-        protected void onContentsChanged() {
-            markDirty();
-        }
-    };
-
-    private boolean isWaterTankPresent = false;
-    private boolean isSteamTankPresent = false;
-
-    private int burnTime = 0;
     private int fuelBurnTime = 0;
-    private int workTime = 0;
-    private int steamTime = 0;
     private boolean isWorking;
     private boolean isBurning;
 
-    private Direction next = null;
+    private int temperature;
 
     public BoilerTile() {
         super(TechworksTiles.BOILER.get());
 
-//        machineIO = MachineIO.create(
-//                PortConfig.create(Type.GAS, steamTank),
-//                PortConfig.create(Type.LIQUID, waterTank)
-//        );
-
-//        machineIO = new MachineIO(this::getFacing);
-
-        fuelInventory = new ItemStackHandler() {
+        waterTank = new LiquidTank(0) {
             @Override
-            public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-                return Predicates.isFuel(stack);
+            public boolean isFluidValid(FluidStack stack) {
+                return stack.getFluid().isIn(FluidTags.WATER);
             }
         };
+        waterTankData = machineIO.getHandlerData(waterTank);
+
+        steamTank = new GasTank(0){
+            @Override
+            public boolean isFluidValid(FluidStack stack) {
+                return stack.getFluid().isIn(TechworksFluidTags.STEAM);
+            }
+        };
+        steamTankData = machineIO.getHandlerData(steamTank);
+
+        components = new ComponentStorage.Builder()
+                .component(TechworksComponents.LIQUID_STORAGE.get(), waterTank)
+                .component(TechworksComponents.GAS_STORAGE.get(), steamTank)
+                .component(TechworksComponents.HEATING.get(), (component, stack) -> heater = component.getHeaterType().createHeater())
+                .build();
+
+        steamEngines = new ArrayList<>(4);
+    }
+
+    @Override
+    protected void onFirstTick() {
+        if (steamEngines.isEmpty()) {
+            int chainLength = 0;
+            int maxChainLength = 0;
+            Direction chainSide = null;
+            Direction maxLengthSide = null;
+
+            for (Direction side : Direction.values()) {
+                boolean maxLength = true;
+
+                for (int i = 1; i <= 4; i++) {
+                    TileEntity tile = world.getTileEntity(pos.offset(side, i));
+
+                    if (!(tile instanceof SteamEngineTile) && i > 1) {
+                        chainLength = i - 1;
+                        chainSide = side;
+                        maxLength = false;
+                        break;
+                    }
+                }
+
+                if (maxLength) {
+                    chainSide = side;
+                    chainLength = 4;
+                }
+
+                if (maxChainLength < chainLength) {
+                    maxChainLength = chainLength;
+                    maxLengthSide = chainSide;
+                }
+            }
+
+            for (int i = 1; i <= maxChainLength; i++) {
+                SteamEngineTile engine = (SteamEngineTile) world.getTileEntity(pos.offset(maxLengthSide, i));
+                engine.link(this, maxLengthSide.getOpposite());
+            }
+        }
     }
 
     @Override
     protected void serverTick() {
-//        boolean flag = true;
-//
-//        if (!isWaterTankPresent) {
-//            flag = false;
-//        }
-//
-//        if (!isSteamTankPresent) {
-//            flag = false;
-//        }
-//
-//        if (!boilingComponent.isPresent()) {
-//            flag = false;
-//            workTime = 0;
-//        }
-//
-//        if (flag) {
-//
-//            if (!isBurning) {
-//                int burnTime = ForgeHooks.getBurnTime(fuelInventory.extractItem(0, 1, true));
-//                int totalBurnTime = fuelInventory.getStackInSlot(0).getCount() * burnTime;
-//
-//                if (burnTime > 0 && (canWork(waterTank, steamTank, boilingComponent) || workTime > 0) && totalBurnTime >= boilingComponent.getWorkTime() - workTime) {
-//                    fuelInventory.extractItem(0, 1, false);
-//                    isBurning = true;
-//                    fuelBurnTime = burnTime;
-//                } else {
-//                    this.burnTime = 0;
-//                    workTime = 0;
-//                    steamTime = 0;
-//                    isWorking = false;
-//                }
-//            } else {
-//                if (burnTime == fuelBurnTime) {
-//                    isBurning = false;
-//                    fuelBurnTime = 0;
-//                    burnTime = 0;
-//
-//                    if (ForgeHooks.getBurnTime(fuelInventory.extractItem(0, 1, true)) <= 0 || workTime == boilingComponent.getWorkTime()) {
-//                        if (steamTime == boilingComponent.calcWorkTime()) {
-//                            steamTank.fill(new FluidStack(TechworksFluids.STEAM.get(), boilingComponent.getSteamAmount()), IFluidHandler.FluidAction.EXECUTE);
-//                        }
-//
-//                        workTime = 0;
-//                        steamTime = 0;
-//                        isWorking = false;
-//                    }
-//                } else {
-//                    burnTime++;
-//
-//                    if (!isWorking) {
-//                        int totalBurnTime = (fuelInventory.getStackInSlot(0).getCount() * fuelBurnTime) + (fuelBurnTime - burnTime) + 1;
-////                        Techworks.LOGGER.debug("TotalBurnTime: {} | Water: [{}]", totalBurnTime, Utils.stringifyFluidStack(waterTank.getFluidInTank(0)));
-//
-//                        if (canWork(waterTank, steamTank, boilingComponent) && totalBurnTime >= boilingComponent.getWorkTime() ) {
-////                            Techworks.LOGGER.debug("Consumed water");
-//                            waterTank.drain(boilingComponent.getWaterAmount(), IFluidHandler.FluidAction.EXECUTE);
-//                            isWorking = true;
-//                            workTime++;
-//                            steamTime++;
-//                        }
-//                    } else {
-//                        if (workTime == boilingComponent.getWorkTime()) {
-//                            if (steamTime == boilingComponent.calcWorkTime()) {
-//                                steamTank.fill(new FluidStack(TechworksFluids.STEAM.get(), boilingComponent.getSteamAmount()), IFluidHandler.FluidAction.EXECUTE);
-//                            }
-//
-//                            isWorking = false;
-//                            workTime = 0;
-//                            steamTime = 0;
-//                        } else {
-//                            if (steamTime == boilingComponent.calcWorkTime()) {
-//                                steamTank.fill(new FluidStack(TechworksFluids.STEAM.get(), boilingComponent.getSteamAmount()), IFluidHandler.FluidAction.EXECUTE);
-//                                steamTime = 1;
-//                            } else {
-//                                steamTime++;
-//                            }
-//
-//                            workTime++;
-//                        }
-//                    }
-//
-//                }
-//            }
+        heater.tick();
 
-//            next = Utils.distributeFluid(steamTank, next, this);
-//        }
+        int receivedHeat = heater.extractHeat();
+
+        if (receivedHeat > 0) {
+            if (temperature > receivedHeat) {
+                temperature = Math.max(receivedHeat, temperature - COOLING_RATE);
+            } else {
+                temperature = Math.min(receivedHeat, temperature + HEATING_RATE);
+            }
+
+            int steam = temperature * 4;
+            if (waterTank.getFluidAmount() >= 50 && steamTank.getFluidAmount() + steam <= steamTank.getCapacity()) {
+                waterTank.drain(50, IFluidHandler.FluidAction.EXECUTE);
+
+                if (!steamEngines.isEmpty()) {
+                    int steamAmount = steam / steamEngines.size();
+                    int maxPower = steam / 4;
+                    int maxDrainAmount = steamTank.getFluidAmount() / steamEngines.size();
+
+                    if (maxDrainAmount > 0) {
+                        int amountDrained = 0;
+
+                        for (int i = 0, size = steamEngines.size(); i < size; i++) {
+                            amountDrained += steamTank.drain(maxDrainAmount, IFluidHandler.FluidAction.EXECUTE).getAmount();
+                        }
+
+                        steamAmount += amountDrained / steamEngines.size();
+                        maxPower += amountDrained / 4;
+                    }
+
+                    for (SteamEngineTile engine : steamEngines) {
+                        engine.receiveSteam(steamAmount, maxPower);
+                    }
+                } else {
+                    steamTank.fill(new FluidStack(TechworksFluids.STEAM.get(), steam), IFluidHandler.FluidAction.EXECUTE);
+                }
+            }
+        } else {
+            temperature = Math.max(0, temperature - COOLING_RATE);
+
+            if (steamTank.getFluidAmount() > 0 && !steamEngines.isEmpty()) {
+                int maxDrainAmount = steamTank.getFluidAmount() / steamEngines.size();
+
+                if (maxDrainAmount > 0) {
+                    int amountDrained = 0;
+
+                    for (int i = 0, size = steamEngines.size(); i < size; i++) {
+                        amountDrained += steamTank.drain(maxDrainAmount, IFluidHandler.FluidAction.EXECUTE).getAmount();
+                    }
+
+                    int maxPower = amountDrained / 4;
+                    int steamAmount = amountDrained / steamEngines.size();
+
+                    for (SteamEngineTile engine : steamEngines) {
+                        engine.receiveSteam(steamAmount, maxPower);
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -182,14 +202,16 @@ public class BoilerTile extends BaseMachineTile {
 
             if (bucket.isPresent()) {
                 IFluidHandlerItem bucketTank = Utils.unpack(bucket);
-                int maxDrain = waterTank.getTankCapacity(0) - waterTank.getFluidInTank(0).getAmount();
+                int maxDrain = waterTank.getCapacity() - waterTank.getFluidAmount();
 
-                if (bucketTank.drain(maxDrain, IFluidHandler.FluidAction.SIMULATE).getFluid().isIn(FluidTags.WATER)) {
-                    waterTank.fill(bucketTank.drain(maxDrain, IFluidHandler.FluidAction.EXECUTE), IFluidHandler.FluidAction.EXECUTE);
-                    player.setHeldItem(handIn, bucketTank.getContainer());
-                    markDirty();
+                if (maxDrain >= 1000) {
+                    if (bucketTank.drain(maxDrain, IFluidHandler.FluidAction.SIMULATE).getFluid().isIn(FluidTags.WATER)) {
+                        waterTank.fill(bucketTank.drain(maxDrain, IFluidHandler.FluidAction.EXECUTE), IFluidHandler.FluidAction.EXECUTE, true);
+                        player.setHeldItem(handIn, bucketTank.getContainer());
+                        markDirty();
 
-                    return ActionResultType.SUCCESS;
+                        return ActionResultType.SUCCESS;
+                    }
                 }
             }
         }
@@ -197,33 +219,40 @@ public class BoilerTile extends BaseMachineTile {
         return ActionResultType.PASS;
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        compound.putInt("FuelBurnTime", fuelBurnTime);
-        compound.putInt("BurnTime", burnTime);
-        compound.putInt("WorkTime", workTime);
-        compound.putInt("SteamTime", steamTime);
-        compound.putBoolean("IsWorking", isWorking);
-        compound.putBoolean("IsBurning", isBurning);
+    protected void buildComponentStorage(ComponentStorage.Builder builder) {
 
-        compound.put("FuelInv", CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.writeNBT(fuelInventory, null));
-        return super.write(compound);
+    }
+
+    @Override
+    public CompoundNBT write(CompoundNBT tag) {
+        tag.putInt("FuelBurnTime", fuelBurnTime);
+        tag.putBoolean("IsWorking", isWorking);
+        tag.putBoolean("IsBurning", isBurning);
+        tag.put("WaterTank", waterTank.serializeNBT());
+        tag.put("SteamTank", steamTank.serializeNBT());
+
+        if (heater instanceof INBTSerializable) {
+            tag.put("Heater", ((INBTSerializable<?>) heater).serializeNBT());
+        }
+
+        return super.write(tag);
     }
 
 
     @Override
-    @ParametersAreNonnullByDefault
-    public void read(BlockState state, CompoundNBT compound) {
-        fuelBurnTime = compound.getInt("FuelBurnTime");
-        burnTime = compound.getInt("BurnTime");
-        workTime = compound.getInt("WorkTime");
-        steamTime = compound.getInt("SteamTime");
-        isWorking = compound.getBoolean("IsWorking");
-        isBurning = compound.getBoolean("IsBurning");
+    public void read(BlockState state, CompoundNBT tag) {
+        fuelBurnTime = tag.getInt("FuelBurnTime");
+        isWorking = tag.getBoolean("IsWorking");
+        isBurning = tag.getBoolean("IsBurning");
+        waterTank.deserializeNBT(tag.getCompound("WaterTank"));
+        steamTank.deserializeNBT(tag.getCompound("SteamTank"));
 
-        CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.readNBT(fuelInventory, null, compound.get("FuelInv"));
-        super.read(state, compound);
+        if (heater instanceof INBTSerializable) {
+            ((INBTSerializable<CompoundNBT>) heater).deserializeNBT(tag.getCompound("Heater"));
+        }
+
+        super.read(state, tag);
     }
 
     @Override
@@ -237,36 +266,65 @@ public class BoilerTile extends BaseMachineTile {
         return new BoilerContainer(id, playerInventory, this, machineIO.createDataMap());
     }
 
+    @Nonnull
     @Override
-    protected ITextComponent getComponentsGuiName() {
-        return new TranslationTextComponent("container.techworks.boiler_components");
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction face) {
+        if (heater instanceof ICapabilityProvider) {
+            LazyOptional<T> heaterCap = ((ICapabilityProvider) heater).getCapability(cap, face);
+
+            if (heaterCap.isPresent())
+                return heaterCap;
+        }
+
+        return super.getCapability(cap, face);
     }
 
-    public int getFuelBurnTime() {
-        return fuelBurnTime;
+    @Override
+    public void remove() {
+        super.remove();
+        steamEngines.forEach(SteamEngineTile::unlink);
     }
 
-    public int getBurnTime() {
-        return burnTime;
+    @Override
+    public void onChunkUnloaded() {
+        super.onChunkUnloaded();
+        steamEngines.forEach(SteamEngineTile::unlink);
     }
 
-    public int getWaterStorage() {
-        return waterTank.getTankCapacity(0);
+    public LiquidHandlerData getWaterTankData() {
+        return waterTankData;
     }
 
-    public int getSteamStorage() {
-        return steamTank.getTankCapacity(0);
+    public GasHandlerData getSteamTankData() {
+        return steamTankData;
     }
 
-    public FluidStack getWater() {
-        return waterTank.getFluidInTank(0);
+    public IHeater getHeater() {
+        return heater;
     }
 
-    public FluidStack getSteam() {
-        return steamTank.getFluidInTank(0);
+    public int getTemperature() {
+        return temperature;
     }
 
-    public IItemHandler getFuelInventory() {
-        return fuelInventory;
+    public BoilerTile linkEngine(SteamEngineTile tile, Direction side) {
+        if (steamEngines.size() < 4) {
+            steamEngines.add(tile);
+            Techworks.LOGGER.debug("Linked engine: {} @ {}", tile, tile.getPos());
+            return this;
+        }
+
+        Techworks.LOGGER.debug("Linked engine cap reached: {} @ {}", tile, tile.getPos());
+        return null;
+    }
+
+    public void unlinkEngine(SteamEngineTile tile, boolean validateOtherLinks) {
+        steamEngines.remove(tile);
+
+        if (validateOtherLinks) {
+            steamEngines.removeIf(engine -> !engine.validateLink());
+        }
+
+        Techworks.LOGGER.debug("Unlinked engine: {} @ {}", tile, tile.getPos());
     }
 }

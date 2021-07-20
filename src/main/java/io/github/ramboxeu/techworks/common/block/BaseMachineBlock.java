@@ -2,58 +2,35 @@ package io.github.ramboxeu.techworks.common.block;
 
 import io.github.ramboxeu.techworks.api.wrench.IWrenchable;
 import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
-import net.minecraft.block.Block;
+import io.github.ramboxeu.techworks.common.util.Utils;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
-import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import static io.github.ramboxeu.techworks.common.property.TechworksBlockStateProperties.RUNNING;
-import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 import static net.minecraftforge.common.util.Constants.NBT.TAG_COMPOUND;
 
-public abstract class BaseMachineBlock extends Block implements IWrenchable {
+public abstract class BaseMachineBlock extends DirectionalProcessingBlock implements IWrenchable {
     public BaseMachineBlock() {
         super(Properties.create(Material.IRON).setRequiresTool().hardnessAndResistance(5, 6).sound(SoundType.METAL).harvestLevel(2).harvestTool(ToolType.PICKAXE));
     }
 
-    @Nullable
-    @Override
-    public abstract TileEntity createTileEntity(BlockState state, IBlockReader world);
-
     @Override
     public boolean hasTileEntity(BlockState state) {
         return true;
-    }
-
-    @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(HORIZONTAL_FACING, RUNNING);
-    }
-
-    @Nullable
-    @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return this.getDefaultState().with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing().getOpposite()).with(RUNNING, false);
     }
 
     @Override
@@ -69,16 +46,7 @@ public abstract class BaseMachineBlock extends Block implements IWrenchable {
             }
         }
 
-        if (!worldIn.isRemote) {
-
-            if (tileEntity instanceof INamedContainerProvider) {
-                NetworkHooks.openGui((ServerPlayerEntity) player, (INamedContainerProvider) tileEntity, tileEntity.getPos());
-            } else {
-                throw new IllegalStateException("Container provider is missing!");
-            }
-            return ActionResultType.SUCCESS;
-        }
-        return ActionResultType.SUCCESS;
+        return Utils.openTileContainer(tileEntity, player, worldIn);
     }
 
     @Override

@@ -89,11 +89,13 @@ public class BurningProgressWidget extends BaseContainerWidget implements IScree
 
         @Override
         protected void renderBaseWidget(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
-            int height = Math.round(this.height * progress);
-            int texHeight = this.height - height;
+            if (progress > 0) {
+                int height = reversed ? Math.round(this.height * (1 - progress)) : Math.round(this.height * progress);
+                int texHeight = this.height - height;
 
-            minecraft.textureManager.bindTexture(TEX);
-            blit(stack, x - 1, y - 1 + texHeight, width, height, 14, texHeight, 14, height, 28, 14);
+                minecraft.textureManager.bindTexture(TEX);
+                blit(stack, x - 1, y - 1 + texHeight, width, height, 14, texHeight, 14, height, 28, 14);
+            }
         }
     }
 }

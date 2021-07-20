@@ -1,0 +1,8 @@
+{
+  "type": "techworks:gas_storage",
+  "item": "techworks:small_gas_tank",
+  "parameters": {
+    "capacity": 4000,
+    "transfer": 100
+  }
+}

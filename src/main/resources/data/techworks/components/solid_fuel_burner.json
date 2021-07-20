@@ -1,0 +1,7 @@
+{
+  "type": "techworks:heating",
+  "item": "techworks:solid_fuel_burner",
+  "parameters": {
+    "heater": "solid_fuel"
+  }
+}

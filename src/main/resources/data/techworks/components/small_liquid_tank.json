@@ -1,0 +1,8 @@
+{
+  "type": "techworks:liquid_storage",
+  "item": "techworks:small_liquid_tank",
+  "parameters": {
+    "capacity": 4000,
+    "transfer": 100
+  }
+}

@@ -31,7 +31,7 @@ public class SteamEngineContainer extends BaseMachineContainer<SteamEngineTile> 
     }
 
     @Override
-    public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
+    public ItemStack transferStackInSlot(PlayerEntity player, int index) {
         ItemStack itemStack = ItemStack.EMPTY;
         ItemStack slotItemStack = ItemStack.EMPTY;
         Slot slot = this.inventorySlots.get(index);

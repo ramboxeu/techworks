@@ -3,6 +3,7 @@ package io.github.ramboxeu.techworks.common.registration;
 import io.github.ramboxeu.techworks.client.container.AssemblyTableContainer;
 import io.github.ramboxeu.techworks.client.container.BlueprintTableContainer;
 import io.github.ramboxeu.techworks.client.container.DevBlockContainer;
+import io.github.ramboxeu.techworks.client.container.SolidFuelBurnerContainer;
 import io.github.ramboxeu.techworks.client.container.machine.BoilerContainer;
 import io.github.ramboxeu.techworks.client.container.machine.ElectricFurnaceContainer;
 import io.github.ramboxeu.techworks.client.container.machine.ElectricGrinderContainer;
@@ -10,6 +11,7 @@ import io.github.ramboxeu.techworks.client.container.machine.SteamEngineContaine
 import io.github.ramboxeu.techworks.client.screen.AssemblyTableScreen;
 import io.github.ramboxeu.techworks.client.screen.BlueprintTableScreen;
 import io.github.ramboxeu.techworks.client.screen.DevBlockScreen;
+import io.github.ramboxeu.techworks.client.screen.SolidFuelBurnerScreen;
 import io.github.ramboxeu.techworks.client.screen.machine.BoilerScreen;
 import io.github.ramboxeu.techworks.client.screen.machine.ElectricFurnaceScreen;
 import io.github.ramboxeu.techworks.client.screen.machine.ElectricGrinderScreen;
@@ -19,6 +21,7 @@ import io.github.ramboxeu.techworks.common.registry.ContainerRegistryObject;
 import io.github.ramboxeu.techworks.common.tile.AssemblyTableTile;
 import io.github.ramboxeu.techworks.common.tile.BlueprintTableTile;
 import io.github.ramboxeu.techworks.common.tile.DevBlockTile;
+import io.github.ramboxeu.techworks.common.tile.SolidFuelBurnerTile;
 import io.github.ramboxeu.techworks.common.tile.machine.ElectricFurnaceTile;
 import net.minecraft.client.gui.ScreenManager;
 
@@ -33,6 +36,7 @@ public class TechworksContainers {
     public static final ContainerRegistryObject<BlueprintTableContainer> BLUEPRINT_TABLE = CONTAINERS.registerTileContainer("blueprint_table", (id, inv, tile) -> new BlueprintTableContainer(id, inv, (BlueprintTableTile) tile));
     public static final ContainerRegistryObject<AssemblyTableContainer> ASSEMBLY_TABLE = CONTAINERS.registerTileContainer("assembly_table", (id, inv, tile) -> new AssemblyTableContainer(id, inv, (AssemblyTableTile) tile));
     public static final ContainerRegistryObject<DevBlockContainer> DEV_BLOCK = CONTAINERS.registerTileContainer("dev_block", (id, inv, tile) -> new DevBlockContainer(id, (DevBlockTile) tile));
+    public static final ContainerRegistryObject<SolidFuelBurnerContainer> SOLID_FUEL_BURNER = CONTAINERS.registerTileContainer("solid_fuel_burner", (id, inv, tile) -> new SolidFuelBurnerContainer(id, inv, (SolidFuelBurnerTile) tile));
 
     public static void registerScreenFactories(){
         ScreenManager.registerFactory(BOILER.get(), BoilerScreen::new);
@@ -42,5 +46,6 @@ public class TechworksContainers {
         ScreenManager.registerFactory(BLUEPRINT_TABLE.get(), BlueprintTableScreen::new);
         ScreenManager.registerFactory(ASSEMBLY_TABLE.get(), AssemblyTableScreen::new);
         ScreenManager.registerFactory(DEV_BLOCK.get(), DevBlockScreen::new);
+        ScreenManager.registerFactory(SOLID_FUEL_BURNER.get(), SolidFuelBurnerScreen::new);
     }
 }

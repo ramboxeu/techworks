@@ -23,7 +23,7 @@ public class DataConstants {
         };
         public static final ItemRegistryObject<?>[] ITEM_GENERATED = new ItemRegistryObject[] {
                 ELECTRIFIED_FURNACE, REINFORCED_ELECTRIFIED_FURNACE, SMALL_BATTERY, MEDIUM_BATTERY, LARGE_BATTERY,
-                HICAP_BATTERY
+                HICAP_BATTERY, SMALL_GAS_TANK, SMALL_LIQUID_TANK
         };
     }
 
@@ -39,6 +39,10 @@ public class DataConstants {
 
         public static final BlockRegistryObject<?, ?>[] CABLES = new BlockRegistryObject[] {
                 ENERGY_CABLE, LIQUID_PIPE, GAS_PIPE, ITEM_TRANSPORTER
+        };
+
+        public static final BlockRegistryObject<?, ?>[] DIRECTIONAL_PROCESSING = new BlockRegistryObject[] {
+                SOLID_FUEL_BURNER
         };
     }
 

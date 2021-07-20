@@ -22,6 +22,7 @@ public abstract class BaseContainerWidget {
         private final List<Slot> slots = new ArrayList<>();
         private final List<ObjectHolder<?>> objectTrackers = new ArrayList<>();
         private final List<IntReferenceHolder> intTrackers = new ArrayList<>();
+        private final List<BaseContainerWidget> subWidgets = new ArrayList<>();
         private final Function<Slot, BaseContainer.ToggleableSlot> wrapperMaker;
 
         public Builder(Function<Slot, BaseContainer.ToggleableSlot> wrapperMaker) {
@@ -59,6 +60,11 @@ public abstract class BaseContainerWidget {
             return this;
         }
 
+        public Builder subWidget(BaseContainerWidget widget) {
+            subWidgets.add(widget);
+            return this;
+        }
+
         public List<Slot> getSlots() {
             return slots;
         }
@@ -69,6 +75,10 @@ public abstract class BaseContainerWidget {
 
         public List<IntReferenceHolder> getIntTrackers() {
             return intTrackers;
+        }
+
+        public List<BaseContainerWidget> getSubWidgets() {
+            return subWidgets;
         }
     }
 }

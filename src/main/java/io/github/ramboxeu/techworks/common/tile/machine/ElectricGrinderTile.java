@@ -1,6 +1,7 @@
 package io.github.ramboxeu.techworks.common.tile.machine;
 
 import io.github.ramboxeu.techworks.client.container.machine.ElectricGrinderContainer;
+import io.github.ramboxeu.techworks.common.component.ComponentStorage;
 import io.github.ramboxeu.techworks.common.registration.TechworksTiles;
 import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
 import net.minecraft.entity.player.PlayerEntity;
@@ -17,13 +18,13 @@ public class ElectricGrinderTile extends BaseMachineTile {
     }
 
     @Override
-    public void tick() {
+    protected void buildComponentStorage(ComponentStorage.Builder builder) {
 
     }
 
     @Override
-    protected ITextComponent getComponentsGuiName() {
-        return new TranslationTextComponent("");
+    public void tick() {
+
     }
 
     //    @Override

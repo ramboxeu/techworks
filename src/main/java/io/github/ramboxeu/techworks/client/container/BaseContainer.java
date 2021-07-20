@@ -40,6 +40,7 @@ public abstract class BaseContainer extends Container {
         builder.getIntTrackers().forEach(this::trackInt);
         builder.getObjectTrackers().forEach(this::trackObject);
         builder.getSlots().forEach(this::addSlot);
+        builder.getSubWidgets().forEach(this::addWidget);
 
         return widget;
     }

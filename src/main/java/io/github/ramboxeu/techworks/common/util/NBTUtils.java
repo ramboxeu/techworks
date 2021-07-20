@@ -7,6 +7,7 @@ import io.github.ramboxeu.techworks.common.component.ComponentType;
 import io.github.ramboxeu.techworks.common.registration.TechworksRegistries;
 import net.minecraft.nbt.*;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
@@ -23,13 +24,21 @@ public class NBTUtils {
     }
 
     public static <T extends Enum<T>> void serializeEnum(CompoundNBT nbt, String key, T value) {
-        nbt.putString(key, value.name());
+        if (value == null) {
+            nbt.putBoolean(key, false);
+        } else {
+            nbt.putString(key, value.name());
+        }
     }
 
     @Nullable
     public static <T extends Enum<T>> T deserializeEnum(CompoundNBT nbt, String key, Class<T> clazz) {
         try {
-            return Enum.valueOf(clazz, nbt.getString(key));
+            if (nbt.getTagId(key) == Constants.NBT.TAG_BYTE) {
+                return null;
+            } else {
+                return Enum.valueOf(clazz, nbt.getString(key));
+            }
         } catch (IllegalArgumentException ignored) {
             return null;
         }

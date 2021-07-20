@@ -12,42 +12,26 @@ import net.minecraft.util.text.TranslationTextComponent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EnergyStorageComponent extends Component {
-
-    private final int capacity;
-    private final int transfer;
+public class EnergyStorageComponent extends BaseStorageComponent {
 
     public EnergyStorageComponent(ResourceLocation id, Item item, int capacity, int transfer) {
-        super(TechworksComponents.ENERGY_STORAGE.get(), id, item);
-        this.capacity = capacity;
-        this.transfer = transfer;
-    }
-
-    public int getCapacity() {
-        return capacity;
-    }
-
-    public int getTransfer() {
-        return transfer;
+        super(TechworksComponents.ENERGY_STORAGE.get(), id, item, capacity, transfer);
     }
 
     @Override
-    protected List<ITextComponent> collectTooltip(ItemStack stack) {
+    public List<ITextComponent> collectTooltip(ItemStack stack) {
         List<ITextComponent> tooltip = new ArrayList<>(2);
-        tooltip.add(new TranslationTextComponent("tooltip.component.techworks.energy_capacity", capacity).setStyle(Component.TOOLTIP_STYLE));
-        tooltip.add(new TranslationTextComponent("tooltip.component.techworks.energy_transfer_rate", transfer).setStyle(Component.TOOLTIP_STYLE));
+        tooltip.add(new TranslationTextComponent("tooltip.component.techworks.energy_storage_capacity", capacity));
+        tooltip.add(new TranslationTextComponent("tooltip.component.techworks.energy_storage_transfer_rate", transfer));
         return tooltip;
     }
 
-    public static class Type extends ComponentType<EnergyStorageComponent> {
+    public static class Type extends BaseType<EnergyStorageComponent> {
 
         public static final ResourceLocation BASE_ID = new ResourceLocation(Techworks.MOD_ID, "small_battery");
 
         @Override
-        protected EnergyStorageComponent readComponent(ResourceLocation id, Item item, JsonObject parameters) {
-            int capacity = parameters.get("capacity").getAsInt();
-            int transfer = parameters.get("transfer").getAsInt();
-
+        protected EnergyStorageComponent readComponent(ResourceLocation id, Item item, JsonObject parameters, int capacity, int transfer) {
             return new EnergyStorageComponent(id, item, capacity, transfer);
         }
 

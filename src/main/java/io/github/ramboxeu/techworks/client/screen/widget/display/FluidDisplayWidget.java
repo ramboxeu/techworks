@@ -8,7 +8,6 @@ import io.github.ramboxeu.techworks.client.screen.BaseMachineScreen;
 import io.github.ramboxeu.techworks.client.screen.widget.IPortScreenWidgetProvider;
 import io.github.ramboxeu.techworks.client.screen.widget.PortContainerWidget;
 import io.github.ramboxeu.techworks.client.screen.widget.PortScreenWidget;
-import io.github.ramboxeu.techworks.client.util.ClientUtils;
 import io.github.ramboxeu.techworks.client.util.Color;
 import io.github.ramboxeu.techworks.client.util.RenderUtils;
 import io.github.ramboxeu.techworks.common.util.MathUtils;
@@ -104,7 +103,7 @@ public class FluidDisplayWidget extends PortContainerWidget implements IPortScre
 
         @Override
         protected void renderWidgetTooltip(MatrixStack stack, int mouseX, int mouseY) {
-            ClientUtils.renderTooltip(screen, minecraft.fontRenderer, stack, getFluidName(fluid), mouseX, mouseY);
+            renderTooltip(stack, getFluidName(fluid), mouseX, mouseY);
         }
 
         public ITextComponent getFluidName(FluidStack stack) {

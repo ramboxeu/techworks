@@ -67,7 +67,7 @@ public class ElectricGrinderContainer extends BaseMachineContainer<ElectricGrind
     }
 
     @Override
-    public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
+    public ItemStack transferStackInSlot(PlayerEntity player, int index) {
         ItemStack itemStack = ItemStack.EMPTY;
         ItemStack slotItemStack = ItemStack.EMPTY;
         Slot slot = this.inventorySlots.get(index);

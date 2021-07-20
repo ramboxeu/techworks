@@ -38,6 +38,8 @@ public class TechworksItems {
     public static final ItemRegistryObject<Item> MEDIUM_BATTERY = ITEMS.register("medium_battery", props -> new Item(props.maxStackSize(1)));
     public static final ItemRegistryObject<Item> LARGE_BATTERY = ITEMS.register("large_battery", props -> new Item(props.maxStackSize(1)));
     public static final ItemRegistryObject<Item> HICAP_BATTERY = ITEMS.register("hicap_battery", props -> new Item(props.maxStackSize(1)));
+    public static final ItemRegistryObject<Item> SMALL_LIQUID_TANK = ITEMS.register("small_liquid_tank", props -> new Item(props.maxStackSize(1)));
+    public static final ItemRegistryObject<Item> SMALL_GAS_TANK = ITEMS.register("small_gas_tank", props -> new Item(props.maxStackSize(1)));
 
     public static final ItemRegistryObject<Item> MACHINE_CASING = ITEMS.register("machine_casing", Item::new);
 

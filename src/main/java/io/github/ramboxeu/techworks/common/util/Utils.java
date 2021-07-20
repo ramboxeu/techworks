@@ -3,10 +3,14 @@ package io.github.ramboxeu.techworks.common.util;
 import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.common.util.machineio.config.HandlerConfig;
 import io.github.ramboxeu.techworks.common.util.machineio.data.HandlerData;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.fluid.Fluid;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -16,6 +20,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -128,5 +133,19 @@ public class Utils {
     @SuppressWarnings("unchecked") // oh well to bad so sad
     public static <T> Class<T> cast(Class<?> clazz) {
         return (Class<T>) clazz;
+    }
+
+    public static ActionResultType openTileContainer(@Nullable TileEntity tile, PlayerEntity player, World world) {
+        if (!world.isRemote && tile != null) {
+            if (tile instanceof INamedContainerProvider) {
+                NetworkHooks.openGui((ServerPlayerEntity) player, (INamedContainerProvider) tile, tile.getPos());
+            } else {
+                throw new IllegalStateException("Container provider is missing!");
+            }
+
+            return ActionResultType.CONSUME;
+        }
+
+        return ActionResultType.SUCCESS;
     }
 }

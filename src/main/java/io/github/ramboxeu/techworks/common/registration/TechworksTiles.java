@@ -29,6 +29,7 @@ public class TechworksTiles {
     public static final TileRegistryObject<FluidPipeTile> LIQUID_PIPE = TILES.register(TechworksBlocks.LIQUID_PIPE, () -> new FluidPipeTile(TechworksTiles.LIQUID_PIPE, NetworkType.LIQUID));
     public static final TileRegistryObject<FluidPipeTile> GAS_PIPE = TILES.register(TechworksBlocks.GAS_PIPE, () -> new FluidPipeTile(TechworksTiles.GAS_PIPE, NetworkType.GAS));
     public static final TileRegistryObject<EnergyCableTile> ENERGY_CABLE = TILES.register(TechworksBlocks.ENERGY_CABLE, EnergyCableTile::new);
+    public static final TileRegistryObject<SolidFuelBurnerTile> SOLID_FUEL_BURNER = TILES.register(TechworksBlocks.SOLID_FUEL_BURNER, SolidFuelBurnerTile::new);
 
     public static final TileRegistryObject<DevBlockTile> DEV_BLOCK = TILES.register(TechworksBlocks.DEV_BLOCK, DevBlockTile::new);
 
