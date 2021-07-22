@@ -1,11 +1,15 @@
 package io.github.ramboxeu.techworks.common.fluid.handler;
 
-import io.github.ramboxeu.techworks.common.component.ComponentStorage;
+import io.github.ramboxeu.techworks.common.component.IComponentsChangeListener;
 import io.github.ramboxeu.techworks.common.component.LiquidStorageComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
-public class LiquidTank extends FluidHandler implements ILiquidTank, ComponentStorage.ComponentChangeListener<LiquidStorageComponent> {
+public class LiquidTank extends FluidHandler implements ILiquidTank, IComponentsChangeListener<LiquidStorageComponent> {
+
+    public LiquidTank() {
+        super(0, 0, 0);
+    }
 
     public LiquidTank(int capacity) {
         super(capacity);
@@ -25,7 +29,7 @@ public class LiquidTank extends FluidHandler implements ILiquidTank, ComponentSt
     }
 
     @Override
-    public void onChange(LiquidStorageComponent component, ItemStack stack) {
+    public void onComponentsChanged(LiquidStorageComponent component, ItemStack stack) {
         capacity = component.getCapacity();
         if (!fluid.isEmpty()) fluid.setAmount(Math.min(fluid.getAmount(), capacity));
         maxDrain = component.getTransfer();

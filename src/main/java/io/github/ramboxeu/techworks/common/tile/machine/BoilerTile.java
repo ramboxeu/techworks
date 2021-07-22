@@ -64,7 +64,7 @@ public class BoilerTile extends BaseMachineTile {
     public BoilerTile() {
         super(TechworksTiles.BOILER.get());
 
-        waterTank = new LiquidTank(0) {
+        waterTank = new LiquidTank() {
             @Override
             public boolean isFluidValid(FluidStack stack) {
                 return stack.getFluid().isIn(FluidTags.WATER);
@@ -72,7 +72,7 @@ public class BoilerTile extends BaseMachineTile {
         };
         waterTankData = machineIO.getHandlerData(waterTank);
 
-        steamTank = new GasTank(0){
+        steamTank = new GasTank(){
             @Override
             public boolean isFluidValid(FluidStack stack) {
                 return stack.getFluid().isIn(TechworksFluidTags.STEAM);

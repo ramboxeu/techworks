@@ -323,17 +323,17 @@ public class ComponentStorage implements IItemHandler, INBTSerializable<Compound
     public static class Builder {
 
         private final Map<ComponentType<?>, Component> typeMap = new Reference2ReferenceArrayMap<>();
-        private final Map<ComponentType<?>, ComponentChangeListener<? extends Component>> changeListenerMap = new HashMap<>();
+        private final Map<ComponentType<?>, IComponentsChangeListener<? extends Component>> changeListenerMap = new HashMap<>();
 
         public <T extends Component> Builder component(ComponentType<T> type) {
             return component(type, (c, s) -> {});
         }
 
-        public <T extends Component> Builder component(ComponentType<T> type, ComponentChangeListener<T> changeListener) {
+        public <T extends Component> Builder component(ComponentType<T> type, IComponentsChangeListener<T> changeListener) {
             return component(Objects.requireNonNull(ComponentManager.getInstance().getComponent(type.getBaseComponentId())), changeListener);
         }
 
-        public <T extends Component> Builder component(T component, ComponentChangeListener<T> changeListener) {
+        public <T extends Component> Builder component(T component, IComponentsChangeListener<T> changeListener) {
             ComponentType<?> type = component.getType();
 
             typeMap.put(type, component);
@@ -347,7 +347,7 @@ public class ComponentStorage implements IItemHandler, INBTSerializable<Compound
             for (Map.Entry<ComponentType<?>, Component> entry : typeMap.entrySet()) {
                 ComponentType<?> type = entry.getKey();
                 Component component = entry.getValue();
-                ComponentChangeListener<Component> listener = (ComponentChangeListener<Component>) changeListenerMap.get(type);
+                IComponentsChangeListener<Component> listener = (IComponentsChangeListener<Component>) changeListenerMap.get(type);
 
                 entryMap.put(type, new Entry(listener, component));
             }
@@ -357,31 +357,26 @@ public class ComponentStorage implements IItemHandler, INBTSerializable<Compound
 
     }
 
-    @FunctionalInterface
-    public interface ComponentChangeListener<T extends Component> {
-        void onChange(T component, ItemStack stack);
-    }
-
     public static class Entry {
-        private final ComponentChangeListener<Component> callback;
+        private final IComponentsChangeListener<Component> callback;
         private Component component;
         private ItemStack stack;
 
-        private Entry(ComponentChangeListener<Component> callback, Component component) {
+        private Entry(IComponentsChangeListener<Component> callback, Component component) {
             this.callback = callback;
             this.component = component;
             this.stack = createItemStack();
         }
 
         private void init() {
-            callback.onChange(component, stack);
+            callback.onComponentsChanged(component, stack);
         }
 
         private void update(Component component, ItemStack stack) {
             this.component = component;
             this.stack = stack == null || stack.isEmpty() ? createItemStack() : stack;
 
-            callback.onChange(component, this.stack);
+            callback.onComponentsChanged(component, this.stack);
         }
 
         private ItemStack createItemStack() {

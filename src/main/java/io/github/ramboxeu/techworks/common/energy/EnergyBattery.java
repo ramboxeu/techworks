@@ -1,16 +1,21 @@
 package io.github.ramboxeu.techworks.common.energy;
 
 import io.github.ramboxeu.techworks.common.component.EnergyStorageComponent;
+import io.github.ramboxeu.techworks.common.component.IComponentsChangeListener;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.energy.IEnergyStorage;
 
-public class EnergyBattery implements IEnergyStorage, INBTSerializable<CompoundNBT> {
+public class EnergyBattery implements IEnergyStorage, INBTSerializable<CompoundNBT>, IComponentsChangeListener<EnergyStorageComponent> {
     protected int energy;
     protected int capacity;
     protected int maxReceive;
     protected int maxExtract;
+
+    public EnergyBattery() {
+        this(0, 0, 0);
+    }
 
     public EnergyBattery(int capacity) {
         this(capacity, capacity, capacity);
@@ -108,7 +113,8 @@ public class EnergyBattery implements IEnergyStorage, INBTSerializable<CompoundN
         energy = nbt.getInt("Energy");
     }
 
-    public void onComponentUpdate(EnergyStorageComponent component, ItemStack stack) {
+    @Override
+    public void onComponentsChanged(EnergyStorageComponent component, ItemStack stack) {
         capacity = component.getCapacity();
         energy = Math.min(energy, capacity);
         maxExtract = component.getTransfer();

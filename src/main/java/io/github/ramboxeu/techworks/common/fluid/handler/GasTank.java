@@ -1,11 +1,15 @@
 package io.github.ramboxeu.techworks.common.fluid.handler;
 
-import io.github.ramboxeu.techworks.common.component.ComponentStorage;
 import io.github.ramboxeu.techworks.common.component.GasStorageComponent;
+import io.github.ramboxeu.techworks.common.component.IComponentsChangeListener;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
-public class GasTank extends FluidHandler implements IGasTank, ComponentStorage.ComponentChangeListener<GasStorageComponent> {
+public class GasTank extends FluidHandler implements IGasTank, IComponentsChangeListener<GasStorageComponent> {
+
+    public GasTank() {
+        super(0, 0, 0);
+    }
 
     public GasTank(int capacity) {
         super(capacity);
@@ -25,7 +29,7 @@ public class GasTank extends FluidHandler implements IGasTank, ComponentStorage.
     }
 
     @Override
-    public void onChange(GasStorageComponent component, ItemStack stack) {
+    public void onComponentsChanged(GasStorageComponent component, ItemStack stack) {
         capacity = component.getCapacity();
         if (!fluid.isEmpty()) fluid.setAmount(Math.min(fluid.getAmount(), capacity));
         maxDrain = component.getTransfer();
