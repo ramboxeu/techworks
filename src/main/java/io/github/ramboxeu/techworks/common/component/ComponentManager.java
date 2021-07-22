@@ -1,10 +1,7 @@
 package io.github.ramboxeu.techworks.common.component;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.common.registration.TechworksRegistries;
 import net.minecraft.client.resources.JsonReloadListener;
@@ -16,7 +13,7 @@ import net.minecraft.tags.ITag;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -48,8 +45,15 @@ public class ComponentManager extends JsonReloadListener {
                 JsonObject obj = elem.getAsJsonObject();
                 ResourceLocation typeId = new ResourceLocation(obj.get("type").getAsString());
                 ComponentType<?> type = TechworksRegistries.COMPONENT_TYPES.getValue(typeId);
-                Component component = type.read(id, obj);
-                builder.put(id, component);
+
+                if (type != null) {
+                    Component component = type.read(id, obj);
+                    builder.put(id, component);
+                } else {
+                    Techworks.LOGGER.error("Component {} uses un-registered type {}", id, typeId);
+                }
+            } catch (JsonParseException e) {
+                Techworks.LOGGER.error("Couldn't read component {}, because it's json was invalid", id, e);
             } catch (RuntimeException e) {
                 Techworks.LOGGER.error("Couldn't read component {}", id);
             }
@@ -61,15 +65,27 @@ public class ComponentManager extends JsonReloadListener {
     }
 
     @SuppressWarnings("unchecked")
-    @Nullable
+    @Nonnull
     public <T extends Component> T getComponent(ResourceLocation id) {
-        return (T) components.get(id);
+        T component = (T) components.get(id);
+
+        if (component == null) {
+            throw new RuntimeException("Component " + id + " does not exist.");
+        }
+
+        return component;
     }
 
     @SuppressWarnings("unchecked")
-    @Nullable
+    @Nonnull
     public <T extends Component> T getComponent(Item item) {
-        return (T) componentToItem.get(item);
+        T component =  (T) componentToItem.get(item);
+
+        if (component == null) {
+            throw new RuntimeException("Item " + item.delegate.name() + " does not map to any component.");
+        }
+
+        return component;
     }
 
     public ITag<Item> getItemComponentTag() {
@@ -78,7 +94,7 @@ public class ComponentManager extends JsonReloadListener {
 
     public static ComponentManager getInstance() {
         if (INSTANCE == null)
-            throw new IllegalStateException("Can not retrieve ComponentManager until resources have loaded once.");
+            throw new IllegalStateException("Can not retrieve ComponentManager until resources have loaded at least once.");
 
         return INSTANCE;
     }

@@ -330,7 +330,7 @@ public class ComponentStorage implements IItemHandler, INBTSerializable<Compound
         }
 
         public <T extends Component> Builder component(ComponentType<T> type, IComponentsChangeListener<T> changeListener) {
-            return component(Objects.requireNonNull(ComponentManager.getInstance().getComponent(type.getBaseComponentId())), changeListener);
+            return component(ComponentManager.getInstance().getComponent(type.getBaseComponentId()), changeListener);
         }
 
         public <T extends Component> Builder component(T component, IComponentsChangeListener<T> changeListener) {

@@ -4,10 +4,9 @@ import com.google.gson.JsonObject;
 import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.common.heat.HeaterType;
 import io.github.ramboxeu.techworks.common.registration.TechworksComponents;
+import io.github.ramboxeu.techworks.common.util.JsonUtils;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
-
-import java.util.Locale;
 
 public class HeatingComponent extends Component {
     private final HeaterType type;
@@ -26,8 +25,7 @@ public class HeatingComponent extends Component {
 
         @Override
         protected HeatingComponent readComponent(ResourceLocation id, Item item, JsonObject parameters) {
-            String rawType = parameters.get("heater").getAsString().toUpperCase(Locale.ENGLISH);
-            HeaterType type = HeaterType.valueOf(rawType);
+            HeaterType type = JsonUtils.helpfulReadEnum(parameters, "heater", HeaterType.class);
 
             return new HeatingComponent(id, item, type);
         }
