@@ -1,0 +1,10 @@
+{
+  "type": "techworks:grinding",
+  "item": "techworks:rock_crusher",
+  "parameters": {
+    "modifier": 1.0,
+    "cap": 20,
+    "bonus": 6,
+    "recipe": "grinding"
+  }
+}

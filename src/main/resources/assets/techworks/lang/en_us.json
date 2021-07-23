@@ -31,6 +31,8 @@
   "item.techworks.large_battery": "Large Battery",
   "item.techworks.hicap_battery": "HiCap™ Battery",
   "item.techworks.solid_fuel_burner": "Solid Fuel Burner",
+  "item.techworks.rock_crusher": "RockCrusher",
+  "item.techworks.ore_crusher": "OreCrusher",
 
   "container.techworks.boiler": "Boiler",
   "container.techworks.steam_engine": "Steam Engine",
@@ -73,6 +75,9 @@
   "tooltip.component.techworks.fluid_storage_capacity": "Capacity: %dmB",
   "tooltip.component.techworks.energy_storage_transfer_rate": "Transfer Rate: %dFE/t",
   "tooltip.component.techworks.fluid_storage_transfer_rate": "Transfer Rate: %dmB/t",
+  "tooltip.component.techworks.grinding_energy_cap": "Energy Cap: %dFE/t",
+  "tooltip.component.techworks.grinding_energy_bonus_cap": "Energy Cap: %dFE/t (+%d Efficiency Bonus)",
+  "tooltip.component.techworks.grinding_energy_modifier": "Energy Modifier: x%d",
 
   "gui.techworks.widget.search_blueprints": "Search",
   "gui.techworks.widget.components": "Components",
@@ -89,6 +94,9 @@
   "component.techworks.medium_battery": "Medium Battery",
   "component.techworks.large_battery": "Large Battery",
   "component.techworks.hicap_battery": "HiCap™ Battery",
+  "component.techworks.rock_crusher": "RockCrusher",
+  "component.techworks.ore_crusher": "OreCrusher",
   "component_type.techworks.smelting": "Smelting Component",
-  "component_type.techworks.energy_storage": "Energy Storage Component"
+  "component_type.techworks.energy_storage": "Energy Storage Component",
+  "component_type.techworks.grinding": "Grinding Component"
 }

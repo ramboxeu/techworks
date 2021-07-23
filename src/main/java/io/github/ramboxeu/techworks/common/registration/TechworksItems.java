@@ -40,6 +40,8 @@ public class TechworksItems {
     public static final ItemRegistryObject<Item> HICAP_BATTERY = ITEMS.register("hicap_battery", props -> new Item(props.maxStackSize(1)));
     public static final ItemRegistryObject<Item> SMALL_LIQUID_TANK = ITEMS.register("small_liquid_tank", props -> new Item(props.maxStackSize(1)));
     public static final ItemRegistryObject<Item> SMALL_GAS_TANK = ITEMS.register("small_gas_tank", props -> new Item(props.maxStackSize(1)));
+    public static final ItemRegistryObject<Item> ROCK_CRUSHER = ITEMS.register("rock_crusher", props -> new Item(props.maxStackSize(1)));
+    public static final ItemRegistryObject<Item> ORE_CRUSHER = ITEMS.register("ore_crusher", props -> new Item(props.maxStackSize(1)));
 
     public static final ItemRegistryObject<Item> MACHINE_CASING = ITEMS.register("machine_casing", Item::new);
 

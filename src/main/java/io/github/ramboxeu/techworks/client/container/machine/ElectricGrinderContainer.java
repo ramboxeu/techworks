@@ -1,107 +1,42 @@
 package io.github.ramboxeu.techworks.client.container.machine;
 
 import io.github.ramboxeu.techworks.client.container.BaseMachineContainer;
+import io.github.ramboxeu.techworks.client.screen.widget.display.EnergyDisplayWidget;
+import io.github.ramboxeu.techworks.client.screen.widget.inventory.SlotWidget;
+import io.github.ramboxeu.techworks.client.screen.widget.progress.ArrowProgressWidget;
 import io.github.ramboxeu.techworks.common.registration.TechworksContainers;
 import io.github.ramboxeu.techworks.common.tile.machine.ElectricGrinderTile;
-import io.github.ramboxeu.techworks.common.util.Predicates;
 import io.github.ramboxeu.techworks.common.util.Side;
 import io.github.ramboxeu.techworks.common.util.machineio.config.HandlerConfig;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.SlotItemHandler;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
 
 public class ElectricGrinderContainer extends BaseMachineContainer<ElectricGrinderTile> {
-    private int workTime;
-    private int workCounter;
 
-    public ElectricGrinderContainer(int id, PlayerInventory playerInventory, ElectricGrinderTile machineTile, Map<Side, List<HandlerConfig>> dataMap) {
-        super(TechworksContainers.ELECTRIC_GRINDER.get(), id, playerInventory, machineTile, dataMap);
+    public ElectricGrinderContainer(int id, PlayerInventory playerInventory, ElectricGrinderTile tile, Map<Side, List<HandlerConfig>> dataMap) {
+        super(TechworksContainers.ELECTRIC_GRINDER.get(), id, playerInventory, tile, dataMap);
 
-//        this.trackInt(new IntReferenceHolder() {
-//            @Override
-//            public int get() {
-//                return machineTile.getOperationTime();
-//            }
-//
-//            @Override
-//            public void set(int time) {
-//                workTime = time;
-//            }
-//        });
-//
-//        this.trackInt(new IntReferenceHolder() {
-//            @Override
-//            public int get() {
-//                return machineTile.getTimeCounter();
-//            }
-//
-//            @Override
-//            public void set(int counter) {
-//                workCounter = counter;
-//            }
-//        });
+        addWidget(new EnergyDisplayWidget(this, 8, 14, tile.getBatteryData()));
+        addWidget(new SlotWidget(this, 55, 34, 0, false, tile.getInvData()));
+        addWidget(new SlotWidget(this, 111, 30, 0, true, tile.getOutputInvData(),
+                (handler, index, x, y) -> new SlotItemHandler(handler, index, x, y) {
+                    @Override
+                    public boolean isItemValid(@NotNull ItemStack stack) {
+                        return false;
+                    }
+                })
+        );
+        addWidget(new ArrowProgressWidget(81, 35, false, tile::getEnergy, tile::getExtractedEnergy));
     }
-
-//    @Override
-//    protected void layoutSlots(InventoryBuilder builder) {
-//        builder.addSlot(new SlotBuilder(56, 35))
-//                .addSlot(new SlotBuilder(32, 53).predicate(PredicateUtils::isEnergyStorage))
-//                .addSlot(new SlotBuilder(116, 35).output(true).limit(0));
-//    }
 
     @Override
     public boolean canInteractWith(PlayerEntity playerIn) {
         return true;
-    }
-
-    public int getWorkTime() {
-        return this.workTime;
-    }
-
-    public int getWorkCounter() {
-        return this.workCounter;
-    }
-
-    @Override
-    public ItemStack transferStackInSlot(PlayerEntity player, int index) {
-        ItemStack itemStack = ItemStack.EMPTY;
-        ItemStack slotItemStack = ItemStack.EMPTY;
-        Slot slot = this.inventorySlots.get(index);
-
-        if (slot != null) {
-            slotItemStack = slot.getStack();
-            itemStack = slotItemStack.copy();
-            if (index < 36) {
-                if (Predicates.isEnergyStorage(itemStack)) {
-                    Slot energyOutput = this.inventorySlots.get(37);
-
-                    ItemStack itemStack1 = ItemStack.EMPTY;
-
-                    itemStack1 = itemStack.split(1);
-
-                    if (!energyOutput.getHasStack() && energyOutput.isItemValid(itemStack)) {
-                        energyOutput.putStack(itemStack1);
-                        slot.putStack(itemStack);
-                        return ItemStack.EMPTY;
-                    }
-                } else {
-                    if (!this.mergeItemStack(itemStack, 36, 37, false)) {
-                        return ItemStack.EMPTY;
-                    }
-                }
-            } else {
-                if (!this.mergeItemStack(itemStack, 0, 36, false)) {
-                    return ItemStack.EMPTY;
-                }
-            }
-        }
-
-        slot.putStack(itemStack);
-
-        return ItemStack.EMPTY;
     }
 }
