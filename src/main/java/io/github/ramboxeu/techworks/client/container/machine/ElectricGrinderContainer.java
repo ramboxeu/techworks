@@ -12,8 +12,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
-import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +27,7 @@ public class ElectricGrinderContainer extends BaseMachineContainer<ElectricGrind
         addWidget(new SlotWidget(this, 111, 30, 0, true, tile.getOutputInvData(),
                 (handler, index, x, y) -> new SlotItemHandler(handler, index, x, y) {
                     @Override
-                    public boolean isItemValid(@NotNull ItemStack stack) {
+                    public boolean isItemValid(@Nonnull ItemStack stack) {
                         return false;
                     }
                 })

@@ -114,6 +114,7 @@ public class ElectricGrinderTile extends BaseMachineTile {
                 extractedEnergy = 0;
             }
 
+            setWorkingState(isWorking);
             shouldCheck = false;
         }
 

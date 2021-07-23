@@ -94,7 +94,7 @@ public abstract class BaseInventoryContainer extends BaseContainer {
                     return ItemStack.EMPTY;
                 }
 
-                source.onSlotChanged();
+                source.putStack(sourceStack);
             }
         }
 

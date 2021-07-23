@@ -54,9 +54,8 @@ public class ElectricFurnaceTile extends BaseMachineTile {
 
         inv = new ItemStackHandler(1) {
             @Override
-            protected void onContentsChanged(int slot) { // putting stack into a slot resets operation
+            protected void onContentsChanged(int slot) {
                 markDirty();
-//                checkAndUpdateRecipe();
                 shouldCheck = true;
             }
         };
@@ -73,10 +72,13 @@ public class ElectricFurnaceTile extends BaseMachineTile {
 
         recipeInv = new RecipeWrapper(inv);
 
-        battery = new EnergyBattery(5000,   100) {
+        battery = new EnergyBattery() {
             @Override
             protected void onContentsChanged() {
-                shouldCheck = true;
+                if (!isWorking) {
+                    markDirty();
+                    shouldCheck = true;
+                }
             }
         };
         batteryData = machineIO.getHandlerData(battery);
@@ -86,20 +88,9 @@ public class ElectricFurnaceTile extends BaseMachineTile {
                     energyModifier = smelting.getModifier();
                     energyCap = smelting.getCap(stack);
                     shouldCheck = true;
-//                    checkAndUpdateRecipe();
                 })
                 .component(TechworksComponents.ENERGY_STORAGE.get(), battery)
                 .build();
-    }
-
-    private void checkAndUpdateRecipe() {
-        if (!checkRecipe()) {
-            isWorking = false;
-            shouldCheck = false;
-        } else {
-            shouldCheck = true;
-            update();
-        }
     }
 
     private boolean checkRecipe() {
@@ -123,21 +114,9 @@ public class ElectricFurnaceTile extends BaseMachineTile {
         return false;
     }
 
-    private void update() {
-        if (cachedRecipe != null) {
-            energy = (int) (cachedRecipe.getEnergy() * energyModifier);
-        }
-    }
-
     @Override
     protected void buildComponentStorage(ComponentStorage.Builder builder) {
 
-    }
-
-    @Override
-    protected void onFirstTick() {
-        super.onFirstTick();
-//        checkAndUpdateRecipe();
     }
 
     @Override
@@ -145,18 +124,19 @@ public class ElectricFurnaceTile extends BaseMachineTile {
         if (shouldCheck) {
             if (checkRecipe() && outputInv.insertItem(0, cachedRecipe.getCraftingResult(recipeInv), true).isEmpty() && battery.getEnergyStored() >= energy - extractedEnergy) {
                 isWorking = true;
+                energy = (int) (cachedRecipe.getEnergy() * energyModifier);
             } else {
                 isWorking = false;
                 extractedEnergy = 0;
             }
 
-            update();
+            setWorkingState(isWorking);
             shouldCheck = false;
         }
 
         if (isWorking) {
             if (extractedEnergy < energy) {
-                extractedEnergy += battery.extractEnergy(energyCap, false); // possibly suppress updates
+                extractedEnergy += battery.extractEnergy(energyCap, false);
             }
 
             if (extractedEnergy >= energy) {
@@ -181,7 +161,6 @@ public class ElectricFurnaceTile extends BaseMachineTile {
         tag.put("Components", components.serializeNBT());
         tag.putInt("ExtractedEnergy", extractedEnergy);
         tag.putFloat("Experience", experience);
-//        tag.putInt("WorkTime", workTime);
         tag.putBoolean("IsWorking", isWorking);
 
         return super.write(tag);
@@ -195,7 +174,6 @@ public class ElectricFurnaceTile extends BaseMachineTile {
         components.deserializeNBT(tag.getCompound("Components"));
         extractedEnergy = tag.getInt("ExtractedEnergy");
         experience = tag.getFloat("Experience");
-//        workTime = tag.getInt("WorkTime");
         isWorking = tag.getBoolean("IsWorking");
 
         super.read(state, tag);
@@ -224,24 +202,12 @@ public class ElectricFurnaceTile extends BaseMachineTile {
         return outputInvData;
     }
 
-    public ItemStackHandler getInventory() {
-        return inv;
-    }
-
-    public ItemStackHandler getOutputInv() {
-        return outputInv;
-    }
-
     public int getExtractedEnergy() {
         return extractedEnergy;
     }
 
-    public int getNeededEnergy() {
-        return energy;
-    }
-
     public int getEnergy() {
-        return battery.getEnergyStored();
+        return energy;
     }
 
     public float resetXP() {

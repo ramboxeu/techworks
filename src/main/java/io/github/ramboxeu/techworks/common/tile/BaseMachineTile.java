@@ -2,6 +2,7 @@ package io.github.ramboxeu.techworks.common.tile;
 
 import io.github.ramboxeu.techworks.api.wrench.IWrenchable;
 import io.github.ramboxeu.techworks.common.component.ComponentStorage;
+import io.github.ramboxeu.techworks.common.property.TechworksBlockStateProperties;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.INamedContainerProvider;
@@ -46,6 +47,10 @@ public abstract class BaseMachineTile extends BaseIOTile implements INamedContai
 
     @Deprecated
     protected abstract void buildComponentStorage(ComponentStorage.Builder builder);
+
+    protected void setWorkingState(boolean isWorking) {
+        world.setBlockState(pos, getBlockState().with(TechworksBlockStateProperties.RUNNING, isWorking));
+    }
 
     @Override
     public void tick() {
