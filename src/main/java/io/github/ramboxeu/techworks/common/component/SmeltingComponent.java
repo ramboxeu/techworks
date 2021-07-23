@@ -3,6 +3,7 @@ package io.github.ramboxeu.techworks.common.component;
 import com.google.gson.JsonObject;
 import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.common.registration.TechworksComponents;
+import io.github.ramboxeu.techworks.common.util.JsonUtils;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.item.Item;
@@ -61,9 +62,10 @@ public class SmeltingComponent extends Component {
 
         @Override
         protected SmeltingComponent readComponent(ResourceLocation id, Item item, JsonObject parameters) {
-            float modifier = parameters.get("modifier").getAsFloat();
-            int energy = parameters.get("cap").getAsInt();
-            int bonus = parameters.get("bonus").getAsInt();
+            float modifier = JsonUtils.readFloat(parameters, "modifier");
+            int energy = JsonUtils.readInt(parameters, "cap");
+            int bonus = JsonUtils.readInt(parameters, "bonus");
+
             return new SmeltingComponent(id, item, modifier, bonus, energy);
         }
 

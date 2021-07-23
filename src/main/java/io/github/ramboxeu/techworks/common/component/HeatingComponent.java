@@ -25,7 +25,7 @@ public class HeatingComponent extends Component {
 
         @Override
         protected HeatingComponent readComponent(ResourceLocation id, Item item, JsonObject parameters) {
-            HeaterType type = JsonUtils.helpfulReadEnum(parameters, "heater", HeaterType.class);
+            HeaterType type = JsonUtils.readEnum(parameters, "heater", HeaterType.class);
 
             return new HeatingComponent(id, item, type);
         }

@@ -68,10 +68,11 @@ public class GrindingComponent extends Component {
 
         @Override
         protected GrindingComponent readComponent(ResourceLocation id, Item item, JsonObject parameters) {
-            GrinderRecipeType type = JsonUtils.helpfulReadEnum(parameters, "recipe", GrinderRecipeType.class);
-            float modifier = parameters.get("modifier").getAsFloat();
-            int energy = parameters.get("cap").getAsInt();
-            int bonus = parameters.get("bonus").getAsInt();
+            GrinderRecipeType type = JsonUtils.readEnum(parameters, "recipe", GrinderRecipeType.class);
+            float modifier = JsonUtils.readFloat(parameters, "modifier");
+            int energy = JsonUtils.readInt(parameters, "cap");
+            int bonus = JsonUtils.readInt(parameters, "bonus");
+
             return new GrindingComponent(id, item, type, modifier, energy, bonus);
         }
 

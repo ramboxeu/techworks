@@ -2,8 +2,8 @@ package io.github.ramboxeu.techworks.common.component;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.*;
-import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.common.registration.TechworksRegistries;
+import io.github.ramboxeu.techworks.common.util.JsonUtils;
 import net.minecraft.client.resources.JsonReloadListener;
 import net.minecraft.item.Item;
 import net.minecraft.profiler.IProfiler;
@@ -41,27 +41,36 @@ public class ComponentManager extends JsonReloadListener {
             ResourceLocation id = entry.getKey();
             JsonElement elem = entry.getValue();
 
-            try {
-                JsonObject obj = elem.getAsJsonObject();
-                ResourceLocation typeId = new ResourceLocation(obj.get("type").getAsString());
-                ComponentType<?> type = TechworksRegistries.COMPONENT_TYPES.getValue(typeId);
+            if (!elem.isJsonObject())
+                throw new ComponentManagerException("Expected component's %s JSON file root element to be object.", id);
 
-                if (type != null) {
+            JsonObject obj = elem.getAsJsonObject();
+            ResourceLocation typeId = JsonUtils.readResourceLocation(obj, "type");
+            ComponentType<?> type = TechworksRegistries.COMPONENT_TYPES.getValue(typeId);
+
+            if (type != null) {
+                try {
                     Component component = type.read(id, obj);
                     builder.put(id, component);
-                } else {
-                    Techworks.LOGGER.error("Component {} uses un-registered type {}", id, typeId);
+                } catch (JsonParseException e) {
+                    throw new ComponentManagerException("Component's %s JSON file is invalid: %s", id, e.getMessage());
+                } catch (ComponentReadException e) {
+                    throw new ComponentManagerException("Component %s is invalid: %s.", id, e.getMessage());
+                } catch (Exception e) {
+                    throw new ComponentManagerException("Unexpected error while reading component " + id + ".", e);
                 }
-            } catch (JsonParseException e) {
-                Techworks.LOGGER.error("Couldn't read component {}, because it's json was invalid", id, e);
-            } catch (RuntimeException e) {
-                Techworks.LOGGER.error("Couldn't read component {}", id);
+            } else {
+                throw new ComponentManagerException("Component %s uses un-registered type %s.", id, typeId);
             }
         }
 
         components = builder.build();
-        componentToItem = components.values().stream().collect(Collectors.toMap(Component::getItem, Function.identity()));
+        componentToItem = components.values().stream().collect(Collectors.toMap(Component::getItem, Function.identity(), ComponentManager::helpfulThrowingMerger));
         itemComponentTag = Tag.getTagFromContents(components.values().stream().map(Component::getItem).collect(Collectors.toSet()));
+    }
+
+    private static Component helpfulThrowingMerger(Component a, Component b) {
+        throw new ComponentManagerException("Item %s can be used by only one component, but multiple uses were found: %s, %s.", a.getItem().delegate.name(), a.getId(), b.getId());
     }
 
     @SuppressWarnings("unchecked")
@@ -70,7 +79,7 @@ public class ComponentManager extends JsonReloadListener {
         T component = (T) components.get(id);
 
         if (component == null) {
-            throw new RuntimeException("Component " + id + " does not exist.");
+            throw new ComponentManagerException("Component " + id + " does not exist.");
         }
 
         return component;
@@ -82,7 +91,7 @@ public class ComponentManager extends JsonReloadListener {
         T component =  (T) componentToItem.get(item);
 
         if (component == null) {
-            throw new RuntimeException("Item " + item.delegate.name() + " does not map to any component.");
+            throw new ComponentManagerException("Item " + item.delegate.name() + " does not map to any component.");
         }
 
         return component;
@@ -106,5 +115,16 @@ public class ComponentManager extends JsonReloadListener {
 
     public boolean isItemComponent(Item item) {
         return componentToItem.containsKey(item);
+    }
+
+    private static class ComponentManagerException extends RuntimeException {
+
+        public ComponentManagerException(String message, Throwable cause) {
+            super(message, cause);
+        }
+
+        public ComponentManagerException(String format, Object... args) {
+            super(String.format(format, args));
+        }
     }
 }

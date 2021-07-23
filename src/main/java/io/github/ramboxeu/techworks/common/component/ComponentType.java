@@ -2,7 +2,9 @@ package io.github.ramboxeu.techworks.common.component;
 
 import com.google.gson.JsonObject;
 import io.github.ramboxeu.techworks.common.registration.TechworksRegistries;
+import io.github.ramboxeu.techworks.common.util.JsonUtils;
 import net.minecraft.item.Item;
+import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
 import net.minecraft.util.text.ITextComponent;
@@ -15,9 +17,15 @@ public abstract class ComponentType<T extends Component> extends ForgeRegistryEn
     private String translationKey;
 
     public T read(ResourceLocation id, JsonObject json) {
-        ResourceLocation itemId = new ResourceLocation(json.get("item").getAsString());
+        ResourceLocation itemId = JsonUtils.readResourceLocation(json, "item");
+        if (!ForgeRegistries.ITEMS.containsKey(itemId))
+            throw new ComponentReadException("un-registered item " + itemId);
+
         Item item = ForgeRegistries.ITEMS.getValue(itemId);
-        JsonObject params = json.getAsJsonObject("parameters");
+        if (item == Items.AIR)
+            throw new ComponentReadException("item minecraft:air is invalid");
+
+        JsonObject params = JsonUtils.readJsonObject(json, "parameters");
 
         return readComponent(id, item, params);
     }

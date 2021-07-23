@@ -1,6 +1,7 @@
 package io.github.ramboxeu.techworks.common.component;
 
 import com.google.gson.JsonObject;
+import io.github.ramboxeu.techworks.common.util.JsonUtils;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 
@@ -26,8 +27,8 @@ public abstract class BaseStorageComponent extends Component {
     public static abstract class BaseType<T extends BaseStorageComponent> extends ComponentType<T> {
         @Override
         protected T readComponent(ResourceLocation id, Item item, JsonObject parameters) {
-            int capacity = parameters.get("capacity").getAsInt();
-            int transfer = parameters.get("transfer").getAsInt();
+            int capacity = JsonUtils.readInt(parameters, "capacity");
+            int transfer = JsonUtils.readInt(parameters, "transfer");
 
             return readComponent(id, item, parameters, capacity, transfer);
         }
