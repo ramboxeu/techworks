@@ -2,6 +2,7 @@ package io.github.ramboxeu.techworks.common.tile;
 
 import io.github.ramboxeu.techworks.client.container.SolidFuelBurnerContainer;
 import io.github.ramboxeu.techworks.common.heat.IHeatTransmitter;
+import io.github.ramboxeu.techworks.common.lang.TranslationKeys;
 import io.github.ramboxeu.techworks.common.registration.TechworksTiles;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,7 +14,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -149,7 +149,7 @@ public class SolidFuelBurnerTile extends BaseTechworksTile implements INamedCont
 
     @Override
     public ITextComponent getDisplayName() {
-        return new TranslationTextComponent("container.techworks.solid_fuel_burner");
+        return TranslationKeys.SOLID_FUEL_BURNER.text();
     }
 
     @Nullable

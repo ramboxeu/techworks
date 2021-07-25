@@ -6,6 +6,7 @@ import io.github.ramboxeu.techworks.client.container.BaseMachineContainer;
 import io.github.ramboxeu.techworks.client.screen.BaseMachineScreen;
 import io.github.ramboxeu.techworks.client.util.ClientUtils;
 import io.github.ramboxeu.techworks.client.util.RenderUtils;
+import io.github.ramboxeu.techworks.common.lang.TranslationKeys;
 import io.github.ramboxeu.techworks.common.util.Side;
 import io.github.ramboxeu.techworks.common.util.machineio.InputType;
 import io.github.ramboxeu.techworks.common.util.machineio.MachineIO;
@@ -17,6 +18,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.IReorderingProcessor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.Color;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TranslationTextComponent;
 
@@ -31,25 +33,24 @@ public class IOConfigWidget extends BaseConfigWidget {
     private static final Style DEFAULT_STYLE = Style.EMPTY.setColor(Color.fromInt(0xFF7F7F7F));
 
     private static final Style TYPE_STYLE = Style.EMPTY.setColor(Color.fromInt(0xFFCC5F28));
-    private static final IReorderingProcessor NONE_TEXT = IReorderingProcessor.fromString("None", Style.EMPTY);
-    private static final IReorderingProcessor ITEMS_TEXT = IReorderingProcessor.fromString("Items", TYPE_STYLE);
-    private static final IReorderingProcessor LIQUID_TEXT = IReorderingProcessor.fromString("Liquid", TYPE_STYLE);
-    private static final IReorderingProcessor GAS_TEXT = IReorderingProcessor.fromString("Gas", TYPE_STYLE);
-    private static final IReorderingProcessor ENERGY_TEXT = IReorderingProcessor.fromString("Energy", TYPE_STYLE);
+    private static final TranslationTextComponent NONE_TEXT = TranslationKeys.NONE_INPUT_TYPE.text();
+    private static final TranslationTextComponent ITEMS_TEXT = TranslationKeys.ITEM_INPUT_TYPE.styledText(TYPE_STYLE);
+    private static final TranslationTextComponent LIQUID_TEXT = TranslationKeys.LIQUID_INPUT_TYPE.styledText(TYPE_STYLE);
+    private static final TranslationTextComponent GAS_TEXT = TranslationKeys.GAS_INPUT_TYPE.styledText(TYPE_STYLE);
+    private static final TranslationTextComponent ENERGY_TEXT = TranslationKeys.ENERGY_INPUT_TYPE.styledText(TYPE_STYLE);
 
     private static final Style SIDE_STYLE = Style.EMPTY.setColor(Color.fromInt(0xFF999999));
-    private static final IReorderingProcessor BOTTOM_TEXT = IReorderingProcessor.fromString("Bottom", SIDE_STYLE);
-    private static final IReorderingProcessor TOP_TEXT = IReorderingProcessor.fromString("Top", SIDE_STYLE);
-    private static final IReorderingProcessor FRONT_TEXT = IReorderingProcessor.fromString("Front", SIDE_STYLE);
-    private static final IReorderingProcessor LEFT_TEXT = IReorderingProcessor.fromString("Left", SIDE_STYLE);
-    private static final IReorderingProcessor RIGHT_TEXT = IReorderingProcessor.fromString("Right", SIDE_STYLE);
-    private static final IReorderingProcessor BACK_TEXT = IReorderingProcessor.fromString("Back", SIDE_STYLE);
+    private static final TranslationTextComponent BOTTOM_TEXT = TranslationKeys.BOTTOM_SIDE.styledText(SIDE_STYLE);
+    private static final TranslationTextComponent TOP_TEXT = TranslationKeys.TOP_SIDE.styledText(SIDE_STYLE);
+    private static final TranslationTextComponent FRONT_TEXT = TranslationKeys.FRONT_SIDE.styledText(SIDE_STYLE);
+    private static final TranslationTextComponent LEFT_TEXT = TranslationKeys.LEFT_SIDE.styledText(SIDE_STYLE);
+    private static final TranslationTextComponent RIGHT_TEXT = TranslationKeys.RIGHT_SIDE.styledText(SIDE_STYLE);
+    private static final TranslationTextComponent BACK_TEXT = TranslationKeys.BACK_SIDE.styledText(SIDE_STYLE);
 
     private static final Style MODE_STYLE = Style.EMPTY.setColor(Color.fromInt(0xFFA5A0A0));
-    private static final IReorderingProcessor INPUT_TEXT = IReorderingProcessor.fromString("Input", MODE_STYLE);
-    private static final IReorderingProcessor OUTPUT_TEXT = IReorderingProcessor.fromString("Output", MODE_STYLE);
-    private static final IReorderingProcessor BOTH_TEXT = IReorderingProcessor.fromString("Both", MODE_STYLE);
-    private static final TranslationTextComponent TITLE = new TranslationTextComponent("gui.techworks.widget.io");
+    private static final TranslationTextComponent INPUT_TEXT = TranslationKeys.INPUT.styledText(MODE_STYLE);
+    private static final TranslationTextComponent OUTPUT_TEXT = TranslationKeys.OUTPUT.styledText(MODE_STYLE);
+    private static final TranslationTextComponent BOTH_TEXT = TranslationKeys.BOTH.styledText(MODE_STYLE);
 
     private final ResourceLocation frontTexture;
     private final BaseMachineContainer<?> container;
@@ -66,14 +67,14 @@ public class IOConfigWidget extends BaseConfigWidget {
     private int modeIconOffset;
     private Side side;
     private boolean enabled;
-    private IReorderingProcessor info;
-    private IReorderingProcessor type;
+    private ITextComponent info;
+    private ITextComponent type;
     private StorageMode mode;
     private HandlerData selectedData;
     private HandlerConfig selectedConfig;
 
     public IOConfigWidget(BaseMachineScreen<?, ?> screen, ResourceLocation frontTexture) {
-        super(screen, TITLE);
+        super(screen, TranslationKeys.IO.text());
         this.frontTexture = frontTexture;
 
         container = screen.getContainer();
@@ -93,7 +94,7 @@ public class IOConfigWidget extends BaseConfigWidget {
     @Override
     public void onScreenInit(Minecraft minecraft, int guiLeft, int guiTop, int guiWidth, int guiHeight) {
         super.onScreenInit(minecraft, guiLeft, guiTop, guiWidth, guiHeight);
-        modeTextWidth = minecraft.fontRenderer.getStringWidth("Mode:");
+        modeTextWidth = minecraft.fontRenderer.getStringWidth(TranslationKeys.MODE.text().getString());
     }
 
     @Override
@@ -142,8 +143,8 @@ public class IOConfigWidget extends BaseConfigWidget {
         blit(stack, 47, 52, 0, 16, 16, machineSideSprite);
 
         ClientUtils.drawString(stack, minecraft.fontRenderer, info, 7, 76, false);
-        ClientUtils.drawString(stack, minecraft.fontRenderer, getText("Enabled"), 20, 91, false);
-        ClientUtils.drawString(stack, minecraft.fontRenderer, getText("Mode:"), 7, 113, false);
+        ClientUtils.drawString(stack, minecraft.fontRenderer, TranslationKeys.ENABLED.styledText(DEFAULT_STYLE), 20, 91, false);
+        ClientUtils.drawString(stack, minecraft.fontRenderer, TranslationKeys.MODE.styledText(DEFAULT_STYLE).appendString(": "), 7, 113, false);
         ClientUtils.drawString(stack, minecraft.fontRenderer, type, 18 + modeTextWidth, 114, false);
     }
 
@@ -252,7 +253,12 @@ public class IOConfigWidget extends BaseConfigWidget {
             modeIconOffset = 20;
         }
 
-        info = ClientUtils.processor(getText("Info: "), getSideText(side), getText(" "), getInputTypeText(selectedData.getType()));
+        info = TranslationKeys.INFO.styledText(DEFAULT_STYLE)
+                .appendString(": ")
+                .appendSibling(getSideText(side))
+                .appendString(" ")
+                .appendSibling(getInputTypeText(selectedData.getType()));
+
         type = getModeText(mode);
     }
 
@@ -260,7 +266,7 @@ public class IOConfigWidget extends BaseConfigWidget {
         return IReorderingProcessor.fromString(text, DEFAULT_STYLE);
     }
 
-    private static IReorderingProcessor getInputTypeText(InputType type) {
+    private static TranslationTextComponent getInputTypeText(InputType type) {
         switch (type) {
             case ITEM:
                 return ITEMS_TEXT;
@@ -275,7 +281,7 @@ public class IOConfigWidget extends BaseConfigWidget {
         }
     }
 
-    private static IReorderingProcessor getSideText(Side side) {
+    private static TranslationTextComponent getSideText(Side side) {
         switch (side) {
             case TOP:
                 return TOP_TEXT;
@@ -294,7 +300,7 @@ public class IOConfigWidget extends BaseConfigWidget {
         }
     }
 
-    private static IReorderingProcessor getModeText(StorageMode mode) {
+    private static TranslationTextComponent getModeText(StorageMode mode) {
         switch (mode) {
             case INPUT:
                 return INPUT_TEXT;

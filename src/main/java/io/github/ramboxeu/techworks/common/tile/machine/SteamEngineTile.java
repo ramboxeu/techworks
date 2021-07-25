@@ -3,6 +3,7 @@ package io.github.ramboxeu.techworks.common.tile.machine;
 import io.github.ramboxeu.techworks.client.container.machine.SteamEngineContainer;
 import io.github.ramboxeu.techworks.common.component.ComponentStorage;
 import io.github.ramboxeu.techworks.common.energy.EnergyBattery;
+import io.github.ramboxeu.techworks.common.lang.TranslationKeys;
 import io.github.ramboxeu.techworks.common.registration.TechworksFluids;
 import io.github.ramboxeu.techworks.common.registration.TechworksTiles;
 import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
@@ -14,7 +15,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nullable;
@@ -164,7 +164,7 @@ public class SteamEngineTile extends BaseMachineTile {
 
     @Override
     public ITextComponent getDisplayName() {
-        return new TranslationTextComponent("container.techworks.steam_engine");
+        return TranslationKeys.STEAM_ENGINE.text();
     }
 
     @Nullable

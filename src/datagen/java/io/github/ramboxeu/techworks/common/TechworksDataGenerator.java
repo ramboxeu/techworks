@@ -3,6 +3,7 @@ package io.github.ramboxeu.techworks.common;
 import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.client.TechworksBlockStateProvider;
 import io.github.ramboxeu.techworks.client.TechworksItemModelProvider;
+import io.github.ramboxeu.techworks.client.lang.EnglishLangProvider;
 import io.github.ramboxeu.techworks.common.loot.TechworksLootProvider;
 import io.github.ramboxeu.techworks.common.tag.TechworksFluidTagProvider;
 import io.github.ramboxeu.techworks.common.tag.TechworksItemTagProvider;
@@ -25,6 +26,7 @@ public class TechworksDataGenerator {
         if (event.includeClient()) {
             generator.addProvider(new TechworksBlockStateProvider(generator, existingFileHelper));
             generator.addProvider(new TechworksItemModelProvider(generator, existingFileHelper));
+            addLangProviders(generator);
         }
 
         if (event.includeServer()) {
@@ -32,5 +34,9 @@ public class TechworksDataGenerator {
             generator.addProvider(new TechworksFluidTagProvider(generator, existingFileHelper));
             generator.addProvider(new TechworksItemTagProvider(generator, existingFileHelper));
         }
+    }
+
+    private static void addLangProviders(DataGenerator generator) {
+        generator.addProvider(new EnglishLangProvider(generator));
     }
 }

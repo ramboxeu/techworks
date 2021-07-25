@@ -3,6 +3,7 @@ package io.github.ramboxeu.techworks.common.tile.machine;
 import io.github.ramboxeu.techworks.client.container.machine.ElectricFurnaceContainer;
 import io.github.ramboxeu.techworks.common.component.ComponentStorage;
 import io.github.ramboxeu.techworks.common.energy.EnergyBattery;
+import io.github.ramboxeu.techworks.common.lang.TranslationKeys;
 import io.github.ramboxeu.techworks.common.recipe.ITechworksSmeltingRecipe;
 import io.github.ramboxeu.techworks.common.recipe.TechworksSmeltingRecipe;
 import io.github.ramboxeu.techworks.common.recipe.VanillaSmeltingRecipeWrapper;
@@ -20,7 +21,6 @@ import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
@@ -181,7 +181,7 @@ public class ElectricFurnaceTile extends BaseMachineTile {
 
     @Override
     public ITextComponent getDisplayName() {
-        return new TranslationTextComponent("container.techworks.electric_furnace");
+        return TranslationKeys.ELECTRIC_FURNACE.text();
     }
 
     @Nullable

@@ -3,6 +3,7 @@ package io.github.ramboxeu.techworks.common.tile.machine;
 import io.github.ramboxeu.techworks.client.container.machine.ElectricGrinderContainer;
 import io.github.ramboxeu.techworks.common.component.ComponentStorage;
 import io.github.ramboxeu.techworks.common.energy.EnergyBattery;
+import io.github.ramboxeu.techworks.common.lang.TranslationKeys;
 import io.github.ramboxeu.techworks.common.recipe.GrinderRecipeType;
 import io.github.ramboxeu.techworks.common.recipe.IGrinderRecipe;
 import io.github.ramboxeu.techworks.common.registration.TechworksComponents;
@@ -16,7 +17,6 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
@@ -160,7 +160,7 @@ public class ElectricGrinderTile extends BaseMachineTile {
 
     @Override
     public ITextComponent getDisplayName() {
-        return new TranslationTextComponent("container.techworks.electric_grinder");
+        return TranslationKeys.ELECTRIC_GRINDER.text();
     }
 
     @Nullable

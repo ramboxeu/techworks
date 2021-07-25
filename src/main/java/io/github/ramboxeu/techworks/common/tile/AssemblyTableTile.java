@@ -1,6 +1,7 @@
 package io.github.ramboxeu.techworks.common.tile;
 
 import io.github.ramboxeu.techworks.client.container.AssemblyTableContainer;
+import io.github.ramboxeu.techworks.common.lang.TranslationKeys;
 import io.github.ramboxeu.techworks.common.recipe.MachineAssemblyRecipe;
 import io.github.ramboxeu.techworks.common.registration.TechworksRecipes;
 import io.github.ramboxeu.techworks.common.registration.TechworksTiles;
@@ -17,7 +18,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.play.server.SSetSlotPacket;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
@@ -228,7 +228,7 @@ public class AssemblyTableTile extends BaseTechworksTile implements INamedContai
 
     @Override
     public ITextComponent getDisplayName() {
-        return new TranslationTextComponent("container.techworks.assembly_table");
+        return TranslationKeys.ASSEMBLY_TABLE.text();
     }
 
     @Nullable

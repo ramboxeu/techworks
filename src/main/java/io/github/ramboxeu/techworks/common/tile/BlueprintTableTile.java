@@ -1,6 +1,7 @@
 package io.github.ramboxeu.techworks.common.tile;
 
 import io.github.ramboxeu.techworks.client.container.BlueprintTableContainer;
+import io.github.ramboxeu.techworks.common.lang.TranslationKeys;
 import io.github.ramboxeu.techworks.common.registration.TechworksItems;
 import io.github.ramboxeu.techworks.common.registration.TechworksTiles;
 import net.minecraft.block.BlockState;
@@ -12,7 +13,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
@@ -48,7 +48,7 @@ public class BlueprintTableTile extends BaseTechworksTile implements INamedConta
 
     @Override
     public ITextComponent getDisplayName() {
-        return new TranslationTextComponent("container.techworks.blueprint_table");
+        return TranslationKeys.BLUEPRINT_TABLE.text();
     }
 
     @Nullable

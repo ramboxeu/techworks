@@ -8,11 +8,11 @@ import io.github.ramboxeu.techworks.client.util.ClientUtils;
 import io.github.ramboxeu.techworks.common.component.Component;
 import io.github.ramboxeu.techworks.common.component.ComponentStorage;
 import io.github.ramboxeu.techworks.common.component.ComponentType;
+import io.github.ramboxeu.techworks.common.lang.TranslationKeys;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.Color;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.items.SlotItemHandler;
 
 import javax.annotation.Nonnull;
@@ -23,11 +23,10 @@ import static io.github.ramboxeu.techworks.client.util.ClientUtils.GUI_WIDTH;
 
 public class ComponentsWidget extends BaseContainerWidget {
     private static final Style STYLE = Style.EMPTY.setColor(Color.fromInt(0xFF7F7F7F));
-    private static final ITextComponent IDLE_TEXT = new TranslationTextComponent("gui.techworks.widget.components_idle_state").setStyle(STYLE);
-    private static final ITextComponent INSTALLING_TEXT = new TranslationTextComponent("gui.techworks.widget.components_installing_state").setStyle(STYLE);
-    private static final ITextComponent UNINSTALLING_TEXT = new TranslationTextComponent("gui.techworks.widget.components_uninstalling_state").setStyle(STYLE);
 
-    private static final ITextComponent TITLE = new TranslationTextComponent("gui.techworks.widget.components");
+    private static final ITextComponent IDLE_TEXT = TranslationKeys.IDLE.styledText(STYLE);
+    private static final ITextComponent INSTALLING_TEXT = TranslationKeys.INSTALLING.styledText(STYLE);
+    private static final ITextComponent UNINSTALLING_TEXT = TranslationKeys.UNINSTALLING.styledText(STYLE);
 
     private final ComponentStorage storage;
     private final List<ComponentType<?>> typeLookup;
@@ -81,7 +80,7 @@ public class ComponentsWidget extends BaseContainerWidget {
         private final ComponentsWidget widget;
 
         public ScreenWidget(BaseMachineScreen<?, ?> screen, ComponentsWidget widget) {
-            super(screen, TITLE);
+            super(screen, TranslationKeys.COMPONENTS.text());
             this.widget = widget;
         }
 

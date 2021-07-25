@@ -3,9 +3,9 @@ package io.github.ramboxeu.techworks.client.screen.widget;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import io.github.ramboxeu.techworks.client.container.BaseContainer;
 import io.github.ramboxeu.techworks.client.screen.BaseScreen;
+import io.github.ramboxeu.techworks.common.lang.TranslationKeys;
 import io.github.ramboxeu.techworks.common.util.MathUtils;
 import net.minecraft.util.IntReferenceHolder;
-import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nonnull;
 import java.util.function.IntSupplier;
@@ -70,7 +70,7 @@ public class HeatDisplayWidget extends BaseContainerWidget implements IScreenWid
 
         @Override
         protected void renderWidgetTooltip(MatrixStack stack, int mouseX, int mouseY) {
-            renderTooltip(stack, new TranslationTextComponent("tooltip.techworks.widget.heat_display_heat", widget.heat, widget.maxHeat), mouseX, mouseY);
+            renderTooltip(stack, TranslationKeys.HEAT_DISPLAY.text(widget.heat, widget.maxHeat), mouseX, mouseY);
         }
     }
 }

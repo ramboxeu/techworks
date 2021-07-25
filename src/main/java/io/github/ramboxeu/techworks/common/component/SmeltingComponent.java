@@ -2,6 +2,7 @@ package io.github.ramboxeu.techworks.common.component;
 
 import com.google.gson.JsonObject;
 import io.github.ramboxeu.techworks.Techworks;
+import io.github.ramboxeu.techworks.common.lang.TranslationKeys;
 import io.github.ramboxeu.techworks.common.registration.TechworksComponents;
 import io.github.ramboxeu.techworks.common.util.JsonUtils;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -10,7 +11,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,12 +34,11 @@ public class SmeltingComponent extends Component {
         int cap = this.cap + bonus;
 
         if (bonus > 0) {
-            tooltip.add(new TranslationTextComponent("tooltip.component.techworks.smelting_energy_bonus_cap", cap, bonus).setStyle(Component.TOOLTIP_STYLE));
+            tooltip.add(TranslationKeys.BONUS_ENERGY_CAP.styledText(Component.TOOLTIP_STYLE, cap, bonus));
         } else {
-            tooltip.add(new TranslationTextComponent("tooltip.component.techworks.smelting_energy_cap", cap).setStyle(Component.TOOLTIP_STYLE));
+            tooltip.add(TranslationKeys.ENERGY_CAP.text(Component.TOOLTIP_STYLE, cap));
         }
-//        tooltip.add(new TranslationTextComponent("tooltip.component.techworks.smelting_efficiency_bonus", bonus).setStyle(Component.TOOLTIP_STYLE));
-        tooltip.add(new TranslationTextComponent("tooltip.component.techworks.smelting_energy_modifier", modifier).setStyle(Component.TOOLTIP_STYLE));
+        tooltip.add(TranslationKeys.ENERGY_MODIFIER.styledText(Component.TOOLTIP_STYLE, modifier));
 
         return tooltip;
     }

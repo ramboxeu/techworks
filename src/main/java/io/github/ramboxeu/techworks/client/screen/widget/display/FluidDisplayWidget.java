@@ -10,6 +10,7 @@ import io.github.ramboxeu.techworks.client.screen.widget.PortContainerWidget;
 import io.github.ramboxeu.techworks.client.screen.widget.PortScreenWidget;
 import io.github.ramboxeu.techworks.client.util.Color;
 import io.github.ramboxeu.techworks.client.util.RenderUtils;
+import io.github.ramboxeu.techworks.common.lang.TranslationKeys;
 import io.github.ramboxeu.techworks.common.util.MathUtils;
 import io.github.ramboxeu.techworks.common.util.machineio.data.FluidHandlerData;
 import io.github.ramboxeu.techworks.common.util.machineio.data.HandlerData;
@@ -109,18 +110,15 @@ public class FluidDisplayWidget extends PortContainerWidget implements IPortScre
         public ITextComponent getFluidName(FluidStack stack) {
             if (fluid != null) {
                 if (!fluid.isEmpty()) {
-                    return new TranslationTextComponent(
-                            "tooltip.techworks.widget.fluid_display",
+                    return TranslationKeys.STORED_FLUID.text(
                             new TranslationTextComponent(stack.getFluid().getAttributes().getTranslationKey(stack)),
                             fluid.getAmount(),
                             capacity
                     );
-                } else {
-                    return new TranslationTextComponent("fluid.techworks.empty");
                 }
             }
 
-            return new TranslationTextComponent("fluid.techworks.none");
+            return TranslationKeys.STORED_FLUID.text(TranslationKeys.EMPTY.text(), 0, capacity);
         }
 
         public void updateFluid(FluidStack fluid, int capacity) {

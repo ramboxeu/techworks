@@ -8,12 +8,12 @@ import io.github.ramboxeu.techworks.client.screen.BaseMachineScreen;
 import io.github.ramboxeu.techworks.client.screen.widget.IPortScreenWidgetProvider;
 import io.github.ramboxeu.techworks.client.screen.widget.PortContainerWidget;
 import io.github.ramboxeu.techworks.client.screen.widget.PortScreenWidget;
+import io.github.ramboxeu.techworks.common.lang.TranslationKeys;
 import io.github.ramboxeu.techworks.common.util.MathUtils;
 import io.github.ramboxeu.techworks.common.util.machineio.data.EnergyHandlerData;
 import io.github.ramboxeu.techworks.common.util.machineio.data.HandlerData;
 import net.minecraft.util.IntReferenceHolder;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.energy.IEnergyStorage;
 
 public class EnergyDisplayWidget extends PortContainerWidget implements IPortScreenWidgetProvider<EnergyDisplayWidget.ScreenWidget> {
@@ -107,7 +107,7 @@ public class EnergyDisplayWidget extends PortContainerWidget implements IPortScr
 
         @Override
         protected void renderWidgetTooltip(MatrixStack stack, int mouseX, int mouseY) {
-            renderTooltip(stack, new TranslationTextComponent("tooltip.techworks.widget.energy_display_energy", widget.energy, widget.capacity), mouseX, mouseY);
+            renderTooltip(stack, TranslationKeys.STORED_ENERGY.text(widget.energy, widget.capacity), mouseX, mouseY);
         }
     }
 }
