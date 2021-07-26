@@ -48,6 +48,7 @@ public class TechworksBlockStateProvider extends BlockStateProvider {
         blockAndItem(TechworksBlocks.DEV_BLOCK);
 
         Arrays.stream(DataConstants.Blocks.CABLES).forEach(this::cableBlockAndItem);
+        Arrays.stream(DataConstants.Blocks.CUBE_ALL).forEach(this::blockAndItem);
     }
 
     private void cableBlockAndItem(BlockRegistryObject<?, ?> cable) {

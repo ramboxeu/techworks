@@ -27,6 +27,8 @@ public class EnglishLangProvider extends BaseLangProvider {
         add(TechworksBlocks.GAS_PIPE, "Gas Pipe");
         add(TechworksBlocks.ENERGY_CABLE, "Energy Cable");
         add(TechworksBlocks.SOLID_FUEL_BURNER, "Solid Fuel Burner");
+        add(TechworksBlocks.COPPER_ORE, "Copper Ore");
+        add(TechworksBlocks.LITHIUM_ORE, "Lithium Ore");
 
         // Items
         add(TechworksItems.WRENCH, "Wrench");
@@ -47,6 +49,16 @@ public class EnglishLangProvider extends BaseLangProvider {
         add(TechworksItems.SMALL_GAS_TANK, "Small Gas Tank");
         add(TechworksItems.ROCK_CRUSHER, "RockCrusher");
         add(TechworksItems.ORE_CRUSHER, "OreCrusher");
+        add(TechworksItems.COPPER_INGOT, "Copper Ingot");
+        add(TechworksItems.LITHIUM_INGOT, "Lithium Ingot");
+        add(TechworksItems.COPPER_DUST, "Copper Dust");
+        add(TechworksItems.LITHIUM_DUST, "Lithium Dust");
+        add(TechworksItems.IRON_DUST, "Iron Dust");
+        add(TechworksItems.GOLD_DUST, "Gold Dust");
+        add(TechworksItems.CRUSHED_COPPER_ORE, "Crushed Copper Ore");
+        add(TechworksItems.CRUSHED_LITHIUM_ORE, "Crushed Lithium Ore");
+        add(TechworksItems.CRUSHED_IRON_ORE, "Crushed Iron Ore");
+        add(TechworksItems.CRUSHED_GOLD_ORE, "Crushed Gold Ore");
 
         // Containers
         add(TranslationKeys.ASSEMBLY_TABLE, "Assembly Table");

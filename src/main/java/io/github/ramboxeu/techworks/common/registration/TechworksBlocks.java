@@ -3,6 +3,9 @@ package io.github.ramboxeu.techworks.common.registration;
 import io.github.ramboxeu.techworks.common.block.*;
 import io.github.ramboxeu.techworks.common.registry.BlockDeferredRegister;
 import io.github.ramboxeu.techworks.common.registry.BlockRegistryObject;
+import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 
@@ -24,6 +27,8 @@ public class TechworksBlocks {
     public static final BlockRegistryObject<CableBlock, BlockItem> GAS_PIPE = BLOCKS.register("gas_pipe", () -> new CableBlock(TechworksTiles.GAS_PIPE));
     public static final BlockRegistryObject<CableBlock, BlockItem> ENERGY_CABLE = BLOCKS.register("energy_cable", () -> new CableBlock(TechworksTiles.ENERGY_CABLE));
     public static final BlockRegistryObject<SolidFuelBurnerBlock, BlockItem> SOLID_FUEL_BURNER = BLOCKS.register("solid_fuel_burner", SolidFuelBurnerBlock::new);
+    public static final BlockRegistryObject<Block, BlockItem> COPPER_ORE = BLOCKS.register("copper_ore", () -> new Block(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3)));
+    public static final BlockRegistryObject<Block, BlockItem> LITHIUM_ORE = BLOCKS.register("lithium_ore", () -> new Block(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3)));
 
     // More testing
     public static final BlockRegistryObject<DevBlockBlock, BlockItem> DEV_BLOCK = BLOCKS.register("dev_block", DevBlockBlock::new, block -> new BlockItem(block, new Item.Properties()));

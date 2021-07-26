@@ -18,18 +18,20 @@ public class DataConstants {
     }
 
     public static class Items {
-        public static final ItemRegistryObject<?>[] BLUEPRINTS = new ItemRegistryObject[]{
+        public static final ItemRegistryObject<?>[] BLUEPRINTS = new ItemRegistryObject[] {
                 BOILER_BLUEPRINT, STEAM_ENGINE_BLUEPRINT, ELECTRIC_FURNACE_BLUEPRINT, ELECTRIC_GRINDER_BLUEPRINT
         };
 
         public static final ItemRegistryObject<?>[] ITEM_GENERATED = new ItemRegistryObject[] {
                 ELECTRIFIED_FURNACE, REINFORCED_ELECTRIFIED_FURNACE, SMALL_BATTERY, MEDIUM_BATTERY, LARGE_BATTERY,
-                HICAP_BATTERY, SMALL_GAS_TANK, SMALL_LIQUID_TANK, ROCK_CRUSHER, ORE_CRUSHER
+                HICAP_BATTERY, SMALL_GAS_TANK, SMALL_LIQUID_TANK, ROCK_CRUSHER, ORE_CRUSHER, COPPER_INGOT, LITHIUM_INGOT,
+                COPPER_DUST, LITHIUM_DUST, IRON_DUST, GOLD_DUST, CRUSHED_COPPER_ORE, CRUSHED_LITHIUM_ORE, CRUSHED_IRON_ORE,
+                CRUSHED_GOLD_ORE
         };
     }
 
     public static class Blocks {
-        public static final BlockRegistryObject<?, ?>[] MACHINES = new BlockRegistryObject[]{
+        public static final BlockRegistryObject<?, ?>[] MACHINES = new BlockRegistryObject[] {
                 BOILER, STEAM_ENGINE, ELECTRIC_FURNACE, ELECTRIC_GRINDER
         };
 
@@ -44,6 +46,10 @@ public class DataConstants {
 
         public static final BlockRegistryObject<?, ?>[] DIRECTIONAL_PROCESSING = new BlockRegistryObject[] {
                 SOLID_FUEL_BURNER
+        };
+
+        public static final BlockRegistryObject<?, ?>[] CUBE_ALL = new BlockRegistryObject[] {
+                COPPER_ORE, LITHIUM_ORE
         };
     }
 

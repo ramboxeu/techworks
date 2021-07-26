@@ -42,6 +42,16 @@ public class TechworksItems {
     public static final ItemRegistryObject<Item> SMALL_GAS_TANK = ITEMS.register("small_gas_tank", props -> new Item(props.maxStackSize(1)));
     public static final ItemRegistryObject<Item> ROCK_CRUSHER = ITEMS.register("rock_crusher", props -> new Item(props.maxStackSize(1)));
     public static final ItemRegistryObject<Item> ORE_CRUSHER = ITEMS.register("ore_crusher", props -> new Item(props.maxStackSize(1)));
+    public static final ItemRegistryObject<Item> COPPER_INGOT = ITEMS.register("copper_ingot", Item::new);
+    public static final ItemRegistryObject<Item> LITHIUM_INGOT = ITEMS.register("lithium_ingot", Item::new);
+    public static final ItemRegistryObject<Item> COPPER_DUST = ITEMS.register("copper_dust", Item::new);
+    public static final ItemRegistryObject<Item> LITHIUM_DUST = ITEMS.register("lithium_dust", Item::new);
+    public static final ItemRegistryObject<Item> IRON_DUST = ITEMS.register("iron_dust", Item::new);
+    public static final ItemRegistryObject<Item> GOLD_DUST = ITEMS.register("gold_dust", Item::new);
+    public static final ItemRegistryObject<Item> CRUSHED_COPPER_ORE = ITEMS.register("crushed_copper_ore", Item::new);
+    public static final ItemRegistryObject<Item> CRUSHED_LITHIUM_ORE = ITEMS.register("crushed_lithium_ore", Item::new);
+    public static final ItemRegistryObject<Item> CRUSHED_IRON_ORE = ITEMS.register("crushed_iron_ore", Item::new);
+    public static final ItemRegistryObject<Item> CRUSHED_GOLD_ORE = ITEMS.register("crushed_gold_ore", Item::new);
 
     public static final ItemRegistryObject<Item> MACHINE_CASING = ITEMS.register("machine_casing", Item::new);
 
