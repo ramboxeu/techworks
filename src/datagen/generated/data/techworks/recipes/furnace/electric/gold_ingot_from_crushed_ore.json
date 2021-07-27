@@ -1,0 +1,11 @@
+{
+  "type": "techworks:smelting",
+  "ingredient": {
+    "item": "techworks:crushed_gold_ore"
+  },
+  "result": {
+    "item": "minecraft:gold_ingot"
+  },
+  "energy": 1500,
+  "experience": 0.6
+}

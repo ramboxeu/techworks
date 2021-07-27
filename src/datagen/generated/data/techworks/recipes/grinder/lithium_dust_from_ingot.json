@@ -1,0 +1,10 @@
+{
+  "type": "techworks:grinding",
+  "ingredient": {
+    "tag": "forge:ingots/lithium"
+  },
+  "result": {
+    "item": "techworks:lithium_dust"
+  },
+  "energy": 1500
+}

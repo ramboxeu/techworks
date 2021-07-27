@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "techworks:furnace/vanilla/gold_ingot_from_dust"
+    ]
+  },
+  "criteria": {
+    "has_gold_dust": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:dusts/gold"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "techworks:furnace/vanilla/gold_ingot_from_dust"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_gold_dust",
+      "has_the_recipe"
+    ]
+  ]
+}

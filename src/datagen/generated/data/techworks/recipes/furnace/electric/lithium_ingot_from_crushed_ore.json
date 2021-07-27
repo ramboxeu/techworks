@@ -1,0 +1,11 @@
+{
+  "type": "techworks:smelting",
+  "ingredient": {
+    "item": "techworks:crushed_lithium_ore"
+  },
+  "result": {
+    "item": "techworks:lithium_ingot"
+  },
+  "energy": 1500,
+  "experience": 0.6
+}

@@ -4,7 +4,7 @@ import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.RegistryObject;
 
-public class ItemRegistryObject<T extends Item> {
+public final class ItemRegistryObject<T extends Item> implements IItemSupplier {
     private final RegistryObject<T> item;
 
     ItemRegistryObject(RegistryObject<T> item) {
@@ -17,5 +17,10 @@ public class ItemRegistryObject<T extends Item> {
 
     public ResourceLocation getId() {
         return item.getId();
+    }
+
+    @Override
+    public Item getAsItem() {
+        return item.get();
     }
 }

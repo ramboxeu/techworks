@@ -1,0 +1,11 @@
+{
+  "type": "techworks:smelting",
+  "ingredient": {
+    "item": "techworks:crushed_copper_ore"
+  },
+  "result": {
+    "item": "techworks:copper_ingot"
+  },
+  "energy": 1500,
+  "experience": 0.6
+}

@@ -1,0 +1,10 @@
+{
+  "type": "techworks:grinding",
+  "ingredient": {
+    "tag": "forge:ingots/gold"
+  },
+  "result": {
+    "item": "techworks:gold_dust"
+  },
+  "energy": 1500
+}

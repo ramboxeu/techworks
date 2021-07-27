@@ -32,8 +32,6 @@ public class EnglishLangProvider extends BaseLangProvider {
 
         // Items
         add(TechworksItems.WRENCH, "Wrench");
-        add(TechworksItems.GROUND_IRON, "Ground Iron");
-        add(TechworksItems.GROUND_GOLD, "Ground Gold");
         add(TechworksItems.EMPTY_BLUEPRINT, "Empty Blueprint");
         add(TechworksItems.BOILER_BLUEPRINT, "Boiler Blueprint");
         add(TechworksItems.STEAM_ENGINE_BLUEPRINT, "Steam Engine Blueprint");

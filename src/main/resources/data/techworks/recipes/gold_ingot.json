@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:smelting",
-  "ingredient": {
-    "item": "techworks:ground_gold"
-  },
-  "result": {
-    "item": "minecraft:gold_ingot"
-  }
-}

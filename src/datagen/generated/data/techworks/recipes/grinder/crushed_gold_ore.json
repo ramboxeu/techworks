@@ -1,0 +1,11 @@
+{
+  "type": "techworks:ore_crushing",
+  "ingredient": {
+    "tag": "forge:ores/gold"
+  },
+  "result": {
+    "item": "techworks:crushed_gold_ore",
+    "count": 2
+  },
+  "energy": 2000
+}

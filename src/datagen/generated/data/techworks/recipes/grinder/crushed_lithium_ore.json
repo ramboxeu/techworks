@@ -1,0 +1,11 @@
+{
+  "type": "techworks:ore_crushing",
+  "ingredient": {
+    "tag": "forge:ores/lithium"
+  },
+  "result": {
+    "item": "techworks:crushed_lithium_ore",
+    "count": 2
+  },
+  "energy": 2000
+}

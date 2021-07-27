@@ -1,0 +1,10 @@
+{
+  "type": "techworks:grinding",
+  "ingredient": {
+    "tag": "forge:ores/iron"
+  },
+  "result": {
+    "item": "techworks:iron_dust"
+  },
+  "energy": 2000
+}

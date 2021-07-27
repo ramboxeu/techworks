@@ -2,7 +2,6 @@ package io.github.ramboxeu.techworks.common.registration;
 
 import io.github.ramboxeu.techworks.common.debug.DebuggerItem;
 import io.github.ramboxeu.techworks.common.item.BlueprintItem;
-import io.github.ramboxeu.techworks.common.item.GroundItem;
 import io.github.ramboxeu.techworks.common.item.SmeltingComponentItem;
 import io.github.ramboxeu.techworks.common.item.WrenchItem;
 import io.github.ramboxeu.techworks.common.registry.BlockRegistryObject;
@@ -21,9 +20,6 @@ public class TechworksItems {
     public static final List<ItemRegistryObject<BlueprintItem>> BLUEPRINTS = new ArrayList<>();
 
     public static final ItemRegistryObject<WrenchItem> WRENCH = ITEMS.register("wrench", WrenchItem::new);
-
-    public static final ItemRegistryObject<GroundItem> GROUND_IRON = ITEMS.register("ground_iron", GroundItem::new);
-    public static final ItemRegistryObject<GroundItem> GROUND_GOLD = ITEMS.register("ground_gold", GroundItem::new);
 
     public static final ItemRegistryObject<Item> EMPTY_BLUEPRINT = ITEMS.register("empty_blueprint", Item::new);
     public static final ItemRegistryObject<BlueprintItem> BOILER_BLUEPRINT = registerBlueprint("boiler_blueprint", TechworksBlocks.BOILER, BlueprintItem::new);

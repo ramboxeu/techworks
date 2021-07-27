@@ -1,35 +1,49 @@
 package io.github.ramboxeu.techworks.common.tag;
 
-import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.common.DataConstants;
 import io.github.ramboxeu.techworks.common.Utils;
+import io.github.ramboxeu.techworks.common.registration.TechworksBlocks;
+import io.github.ramboxeu.techworks.common.registration.TechworksItems;
+import io.github.ramboxeu.techworks.common.registry.IItemSupplier;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.TagsProvider;
 import net.minecraft.item.Item;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.tags.ITag;
 import net.minecraft.util.registry.Registry;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
-import java.nio.file.Path;
+import java.util.Arrays;
 
-public class TechworksItemTagProvider extends TagsProvider<Item> {
+public class TechworksItemTagProvider extends BaseTagsProvider<Item> {
+
+    @SuppressWarnings("deprecation")
     public TechworksItemTagProvider(DataGenerator generator, ExistingFileHelper helper) {
-        super(generator, Registry.ITEM, Techworks.MOD_ID, helper);
+        super(generator, Registry.ITEM, helper, Type.ITEMS);
     }
 
     @Override
     protected void registerTags() {
         getOrCreateBuilder(TechworksItemTags.BLUEPRINTS).add(Utils.unpackItemObjectsArray(DataConstants.Items.BLUEPRINTS));
         getOrCreateBuilder(TechworksItemTags.MACHINES).add(Utils.unpackBlockItemArray(DataConstants.Blocks.MACHINES));
+
+        makeTag(TechworksItemTags.LITHIUM_ORES, TechworksBlocks.LITHIUM_ORE);
+        makeTag(TechworksItemTags.COPPER_ORES, TechworksBlocks.COPPER_ORE);
+        makeTag(Tags.Items.ORES, TechworksBlocks.LITHIUM_ORE, TechworksBlocks.COPPER_ORE);
+
+        makeTag(TechworksItemTags.LITHIUM_DUSTS, TechworksItems.LITHIUM_DUST);
+        makeTag(TechworksItemTags.COPPER_DUSTS, TechworksItems.COPPER_DUST);
+        makeTag(TechworksItemTags.IRON_DUSTS, TechworksItems.IRON_DUST);
+        makeTag(TechworksItemTags.GOLD_DUSTS, TechworksItems.GOLD_DUST);
+        makeTag(Tags.Items.DUSTS, TechworksItems.LITHIUM_DUST, TechworksItems.COPPER_DUST, TechworksItems.IRON_DUST, TechworksItems.GOLD_DUST);
+
+        makeTag(TechworksItemTags.LITHIUM_INGOTS, TechworksItems.LITHIUM_INGOT);
+        makeTag(TechworksItemTags.COPPER_INGOTS, TechworksItems.COPPER_INGOT);
+        makeTag(Tags.Items.INGOTS, TechworksItems.LITHIUM_INGOT, TechworksItems.COPPER_INGOT);
     }
 
-    @Override
-    protected Path makePath(ResourceLocation id) {
-        return this.generator.getOutputFolder().resolve("data/" + id.getNamespace() + "/tags/items/" + id.getPath() + ".json");
-    }
-
-    @Override
-    public String getName() {
-        return "Item Tags : techworks";
+    private Builder<Item> makeTag(ITag.INamedTag<Item> tag, IItemSupplier... items) {
+        Builder<Item> builder = getOrCreateBuilder(tag);
+        Arrays.stream(items).forEach(obj -> builder.add(obj.getAsItem()));
+        return builder;
     }
 }

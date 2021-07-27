@@ -1,0 +1,11 @@
+{
+  "type": "techworks:smelting",
+  "ingredient": {
+    "tag": "forge:dusts/lithium"
+  },
+  "result": {
+    "item": "techworks:lithium_ingot"
+  },
+  "energy": 1500,
+  "experience": 0.35
+}

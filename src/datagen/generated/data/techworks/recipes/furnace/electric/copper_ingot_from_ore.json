@@ -1,0 +1,11 @@
+{
+  "type": "techworks:smelting",
+  "ingredient": {
+    "tag": "forge:ores/copper"
+  },
+  "result": {
+    "item": "techworks:copper_ingot"
+  },
+  "energy": 2000,
+  "experience": 0.7
+}

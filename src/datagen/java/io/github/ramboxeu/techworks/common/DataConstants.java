@@ -37,7 +37,7 @@ public class DataConstants {
 
         public static final BlockRegistryObject<?, ?>[] DROPPING_SELF = new BlockRegistryObject[] {
                 BOILER, STEAM_ENGINE, ELECTRIC_FURNACE, ELECTRIC_GRINDER, BLUEPRINT_TABLE, ASSEMBLY_TABLE,
-                ENERGY_CABLE, LIQUID_PIPE, GAS_PIPE, ITEM_TRANSPORTER
+                ENERGY_CABLE, LIQUID_PIPE, GAS_PIPE, ITEM_TRANSPORTER, LITHIUM_ORE
         };
 
         public static final BlockRegistryObject<?, ?>[] CABLES = new BlockRegistryObject[] {

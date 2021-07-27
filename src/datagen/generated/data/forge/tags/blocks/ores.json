@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "techworks:copper_ore",
+    "techworks:lithium_ore"
+  ]
+}

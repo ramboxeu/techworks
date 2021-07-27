@@ -1,7 +1,0 @@
-{
-  "type": "techworks:grinding",
-  "ingredient": {
-    "item": "minecraft:cobblestone"
-  },
-  "result": "minecraft:gravel"
-}

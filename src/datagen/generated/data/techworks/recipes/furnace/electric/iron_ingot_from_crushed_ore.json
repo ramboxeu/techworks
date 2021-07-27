@@ -1,0 +1,11 @@
+{
+  "type": "techworks:smelting",
+  "ingredient": {
+    "item": "techworks:crushed_iron_ore"
+  },
+  "result": {
+    "item": "minecraft:iron_ingot"
+  },
+  "energy": 1500,
+  "experience": 0.6
+}

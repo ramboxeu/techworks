@@ -3,7 +3,6 @@ package io.github.ramboxeu.techworks.common.loot;
 import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
 import io.github.ramboxeu.techworks.Techworks;
-import io.github.ramboxeu.techworks.common.loot.table.TechworksBlockLootTables;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.LootTableProvider;
 import net.minecraft.loot.LootParameterSet;

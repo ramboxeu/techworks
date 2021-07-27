@@ -1,0 +1,10 @@
+{
+  "type": "techworks:grinding",
+  "ingredient": {
+    "tag": "forge:ores/lithium"
+  },
+  "result": {
+    "item": "techworks:lithium_dust"
+  },
+  "energy": 2000
+}

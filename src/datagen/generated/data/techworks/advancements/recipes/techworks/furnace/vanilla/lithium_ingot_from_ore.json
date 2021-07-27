@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "techworks:furnace/vanilla/lithium_ingot_from_ore"
+    ]
+  },
+  "criteria": {
+    "has_lithium_ore": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "forge:ores/lithium"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "techworks:furnace/vanilla/lithium_ingot_from_ore"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_lithium_ore",
+      "has_the_recipe"
+    ]
+  ]
+}
