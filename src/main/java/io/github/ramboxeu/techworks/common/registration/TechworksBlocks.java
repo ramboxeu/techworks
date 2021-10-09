@@ -29,6 +29,7 @@ public class TechworksBlocks {
     public static final BlockRegistryObject<SolidFuelBurnerBlock, BlockItem> SOLID_FUEL_BURNER = BLOCKS.register("solid_fuel_burner", SolidFuelBurnerBlock::new);
     public static final BlockRegistryObject<Block, BlockItem> COPPER_ORE = BLOCKS.register("copper_ore", () -> new Block(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3)));
     public static final BlockRegistryObject<Block, BlockItem> LITHIUM_ORE = BLOCKS.register("lithium_ore", () -> new Block(AbstractBlock.Properties.create(Material.ROCK).hardnessAndResistance(3)));
+    public static final BlockRegistryObject<OreWasherBlock, BlockItem> ORE_WASHER = BLOCKS.register("ore_washer", OreWasherBlock::new);
 
     // More testing
     public static final BlockRegistryObject<DevBlockBlock, BlockItem> DEV_BLOCK = BLOCKS.register("dev_block", DevBlockBlock::new, block -> new BlockItem(block, new Item.Properties()));

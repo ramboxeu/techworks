@@ -11,6 +11,7 @@ public class TranslationKeys {
     public static final TranslationKey BLUEPRINT_TABLE = TranslationKey.container(TechworksContainers.BLUEPRINT_TABLE);
     public static final TranslationKey ASSEMBLY_TABLE = TranslationKey.container(TechworksContainers.ASSEMBLY_TABLE);
     public static final TranslationKey SOLID_FUEL_BURNER = TranslationKey.container(TechworksContainers.SOLID_FUEL_BURNER);
+    public static final TranslationKey ORE_WASHER = TranslationKey.container(TechworksContainers.ORE_WASHER);
 
     // Tooltips
     public static final TranslationKey ENERGY_STORAGE_CAPACITY = TranslationKey.tooltip("energy_storage_capacity");

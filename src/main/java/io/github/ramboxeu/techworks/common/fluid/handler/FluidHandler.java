@@ -63,6 +63,7 @@ public abstract class FluidHandler implements IFluidTank, INBTSerializable<Compo
             } else {
                 fluid.grow(maxedFill);
             }
+            onContentsChanged();
         }
 
         return maxedFill;
@@ -85,6 +86,7 @@ public abstract class FluidHandler implements IFluidTank, INBTSerializable<Compo
 
         if (action.execute()) {
             fluid.shrink(maxedDrain);
+            onContentsChanged();
         }
 
         return returned;
@@ -118,6 +120,9 @@ public abstract class FluidHandler implements IFluidTank, INBTSerializable<Compo
     @Override
     public void deserializeNBT(CompoundNBT tag) {
         fluid = FluidStack.loadFluidStackFromNBT(tag.getCompound("Fluid"));
+    }
+
+    protected void onContentsChanged() {
     }
 
     public int getMaxFill() {

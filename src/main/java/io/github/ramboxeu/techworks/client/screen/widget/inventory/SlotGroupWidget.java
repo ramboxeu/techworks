@@ -42,7 +42,8 @@ public class SlotGroupWidget extends PortContainerWidget implements IPortScreenW
     public void init(BaseContainer container, Builder builder) {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                builder.slot(factory.create(handler, i + j * cols, x + (i * 17 + (i == 0 ? 0 : 1)), y + (j * 17 + (j == 0 ? 0 : 1))));
+//                builder.slot(factory.create(handler, i + j * cols, x + (i * 17 + (i == 0 ? 0 : 1)), y + (j * 17 + (j == 0 ? 0 : 1))));
+                builder.slot(factory.create(handler, i + j * cols, x + (18 * i), y + (18 * j)));
             }
         }
     }
@@ -71,13 +72,13 @@ public class SlotGroupWidget extends PortContainerWidget implements IPortScreenW
         @Override
         protected void renderBaseWidget(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
             super.renderBaseWidget(stack, mouseX, mouseY, partialTicks);
-
-            minecraft.textureManager.bindTexture(TEX);
-            for (int i = 0; i < rows; i++) {
-                for (int j = 0; j < cols; j++) {
-                    blit(stack, x + (i * 18), y + (j * 18), 0, 0, 0, 18, 18, 18, 18);
-                }
-            }
+//
+//            minecraft.textureManager.bindTexture(TEX);
+//            for (int i = 0; i < rows; i++) {
+//                for (int j = 0; j < cols; j++) {
+//                    blit(stack, x + (i * 18), y + (j * 18), 0, 0, 0, 18, 18, 18, 18);
+//                }
+//            }
         }
     }
 }

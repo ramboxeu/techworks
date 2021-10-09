@@ -45,9 +45,6 @@ public abstract class BaseMachineTile extends BaseIOTile implements INamedContai
         return components;
     }
 
-    @Deprecated
-    protected abstract void buildComponentStorage(ComponentStorage.Builder builder);
-
     protected void setWorkingState(boolean isWorking) {
         world.setBlockState(pos, getBlockState().with(TechworksBlockStateProperties.RUNNING, isWorking));
     }

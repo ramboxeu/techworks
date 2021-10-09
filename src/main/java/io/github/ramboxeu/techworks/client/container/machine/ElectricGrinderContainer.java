@@ -6,21 +6,17 @@ import io.github.ramboxeu.techworks.client.screen.widget.inventory.SlotWidget;
 import io.github.ramboxeu.techworks.client.screen.widget.progress.ArrowProgressWidget;
 import io.github.ramboxeu.techworks.common.registration.TechworksContainers;
 import io.github.ramboxeu.techworks.common.tile.machine.ElectricGrinderTile;
-import io.github.ramboxeu.techworks.common.util.Side;
-import io.github.ramboxeu.techworks.common.util.machineio.config.HandlerConfig;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
 
 import javax.annotation.Nonnull;
-import java.util.List;
-import java.util.Map;
 
 public class ElectricGrinderContainer extends BaseMachineContainer<ElectricGrinderTile> {
 
-    public ElectricGrinderContainer(int id, PlayerInventory playerInventory, ElectricGrinderTile tile, Map<Side, List<HandlerConfig>> dataMap) {
-        super(TechworksContainers.ELECTRIC_GRINDER.get(), id, playerInventory, tile, dataMap);
+    public ElectricGrinderContainer(int id, PlayerInventory playerInventory, ElectricGrinderTile tile) {
+        super(TechworksContainers.ELECTRIC_GRINDER.get(), id, playerInventory, tile);
 
         addWidget(new EnergyDisplayWidget(this, 8, 14, tile.getBatteryData()));
         addWidget(new SlotWidget(this, 55, 34, 0, false, tile.getInvData()));

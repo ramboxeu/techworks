@@ -1,21 +1,17 @@
 package io.github.ramboxeu.techworks.client.container.machine;
+
 import io.github.ramboxeu.techworks.client.container.BaseMachineContainer;
 import io.github.ramboxeu.techworks.common.registration.TechworksContainers;
 import io.github.ramboxeu.techworks.common.tile.machine.SteamEngineTile;
 import io.github.ramboxeu.techworks.common.util.Predicates;
-import io.github.ramboxeu.techworks.common.util.Side;
-import io.github.ramboxeu.techworks.common.util.machineio.config.HandlerConfig;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 
-import java.util.List;
-import java.util.Map;
-
 public class SteamEngineContainer extends BaseMachineContainer<SteamEngineTile> {
-    public SteamEngineContainer(int id, PlayerInventory playerInventory, SteamEngineTile machineTile, Map<Side, List<HandlerConfig>> dataMap) {
-        super(TechworksContainers.STEAM_ENGINE.get(), id, playerInventory, machineTile, dataMap);
+    public SteamEngineContainer(int id, PlayerInventory playerInventory, SteamEngineTile machineTile) {
+        super(TechworksContainers.STEAM_ENGINE.get(), id, playerInventory, machineTile);
     }
 
 //    @Override

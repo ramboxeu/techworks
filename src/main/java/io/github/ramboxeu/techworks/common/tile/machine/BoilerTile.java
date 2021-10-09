@@ -220,11 +220,6 @@ public class BoilerTile extends BaseMachineTile {
     }
 
     @Override
-    protected void buildComponentStorage(ComponentStorage.Builder builder) {
-
-    }
-
-    @Override
     public CompoundNBT write(CompoundNBT tag) {
         tag.putInt("FuelBurnTime", fuelBurnTime);
         tag.putBoolean("IsWorking", isWorking);
@@ -263,7 +258,7 @@ public class BoilerTile extends BaseMachineTile {
     @Nullable
     @Override
     public Container createMenu(int id, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-        return new BoilerContainer(id, playerInventory, this, machineIO.createDataMap());
+        return new BoilerContainer(id, playerInventory, this);
     }
 
     @Nonnull

@@ -1,0 +1,24 @@
+{
+  "type": "techworks:ore_washing",
+  "ingredient": {
+    "item": "techworks:crushed_gold_ore"
+  },
+  "results": [
+    {
+      "result": {
+        "item": "techworks:gold_dust"
+      },
+      "max": 3,
+      "min": 2,
+      "chance": 100
+    },
+    {
+      "result": {
+        "item": "minecraft:gravel"
+      },
+      "max": 1,
+      "min": 1,
+      "chance": 100
+    }
+  ]
+}

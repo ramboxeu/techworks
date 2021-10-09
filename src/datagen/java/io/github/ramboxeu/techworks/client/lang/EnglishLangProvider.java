@@ -66,6 +66,7 @@ public class EnglishLangProvider extends BaseLangProvider {
         add(TranslationKeys.ELECTRIC_GRINDER, "Electric Grinder");
         add(TranslationKeys.SOLID_FUEL_BURNER, "Solid Fuel Burner");
         add(TranslationKeys.STEAM_ENGINE, "Steam Engine");
+        add(TranslationKeys.ORE_WASHER, "Ore Washer");
 
         // Tooltips
         add(TranslationKeys.ENERGY_STORAGE_CAPACITY, "Capacity: %dFE");

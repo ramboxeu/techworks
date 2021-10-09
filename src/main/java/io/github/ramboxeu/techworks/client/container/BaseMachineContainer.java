@@ -16,19 +16,16 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public abstract class BaseMachineContainer<T extends BaseMachineTile> extends BaseInventoryContainer {
     protected T machineTile;
 //    private int firstPlayerSlot = 0;
 
     protected final List<HandlerData> dataList;
-    protected final Map<Side, List<HandlerConfig>> dataMap;
     protected final ComponentsWidget componentsWidget;
 
-    public BaseMachineContainer(@Nullable ContainerType<?> containerType, int id, PlayerInventory playerInventory, T machineTile, @Deprecated Map<Side, List<HandlerConfig>> dataMap) {
+    public BaseMachineContainer(@Nullable ContainerType<?> containerType, int id, PlayerInventory playerInventory, T machineTile) {
         super(containerType, playerInventory, id);
-        this.dataMap = dataMap;
 
         dataList = new ArrayList<>();
 
@@ -74,10 +71,6 @@ public abstract class BaseMachineContainer<T extends BaseMachineTile> extends Ba
 
     public List<HandlerData> getDataList() {
         return dataList;
-    }
-
-    public Map<Side, List<HandlerConfig>> getDataMap() {
-        return dataMap;
     }
 
     public T getMachineTile() {

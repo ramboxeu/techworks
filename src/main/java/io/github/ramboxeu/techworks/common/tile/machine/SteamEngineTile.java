@@ -144,11 +144,6 @@ public class SteamEngineTile extends BaseMachineTile {
     }
 
     @Override
-    protected void buildComponentStorage(ComponentStorage.Builder builder) {
-
-    }
-
-    @Override
     public CompoundNBT write(CompoundNBT tag) {
         tag.putBoolean("IsWorking", isWorking);
 
@@ -170,7 +165,7 @@ public class SteamEngineTile extends BaseMachineTile {
     @Nullable
     @Override
     public Container createMenu(int id, PlayerInventory inventory, PlayerEntity entity) {
-        return new SteamEngineContainer(id, inventory, this, machineIO.createDataMap());
+        return new SteamEngineContainer(id, inventory, this);
     }
 
     public void receiveSteam(int amount, int maxPower) {

@@ -99,11 +99,6 @@ public class ElectricGrinderTile extends BaseMachineTile {
     }
 
     @Override
-    protected void buildComponentStorage(ComponentStorage.Builder builder) {
-
-    }
-
-    @Override
     protected void serverTick() {
         if (shouldCheck) {
             if (checkRecipe() && outputInv.insertItem(0, cachedRecipe.getCraftingResult(recipeInv), true).isEmpty() && battery.getEnergyStored() >= energy - extractedEnergy) {
@@ -166,7 +161,7 @@ public class ElectricGrinderTile extends BaseMachineTile {
     @Nullable
     @Override
     public Container createMenu(int id, PlayerInventory inventory, PlayerEntity entity) {
-        return new ElectricGrinderContainer(id, inventory, this, machineIO.createDataMap());
+        return new ElectricGrinderContainer(id, inventory, this);
     }
 
     private boolean checkRecipe() {

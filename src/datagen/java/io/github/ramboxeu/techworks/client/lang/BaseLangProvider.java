@@ -11,9 +11,11 @@ import net.minecraftforge.common.data.LanguageProvider;
 import net.minecraftforge.fml.RegistryObject;
 
 public abstract class BaseLangProvider extends LanguageProvider {
+    protected final String locale;
 
     public BaseLangProvider(DataGenerator gen, String locale) {
         super(gen, Techworks.MOD_ID, locale);
+        this.locale = locale;
     }
 
     protected void add(BlockRegistryObject<?, ?> block, String name) {
@@ -34,5 +36,10 @@ public abstract class BaseLangProvider extends LanguageProvider {
 
     protected void add(RegistryObject<? extends ComponentType<?>> type, String name) {
         add(type.get().getTranslationKey(), name);
+    }
+
+    @Override
+    public String getName() {
+        return "Languages: techworks: " + locale;
     }
 }

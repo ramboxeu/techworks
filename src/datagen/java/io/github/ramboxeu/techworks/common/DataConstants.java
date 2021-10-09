@@ -32,12 +32,12 @@ public class DataConstants {
 
     public static class Blocks {
         public static final BlockRegistryObject<?, ?>[] MACHINES = new BlockRegistryObject[] {
-                BOILER, STEAM_ENGINE, ELECTRIC_FURNACE, ELECTRIC_GRINDER
+                BOILER, STEAM_ENGINE, ELECTRIC_FURNACE, ELECTRIC_GRINDER, ORE_WASHER
         };
 
         public static final BlockRegistryObject<?, ?>[] DROPPING_SELF = new BlockRegistryObject[] {
                 BOILER, STEAM_ENGINE, ELECTRIC_FURNACE, ELECTRIC_GRINDER, BLUEPRINT_TABLE, ASSEMBLY_TABLE,
-                ENERGY_CABLE, LIQUID_PIPE, GAS_PIPE, ITEM_TRANSPORTER, LITHIUM_ORE
+                ENERGY_CABLE, LIQUID_PIPE, GAS_PIPE, ITEM_TRANSPORTER, LITHIUM_ORE, ORE_WASHER
         };
 
         public static final BlockRegistryObject<?, ?>[] CABLES = new BlockRegistryObject[] {

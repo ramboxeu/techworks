@@ -6,8 +6,6 @@ import io.github.ramboxeu.techworks.client.screen.widget.inventory.SlotWidget;
 import io.github.ramboxeu.techworks.client.screen.widget.progress.ArrowProgressWidget;
 import io.github.ramboxeu.techworks.common.registration.TechworksContainers;
 import io.github.ramboxeu.techworks.common.tile.machine.ElectricFurnaceTile;
-import io.github.ramboxeu.techworks.common.util.Side;
-import io.github.ramboxeu.techworks.common.util.machineio.config.HandlerConfig;
 import net.minecraft.entity.item.ExperienceOrbEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -16,17 +14,15 @@ import net.minecraft.util.IWorldPosCallable;
 import net.minecraftforge.items.SlotItemHandler;
 
 import javax.annotation.Nonnull;
-import java.util.List;
-import java.util.Map;
 
 public class ElectricFurnaceContainer extends BaseMachineContainer<ElectricFurnaceTile> {
 
-    public ElectricFurnaceContainer(int id, PlayerInventory inv, ElectricFurnaceTile tile, Map<Side, List<HandlerConfig>> dataMap) {
-        this(id, inv, tile, dataMap, IWorldPosCallable.DUMMY);
+    public ElectricFurnaceContainer(int id, PlayerInventory inv, ElectricFurnaceTile tile) {
+        this(id, inv, tile, IWorldPosCallable.DUMMY);
     }
 
-    public ElectricFurnaceContainer(int id, PlayerInventory playerInventory, ElectricFurnaceTile tile, Map<Side, List<HandlerConfig>> dataMap, IWorldPosCallable callable) {
-        super(TechworksContainers.ELECTRIC_FURNACE.get(), id, playerInventory, tile, dataMap);
+    public ElectricFurnaceContainer(int id, PlayerInventory playerInventory, ElectricFurnaceTile tile, IWorldPosCallable callable) {
+        super(TechworksContainers.ELECTRIC_FURNACE.get(), id, playerInventory, tile);
 
         addWidget(new EnergyDisplayWidget(this, 8, 14, tile.getBatteryData()));
         addWidget(new ArrowProgressWidget(81, 35, false, tile::getEnergy, tile::getExtractedEnergy));

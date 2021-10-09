@@ -18,10 +18,12 @@ import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.tags.ITag;
+import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.Arrays;
 import java.util.function.Consumer;
 
 public class TechworksRecipeProvider extends RecipeProvider {
@@ -61,6 +63,12 @@ public class TechworksRecipeProvider extends RecipeProvider {
         ingotFromCrushedOre(consumer, TechworksItems.CRUSHED_LITHIUM_ORE, TechworksItems.LITHIUM_INGOT);
         ingotFromCrushedOre(consumer, TechworksItems.CRUSHED_IRON_ORE, Items.IRON_INGOT);
         ingotFromCrushedOre(consumer, TechworksItems.CRUSHED_GOLD_ORE, Items.GOLD_INGOT);
+
+        // Ore Washing
+        oreWashing(consumer, TechworksItems.CRUSHED_COPPER_ORE, oreWashingResult(TechworksItems.COPPER_DUST).count(2, 3), oreWashingResult(Items.GRAVEL).count(1));
+        oreWashing(consumer, TechworksItems.CRUSHED_LITHIUM_ORE, oreWashingResult(TechworksItems.LITHIUM_DUST).count(2, 3), oreWashingResult(Items.GRAVEL).count(1));
+        oreWashing(consumer, TechworksItems.CRUSHED_IRON_ORE, oreWashingResult(TechworksItems.IRON_DUST).count(2, 3), oreWashingResult(Items.GRAVEL).count(1));
+        oreWashing(consumer, TechworksItems.CRUSHED_GOLD_ORE, oreWashingResult(TechworksItems.GOLD_DUST).count(2, 3), oreWashingResult(Items.GRAVEL).count(1));
     }
 
     @Override
@@ -106,6 +114,21 @@ public class TechworksRecipeProvider extends RecipeProvider {
 
     public static void ingotFromCrushedOre(Consumer<IFinishedRecipe> consumer, ItemRegistryObject<?> crushedOre, Item ingot) {
         SmeltingRecipeBuilder.smelting(ingredient(crushedOre), () -> ingot, 0.6f, 1500).build(consumer, "furnace/electric/" + name(ingot) + "_from_crushed_ore");
+    }
+
+    public static void oreWashing(Consumer<IFinishedRecipe> consumer, ItemRegistryObject<?> crushedOre, OreWashingRecipeBuilder.ResultBuilder... results) {
+        if (results.length == 0) throw new IllegalArgumentException("Empty results");
+
+        Item primary = results[0].getResult().getItem();
+        new OreWashingRecipeBuilder(ingredient(crushedOre), Arrays.asList(results)).build(consumer, "ore_washer/" + name(primary));
+    }
+
+    public static OreWashingRecipeBuilder.ResultBuilder oreWashingResult(IItemSupplier supplier) {
+        return new OreWashingRecipeBuilder.ResultBuilder(supplier::getAsItem);
+    }
+
+    public static OreWashingRecipeBuilder.ResultBuilder oreWashingResult(IItemProvider provider) {
+        return new OreWashingRecipeBuilder.ResultBuilder(provider::asItem);
     }
 
     private static Ingredient ingredient(ITag.INamedTag<Item> tag) {

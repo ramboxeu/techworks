@@ -1,14 +1,10 @@
 package io.github.ramboxeu.techworks.common.registration;
 
 import io.github.ramboxeu.techworks.client.render.CableTileEntityRenderer;
-import io.github.ramboxeu.techworks.client.render.MachineIOTileEntityRenderer;
 import io.github.ramboxeu.techworks.common.registry.TileDeferredRegister;
 import io.github.ramboxeu.techworks.common.registry.TileRegistryObject;
 import io.github.ramboxeu.techworks.common.tile.*;
-import io.github.ramboxeu.techworks.common.tile.machine.BoilerTile;
-import io.github.ramboxeu.techworks.common.tile.machine.ElectricFurnaceTile;
-import io.github.ramboxeu.techworks.common.tile.machine.ElectricGrinderTile;
-import io.github.ramboxeu.techworks.common.tile.machine.SteamEngineTile;
+import io.github.ramboxeu.techworks.common.tile.machine.*;
 import io.github.ramboxeu.techworks.common.util.cable.network.NetworkType;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 
@@ -30,6 +26,7 @@ public class TechworksTiles {
     public static final TileRegistryObject<FluidPipeTile> GAS_PIPE = TILES.register(TechworksBlocks.GAS_PIPE, () -> new FluidPipeTile(TechworksTiles.GAS_PIPE, NetworkType.GAS));
     public static final TileRegistryObject<EnergyCableTile> ENERGY_CABLE = TILES.register(TechworksBlocks.ENERGY_CABLE, EnergyCableTile::new);
     public static final TileRegistryObject<SolidFuelBurnerTile> SOLID_FUEL_BURNER = TILES.register(TechworksBlocks.SOLID_FUEL_BURNER, SolidFuelBurnerTile::new);
+    public static final TileRegistryObject<OreWasherTile> ORE_WASHER = TILES.register(TechworksBlocks.ORE_WASHER, OreWasherTile::new);
 
     public static final TileRegistryObject<DevBlockTile> DEV_BLOCK = TILES.register(TechworksBlocks.DEV_BLOCK, DevBlockTile::new);
 
@@ -37,7 +34,7 @@ public class TechworksTiles {
 //        ClientRegistry.bindTileEntityRenderer(BOILER.getTileType(), MachineIOTileEntityRenderer::new);
 //        ClientRegistry.bindTileEntityRenderer(STEAM_ENGINE.getTileType(), MachineIOTileEntityRenderer::new);
 //        ClientRegistry.bindTileEntityRenderer(ELECTRIC_GRINDER.getTileType(), MachineIOTileEntityRenderer::new);
-        ClientRegistry.bindTileEntityRenderer(ELECTRIC_FURNACE.get(), MachineIOTileEntityRenderer::new);
+//        ClientRegistry.bindTileEntityRenderer(ELECTRIC_FURNACE.get(), MachineIOTileEntityRenderer::new);
         ClientRegistry.bindTileEntityRenderer(ITEM_TRANSPORTER.get(), CableTileEntityRenderer::new);
 //        ClientRegistry.bindTileEntityRenderer(CREATIVE_ENERGY_BATTERY.getTileType(), MachineIOTileEntityRenderer::new);
     }
