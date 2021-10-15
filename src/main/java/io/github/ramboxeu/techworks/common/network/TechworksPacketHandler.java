@@ -7,6 +7,7 @@ import io.github.ramboxeu.techworks.common.network.dev.DevBlockGasSyncPacket;
 import io.github.ramboxeu.techworks.common.network.dev.DevBlockItemSyncPacket;
 import io.github.ramboxeu.techworks.common.network.dev.DevBlockLiquidSyncPacket;
 import io.github.ramboxeu.techworks.common.tile.DevBlockTile;
+import io.github.ramboxeu.techworks.common.tile.machine.MetalPressTile;
 import io.github.ramboxeu.techworks.common.util.Side;
 import io.github.ramboxeu.techworks.common.util.cable.connection.CableConnections;
 import io.github.ramboxeu.techworks.common.util.cable.network.ICablePacket;
@@ -57,6 +58,7 @@ public class TechworksPacketHandler {
         CHANNEL.registerMessage(id++, ContainerButtonClicked.class, ContainerButtonClicked::encode, ContainerButtonClicked::decode, ContainerButtonClicked::handle);
         CHANNEL.registerMessage(id++, SyncToggleableButtonState.class, SyncToggleableButtonState::encode, SyncToggleableButtonState::decode, SyncToggleableButtonState::handle);
         CHANNEL.registerMessage(id++, SyncObjectHolder.class, SyncObjectHolder::encode, SyncObjectHolder::decode, SyncObjectHolder::handle);
+        CHANNEL.registerMessage(id++, MetalPressSyncPacket.class, MetalPressSyncPacket::encode, MetalPressSyncPacket::decode, MetalPressSyncPacket::handle);
     }
 
     public static void sendMachinePortUpdatePacket(BlockPos pos, int index, MachinePort port, Chunk chunk) {
@@ -135,5 +137,9 @@ public class TechworksPacketHandler {
 
     public static void syncObjectHolder(ServerPlayerEntity player, int holderId, ObjectHolder<?> holder) {
         CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new SyncObjectHolder(holderId, holder));
+    }
+
+    public static void syncMetalPressMode(BlockPos pos, MetalPressTile.Mode mode) {
+        CHANNEL.sendToServer(new MetalPressSyncPacket(pos, mode));
     }
 }

@@ -12,6 +12,7 @@ public class TranslationKeys {
     public static final TranslationKey ASSEMBLY_TABLE = TranslationKey.container(TechworksContainers.ASSEMBLY_TABLE);
     public static final TranslationKey SOLID_FUEL_BURNER = TranslationKey.container(TechworksContainers.SOLID_FUEL_BURNER);
     public static final TranslationKey ORE_WASHER = TranslationKey.container(TechworksContainers.ORE_WASHER);
+    public static final TranslationKey METAL_PRESS = TranslationKey.container(TechworksContainers.METAL_PRESS);
 
     // Tooltips
     public static final TranslationKey ENERGY_STORAGE_CAPACITY = TranslationKey.tooltip("energy_storage_capacity");
@@ -25,6 +26,8 @@ public class TranslationKeys {
     public static final TranslationKey STORED_FLUID = TranslationKey.tooltip("stored_fluid");
     public static final TranslationKey STORED_ENERGY = TranslationKey.tooltip("stored_energy");
     public static final TranslationKey HEAT_DISPLAY = TranslationKey.tooltip("heat_display");
+    public static final TranslationKey GEAR = TranslationKey.tooltip("gear");
+    public static final TranslationKey PLATE = TranslationKey.tooltip("plate");
 
     // Widgets
     public static final TranslationKey COMPONENTS = TranslationKey.widget("components");

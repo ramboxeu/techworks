@@ -27,6 +27,7 @@ public class TechworksTiles {
     public static final TileRegistryObject<EnergyCableTile> ENERGY_CABLE = TILES.register(TechworksBlocks.ENERGY_CABLE, EnergyCableTile::new);
     public static final TileRegistryObject<SolidFuelBurnerTile> SOLID_FUEL_BURNER = TILES.register(TechworksBlocks.SOLID_FUEL_BURNER, SolidFuelBurnerTile::new);
     public static final TileRegistryObject<OreWasherTile> ORE_WASHER = TILES.register(TechworksBlocks.ORE_WASHER, OreWasherTile::new);
+    public static final TileRegistryObject<MetalPressTile> METAL_PRESS = TILES.register(TechworksBlocks.METAL_PRESS, MetalPressTile::new);
 
     public static final TileRegistryObject<DevBlockTile> DEV_BLOCK = TILES.register(TechworksBlocks.DEV_BLOCK, DevBlockTile::new);
 

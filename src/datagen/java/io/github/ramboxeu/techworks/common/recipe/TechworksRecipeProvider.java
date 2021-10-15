@@ -69,6 +69,10 @@ public class TechworksRecipeProvider extends RecipeProvider {
         oreWashing(consumer, TechworksItems.CRUSHED_LITHIUM_ORE, oreWashingResult(TechworksItems.LITHIUM_DUST).count(2, 3), oreWashingResult(Items.GRAVEL).count(1));
         oreWashing(consumer, TechworksItems.CRUSHED_IRON_ORE, oreWashingResult(TechworksItems.IRON_DUST).count(2, 3), oreWashingResult(Items.GRAVEL).count(1));
         oreWashing(consumer, TechworksItems.CRUSHED_GOLD_ORE, oreWashingResult(TechworksItems.GOLD_DUST).count(2, 3), oreWashingResult(Items.GRAVEL).count(1));
+
+        // Metal Pressing
+        plate(consumer, Tags.Items.INGOTS_IRON, TechworksItems.IRON_PLATE);
+        gear(consumer, Tags.Items.INGOTS_IRON, TechworksItems.IRON_GEAR);
     }
 
     @Override
@@ -129,6 +133,14 @@ public class TechworksRecipeProvider extends RecipeProvider {
 
     public static OreWashingRecipeBuilder.ResultBuilder oreWashingResult(IItemProvider provider) {
         return new OreWashingRecipeBuilder.ResultBuilder(provider::asItem);
+    }
+
+    public static void plate(Consumer<IFinishedRecipe> consumer, ITag.INamedTag<Item> ingotTag, ItemRegistryObject<?> plate) {
+        MetalPressingRecipeBuilder.plate(ingredient(ingotTag), result(plate)).build(consumer, plate.getId().getPath());
+    }
+
+    public static void gear(Consumer<IFinishedRecipe> consumer, ITag.INamedTag<Item> ingotTag, ItemRegistryObject<?> plate) {
+        MetalPressingRecipeBuilder.gear(ingredient(ingotTag), result(plate)).build(consumer, plate.getId().getPath());
     }
 
     private static Ingredient ingredient(ITag.INamedTag<Item> tag) {

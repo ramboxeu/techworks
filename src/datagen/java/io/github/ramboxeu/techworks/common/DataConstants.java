@@ -26,13 +26,13 @@ public class DataConstants {
                 ELECTRIFIED_FURNACE, REINFORCED_ELECTRIFIED_FURNACE, SMALL_BATTERY, MEDIUM_BATTERY, LARGE_BATTERY,
                 HICAP_BATTERY, SMALL_GAS_TANK, SMALL_LIQUID_TANK, ROCK_CRUSHER, ORE_CRUSHER, COPPER_INGOT, LITHIUM_INGOT,
                 COPPER_DUST, LITHIUM_DUST, IRON_DUST, GOLD_DUST, CRUSHED_COPPER_ORE, CRUSHED_LITHIUM_ORE, CRUSHED_IRON_ORE,
-                CRUSHED_GOLD_ORE
+                CRUSHED_GOLD_ORE, IRON_GEAR, IRON_PLATE
         };
     }
 
     public static class Blocks {
         public static final BlockRegistryObject<?, ?>[] MACHINES = new BlockRegistryObject[] {
-                BOILER, STEAM_ENGINE, ELECTRIC_FURNACE, ELECTRIC_GRINDER, ORE_WASHER
+                BOILER, STEAM_ENGINE, ELECTRIC_FURNACE, ELECTRIC_GRINDER, ORE_WASHER, METAL_PRESS
         };
 
         public static final BlockRegistryObject<?, ?>[] DROPPING_SELF = new BlockRegistryObject[] {

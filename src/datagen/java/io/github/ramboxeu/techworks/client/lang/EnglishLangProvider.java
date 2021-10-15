@@ -29,6 +29,7 @@ public class EnglishLangProvider extends BaseLangProvider {
         add(TechworksBlocks.SOLID_FUEL_BURNER, "Solid Fuel Burner");
         add(TechworksBlocks.COPPER_ORE, "Copper Ore");
         add(TechworksBlocks.LITHIUM_ORE, "Lithium Ore");
+        add(TechworksBlocks.METAL_PRESS, "Metal Press");
 
         // Items
         add(TechworksItems.WRENCH, "Wrench");
@@ -57,6 +58,8 @@ public class EnglishLangProvider extends BaseLangProvider {
         add(TechworksItems.CRUSHED_LITHIUM_ORE, "Crushed Lithium Ore");
         add(TechworksItems.CRUSHED_IRON_ORE, "Crushed Iron Ore");
         add(TechworksItems.CRUSHED_GOLD_ORE, "Crushed Gold Ore");
+        add(TechworksItems.IRON_PLATE, "Iron Plate");
+        add(TechworksItems.IRON_GEAR, "Iron Gear");
 
         // Containers
         add(TranslationKeys.ASSEMBLY_TABLE, "Assembly Table");
@@ -67,6 +70,7 @@ public class EnglishLangProvider extends BaseLangProvider {
         add(TranslationKeys.SOLID_FUEL_BURNER, "Solid Fuel Burner");
         add(TranslationKeys.STEAM_ENGINE, "Steam Engine");
         add(TranslationKeys.ORE_WASHER, "Ore Washer");
+        add(TranslationKeys.METAL_PRESS, "Metal Press");
 
         // Tooltips
         add(TranslationKeys.ENERGY_STORAGE_CAPACITY, "Capacity: %dFE");
@@ -80,6 +84,8 @@ public class EnglishLangProvider extends BaseLangProvider {
         add(TranslationKeys.STORED_FLUID, "%s %d/%dmB");
         add(TranslationKeys.STORED_ENERGY, "%d/%dFE");
         add(TranslationKeys.HEAT_DISPLAY, "%dHU");
+        add(TranslationKeys.GEAR, "Gear");
+        add(TranslationKeys.PLATE, "Plate");
 
         // Widgets
         add(TranslationKeys.COMPONENTS, "Components");
