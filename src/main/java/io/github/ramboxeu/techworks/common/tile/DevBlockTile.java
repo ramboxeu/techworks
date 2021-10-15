@@ -1,6 +1,5 @@
 package io.github.ramboxeu.techworks.common.tile;
 
-import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.client.container.DevBlockContainer;
 import io.github.ramboxeu.techworks.common.energy.DevEnergyStorage;
 import io.github.ramboxeu.techworks.common.fluid.handler.DevFluidHandler;
@@ -97,10 +96,10 @@ public class DevBlockTile extends BaseTechworksTile implements INamedContainerPr
     public void createLog(String message) {
         String log = (world.getGameTime() % 100) + (world.isRemote ? "C" : "S") + " " + message;
         logs.add(log);
-        Techworks.LOGGER.debug(DEVTILE, log);
+//        Techworks.LOGGER.debug(DEVTILE, log);
 
         if (world != null && !world.isRemote) {
-            Techworks.LOGGER.debug("Syncing server logs!");
+//            Techworks.LOGGER.debug("Syncing server logs!");
             TechworksPacketHandler.syncDevLog(world.getChunkAt(pos), pos, log);
         }
     }
@@ -368,7 +367,7 @@ public class DevBlockTile extends BaseTechworksTile implements INamedContainerPr
         this.energyPerTick = energyPerTick;
         energySides = sides;
         energyActiveSignal = signal;
-        Techworks.LOGGER.debug("Energy Sync: EpT = {}, S = {}, AS = {}", energyPerTick, sides, signal);
+//        Techworks.LOGGER.debug("Energy Sync: EpT = {}, S = {}, AS = {}", energyPerTick, sides, signal);
     }
 
     public void configureLiquid(int liquidPerTick, Fluid liquid, EnumSet<Side> sides, ActiveSignal signal) {
@@ -376,7 +375,7 @@ public class DevBlockTile extends BaseTechworksTile implements INamedContainerPr
         this.liquid.setFluid(liquid);
         liquidSides = sides;
         liquidActiveSignal = signal;
-        Techworks.LOGGER.debug("Liquid Sync: LpT = {}, L = {}, S = {}, AS = {}", liquidPerTick, liquid, sides, signal);
+//        Techworks.LOGGER.debug("Liquid Sync: LpT = {}, L = {}, S = {}, AS = {}", liquidPerTick, liquid, sides, signal);
     }
 
     public void configureGas(int gasPerTick, Fluid gas, EnumSet<Side> sides, ActiveSignal signal) {
@@ -384,14 +383,14 @@ public class DevBlockTile extends BaseTechworksTile implements INamedContainerPr
         this.gas.setFluid(gas);
         gasSides = sides;
         gasActiveSignal = signal;
-        Techworks.LOGGER.debug("Gas Sync: GpT = {}, G = {}, S = {}, AS = {}", gasPerTick, gas, sides, signal);
+//        Techworks.LOGGER.debug("Gas Sync: GpT = {}, G = {}, S = {}, AS = {}", gasPerTick, gas, sides, signal);
     }
 
     public void configureItem(List<ItemStack> inv, EnumSet<Side> sides, ActiveSignal signal) {
         this.inv.setStacks(inv);
         invSides = sides;
         invActiveSignal = signal;
-        Techworks.LOGGER.debug("Item Sync: Inv = {}, S = {}, AS = {}", inv, sides, signal);
+//        Techworks.LOGGER.debug("Item Sync: Inv = {}, S = {}, AS = {}", inv, sides, signal);
     }
 
     public List<String> getLogs() {

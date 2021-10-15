@@ -1,7 +1,6 @@
 package io.github.ramboxeu.techworks.common.util.machineio;
 
 import com.google.common.collect.Streams;
-import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.client.util.Color;
 import io.github.ramboxeu.techworks.common.energy.EnergyHandlerContainer;
 import io.github.ramboxeu.techworks.common.fluid.handler.FluidHandlerContainer;
@@ -26,8 +25,6 @@ import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.items.IItemHandler;
-import org.apache.logging.log4j.Marker;
-import org.apache.logging.log4j.MarkerManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -115,38 +112,38 @@ public class MachineIO implements ICapabilityProvider, INBTSerializable<Compound
         CompoundNBT tag = new CompoundNBT();
         tag.putByte("DisabledSides", (byte) disabledSides);
 
-        Marker marker = MarkerManager.getMarker(String.valueOf(hashCode()));
-        for (Side side : Side.values()) {
-            MachinePort port = ports[side.getIndex()];
+//        Marker marker = MarkerManager.getMarker(String.valueOf(hashCode()));
+//        for (Side side : Side.values()) {
+//            MachinePort port = ports[side.getIndex()];
+//
+//            if (!port.isDisabled()) {
+//                LazyOptional<IItemHandler> holder = port.getItemHolder();
+//                List<HandlerConfig> list = holder.<List<HandlerConfig>>map(handler -> handler instanceof IHandlerContainer ?
+//                                ((IHandlerContainer) handler).getConfigs() :
+//                                Collections.emptyList()
+//                ).orElse(Collections.emptyList());
 
-            if (!port.isDisabled()) {
-                LazyOptional<IItemHandler> holder = port.getItemHolder();
-                List<HandlerConfig> list = holder.<List<HandlerConfig>>map(handler -> handler instanceof IHandlerContainer ?
-                                ((IHandlerContainer) handler).getConfigs() :
-                                Collections.emptyList()
-                ).orElse(Collections.emptyList());
+//                if (!list.isEmpty()) {
+//                    Techworks.LOGGER.debug(marker, "Side {} : Type ITEM : {}", side, list.toString());
+//                } else {
+//                    Techworks.LOGGER.debug(marker, "Side {} : Type ITEM : empty", side);
+//                }
 
-                if (!list.isEmpty()) {
-                    Techworks.LOGGER.debug(marker, "Side {} : Type ITEM : {}", side, list.toString());
-                } else {
-                    Techworks.LOGGER.debug(marker, "Side {} : Type ITEM : empty", side);
-                }
+//                LazyOptional<IEnergyStorage> energyHolder = port.getEnergyHolder();
+//                List<HandlerConfig> energyList = energyHolder.<List<HandlerConfig>>map(handler -> handler instanceof IHandlerContainer ?
+//                        ((IHandlerContainer) handler).getConfigs() :
+//                        Collections.emptyList()
+//                ).orElse(Collections.emptyList());
 
-                LazyOptional<IEnergyStorage> energyHolder = port.getEnergyHolder();
-                List<HandlerConfig> energyList = energyHolder.<List<HandlerConfig>>map(handler -> handler instanceof IHandlerContainer ?
-                        ((IHandlerContainer) handler).getConfigs() :
-                        Collections.emptyList()
-                ).orElse(Collections.emptyList());
-
-                if (!energyList.isEmpty()) {
-                    Techworks.LOGGER.debug(marker, "Side {} : Type ENERGY : {}", side, energyList.toString());
-                } else {
-                    Techworks.LOGGER.debug(marker, "Side {} : Type ENERGY : empty", side);
-                }
-            } else {
-                Techworks.LOGGER.debug(marker, "Side {} : disabled", side);
-            }
-        }
+//                if (!energyList.isEmpty()) {
+//                    Techworks.LOGGER.debug(marker, "Side {} : Type ENERGY : {}", side, energyList.toString());
+//                } else {
+//                    Techworks.LOGGER.debug(marker, "Side {} : Type ENERGY : empty", side);
+//                }
+//            } else {
+//                Techworks.LOGGER.debug(marker, "Side {} : disabled", side);
+//            }
+//        }
 
         Map<Side, List<HandlerConfig>> map = createDataMap();
 
