@@ -2,7 +2,11 @@ package io.github.ramboxeu.techworks.common.tile;
 
 import io.github.ramboxeu.techworks.api.wrench.IWrenchable;
 import io.github.ramboxeu.techworks.common.component.ComponentStorage;
+import io.github.ramboxeu.techworks.common.network.TechworksPacketHandler;
 import io.github.ramboxeu.techworks.common.property.TechworksBlockStateProperties;
+import io.github.ramboxeu.techworks.common.util.NBTUtils;
+import io.github.ramboxeu.techworks.common.util.RedstoneMode;
+import io.github.ramboxeu.techworks.common.util.StandbyMode;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.INamedContainerProvider;
@@ -15,8 +19,8 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
@@ -25,6 +29,8 @@ import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FAC
 
 public abstract class BaseMachineTile extends BaseIOTile implements INamedContainerProvider, IWrenchable {
     protected ComponentStorage components;
+    protected RedstoneMode redstoneMode;
+    protected StandbyMode standbyMode;
 
     public BaseMachineTile(TileEntityType<?> tileEntityType) {
         super(tileEntityType);
@@ -56,9 +62,20 @@ public abstract class BaseMachineTile extends BaseIOTile implements INamedContai
     }
 
     @Override
+    protected void serverTick() {
+        if (standbyMode.canWork() && redstoneMode.canWork(world.isBlockPowered(pos))) {
+            workTick();
+        }
+    }
+
+    protected void workTick() {}
+
+    @Override
     public CompoundNBT write(CompoundNBT tag) {
         tag.put("MachineIO", machineIO.serializeNBT());
         tag.put("Components", components.serializeNBT());
+        NBTUtils.serializeEnum(tag, "StandbyMode", standbyMode);
+        NBTUtils.serializeEnum(tag, "RedstoneMode", redstoneMode);
 
         return super.write(tag);
     }
@@ -67,6 +84,8 @@ public abstract class BaseMachineTile extends BaseIOTile implements INamedContai
     public void read(BlockState state, CompoundNBT tag) {
         machineIO.deserializeNBT(tag.getCompound("MachineIO"));
         components.deserializeNBT(tag.getCompound("Components"));
+        standbyMode = NBTUtils.deserializeEnum(tag, "StandbyMode", StandbyMode.class);
+        redstoneMode = NBTUtils.deserializeEnum(tag, "RedstoneMode", RedstoneMode.class);
 
         super.read(state, tag);
     }
@@ -75,6 +94,8 @@ public abstract class BaseMachineTile extends BaseIOTile implements INamedContai
     protected CompoundNBT writeUpdateTag(CompoundNBT tag) {
         tag.put("MachineIO", machineIO.serializeNBT());
         tag.put("Components", components.serializeNBT());
+        NBTUtils.serializeEnum(tag, "StandbyMode", standbyMode);
+        NBTUtils.serializeEnum(tag, "RedstoneMode", redstoneMode);
 
         return super.writeUpdateTag(tag);
     }
@@ -83,6 +104,8 @@ public abstract class BaseMachineTile extends BaseIOTile implements INamedContai
     protected void readUpdateTag(CompoundNBT nbt, BlockState state) {
         machineIO.deserializeNBT(nbt.getCompound("MachineIO"));
         components.deserializeNBT(nbt.getCompound("Components"));
+        standbyMode = NBTUtils.deserializeEnum(nbt, "StandbyMode", StandbyMode.class);
+        redstoneMode = NBTUtils.deserializeEnum(nbt, "RedstoneMode", RedstoneMode.class);
 
         super.readUpdateTag(nbt, state);
     }
@@ -111,8 +134,36 @@ public abstract class BaseMachineTile extends BaseIOTile implements INamedContai
         return false;
     }
 
-    @NotNull
+    @Nonnull
     public Direction getFacing() {
         return world != null ? getBlockState().get(HORIZONTAL_FACING) : Direction.NORTH;
+    }
+
+    public RedstoneMode getRedstoneMode() {
+        return redstoneMode;
+    }
+
+    public StandbyMode getWorkMode() {
+        return standbyMode;
+    }
+
+    public void syncRedstoneMode(RedstoneMode mode) {
+        setRedstoneMode(mode);
+        TechworksPacketHandler.syncMachineWorkState(pos, mode, null);
+    }
+
+    public void syncStandbyMode(StandbyMode mode) {
+        setStandbyMode(mode);
+        TechworksPacketHandler.syncMachineWorkState(pos, null, mode);
+    }
+
+    public void setRedstoneMode(RedstoneMode mode) {
+        if (mode != null)
+            redstoneMode = mode;
+    }
+
+    public void setStandbyMode(StandbyMode mode) {
+        if (mode != null)
+            standbyMode = mode;
     }
 }

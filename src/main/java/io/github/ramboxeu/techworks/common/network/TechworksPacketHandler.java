@@ -8,7 +8,9 @@ import io.github.ramboxeu.techworks.common.network.dev.DevBlockItemSyncPacket;
 import io.github.ramboxeu.techworks.common.network.dev.DevBlockLiquidSyncPacket;
 import io.github.ramboxeu.techworks.common.tile.DevBlockTile;
 import io.github.ramboxeu.techworks.common.tile.machine.MetalPressTile;
+import io.github.ramboxeu.techworks.common.util.RedstoneMode;
 import io.github.ramboxeu.techworks.common.util.Side;
+import io.github.ramboxeu.techworks.common.util.StandbyMode;
 import io.github.ramboxeu.techworks.common.util.cable.connection.CableConnections;
 import io.github.ramboxeu.techworks.common.util.cable.network.ICablePacket;
 import io.github.ramboxeu.techworks.common.util.machineio.MachinePort;
@@ -59,6 +61,7 @@ public class TechworksPacketHandler {
         CHANNEL.registerMessage(id++, SyncToggleableButtonState.class, SyncToggleableButtonState::encode, SyncToggleableButtonState::decode, SyncToggleableButtonState::handle);
         CHANNEL.registerMessage(id++, SyncObjectHolder.class, SyncObjectHolder::encode, SyncObjectHolder::decode, SyncObjectHolder::handle);
         CHANNEL.registerMessage(id++, MetalPressSyncPacket.class, MetalPressSyncPacket::encode, MetalPressSyncPacket::decode, MetalPressSyncPacket::handle);
+        CHANNEL.registerMessage(id++, MachineWorkStateSyncPacket.class, MachineWorkStateSyncPacket::encode, MachineWorkStateSyncPacket::decode, MachineWorkStateSyncPacket::handle);
     }
 
     public static void sendMachinePortUpdatePacket(BlockPos pos, int index, MachinePort port, Chunk chunk) {
@@ -141,5 +144,9 @@ public class TechworksPacketHandler {
 
     public static void syncMetalPressMode(BlockPos pos, MetalPressTile.Mode mode) {
         CHANNEL.sendToServer(new MetalPressSyncPacket(pos, mode));
+    }
+
+    public static void syncMachineWorkState(BlockPos pos, RedstoneMode redstoneMode, StandbyMode standbyMode) {
+        CHANNEL.sendToServer(new MachineWorkStateSyncPacket(pos, redstoneMode, standbyMode));
     }
 }

@@ -115,7 +115,7 @@ public class ElectricFurnaceTile extends BaseMachineTile {
     }
 
     @Override
-    protected void serverTick() {
+    protected void workTick() {
         if (shouldCheck) {
             if (checkRecipe() && outputInv.insertItem(0, cachedRecipe.getCraftingResult(recipeInv), true).isEmpty() && battery.getEnergyStored() >= energy - extractedEnergy) {
                 isWorking = true;

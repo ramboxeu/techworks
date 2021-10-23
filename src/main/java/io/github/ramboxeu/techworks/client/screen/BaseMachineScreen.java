@@ -2,9 +2,7 @@ package io.github.ramboxeu.techworks.client.screen;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import io.github.ramboxeu.techworks.client.container.BaseMachineContainer;
-import io.github.ramboxeu.techworks.client.screen.widget.BaseContainerWidget;
-import io.github.ramboxeu.techworks.client.screen.widget.IPortScreenWidgetProvider;
-import io.github.ramboxeu.techworks.client.screen.widget.PortScreenWidget;
+import io.github.ramboxeu.techworks.client.screen.widget.*;
 import io.github.ramboxeu.techworks.client.screen.widget.config.BaseConfigWidget;
 import io.github.ramboxeu.techworks.client.screen.widget.config.IOConfigWidget;
 import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
@@ -23,6 +21,8 @@ public abstract class BaseMachineScreen<TILE extends BaseMachineTile, CONTAINER 
 
     protected final List<PortScreenWidget> portWidgets = new ArrayList<>();
     protected final List<BaseConfigWidget> configWidgets = new ArrayList<>();
+    protected final RedstoneConfigWidget redstoneConfig;
+    protected final WorkStatusConfigWidget workConfig;
 
     public BaseMachineScreen(CONTAINER container, PlayerInventory inv, ITextComponent title, ResourceLocation background, ResourceLocation machineFrontTex) {
         super(container, inv, title, background);
@@ -36,6 +36,9 @@ public abstract class BaseMachineScreen<TILE extends BaseMachineTile, CONTAINER 
                 addPortWidget(((IPortScreenWidgetProvider<?>) widget).getPortScreenWidget(this));
             }
         }
+
+        redstoneConfig = addWidget(new RedstoneConfigWidget(this, 176, 114, container.getMachineTile()));
+        workConfig = addWidget(new WorkStatusConfigWidget(this, 176, 137, container.getMachineTile()));
     }
 
     protected <T extends BaseConfigWidget> T addConfigWidget(T widget) {
@@ -106,6 +109,9 @@ public abstract class BaseMachineScreen<TILE extends BaseMachineTile, CONTAINER 
             widget.toggle();
             config = widget;
         }
+
+        redstoneConfig.setActive(!renderConfig);
+        workConfig.setActive(!renderConfig);
     }
 
     public boolean isConfigOpen() {

@@ -96,7 +96,7 @@ public class SteamEngineTile extends BaseMachineTile {
     }
 
     @Override
-    protected void serverTick() {
+    protected void workTick() {
         // process
 //        Techworks.LOGGER.debug("Received steam: {}", steam.getAmount());
         steam = FluidStack.EMPTY;

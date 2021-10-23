@@ -130,7 +130,7 @@ public class BoilerTile extends BaseMachineTile {
     }
 
     @Override
-    protected void serverTick() {
+    protected void workTick() {
         heater.tick();
 
         int receivedHeat = heater.extractHeat();

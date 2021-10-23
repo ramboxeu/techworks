@@ -15,6 +15,32 @@ public enum RedstoneMode {
         return predicate.canWork(powered);
     }
 
+    public RedstoneMode next() {
+        switch (this) {
+            case IGNORE:
+                return HIGH;
+            case HIGH:
+                return LOW;
+            case LOW:
+                return IGNORE;
+        }
+
+        throw new AssertionError();
+    }
+
+    public RedstoneMode previous() {
+        switch (this) {
+            case IGNORE:
+                return LOW;
+            case HIGH:
+                return IGNORE;
+            case LOW:
+                return HIGH;
+        }
+
+        throw new AssertionError();
+    }
+
     @FunctionalInterface
     private interface WorkPredicate {
         boolean canWork(boolean powered);

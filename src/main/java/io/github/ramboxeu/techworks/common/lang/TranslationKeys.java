@@ -52,6 +52,13 @@ public class TranslationKeys {
     public static final TranslationKey MODE = TranslationKey.widget("io", "mode");
     public static final TranslationKey ENABLED = TranslationKey.widget("io", "enabled");
     public static final TranslationKey INFO = TranslationKey.widget("io", "info");
+    public static final TranslationKey REDSTONE = TranslationKey.widget("redstone_config", "redstone");
+    public static final TranslationKey IGNORED = TranslationKey.widget("redstone_config", "ignored");
+    public static final TranslationKey HIGH = TranslationKey.widget("redstone_config", "high");
+    public static final TranslationKey LOW = TranslationKey.widget("redstone_config", "low");
+    public static final TranslationKey STATUS = TranslationKey.widget("work_config", "status");
+    public static final TranslationKey ACTIVE = TranslationKey.widget("work_config", "active");
+    public static final TranslationKey STANDBY = TranslationKey.widget("work_config", "standby");
 
     // Fluids
     public static final TranslationKey EMPTY = TranslationKey.fluid("empty");

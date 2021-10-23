@@ -104,5 +104,12 @@
   "widget.techworks.io.none_input_type": "None",
   "widget.techworks.io.output": "Output",
   "widget.techworks.io.right_side": "Right",
-  "widget.techworks.io.top_side": "Top"
+  "widget.techworks.io.top_side": "Top",
+  "widget.techworks.redstone_config.high": "High",
+  "widget.techworks.redstone_config.ignored": "Ignored",
+  "widget.techworks.redstone_config.low": "Low",
+  "widget.techworks.redstone_config.redstone": "Redstone",
+  "widget.techworks.work_config.active": "Active",
+  "widget.techworks.work_config.standby": "Standby",
+  "widget.techworks.work_config.status": "Status"
 }

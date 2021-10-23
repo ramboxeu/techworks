@@ -107,7 +107,7 @@ public class OreWasherTile extends BaseMachineTile {
     }
 
     @Override
-    protected void serverTick() {
+    protected void workTick() {
         if (shouldCheck) {
             if (checkRecipe() && ItemUtils.canInsertItems(outputInv, cachedRecipe.getRecipeOutputs()) && battery.getEnergyStored() >= 4000 - extractedEnergy && waterTank.getFluidAmount() >= 125) {
                 isWorking = true;

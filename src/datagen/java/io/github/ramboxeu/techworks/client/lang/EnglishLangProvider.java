@@ -110,6 +110,13 @@ public class EnglishLangProvider extends BaseLangProvider {
         add(TranslationKeys.MODE, "Mode");
         add(TranslationKeys.ENABLED, "Enabled");
         add(TranslationKeys.INFO, "Info");
+        add(TranslationKeys.REDSTONE, "Redstone");
+        add(TranslationKeys.IGNORED, "Ignored");
+        add(TranslationKeys.HIGH, "High");
+        add(TranslationKeys.LOW, "Low");
+        add(TranslationKeys.STATUS, "Status");
+        add(TranslationKeys.ACTIVE, "Active");
+        add(TranslationKeys.STANDBY, "Standby");
 
         // Fluids
         add(TechworksFluids.STEAM, "Steam");

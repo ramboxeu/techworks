@@ -79,7 +79,7 @@ public class MetalPressTile extends BaseMachineTile {
     }
 
     @Override
-    protected void serverTick() {
+    protected void workTick() {
         if (shouldCheck) {
             if (checkRecipe() && outputInv.insertItem(0, cachedRecipe.getRecipeOutput(), true).isEmpty() && battery.getEnergyStored() >= 4000 - extractedEnergy) {
                 isWorking = true;
