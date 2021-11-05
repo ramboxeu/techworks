@@ -75,6 +75,7 @@ public class TranslationKeys {
     public static final TranslationKey SMALL_BATTERY = TranslationKey.component("small_battery");
     public static final TranslationKey SMALL_GAS_TANK = TranslationKey.component("small_gas_tank");
     public static final TranslationKey SMALL_LIQUID_TANK = TranslationKey.component("small_liquid_tank");
+    public static final TranslationKey STEAM_TURBINE_MK1 = TranslationKey.component("steam_turbine_mk1");
 
     // Statues
     public static final TranslationKey ENGINE_ALREADY_LINKED = TranslationKey.status("engine_already_linked");

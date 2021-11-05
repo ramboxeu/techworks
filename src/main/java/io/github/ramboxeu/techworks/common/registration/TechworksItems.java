@@ -50,6 +50,7 @@ public class TechworksItems {
     public static final ItemRegistryObject<Item> CRUSHED_GOLD_ORE = ITEMS.register("crushed_gold_ore", Item::new);
     public static final ItemRegistryObject<Item> IRON_PLATE = ITEMS.register("iron_plate", Item::new);
     public static final ItemRegistryObject<Item> IRON_GEAR = ITEMS.register("iron_gear", Item::new);
+    public static final ItemRegistryObject<Item> STEAM_TURBINE_MK1 = ITEMS.register("steam_turbine_mk1", Item::new);
 
     public static final ItemRegistryObject<Item> MACHINE_CASING = ITEMS.register("machine_casing", Item::new);
 

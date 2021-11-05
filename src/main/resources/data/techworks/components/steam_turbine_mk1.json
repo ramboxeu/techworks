@@ -1,0 +1,8 @@
+{
+  "type": "techworks:steam_turbine",
+  "item": "techworks:steam_turbine_mk1",
+  "parameters": {
+    "maxEnergy": 100,
+    "efficiency": 0.5
+  }
+}

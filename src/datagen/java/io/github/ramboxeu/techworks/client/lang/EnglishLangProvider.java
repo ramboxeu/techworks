@@ -43,7 +43,7 @@ public class EnglishLangProvider extends BaseLangProvider {
         add(TechworksItems.SMALL_BATTERY, "Small Battery");
         add(TechworksItems.MEDIUM_BATTERY, "Medium Battery");
         add(TechworksItems.LARGE_BATTERY, "Large Battery");
-        add(TechworksItems.HICAP_BATTERY, "HiCap™ Battery");
+        add(TechworksItems.HICAP_BATTERY, "HiCap\u2122 Battery");
         add(TechworksItems.SMALL_LIQUID_TANK, "Small Liquid Tank");
         add(TechworksItems.SMALL_GAS_TANK, "Small Gas Tank");
         add(TechworksItems.ROCK_CRUSHER, "RockCrusher");
@@ -60,6 +60,7 @@ public class EnglishLangProvider extends BaseLangProvider {
         add(TechworksItems.CRUSHED_GOLD_ORE, "Crushed Gold Ore");
         add(TechworksItems.IRON_PLATE, "Iron Plate");
         add(TechworksItems.IRON_GEAR, "Iron Gear");
+        add(TechworksItems.STEAM_TURBINE_MK1, "Steam Turbine Mk1");
 
         // Containers
         add(TranslationKeys.ASSEMBLY_TABLE, "Assembly Table");
@@ -128,18 +129,20 @@ public class EnglishLangProvider extends BaseLangProvider {
         add(TranslationKeys.SOLID_FUEL_BURNER_COMPONENT, "Solid Fuel Burner");
         add(TranslationKeys.ROCK_CRUSHER, "RockCrusher");
         add(TranslationKeys.ORE_CRUSHER, "OreCrusher");
-        add(TranslationKeys.HICAP_BATTERY, "HiCap™ Battery");
+        add(TranslationKeys.HICAP_BATTERY, "HiCap\u2122 Battery");
         add(TranslationKeys.LARGE_BATTERY, "Large Battery");
         add(TranslationKeys.MEDIUM_BATTERY, "Medium Battery");
         add(TranslationKeys.SMALL_BATTERY, "Small Battery");
         add(TranslationKeys.SMALL_GAS_TANK, "Small Gas Tank");
         add(TranslationKeys.SMALL_LIQUID_TANK, "Small Liquid Tank");
+        add(TranslationKeys.STEAM_TURBINE_MK1, "Steam Turbine Mk1");
         add(TechworksComponents.ENERGY_STORAGE, "Energy Storage Component");
         add(TechworksComponents.GAS_STORAGE, "Gas Storage Component");
         add(TechworksComponents.LIQUID_STORAGE, "Liquid Storage Component");
         add(TechworksComponents.GRINDING, "Grinding Component");
         add(TechworksComponents.HEATING, "Heating Component");
         add(TechworksComponents.SMELTING, "Smelting Component");
+        add(TechworksComponents.STEAM_TURBINE, "Steam Turbine");
 
         // Statues
         add(TranslationKeys.ENGINE_ALREADY_LINKED, "Engine (%d %d %d) is already linked to boiler (%d %d %d)");

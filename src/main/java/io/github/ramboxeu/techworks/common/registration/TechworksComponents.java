@@ -15,4 +15,5 @@ public class TechworksComponents {
     public static final RegistryObject<GasStorageComponent.Type> GAS_STORAGE = TYPES.register("gas_storage", GasStorageComponent.Type::new);
     public static final RegistryObject<HeatingComponent.Type> HEATING = TYPES.register("heating", HeatingComponent.Type::new);
     public static final RegistryObject<GrindingComponent.Type> GRINDING = TYPES.register("grinding", GrindingComponent.Type::new);
+    public static final RegistryObject<SteamTurbineComponent.Type> STEAM_TURBINE = TYPES.register("steam_turbine", SteamTurbineComponent.Type::new);
 }

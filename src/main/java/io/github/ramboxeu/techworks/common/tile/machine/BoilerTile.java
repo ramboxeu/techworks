@@ -1,6 +1,5 @@
 package io.github.ramboxeu.techworks.common.tile.machine;
 
-import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.client.container.machine.BoilerContainer;
 import io.github.ramboxeu.techworks.common.component.ComponentStorage;
 import io.github.ramboxeu.techworks.common.fluid.handler.GasTank;
@@ -90,46 +89,6 @@ public class BoilerTile extends BaseMachineTile {
 
         steamEngines = new ArrayList<>(4);
     }
-
-//    @Override
-//    protected void onFirstTick() {
-//        if (steamEngines.isEmpty()) {
-//            int chainLength = 0;
-//            int maxChainLength = 0;
-//            Direction chainSide = null;
-//            Direction maxLengthSide = null;
-//
-//            for (Direction side : Direction.values()) {
-//                boolean maxLength = true;
-//
-//                for (int i = 1; i <= 4; i++) {
-//                    TileEntity tile = world.getTileEntity(pos.offset(side, i));
-//
-//                    if (!(tile instanceof SteamEngineTile) && i > 1) {
-//                        chainLength = i - 1;
-//                        chainSide = side;
-//                        maxLength = false;
-//                        break;
-//                    }
-//                }
-//
-//                if (maxLength) {
-//                    chainSide = side;
-//                    chainLength = 4;
-//                }
-//
-//                if (maxChainLength < chainLength) {
-//                    maxChainLength = chainLength;
-//                    maxLengthSide = chainSide;
-//                }
-//            }
-//
-//            for (int i = 1; i <= maxChainLength; i++) {
-//                SteamEngineTile engine = (SteamEngineTile) world.getTileEntity(pos.offset(maxLengthSide, i));
-//                engine.link(this, maxLengthSide.getOpposite());
-//            }
-//        }
-//    }
 
     @Override
     protected void workTick() {
@@ -321,30 +280,11 @@ public class BoilerTile extends BaseMachineTile {
         }
 
         return true;
-//        if (steamEngines.size() >= 4)
-//            return false;
-//
-//        CompoundNBT wrenchTag = wrenchStack.getOrCreateChildTag("Wrench");
-//
-//        // TODO: abort only if pos == this.pos
-//        if (!wrenchTag.contains("Boiler", Constants.NBT.TAG_COMPOUND)) {
-//            CompoundNBT boilerTag = new CompoundNBT();
-//            boilerTag.putInt("x", pos.getX());
-//            boilerTag.putInt("y", pos.getY());
-//            boilerTag.putInt("z", pos.getZ());
-//            wrenchTag.put("Boiler", boilerTag);
-//            Techworks.LOGGER.debug("Linking...");
-//        } else {
-//            wrenchTag.remove("Boiler");
-//            Techworks.LOGGER.debug("Linking aborted");
-//        }
-
     }
 
     public boolean linkEngine(SteamEngineTile tile) {
         if (steamEngines.size() < 4) {
             steamEngines.add(tile);
-            Techworks.LOGGER.debug("Linked Steam Engine ({}) @ {}", steamEngines.size() - 1, tile);
             return true;
         }
 
@@ -353,33 +293,9 @@ public class BoilerTile extends BaseMachineTile {
 
     public void unlinkEngine(SteamEngineTile tile) {
         steamEngines.remove(tile);
-        Techworks.LOGGER.debug("Unlinked Steam Engine ({}) @ {}", steamEngines.size(), tile);
     }
 
     public Collection<SteamEngineTile> getLikedEngines() {
         return steamEngines;
     }
-
-//    @Deprecated
-//    public BoilerTile linkEngine(SteamEngineTile tile, Direction side) {
-////        if (steamEngines.size() < 4) {
-////            steamEngines.add(tile);
-////            Techworks.LOGGER.debug("Linked engine: {} @ {}", tile, tile.getPos());
-////            return this;
-////        }
-////
-////        Techworks.LOGGER.debug("Linked engine cap reached: {} @ {}", tile, tile.getPos());
-//        return null;
-//    }
-//
-//    @Deprecated
-//    public void unlinkEngine(SteamEngineTile tile, boolean validateOtherLinks) {
-////        steamEngines.remove(tile);
-////
-////        if (validateOtherLinks) {
-////            steamEngines.removeIf(engine -> !engine.validateLink());
-////    }
-////
-////        Techworks.LOGGER.debug("Unlinked engine: {} @ {}", tile, tile.getPos());
-//    }
 }
