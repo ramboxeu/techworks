@@ -5,6 +5,8 @@ import io.github.ramboxeu.techworks.api.wrench.IWrenchable;
 import io.github.ramboxeu.techworks.common.util.Side;
 import io.github.ramboxeu.techworks.common.util.machineio.MachineIO;
 import io.github.ramboxeu.techworks.common.util.machineio.MachinePort;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -51,7 +53,7 @@ public abstract class BaseIOTile extends BaseTechworksTile implements IWrenchabl
     }
 
     @Override
-    public boolean configure(World world, BlockPos pos, Direction face, Vector3d hitVec) {
+    public boolean configure(PlayerEntity player, ItemStack wrench, World world, BlockPos pos, Direction face, Vector3d hitVec) {
         MachinePort port = machineIO.getPort(face);
 
         Techworks.LOGGER.debug("Disabled: {}", port.isDisabled());

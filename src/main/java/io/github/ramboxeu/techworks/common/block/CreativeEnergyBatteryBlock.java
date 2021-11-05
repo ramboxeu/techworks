@@ -6,6 +6,8 @@ import io.github.ramboxeu.techworks.common.tile.CreativeEnergyBatteryTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -32,7 +34,7 @@ public class CreativeEnergyBatteryBlock extends Block implements IWrenchable {
     }
 
     @Override
-    public boolean configure(World world, BlockPos pos, Direction face, Vector3d hitVec) {
+    public boolean configure(PlayerEntity player, ItemStack wrench, World world, BlockPos pos, Direction face, Vector3d hitVec) {
         if (!world.isRemote) {
             TileEntity te = world.getTileEntity(pos);
 

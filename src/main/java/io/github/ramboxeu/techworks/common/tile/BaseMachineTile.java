@@ -34,6 +34,8 @@ public abstract class BaseMachineTile extends BaseIOTile implements INamedContai
 
     public BaseMachineTile(TileEntityType<?> tileEntityType) {
         super(tileEntityType);
+        redstoneMode = RedstoneMode.IGNORE;
+        standbyMode = StandbyMode.OFF;
     }
 
     // PASS continues the execution on the block side
@@ -86,6 +88,9 @@ public abstract class BaseMachineTile extends BaseIOTile implements INamedContai
         components.deserializeNBT(tag.getCompound("Components"));
         standbyMode = NBTUtils.deserializeEnum(tag, "StandbyMode", StandbyMode.class);
         redstoneMode = NBTUtils.deserializeEnum(tag, "RedstoneMode", RedstoneMode.class);
+
+        if (redstoneMode == null) redstoneMode = RedstoneMode.IGNORE;
+        if (standbyMode == null) standbyMode = StandbyMode.OFF;
 
         super.read(state, tag);
     }

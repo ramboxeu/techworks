@@ -75,4 +75,13 @@ public class TranslationKeys {
     public static final TranslationKey SMALL_BATTERY = TranslationKey.component("small_battery");
     public static final TranslationKey SMALL_GAS_TANK = TranslationKey.component("small_gas_tank");
     public static final TranslationKey SMALL_LIQUID_TANK = TranslationKey.component("small_liquid_tank");
+
+    // Statues
+    public static final TranslationKey ENGINE_ALREADY_LINKED = TranslationKey.status("engine_already_linked");
+    public static final TranslationKey ENGINE_LINKING_SUCCESS = TranslationKey.status("engine_linking_success");
+    public static final TranslationKey ENGINE_LINKING_FAILURE = TranslationKey.status("engine_linking_failure");
+    public static final TranslationKey ENGINE_LINKING_CANCELLED = TranslationKey.status("engine_linking_cancelled");
+    public static final TranslationKey LINKING_ENGINES = TranslationKey.status("linking_engines");
+    public static final TranslationKey ENGINE_UNLINKED = TranslationKey.status("engine_unlinked");
+    public static final TranslationKey ENGINE_UNLINKING_FAILURE = TranslationKey.status("engine_unlinking_failure");
 }

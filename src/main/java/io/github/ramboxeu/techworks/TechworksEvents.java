@@ -58,7 +58,7 @@ public class TechworksEvents {
             if (item == TechworksItems.WRENCH.get()) {
                 result = ((WrenchItem) stack.getItem()).onLeftClickBlock(player, event.getWorld(), pos, event.getFace(), hitVec, stack);
             } else if (item instanceof IWrench) {
-                result = WrenchItem.useExternalWrench(((IWrench) item).leftClick(player), event.getWorld(), pos, event.getFace(), hitVec, stack);
+                result = WrenchItem.useExternalWrench(((IWrench) item).leftClick(player), player, event.getWorld(), pos, event.getFace(), hitVec, stack);
             }
 
             if (result != null) {
@@ -87,7 +87,7 @@ public class TechworksEvents {
             if (item == TechworksItems.WRENCH.get()) {
                 result = ((WrenchItem) item).onRightClick(player, event.getWorld(), pos, event.getFace(), hitVec, stack);
             } else if (item instanceof IWrench) {
-                result = WrenchItem.useExternalWrench(((IWrench) item).rightClick(player), event.getWorld(), pos, event.getFace(), hitVec, stack);
+                result = WrenchItem.useExternalWrench(((IWrench) item).rightClick(player), player, event.getWorld(), pos, event.getFace(), hitVec, stack);
             }
 
             if (result != null) {

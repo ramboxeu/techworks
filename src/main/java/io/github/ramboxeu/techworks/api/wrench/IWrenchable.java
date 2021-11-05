@@ -1,6 +1,7 @@
 package io.github.ramboxeu.techworks.api.wrench;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -57,7 +58,7 @@ public interface IWrenchable {
      * @param face the face that was clicked
      * @return {@code true} if the block was configured; {@code false} will continue execution
      */
-    default boolean configure(World world, BlockPos pos, Direction face, Vector3d hitVec) {
+    default boolean configure(PlayerEntity player, ItemStack wrench, World world, BlockPos pos, Direction face, Vector3d hitVec) {
         return false;
     }
 

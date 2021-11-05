@@ -141,6 +141,15 @@ public class EnglishLangProvider extends BaseLangProvider {
         add(TechworksComponents.HEATING, "Heating Component");
         add(TechworksComponents.SMELTING, "Smelting Component");
 
+        // Statues
+        add(TranslationKeys.ENGINE_ALREADY_LINKED, "Engine (%d %d %d) is already linked to boiler (%d %d %d)");
+        add(TranslationKeys.ENGINE_LINKING_SUCCESS, "Linked engine (%d %d %d) to boiler (%d %d %d)");
+        add(TranslationKeys.ENGINE_LINKING_FAILURE, "Linking engine (%d %d %d) to %d %d %d failed");
+        add(TranslationKeys.ENGINE_LINKING_CANCELLED, "Linking to %d %d %d was canceled");
+        add(TranslationKeys.LINKING_ENGINES, "Linking to %d %d %d");
+        add(TranslationKeys.ENGINE_UNLINKED, "Unliked engine (%d %d %d) from boiler (%d %d %d)");
+        add(TranslationKeys.ENGINE_UNLINKING_FAILURE, "Unlinking engine (%d %d %d) from boiler (%d %d %d) failed");
+
         // Other
         add("itemGroup.techworks", "Techworks");
     }

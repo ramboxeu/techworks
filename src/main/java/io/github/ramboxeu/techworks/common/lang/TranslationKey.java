@@ -60,6 +60,10 @@ public final class TranslationKey {
         return make("component", name);
     }
 
+    public static TranslationKey status(String name) {
+        return make("status", name);
+    }
+
     public static TranslationKey make(String type, String name) {
         return new TranslationKey(type + '.' + Techworks.MOD_ID + '.' + name);
     }

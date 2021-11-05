@@ -38,10 +38,10 @@ public class WrenchItem extends Item {
             }
 
             if (!player.isSneaking()) {
-                if (blockWrenchable.configure(world, pos, face, hitVec)){
+                if (blockWrenchable.configure(player, stack, world, pos, face, hitVec)){
                     return Result.SUCCESS;
                 } else {
-                    if (flag && tileWrenchable.configure(world, pos, face, hitVec)) {
+                    if (flag && tileWrenchable.configure(player, stack, world, pos, face, hitVec)) {
                         return Result.SUCCESS;
                     }
                 }
@@ -96,7 +96,7 @@ public class WrenchItem extends Item {
         return Result.BLOCK;
     }
 
-    public static Result useExternalWrench(WrenchAction action, World world, BlockPos pos, Direction face, Vector3d hitVec, ItemStack stack) {
+    public static Result useExternalWrench(WrenchAction action, PlayerEntity player, World world, BlockPos pos, Direction face, Vector3d hitVec, ItemStack stack) {
         BlockState state = world.getBlockState(pos);
         Block block = state.getBlock();
         TileEntity tile = world.getTileEntity(pos);
@@ -138,10 +138,10 @@ public class WrenchItem extends Item {
                         }
                     }
                 case CONFIGURE:
-                    if (blockWrenchable.configure(world, pos, face, hitVec)){
+                    if (blockWrenchable.configure(player, stack, world, pos, face, hitVec)){
                         return Result.SUCCESS;
                     } else {
-                        if (flag && tileWrenchable.configure(world, pos, face, hitVec)) {
+                        if (flag && tileWrenchable.configure(player, stack, world, pos, face, hitVec)) {
                             return Result.SUCCESS;
                         }
                     }

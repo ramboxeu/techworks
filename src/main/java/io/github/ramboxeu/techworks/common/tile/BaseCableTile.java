@@ -12,6 +12,8 @@ import io.github.ramboxeu.techworks.common.util.cable.connection.ConnectionStatu
 import io.github.ramboxeu.techworks.common.util.cable.network.*;
 import io.github.ramboxeu.techworks.common.util.model.CuboidGroup;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -181,7 +183,7 @@ public abstract class BaseCableTile extends TileEntity implements ITickableTileE
     }
 
     @Override
-    public boolean configure(World world, BlockPos pos, Direction face, Vector3d hitVec) {
+    public boolean configure(PlayerEntity player, ItemStack wrench, World world, BlockPos pos, Direction face, Vector3d hitVec) {
         if (CableModel.CENTER.isVectorWithin(hitVec)) {
             if (connections.getStatus(face).isBlocked()) {
                 TileEntity tile = world.getTileEntity(pos.offset(face));

@@ -7,6 +7,7 @@ import io.github.ramboxeu.techworks.common.component.ComponentType;
 import io.github.ramboxeu.techworks.common.registration.TechworksRegistries;
 import net.minecraft.nbt.*;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
@@ -85,5 +86,28 @@ public class NBTUtils {
 
     public static void serializeComponent(CompoundNBT tag, String key, Component component) {
         tag.putString(key, component.getId().toString());
+    }
+
+    @Nullable
+    public static BlockPos getBlockPos(CompoundNBT tag, String key) {
+        if (tag.contains(key, Constants.NBT.TAG_COMPOUND)) {
+            CompoundNBT posTag = tag.getCompound(key);
+            int x = posTag.getInt("x");
+            int y = posTag.getInt("y");
+            int z = posTag.getInt("z");
+
+            return new BlockPos(x, y, z);
+        }
+
+        return null;
+    }
+
+    public static void putBlockPos(CompoundNBT tag, String key, BlockPos pos) {
+        CompoundNBT posTag = new CompoundNBT();
+        posTag.putInt("x", pos.getX());
+        posTag.putInt("y", pos.getY());
+        posTag.putInt("z", pos.getZ());
+
+        tag.put(key, posTag);
     }
 }

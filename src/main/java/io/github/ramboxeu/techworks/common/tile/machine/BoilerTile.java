@@ -12,6 +12,7 @@ import io.github.ramboxeu.techworks.common.registration.TechworksFluids;
 import io.github.ramboxeu.techworks.common.registration.TechworksTiles;
 import io.github.ramboxeu.techworks.common.tag.TechworksFluidTags;
 import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
+import io.github.ramboxeu.techworks.common.util.NBTUtils;
 import io.github.ramboxeu.techworks.common.util.Utils;
 import io.github.ramboxeu.techworks.common.util.machineio.data.GasHandlerData;
 import io.github.ramboxeu.techworks.common.util.machineio.data.LiquidHandlerData;
@@ -22,16 +23,17 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -89,45 +91,45 @@ public class BoilerTile extends BaseMachineTile {
         steamEngines = new ArrayList<>(4);
     }
 
-    @Override
-    protected void onFirstTick() {
-        if (steamEngines.isEmpty()) {
-            int chainLength = 0;
-            int maxChainLength = 0;
-            Direction chainSide = null;
-            Direction maxLengthSide = null;
-
-            for (Direction side : Direction.values()) {
-                boolean maxLength = true;
-
-                for (int i = 1; i <= 4; i++) {
-                    TileEntity tile = world.getTileEntity(pos.offset(side, i));
-
-                    if (!(tile instanceof SteamEngineTile) && i > 1) {
-                        chainLength = i - 1;
-                        chainSide = side;
-                        maxLength = false;
-                        break;
-                    }
-                }
-
-                if (maxLength) {
-                    chainSide = side;
-                    chainLength = 4;
-                }
-
-                if (maxChainLength < chainLength) {
-                    maxChainLength = chainLength;
-                    maxLengthSide = chainSide;
-                }
-            }
-
-            for (int i = 1; i <= maxChainLength; i++) {
-                SteamEngineTile engine = (SteamEngineTile) world.getTileEntity(pos.offset(maxLengthSide, i));
-                engine.link(this, maxLengthSide.getOpposite());
-            }
-        }
-    }
+//    @Override
+//    protected void onFirstTick() {
+//        if (steamEngines.isEmpty()) {
+//            int chainLength = 0;
+//            int maxChainLength = 0;
+//            Direction chainSide = null;
+//            Direction maxLengthSide = null;
+//
+//            for (Direction side : Direction.values()) {
+//                boolean maxLength = true;
+//
+//                for (int i = 1; i <= 4; i++) {
+//                    TileEntity tile = world.getTileEntity(pos.offset(side, i));
+//
+//                    if (!(tile instanceof SteamEngineTile) && i > 1) {
+//                        chainLength = i - 1;
+//                        chainSide = side;
+//                        maxLength = false;
+//                        break;
+//                    }
+//                }
+//
+//                if (maxLength) {
+//                    chainSide = side;
+//                    chainLength = 4;
+//                }
+//
+//                if (maxChainLength < chainLength) {
+//                    maxChainLength = chainLength;
+//                    maxLengthSide = chainSide;
+//                }
+//            }
+//
+//            for (int i = 1; i <= maxChainLength; i++) {
+//                SteamEngineTile engine = (SteamEngineTile) world.getTileEntity(pos.offset(maxLengthSide, i));
+//                engine.link(this, maxLengthSide.getOpposite());
+//            }
+//        }
+//    }
 
     @Override
     protected void workTick() {
@@ -277,13 +279,13 @@ public class BoilerTile extends BaseMachineTile {
     @Override
     public void remove() {
         super.remove();
-        steamEngines.forEach(SteamEngineTile::unlink);
+        steamEngines.forEach(SteamEngineTile::unlinkBoiler);
     }
 
     @Override
     public void onChunkUnloaded() {
         super.onChunkUnloaded();
-        steamEngines.forEach(SteamEngineTile::unlink);
+        steamEngines.forEach(SteamEngineTile::unlinkBoiler);
     }
 
     public LiquidHandlerData getWaterTankData() {
@@ -302,24 +304,82 @@ public class BoilerTile extends BaseMachineTile {
         return temperature;
     }
 
-    public BoilerTile linkEngine(SteamEngineTile tile, Direction side) {
+    @Override
+    public boolean configure(PlayerEntity player, ItemStack wrenchStack, World world, BlockPos pos, Direction face, Vector3d hitVec) {
+        CompoundNBT wrenchTag = wrenchStack.getOrCreateChildTag("Wrench");
+
+        if (wrenchTag.contains("BoilerChain", Constants.NBT.TAG_COMPOUND)) {
+            BlockPos startPos = NBTUtils.getBlockPos(wrenchTag, "BoilerChain");
+
+            if (startPos.equals(pos)) {
+                wrenchTag.remove("BoilerChain");
+                player.sendStatusMessage(TranslationKeys.ENGINE_LINKING_CANCELLED.text(pos.getX(), pos.getY(), pos.getZ()), true);
+            }
+        } else {
+            NBTUtils.putBlockPos(wrenchTag, "BoilerChain", pos);
+            player.sendStatusMessage(TranslationKeys.LINKING_ENGINES.text(pos.getX(), pos.getY(), pos.getZ()), true);
+        }
+
+        return true;
+//        if (steamEngines.size() >= 4)
+//            return false;
+//
+//        CompoundNBT wrenchTag = wrenchStack.getOrCreateChildTag("Wrench");
+//
+//        // TODO: abort only if pos == this.pos
+//        if (!wrenchTag.contains("Boiler", Constants.NBT.TAG_COMPOUND)) {
+//            CompoundNBT boilerTag = new CompoundNBT();
+//            boilerTag.putInt("x", pos.getX());
+//            boilerTag.putInt("y", pos.getY());
+//            boilerTag.putInt("z", pos.getZ());
+//            wrenchTag.put("Boiler", boilerTag);
+//            Techworks.LOGGER.debug("Linking...");
+//        } else {
+//            wrenchTag.remove("Boiler");
+//            Techworks.LOGGER.debug("Linking aborted");
+//        }
+
+    }
+
+    public boolean linkEngine(SteamEngineTile tile) {
         if (steamEngines.size() < 4) {
             steamEngines.add(tile);
-            Techworks.LOGGER.debug("Linked engine: {} @ {}", tile, tile.getPos());
-            return this;
+            Techworks.LOGGER.debug("Linked Steam Engine ({}) @ {}", steamEngines.size() - 1, tile);
+            return true;
         }
 
-        Techworks.LOGGER.debug("Linked engine cap reached: {} @ {}", tile, tile.getPos());
-        return null;
+        return false;
     }
 
-    public void unlinkEngine(SteamEngineTile tile, boolean validateOtherLinks) {
+    public void unlinkEngine(SteamEngineTile tile) {
         steamEngines.remove(tile);
-
-        if (validateOtherLinks) {
-            steamEngines.removeIf(engine -> !engine.validateLink());
-        }
-
-        Techworks.LOGGER.debug("Unlinked engine: {} @ {}", tile, tile.getPos());
+        Techworks.LOGGER.debug("Unlinked Steam Engine ({}) @ {}", steamEngines.size(), tile);
     }
+
+    public Collection<SteamEngineTile> getLikedEngines() {
+        return steamEngines;
+    }
+
+//    @Deprecated
+//    public BoilerTile linkEngine(SteamEngineTile tile, Direction side) {
+////        if (steamEngines.size() < 4) {
+////            steamEngines.add(tile);
+////            Techworks.LOGGER.debug("Linked engine: {} @ {}", tile, tile.getPos());
+////            return this;
+////        }
+////
+////        Techworks.LOGGER.debug("Linked engine cap reached: {} @ {}", tile, tile.getPos());
+//        return null;
+//    }
+//
+//    @Deprecated
+//    public void unlinkEngine(SteamEngineTile tile, boolean validateOtherLinks) {
+////        steamEngines.remove(tile);
+////
+////        if (validateOtherLinks) {
+////            steamEngines.removeIf(engine -> !engine.validateLink());
+////    }
+////
+////        Techworks.LOGGER.debug("Unlinked engine: {} @ {}", tile, tile.getPos());
+//    }
 }
