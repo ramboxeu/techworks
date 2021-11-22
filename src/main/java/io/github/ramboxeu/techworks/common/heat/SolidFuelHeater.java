@@ -81,7 +81,7 @@ public class SolidFuelHeater implements IHeater, ICapabilityProvider, INBTSerial
     }
 
     @Override
-    public HeaterType getType() {
+    public HeaterType getHeaterType() {
         return HeaterType.SOLID_FUEL;
     }
 

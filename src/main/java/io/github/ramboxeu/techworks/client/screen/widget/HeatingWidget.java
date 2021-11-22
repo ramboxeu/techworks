@@ -25,7 +25,7 @@ public class HeatingWidget extends BaseContainerWidget {
 
     @Override
     public void init(BaseContainer container, Builder builder) {
-        switch (heater.getType()) {
+        switch (heater.getHeaterType()) {
             case SOLID_FUEL:
                 builder.subWidget(new SolidFuelHeatingWidget((SolidFuelHeater) heater, solidFuelBurnerX, solidFuelBurnerY));
         }
