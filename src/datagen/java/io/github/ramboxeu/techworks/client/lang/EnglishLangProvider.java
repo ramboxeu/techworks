@@ -30,6 +30,7 @@ public class EnglishLangProvider extends BaseLangProvider {
         add(TechworksBlocks.COPPER_ORE, "Copper Ore");
         add(TechworksBlocks.LITHIUM_ORE, "Lithium Ore");
         add(TechworksBlocks.METAL_PRESS, "Metal Press");
+        add(TechworksBlocks.INDUSTRIAL_FURNACE, "Industrial Furnace");
 
         // Items
         add(TechworksItems.WRENCH, "Wrench");
@@ -72,6 +73,7 @@ public class EnglishLangProvider extends BaseLangProvider {
         add(TranslationKeys.STEAM_ENGINE, "Steam Engine");
         add(TranslationKeys.ORE_WASHER, "Ore Washer");
         add(TranslationKeys.METAL_PRESS, "Metal Press");
+        add(TranslationKeys.INDUSTRIAL_FURNACE, "Industrial Furnace");
 
         // Tooltips
         add(TranslationKeys.ENERGY_STORAGE_CAPACITY, "Capacity: %dFE");
@@ -87,6 +89,7 @@ public class EnglishLangProvider extends BaseLangProvider {
         add(TranslationKeys.HEAT_DISPLAY, "%dHU");
         add(TranslationKeys.GEAR, "Gear");
         add(TranslationKeys.PLATE, "Plate");
+        add(TranslationKeys.TEMPERATURE, "Temperature: %dHU");
 
         // Widgets
         add(TranslationKeys.COMPONENTS, "Components");

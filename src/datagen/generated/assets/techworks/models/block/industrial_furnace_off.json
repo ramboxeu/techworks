@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "down": "techworks:block/machine_bottom",
+    "up": "techworks:block/machine_top",
+    "north": "techworks:block/industrial_furnace_front_off",
+    "south": "techworks:block/machine_side",
+    "east": "techworks:block/machine_side",
+    "west": "techworks:block/machine_side",
+    "particle": "techworks:block/machine_side"
+  }
+}

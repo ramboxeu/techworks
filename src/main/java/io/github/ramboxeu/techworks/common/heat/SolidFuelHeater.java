@@ -74,9 +74,12 @@ public class SolidFuelHeater implements IHeater, ICapabilityProvider, INBTSerial
     }
 
     @Override
-    public int extractHeat() {
+    public int extractHeat(boolean simulate) {
         int heat = this.heat;
-        this.heat = 0;
+
+        if (!simulate)
+            this.heat = 0;
+
         return heat;
     }
 

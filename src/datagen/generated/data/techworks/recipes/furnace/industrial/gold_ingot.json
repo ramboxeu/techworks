@@ -1,0 +1,14 @@
+{
+  "type": "techworks:industrial_smelting",
+  "ingredients": [
+    {
+      "tag": "forge:ores/gold"
+    }
+  ],
+  "result": {
+    "item": "minecraft:gold_ingot",
+    "count": 4
+  },
+  "temperature": 450,
+  "heat": 360000
+}

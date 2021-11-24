@@ -94,7 +94,7 @@ public class BoilerTile extends BaseMachineTile {
     protected void workTick() {
         heater.tick();
 
-        int receivedHeat = heater.extractHeat();
+        int receivedHeat = heater.extractHeat(false);
 
         if (receivedHeat > 0) {
             if (temperature > receivedHeat) {

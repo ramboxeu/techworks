@@ -41,7 +41,7 @@ public class SolidFuelBurnerTile extends BaseTechworksTile implements INamedCont
         if (heater.getBurnTime() <= 0) {
             heat = Math.max(0, heat - COOLING_RATE);
         } else {
-            int receivedHeat = heater.extractHeat();
+            int receivedHeat = heater.extractHeat(false);
 
             if (receivedHeat > 0) {
                 if (heat > receivedHeat) {
@@ -77,9 +77,12 @@ public class SolidFuelBurnerTile extends BaseTechworksTile implements INamedCont
     }
 
     @Override
-    public int extractHeat() {
+    public int extractHeat(boolean simulate) {
         int heat = this.heat;
-        this.heat = 0;
+
+        if (!simulate)
+            this.heat = 0;
+
         return heat;
     }
 

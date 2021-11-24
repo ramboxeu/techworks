@@ -73,6 +73,12 @@ public class TechworksRecipeProvider extends RecipeProvider {
         // Metal Pressing
         plate(consumer, Tags.Items.INGOTS_IRON, TechworksItems.IRON_PLATE);
         gear(consumer, Tags.Items.INGOTS_IRON, TechworksItems.IRON_GEAR);
+
+        // Industrial Smelting
+        quadIngotFromOre(consumer, Tags.Items.ORES_IRON, Items.IRON_INGOT);
+        quadIngotFromOre(consumer, Tags.Items.ORES_GOLD, Items.GOLD_INGOT);
+        quadIngotFromOre(consumer, TechworksItemTags.COPPER_ORES, TechworksItems.COPPER_INGOT);
+        quadIngotFromOre(consumer, TechworksItemTags.LITHIUM_ORES, TechworksItems.LITHIUM_INGOT);
     }
 
     @Override
@@ -143,6 +149,14 @@ public class TechworksRecipeProvider extends RecipeProvider {
         MetalPressingRecipeBuilder.gear(ingredient(ingotTag), result(plate)).build(consumer, plate.getId().getPath());
     }
 
+    public static void quadIngotFromOre(Consumer<IFinishedRecipe> consumer, ITag.INamedTag<Item> oreTag, Item ingot) {
+        IndustrialSmeltingRecipeBuilder.smelting(Ingredient.fromTag(oreTag), result(ingot, 4), 450, 360000).build(consumer, "furnace/industrial/" + name(ingot));
+    }
+
+    public static void quadIngotFromOre(Consumer<IFinishedRecipe> consumer, ITag.INamedTag<Item> oreTag, ItemRegistryObject<?> ingot) {
+        IndustrialSmeltingRecipeBuilder.smelting(Ingredient.fromTag(oreTag), result(ingot, 4), 450, 360000).build(consumer, "furnace/industrial/" + ingot.getId().getPath());
+    }
+
     private static Ingredient ingredient(ITag.INamedTag<Item> tag) {
         return Ingredient.fromTag(tag);
     }
@@ -156,6 +170,10 @@ public class TechworksRecipeProvider extends RecipeProvider {
     }
 
     private static IRecipeResult result(IItemSupplier item, int count) {
+        return new RecipeResult(item, count);
+    }
+
+    private static IRecipeResult result(IItemProvider item, int count) {
         return new RecipeResult(item, count);
     }
 
