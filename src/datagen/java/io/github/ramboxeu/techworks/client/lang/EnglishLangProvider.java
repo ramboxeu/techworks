@@ -62,6 +62,16 @@ public class EnglishLangProvider extends BaseLangProvider {
         add(TechworksItems.IRON_PLATE, "Iron Plate");
         add(TechworksItems.IRON_GEAR, "Iron Gear");
         add(TechworksItems.STEAM_TURBINE_MK1, "Steam Turbine Mk1");
+        add(TechworksItems.STEEL_INGOT, "Steel Ingot");
+        add(TechworksItems.STEEL_PICKAXE, "Steel Pickaxe");
+        add(TechworksItems.STEEL_AXE, "Steel Axe");
+        add(TechworksItems.STEEL_SHOVEL, "Steel Shovel");
+        add(TechworksItems.STEEL_HOE, "Steel Hoe");
+        add(TechworksItems.STEEL_SWORD, "Steel Sword");
+        add(TechworksItems.STEEL_HELMET, "Steel Helmet");
+        add(TechworksItems.STEEL_CHESTPLATE, "Steel Chestplate");
+        add(TechworksItems.STEEL_LEGGINGS, "Steel Leggings");
+        add(TechworksItems.STEEL_BOOTS, "Steel Boots");
 
         // Containers
         add(TranslationKeys.ASSEMBLY_TABLE, "Assembly Table");

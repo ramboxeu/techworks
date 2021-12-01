@@ -23,6 +23,10 @@ public class TechworksItemModelProvider extends ItemModelProvider {
             singleTexture(blueprint.getId().getPath(), DataConstants.Textures.ITEM_GENERATED, "layer0", modLoc("item/blueprint"));
         }
 
+        for (ItemRegistryObject<?> tool : DataConstants.Items.HANDHELD) {
+            itemHandheld(tool.getId().getPath());
+        }
+
         singleTexture("wrench", DataConstants.Textures.ITEM_GENERATED, "layer0", modLoc("item/wrench")).transforms()
                 .transform(ModelBuilder.Perspective.FIRSTPERSON_LEFT).rotation(0, 90, 25).scale(1, 1, 1).end()
                 .transform(ModelBuilder.Perspective.FIRSTPERSON_RIGHT).rotation(0, -90, -25).scale(1, 1, 1).end()
@@ -35,5 +39,9 @@ public class TechworksItemModelProvider extends ItemModelProvider {
 
     private void itemGenerated(String name) {
         singleTexture(name, DataConstants.Textures.ITEM_GENERATED, "layer0", modLoc("item/" + name));
+    }
+
+    private void itemHandheld(String name) {
+        singleTexture(name, DataConstants.Textures.ITEM_HANDHELD, "layer0", modLoc("item/" + name));
     }
 }

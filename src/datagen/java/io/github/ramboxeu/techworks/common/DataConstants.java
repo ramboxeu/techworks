@@ -15,6 +15,7 @@ public class DataConstants {
         public static final ResourceLocation MACHINE_BOTTOM = new ResourceLocation(Techworks.MOD_ID, "block/machine_bottom");
 
         public static final ResourceLocation ITEM_GENERATED = new ResourceLocation("item/generated");
+        public static final ResourceLocation ITEM_HANDHELD = new ResourceLocation("item/handheld");
     }
 
     public static class Items {
@@ -26,7 +27,12 @@ public class DataConstants {
                 ELECTRIFIED_FURNACE, REINFORCED_ELECTRIFIED_FURNACE, SMALL_BATTERY, MEDIUM_BATTERY, LARGE_BATTERY,
                 HICAP_BATTERY, SMALL_GAS_TANK, SMALL_LIQUID_TANK, ROCK_CRUSHER, ORE_CRUSHER, COPPER_INGOT, LITHIUM_INGOT,
                 COPPER_DUST, LITHIUM_DUST, IRON_DUST, GOLD_DUST, CRUSHED_COPPER_ORE, CRUSHED_LITHIUM_ORE, CRUSHED_IRON_ORE,
-                CRUSHED_GOLD_ORE, IRON_GEAR, IRON_PLATE, STEAM_TURBINE_MK1
+                CRUSHED_GOLD_ORE, IRON_GEAR, IRON_PLATE, STEAM_TURBINE_MK1, STEEL_INGOT, STEEL_HELMET, STEEL_CHESTPLATE,
+                STEEL_LEGGINGS, STEEL_BOOTS
+        };
+
+        public static final ItemRegistryObject<?>[] HANDHELD = new ItemRegistryObject[] {
+                STEEL_PICKAXE, STEEL_AXE, STEEL_SHOVEL, STEEL_HOE, STEEL_SWORD
         };
     }
 

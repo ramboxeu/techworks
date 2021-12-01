@@ -1,14 +1,13 @@
 package io.github.ramboxeu.techworks.common.registration;
 
 import io.github.ramboxeu.techworks.common.debug.DebuggerItem;
-import io.github.ramboxeu.techworks.common.item.BlueprintItem;
-import io.github.ramboxeu.techworks.common.item.SmeltingComponentItem;
-import io.github.ramboxeu.techworks.common.item.WrenchItem;
+import io.github.ramboxeu.techworks.common.item.*;
 import io.github.ramboxeu.techworks.common.registry.BlockRegistryObject;
 import io.github.ramboxeu.techworks.common.registry.ItemDeferredRegister;
 import io.github.ramboxeu.techworks.common.registry.ItemRegistryObject;
 import net.minecraft.block.Block;
-import net.minecraft.item.Item;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.*;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.ArrayList;
@@ -51,6 +50,16 @@ public class TechworksItems {
     public static final ItemRegistryObject<Item> IRON_PLATE = ITEMS.register("iron_plate", Item::new);
     public static final ItemRegistryObject<Item> IRON_GEAR = ITEMS.register("iron_gear", Item::new);
     public static final ItemRegistryObject<Item> STEAM_TURBINE_MK1 = ITEMS.register("steam_turbine_mk1", Item::new);
+    public static final ItemRegistryObject<Item> STEEL_INGOT = ITEMS.register("steel_ingot", Item::new);
+    public static final ItemRegistryObject<PickaxeItem> STEEL_PICKAXE = ITEMS.register("steel_pickaxe", props -> new PickaxeItem(TechworksItemTier.STEEL, 1, -2.8f, props));
+    public static final ItemRegistryObject<AxeItem> STEEL_AXE = ITEMS.register("steel_axe", props -> new AxeItem(TechworksItemTier.STEEL, 6.0f, -3.1f, props));
+    public static final ItemRegistryObject<ShovelItem> STEEL_SHOVEL = ITEMS.register("steel_shovel", props -> new ShovelItem(TechworksItemTier.STEEL, 1.5f, -3.0f, props));
+    public static final ItemRegistryObject<HoeItem> STEEL_HOE = ITEMS.register("steel_hoe", props -> new HoeItem(TechworksItemTier.STEEL, -2, -1.0f, props));
+    public static final ItemRegistryObject<SwordItem> STEEL_SWORD = ITEMS.register("steel_sword", props -> new SwordItem(TechworksItemTier.STEEL, 3, -2.4f, props));
+    public static final ItemRegistryObject<ArmorItem> STEEL_HELMET = ITEMS.register("steel_helmet", props -> new ArmorItem(TechworksArmorMaterial.STEEL, EquipmentSlotType.HEAD, props));
+    public static final ItemRegistryObject<ArmorItem> STEEL_CHESTPLATE = ITEMS.register("steel_chestplate", props -> new ArmorItem(TechworksArmorMaterial.STEEL, EquipmentSlotType.CHEST, props));
+    public static final ItemRegistryObject<ArmorItem> STEEL_LEGGINGS = ITEMS.register("steel_leggings", props -> new ArmorItem(TechworksArmorMaterial.STEEL, EquipmentSlotType.LEGS, props));
+    public static final ItemRegistryObject<ArmorItem> STEEL_BOOTS = ITEMS.register("steel_boots", props -> new ArmorItem(TechworksArmorMaterial.STEEL, EquipmentSlotType.FEET, props));
 
     public static final ItemRegistryObject<Item> MACHINE_CASING = ITEMS.register("machine_casing", Item::new);
 
