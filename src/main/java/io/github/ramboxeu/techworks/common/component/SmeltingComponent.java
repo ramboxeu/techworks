@@ -36,7 +36,7 @@ public class SmeltingComponent extends Component {
         if (bonus > 0) {
             tooltip.add(TranslationKeys.BONUS_ENERGY_CAP.styledText(Component.TOOLTIP_STYLE, cap, bonus));
         } else {
-            tooltip.add(TranslationKeys.ENERGY_CAP.text(Component.TOOLTIP_STYLE, cap));
+            tooltip.add(TranslationKeys.ENERGY_CAP.styledText(Component.TOOLTIP_STYLE, cap));
         }
         tooltip.add(TranslationKeys.ENERGY_MODIFIER.styledText(Component.TOOLTIP_STYLE, modifier));
 

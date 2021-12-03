@@ -146,17 +146,22 @@ public class OreWasherTile extends BaseMachineTile {
     }
 
     private boolean checkRecipe() {
-        if (cachedRecipe != null && cachedRecipe.matches(recipeInv, world)) {
-            return true;
+        if (world != null) {
+            if (cachedRecipe != null && cachedRecipe.matches(recipeInv, world)) {
+                return true;
+            }
+
+            Optional<OreWashingRecipe> recipe = world.getRecipeManager().getRecipe(TechworksRecipes.ORE_WASHING.get(), recipeInv, world);
+
+            if (recipe.isPresent()) {
+                cachedRecipe = recipe.get();
+                extractedEnergy = 0;
+                extractedWater = false;
+                return true;
+            }
         }
 
-        Optional<OreWashingRecipe> recipe = world.getRecipeManager().getRecipe(TechworksRecipes.ORE_WASHING.get(), recipeInv, world);
-
-        if (recipe.isPresent()) {
-            cachedRecipe = recipe.get();
-            return true;
-        }
-
+        cachedRecipe = null;
         return false;
     }
 

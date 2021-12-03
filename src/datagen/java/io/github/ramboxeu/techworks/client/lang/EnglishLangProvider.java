@@ -29,6 +29,7 @@ public class EnglishLangProvider extends BaseLangProvider {
         add(TechworksBlocks.SOLID_FUEL_BURNER, "Solid Fuel Burner");
         add(TechworksBlocks.COPPER_ORE, "Copper Ore");
         add(TechworksBlocks.LITHIUM_ORE, "Lithium Ore");
+        add(TechworksBlocks.ORE_WASHER, "Ore Washer");
         add(TechworksBlocks.METAL_PRESS, "Metal Press");
         add(TechworksBlocks.INDUSTRIAL_FURNACE, "Industrial Furnace");
 

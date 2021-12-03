@@ -25,6 +25,7 @@ import net.minecraftforge.items.wrapper.RecipeWrapper;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class IndustrialFurnaceTile extends BaseMachineTile {
     private static final int COOLING_RATE = 1;
@@ -134,12 +135,18 @@ public class IndustrialFurnaceTile extends BaseMachineTile {
         if (world != null) {
             if (cachedRecipe != null && cachedRecipe.matches(recipeInv, world)) {
                 return true;
-            } else {
-                cachedRecipe = world.getRecipeManager().getRecipe(TechworksRecipes.INDUSTRIAL_SMELTING.get(), recipeInv, world).orElse(null);
-                return cachedRecipe != null;
+            }
+
+            Optional<IndustrialSmeltingRecipe> recipe = world.getRecipeManager().getRecipe(TechworksRecipes.INDUSTRIAL_SMELTING.get(), recipeInv, world);
+
+            if (recipe.isPresent()) {
+                cachedRecipe = recipe.get();
+                extractedHeat = 0;
+                return true;
             }
         }
 
+        cachedRecipe = null;
         return false;
     }
 

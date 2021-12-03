@@ -21,6 +21,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 public class ElectricGrinderTile extends BaseMachineTile {
     private final EnergyBattery battery;
@@ -168,12 +169,18 @@ public class ElectricGrinderTile extends BaseMachineTile {
         if (world != null) {
             if (cachedRecipe != null && cachedRecipe.matches(recipeInv, world)) {
                 return true;
-            } else {
-                cachedRecipe = world.getRecipeManager().getRecipe(type.get(), recipeInv, world).orElse(null);
-                return cachedRecipe != null;
+            }
+
+            Optional<? extends IGrinderRecipe> recipe = world.getRecipeManager().getRecipe(type.get(), recipeInv, world);
+
+            if (recipe.isPresent()) {
+                cachedRecipe = recipe.get();
+                extractedEnergy = 0;
+                return true;
             }
         }
 
+        cachedRecipe = null;
         return false;
     }
 

@@ -198,6 +198,8 @@ public class BoilerTile extends BaseMachineTile {
 
     @Override
     public void read(BlockState state, CompoundNBT tag) {
+        super.read(state, tag);
+
         fuelBurnTime = tag.getInt("FuelBurnTime");
         isWorking = tag.getBoolean("IsWorking");
         isBurning = tag.getBoolean("IsBurning");
@@ -207,8 +209,6 @@ public class BoilerTile extends BaseMachineTile {
         if (heater instanceof INBTSerializable) {
             ((INBTSerializable<CompoundNBT>) heater).deserializeNBT(tag.getCompound("Heater"));
         }
-
-        super.read(state, tag);
     }
 
     @Override

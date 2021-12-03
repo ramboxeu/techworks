@@ -111,20 +111,23 @@ public class MetalPressTile extends BaseMachineTile {
     }
 
     private boolean checkRecipe() {
-        if (cachedRecipe != null && cachedRecipe.getMode() == mode && cachedRecipe.matches(recipeInv, world)) {
-            return true;
+        if (world != null) {
+            if (cachedRecipe != null && cachedRecipe.getMode() == mode && cachedRecipe.matches(recipeInv, world)) {
+                return true;
+            }
+
+            Optional<MetalPressingRecipe> optional = world.getRecipeManager().getRecipesForType(TechworksRecipes.METAL_PRESSING.get()).stream()
+                    .filter(recipe -> recipe.getMode() == mode && recipe.matches(recipeInv, world))
+                    .findFirst();
+
+            if (optional.isPresent()) {
+                cachedRecipe = optional.get();
+                extractedEnergy = 0;
+                return true;
+            }
         }
 
-        Optional<MetalPressingRecipe> optional = world.getRecipeManager().getRecipesForType(TechworksRecipes.METAL_PRESSING.get()).stream()
-                .filter(recipe -> recipe.getMode() == mode && recipe.matches(recipeInv, world))
-                .findFirst();
-
-        if (optional.isPresent()) {
-            cachedRecipe = optional.get();
-            extractedEnergy = 0;
-            return true;
-        }
-
+        cachedRecipe = null;
         return false;
     }
 

@@ -97,20 +97,26 @@ public class ElectricFurnaceTile extends BaseMachineTile {
         if (world != null) {
             if (cachedRecipe != null && cachedRecipe.matches(recipeInv, world)) {
                 return true;
-            } else {
-                Optional<TechworksSmeltingRecipe> recipe = world.getRecipeManager().getRecipe(TechworksRecipes.SMELTING.get(), recipeInv, world);
+            }
 
-                if (recipe.isPresent()) {
-                    cachedRecipe = recipe.get();
+            Optional<TechworksSmeltingRecipe> recipe = world.getRecipeManager().getRecipe(TechworksRecipes.SMELTING.get(), recipeInv, world);
+
+            if (recipe.isPresent()) {
+                cachedRecipe = recipe.get();
+                extractedEnergy = 0;
+                return true;
+            } else {
+                Optional<VanillaSmeltingRecipeWrapper> wrapper = world.getRecipeManager().getRecipe(IRecipeType.SMELTING, recipeInv, world).map(VanillaSmeltingRecipeWrapper::new);
+
+                if (wrapper.isPresent()) {
+                    cachedRecipe = wrapper.get();
+                    extractedEnergy = 0;
                     return true;
-                } else {
-                    Optional<VanillaSmeltingRecipeWrapper> wrapper = world.getRecipeManager().getRecipe(IRecipeType.SMELTING, recipeInv, world).map(VanillaSmeltingRecipeWrapper::new);
-                    cachedRecipe = wrapper.orElse(null);
-                    return wrapper.isPresent();
                 }
             }
         }
 
+        cachedRecipe = null;
         return false;
     }
 
