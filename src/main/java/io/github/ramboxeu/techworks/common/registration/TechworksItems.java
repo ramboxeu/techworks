@@ -60,6 +60,12 @@ public class TechworksItems {
     public static final ItemRegistryObject<ArmorItem> STEEL_CHESTPLATE = ITEMS.register("steel_chestplate", props -> new ArmorItem(TechworksArmorMaterial.STEEL, EquipmentSlotType.CHEST, props));
     public static final ItemRegistryObject<ArmorItem> STEEL_LEGGINGS = ITEMS.register("steel_leggings", props -> new ArmorItem(TechworksArmorMaterial.STEEL, EquipmentSlotType.LEGS, props));
     public static final ItemRegistryObject<ArmorItem> STEEL_BOOTS = ITEMS.register("steel_boots", props -> new ArmorItem(TechworksArmorMaterial.STEEL, EquipmentSlotType.FEET, props));
+    public static final ItemRegistryObject<Item> MEDIUM_LIQUID_TANK = ITEMS.register("medium_liquid_tank", props -> new Item(props.maxStackSize(1)));
+    public static final ItemRegistryObject<Item> LARGE_LIQUID_TANK = ITEMS.register("large_liquid_tank", props -> new Item(props.maxStackSize(1)));
+    public static final ItemRegistryObject<Item> HICAP_LIQUID_TANK = ITEMS.register("hicap_liquid_tank", props -> new Item(props.maxStackSize(1)));
+    public static final ItemRegistryObject<Item> MEDIUM_GAS_TANK = ITEMS.register("medium_gas_tank", props -> new Item(props.maxStackSize(1)));
+    public static final ItemRegistryObject<Item> LARGE_GAS_TANK = ITEMS.register("large_gas_tank", props -> new Item(props.maxStackSize(1)));
+    public static final ItemRegistryObject<Item> HICAP_GAS_TANK = ITEMS.register("hicap_gas_tank", props -> new Item(props.maxStackSize(1)));
 
     public static final ItemRegistryObject<Item> MACHINE_CASING = ITEMS.register("machine_casing", Item::new);
 

@@ -1,6 +1,9 @@
 package io.github.ramboxeu.techworks.common.registration;
 
 import io.github.ramboxeu.techworks.client.render.CableTileEntityRenderer;
+import io.github.ramboxeu.techworks.client.render.EnergyStorageRenderer;
+import io.github.ramboxeu.techworks.client.render.GasStorageRenderer;
+import io.github.ramboxeu.techworks.client.render.LiquidStorageRenderer;
 import io.github.ramboxeu.techworks.common.registry.TileDeferredRegister;
 import io.github.ramboxeu.techworks.common.registry.TileRegistryObject;
 import io.github.ramboxeu.techworks.common.tile.*;
@@ -29,6 +32,9 @@ public class TechworksTiles {
     public static final TileRegistryObject<OreWasherTile> ORE_WASHER = TILES.register(TechworksBlocks.ORE_WASHER, OreWasherTile::new);
     public static final TileRegistryObject<MetalPressTile> METAL_PRESS = TILES.register(TechworksBlocks.METAL_PRESS, MetalPressTile::new);
     public static final TileRegistryObject<IndustrialFurnaceTile> INDUSTRIAL_FURNACE = TILES.register(TechworksBlocks.INDUSTRIAL_FURNACE, IndustrialFurnaceTile::new);
+    public static final TileRegistryObject<LiquidTankTile> LIQUID_STORAGE = TILES.register(TechworksBlocks.LIQUID_TANK, LiquidTankTile::new);
+    public static final TileRegistryObject<GasTankTile> GAS_STORAGE = TILES.register(TechworksBlocks.GAS_TANK, GasTankTile::new);
+    public static final TileRegistryObject<EnergyStorageTile> ENERGY_STORAGE = TILES.register(TechworksBlocks.ENERGY_STORAGE, EnergyStorageTile::new);
 
     public static final TileRegistryObject<DevBlockTile> DEV_BLOCK = TILES.register(TechworksBlocks.DEV_BLOCK, DevBlockTile::new);
 
@@ -38,6 +44,9 @@ public class TechworksTiles {
 //        ClientRegistry.bindTileEntityRenderer(ELECTRIC_GRINDER.getTileType(), MachineIOTileEntityRenderer::new);
 //        ClientRegistry.bindTileEntityRenderer(ELECTRIC_FURNACE.get(), MachineIOTileEntityRenderer::new);
         ClientRegistry.bindTileEntityRenderer(ITEM_TRANSPORTER.get(), CableTileEntityRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(LIQUID_STORAGE.get(), LiquidStorageRenderer.tileRenderer());
+        ClientRegistry.bindTileEntityRenderer(GAS_STORAGE.get(), GasStorageRenderer.tileRenderer());
+        ClientRegistry.bindTileEntityRenderer(ENERGY_STORAGE.get(), EnergyStorageRenderer.tileRenderer());
 //        ClientRegistry.bindTileEntityRenderer(CREATIVE_ENERGY_BATTERY.getTileType(), MachineIOTileEntityRenderer::new);
     }
 }

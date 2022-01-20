@@ -1,0 +1,8 @@
+{
+  "type": "techworks:gas_storage",
+  "item": "techworks:medium_gas_tank",
+  "parameters": {
+    "capacity": 12000,
+    "transfer": 300
+  }
+}

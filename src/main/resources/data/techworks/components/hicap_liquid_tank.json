@@ -1,0 +1,8 @@
+{
+  "type": "techworks:liquid_storage",
+  "item": "techworks:hicap_liquid_tank",
+  "parameters": {
+    "capacity": 64000,
+    "transfer": 1600
+  }
+}

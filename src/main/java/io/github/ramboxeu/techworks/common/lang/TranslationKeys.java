@@ -30,6 +30,10 @@ public class TranslationKeys {
     public static final TranslationKey GEAR = TranslationKey.tooltip("gear");
     public static final TranslationKey PLATE = TranslationKey.tooltip("plate");
     public static final TranslationKey TEMPERATURE = TranslationKey.tooltip("temperature");
+    public static final TranslationKey LIQUID_STORED = TranslationKey.tooltip("liquid_stored");
+    public static final TranslationKey FLUID_AMOUNT_STORED = TranslationKey.tooltip("fluid_amount_stored");
+    public static final TranslationKey GAS_STORED = TranslationKey.tooltip("gas_stored");
+    public static final TranslationKey ENERGY_STORED = TranslationKey.tooltip("energy_stored");
 
     // Widgets
     public static final TranslationKey COMPONENTS = TranslationKey.widget("components");
@@ -87,4 +91,12 @@ public class TranslationKeys {
     public static final TranslationKey LINKING_ENGINES = TranslationKey.status("linking_engines");
     public static final TranslationKey ENGINE_UNLINKED = TranslationKey.status("engine_unlinked");
     public static final TranslationKey ENGINE_UNLINKING_FAILURE = TranslationKey.status("engine_unlinking_failure");
+    public static final TranslationKey COMPONENT_ALREADY_INSTALLED = TranslationKey.status("component_already_installed");
+    public static final TranslationKey COMPONENT_CAPACITY_TOO_SMALL = TranslationKey.status("component_capacity_too_small");
+    public static final TranslationKey COMPONENT_INSTALLED = TranslationKey.status("component_installed");
+    public static final TranslationKey CANT_INSTALL_COMPONENT = TranslationKey.status("cant_install_component");
+    public static final TranslationKey CANT_UNINSTALL_COMPONENT = TranslationKey.status("cant_uninstall_component");
+    public static final TranslationKey BASE_COMPONENT_INSTALLED = TranslationKey.status("base_component_installed");
+    public static final TranslationKey INSTALLED_COMPONENT = TranslationKey.status("installed_component");
+    public static final TranslationKey COMPONENT_UNINSTALLED = TranslationKey.status("component_uninstalled");
 }

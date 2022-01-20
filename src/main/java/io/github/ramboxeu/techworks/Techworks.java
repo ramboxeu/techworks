@@ -67,6 +67,7 @@ public class Techworks {
 
         RenderTypeLookup.setRenderLayer(TechworksBlocks.ITEM_TRANSPORTER.get(), RenderType.getTranslucent());
         RenderTypeLookup.setRenderLayer(TechworksBlocks.LIQUID_PIPE.get(), RenderType.getTranslucent());
+        RenderTypeLookup.setRenderLayer(TechworksBlocks.LIQUID_TANK.get(), RenderType.getCutout());
 
         MinecraftForge.EVENT_BUS.addListener(DebugInfoRenderer::render);
         MinecraftForge.EVENT_BUS.register(TechworksClientEvents.class);

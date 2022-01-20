@@ -1,5 +1,8 @@
 package io.github.ramboxeu.techworks.common.registration;
 
+import io.github.ramboxeu.techworks.client.render.EnergyStorageRenderer;
+import io.github.ramboxeu.techworks.client.render.GasStorageRenderer;
+import io.github.ramboxeu.techworks.client.render.LiquidStorageRenderer;
 import io.github.ramboxeu.techworks.common.block.*;
 import io.github.ramboxeu.techworks.common.registry.BlockDeferredRegister;
 import io.github.ramboxeu.techworks.common.registry.BlockRegistryObject;
@@ -32,7 +35,10 @@ public class TechworksBlocks {
     public static final BlockRegistryObject<OreWasherBlock, BlockItem> ORE_WASHER = BLOCKS.register("ore_washer", OreWasherBlock::new);
     public static final BlockRegistryObject<MetalPressBlock, BlockItem> METAL_PRESS = BLOCKS.register("metal_press", MetalPressBlock::new);
     public static final BlockRegistryObject<IndustrialFurnaceBlock, BlockItem> INDUSTRIAL_FURNACE = BLOCKS.register("industrial_furnace", IndustrialFurnaceBlock::new);
+    public static final BlockRegistryObject<LiquidTankBlock, BlockItem> LIQUID_TANK = BLOCKS.register("liquid_tank", LiquidTankBlock::new, (block, props) -> new BlockItem(block, props.setISTER(() -> LiquidStorageRenderer::stackRenderer)));
+    public static final BlockRegistryObject<GasTankBlock, BlockItem> GAS_TANK = BLOCKS.register("gas_tank", GasTankBlock::new, (block, props) -> new BlockItem(block, props.setISTER(() -> GasStorageRenderer::stackRenderer)));
+    public static final BlockRegistryObject<EnergyStorageBlock, BlockItem> ENERGY_STORAGE = BLOCKS.register("energy_storage", EnergyStorageBlock::new, (block, props) -> new BlockItem(block, props.setISTER(() -> EnergyStorageRenderer::stackRenderer)));
 
     // More testing
-    public static final BlockRegistryObject<DevBlockBlock, BlockItem> DEV_BLOCK = BLOCKS.register("dev_block", DevBlockBlock::new, block -> new BlockItem(block, new Item.Properties()));
+    public static final BlockRegistryObject<DevBlockBlock, BlockItem> DEV_BLOCK = BLOCKS.register("dev_block", DevBlockBlock::new, (block, props) -> new BlockItem(block, new Item.Properties()));
 }

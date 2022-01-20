@@ -23,6 +23,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
@@ -62,6 +63,8 @@ public class TechworksPacketHandler {
         CHANNEL.registerMessage(id++, SyncObjectHolder.class, SyncObjectHolder::encode, SyncObjectHolder::decode, SyncObjectHolder::handle);
         CHANNEL.registerMessage(id++, MetalPressSyncPacket.class, MetalPressSyncPacket::encode, MetalPressSyncPacket::decode, MetalPressSyncPacket::handle);
         CHANNEL.registerMessage(id++, MachineWorkStateSyncPacket.class, MachineWorkStateSyncPacket::encode, MachineWorkStateSyncPacket::decode, MachineWorkStateSyncPacket::handle);
+        CHANNEL.registerMessage(id++, FluidStorageSyncPacket.class, FluidStorageSyncPacket::encode, FluidStorageSyncPacket::decode, FluidStorageSyncPacket::handle);
+        CHANNEL.registerMessage(id++, EnergyStorageSyncPacket.class, EnergyStorageSyncPacket::encode, EnergyStorageSyncPacket::decode, EnergyStorageSyncPacket::handle);
     }
 
     public static void sendMachinePortUpdatePacket(BlockPos pos, int index, MachinePort port, Chunk chunk) {
@@ -148,5 +151,13 @@ public class TechworksPacketHandler {
 
     public static void syncMachineWorkState(BlockPos pos, RedstoneMode redstoneMode, StandbyMode standbyMode) {
         CHANNEL.sendToServer(new MachineWorkStateSyncPacket(pos, redstoneMode, standbyMode));
+    }
+
+    public static void syncFluidStorage(Chunk chunk, BlockPos pos, FluidStack fluid) {
+        CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> chunk), new FluidStorageSyncPacket(pos, fluid));
+    }
+
+    public static void syncEnergyStorage(Chunk chunk, BlockPos pos, int energy) {
+        CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> chunk), new EnergyStorageSyncPacket(pos, energy));
     }
 }

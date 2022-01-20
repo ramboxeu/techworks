@@ -26,6 +26,16 @@ public class EnergyStorageComponent extends BaseStorageComponent {
         return tooltip;
     }
 
+    @Override
+    public int getStorageCapacity() {
+        return capacity * 50;
+    }
+
+    @Override
+    public int getStorageTransfer() {
+        return transfer * 5;
+    }
+
     public static class Type extends BaseType<EnergyStorageComponent> {
 
         public static final ResourceLocation BASE_ID = new ResourceLocation(Techworks.MOD_ID, "small_battery");

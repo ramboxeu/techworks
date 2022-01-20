@@ -49,6 +49,10 @@ public class TechworksBlockStateProvider extends BlockStateProvider {
 
         Arrays.stream(DataConstants.Blocks.CABLES).forEach(this::cableBlockAndItem);
         Arrays.stream(DataConstants.Blocks.CUBE_ALL).forEach(this::blockAndItem);
+
+        storageBlock(TechworksBlocks.LIQUID_TANK);
+        storageBlock(TechworksBlocks.GAS_TANK);
+        storageBlock(TechworksBlocks.ENERGY_STORAGE);
     }
 
     private void cableBlockAndItem(BlockRegistryObject<?, ?> cable) {
@@ -122,6 +126,12 @@ public class TechworksBlockStateProvider extends BlockStateProvider {
 
     private void blockItem(String name) {
         models().withExistingParent("item/" + name, modLoc("block/" + name));
+    }
+
+    private void storageBlock(BlockRegistryObject<?, ?> block) {
+        String name = block.getId().getPath();
+        simpleBlock(block.get(), new ModelFile.ExistingModelFile(modLoc("block/" + name), helper));
+        models().withExistingParent("item/" + name, modLoc("item/storage_block"));
     }
 
     private int getHorizontalRotation(Direction facing) {

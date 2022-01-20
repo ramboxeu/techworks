@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "techworks:item/hicap_liquid_tank"
+  }
+}

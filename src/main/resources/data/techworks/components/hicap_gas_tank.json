@@ -1,0 +1,8 @@
+{
+  "type": "techworks:gas_storage",
+  "item": "techworks:hicap_gas_tank",
+  "parameters": {
+    "capacity": 64000,
+    "transfer": 1600
+  }
+}

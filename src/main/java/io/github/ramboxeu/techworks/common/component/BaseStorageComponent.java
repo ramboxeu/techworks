@@ -24,6 +24,9 @@ public abstract class BaseStorageComponent extends Component {
         return transfer;
     }
 
+    public abstract int getStorageCapacity();
+    public abstract int getStorageTransfer();
+
     public static abstract class BaseType<T extends BaseStorageComponent> extends ComponentType<T> {
         @Override
         protected T readComponent(ResourceLocation id, Item item, JsonObject parameters) {

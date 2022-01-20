@@ -132,4 +132,11 @@ public abstract class FluidHandler implements IFluidTank, INBTSerializable<Compo
     public int getMaxDrain() {
         return maxDrain;
     }
+
+    public void setFluid(FluidStack fluid) {
+        if (!isFluidValid(fluid))
+            throw new IllegalArgumentException("Tried to set invalid fluid");
+
+        this.fluid = fluid;
+    }
 }

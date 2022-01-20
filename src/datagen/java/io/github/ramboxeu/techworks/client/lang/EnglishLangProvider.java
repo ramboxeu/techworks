@@ -32,6 +32,9 @@ public class EnglishLangProvider extends BaseLangProvider {
         add(TechworksBlocks.ORE_WASHER, "Ore Washer");
         add(TechworksBlocks.METAL_PRESS, "Metal Press");
         add(TechworksBlocks.INDUSTRIAL_FURNACE, "Industrial Furnace");
+        add(TechworksBlocks.LIQUID_TANK, "Liquid Tank");
+        add(TechworksBlocks.GAS_TANK, "Gas Tank");
+        add(TechworksBlocks.ENERGY_STORAGE, "Energy Storage");
 
         // Items
         add(TechworksItems.WRENCH, "Wrench");
@@ -73,6 +76,12 @@ public class EnglishLangProvider extends BaseLangProvider {
         add(TechworksItems.STEEL_CHESTPLATE, "Steel Chestplate");
         add(TechworksItems.STEEL_LEGGINGS, "Steel Leggings");
         add(TechworksItems.STEEL_BOOTS, "Steel Boots");
+        add(TechworksItems.MEDIUM_LIQUID_TANK, "Medium Liquid Tank");
+        add(TechworksItems.LARGE_LIQUID_TANK, "Large Liquid Tank");
+        add(TechworksItems.HICAP_LIQUID_TANK, "HiCap\u2122 Liquid Tank");
+        add(TechworksItems.MEDIUM_GAS_TANK, "Medium Gas Tank");
+        add(TechworksItems.LARGE_GAS_TANK, "Large Gas Tank");
+        add(TechworksItems.HICAP_GAS_TANK, "HiCap\u2122 Gas Tank");
 
         // Containers
         add(TranslationKeys.ASSEMBLY_TABLE, "Assembly Table");
@@ -101,6 +110,10 @@ public class EnglishLangProvider extends BaseLangProvider {
         add(TranslationKeys.GEAR, "Gear");
         add(TranslationKeys.PLATE, "Plate");
         add(TranslationKeys.TEMPERATURE, "Temperature: %dHU");
+        add(TranslationKeys.LIQUID_STORED, "Liquid Stored: ");
+        add(TranslationKeys.FLUID_AMOUNT_STORED, "Amount Stored: %dmB");
+        add(TranslationKeys.GAS_STORED, "Gas Stored: ");
+        add(TranslationKeys.ENERGY_STORED, "Energy Stored: %dFE");
 
         // Widgets
         add(TranslationKeys.COMPONENTS, "Components");
@@ -166,6 +179,14 @@ public class EnglishLangProvider extends BaseLangProvider {
         add(TranslationKeys.LINKING_ENGINES, "Linking to %d %d %d");
         add(TranslationKeys.ENGINE_UNLINKED, "Unliked engine (%d %d %d) from boiler (%d %d %d)");
         add(TranslationKeys.ENGINE_UNLINKING_FAILURE, "Unlinking engine (%d %d %d) from boiler (%d %d %d) failed");
+        add(TranslationKeys.COMPONENT_ALREADY_INSTALLED, "Component is already installed");
+        add(TranslationKeys.COMPONENT_CAPACITY_TOO_SMALL, "Component's capacity is too small and would result in overflow");
+        add(TranslationKeys.COMPONENT_INSTALLED, "Component installed");
+        add(TranslationKeys.CANT_INSTALL_COMPONENT, "Unable to install: ");
+        add(TranslationKeys.CANT_UNINSTALL_COMPONENT, "Unable to uninstall: ");
+        add(TranslationKeys.BASE_COMPONENT_INSTALLED, "Base component is installed");
+        add(TranslationKeys.INSTALLED_COMPONENT, "Currently installed component: ");
+        add(TranslationKeys.COMPONENT_UNINSTALLED, "Component uninstalled");
 
         // Other
         add("itemGroup.techworks", "Techworks");

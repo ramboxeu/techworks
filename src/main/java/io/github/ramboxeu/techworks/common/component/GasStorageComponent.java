@@ -26,6 +26,16 @@ public class GasStorageComponent extends BaseStorageComponent {
         return tooltip;
     }
 
+    @Override
+    public int getStorageCapacity() {
+        return capacity * 2;
+    }
+
+    @Override
+    public int getStorageTransfer() {
+        return transfer * 5;
+    }
+
     public static class Type extends BaseType<GasStorageComponent> {
 
         private static final ResourceLocation BASE = new ResourceLocation(Techworks.MOD_ID, "small_gas_tank");

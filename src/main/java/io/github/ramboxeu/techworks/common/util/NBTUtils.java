@@ -79,7 +79,7 @@ public class NBTUtils {
     }
 
     @Nullable
-    public static Component deserializeComponent(CompoundNBT tag, String key) {
+    public static <T extends Component> T deserializeComponent(CompoundNBT tag, String key) {
         ResourceLocation id = new ResourceLocation(tag.getString(key));
         return ComponentManager.getInstance().getComponent(id);
     }

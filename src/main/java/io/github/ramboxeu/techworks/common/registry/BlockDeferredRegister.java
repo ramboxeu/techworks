@@ -9,7 +9,7 @@ import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.function.Function;
+import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 public final class BlockDeferredRegister {
@@ -17,12 +17,12 @@ public final class BlockDeferredRegister {
     private final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Techworks.MOD_ID);
 
     public <T extends Block> BlockRegistryObject<T, BlockItem> register(String name, Supplier<T> blockSupplier) {
-        return register(name, blockSupplier, block -> new BlockItem(block, ItemDeferredRegister.getDefaultProperties()));
+        return register(name, blockSupplier, BlockItem::new);
     }
 
-    public <T extends Block, U extends Item> BlockRegistryObject<T, U> register(String name, Supplier<T> blockSupplier, Function<T, U> itemFactory) {
+    public <T extends Block, U extends Item> BlockRegistryObject<T, U> register(String name, Supplier<T> blockSupplier, BiFunction<T, Item.Properties, U> itemFactory) {
         RegistryObject<T> block = BLOCKS.register(name, blockSupplier);
-        RegistryObject<U> item = ITEMS.register(name, () -> itemFactory.apply(block.get()));
+        RegistryObject<U> item = ITEMS.register(name, () -> itemFactory.apply(block.get(), ItemDeferredRegister.getDefaultProperties()));
 
         return new BlockRegistryObject<>(block, item);
     }
