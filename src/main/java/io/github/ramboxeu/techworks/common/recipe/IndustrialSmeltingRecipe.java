@@ -7,7 +7,10 @@ import com.google.gson.JsonSyntaxException;
 import io.github.ramboxeu.techworks.common.registration.TechworksRecipes;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.*;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.item.crafting.ShapedRecipe;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
@@ -15,16 +18,17 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class IndustrialSmeltingRecipe implements IRecipe<IInventory> {
     private final ResourceLocation id;
-    private final List<Ingredient> ingredients;
+    private final List<SizedIngredient> ingredients;
     private final ItemStack result;
     private final int temperature;
     private final int heat;
 
-    public IndustrialSmeltingRecipe(ResourceLocation id, List<Ingredient> ingredients, ItemStack result, int temperature, int heat) {
+    public IndustrialSmeltingRecipe(ResourceLocation id, List<SizedIngredient> ingredients, ItemStack result, int temperature, int heat) {
         this.id = id;
         this.ingredients = ingredients;
         this.result = result;
@@ -37,8 +41,8 @@ public class IndustrialSmeltingRecipe implements IRecipe<IInventory> {
         for (int i = 0, size = inv.getSizeInventory(); i < size; i++) {
             ItemStack stack = inv.getStackInSlot(i);
 
-            if (stack.isEmpty())
-                continue;
+//            if (stack.isEmpty())
+//                continue;
 
             if (ingredients.stream().noneMatch(ingredient -> ingredient.test(stack)))
                 return false;
@@ -49,6 +53,23 @@ public class IndustrialSmeltingRecipe implements IRecipe<IInventory> {
 
     @Override
     public ItemStack getCraftingResult(IInventory inv) {
+        List<SizedIngredient> ingredients = new ArrayList<>(this.ingredients);
+
+        for (Iterator<SizedIngredient> iter = ingredients.iterator(); iter.hasNext(); ) {
+            SizedIngredient ingredient = iter.next();
+
+            for (int i = 0, size = inv.getSizeInventory(); i < size; i++) {
+                ItemStack stack = inv.getStackInSlot(i);
+                int count = ingredient.getCount(stack);
+
+                if (count > 0) {
+                    stack.shrink(count);
+                    iter.remove();
+                    break;
+                }
+            }
+        }
+
         return result.copy();
     }
 
@@ -98,12 +119,12 @@ public class IndustrialSmeltingRecipe implements IRecipe<IInventory> {
             if (ingredientsJson.size() > 2)
                 throw new JsonSyntaxException("Expected 'ingredients' to have no more than 2 elements");
 
-            List<Ingredient> ingredients = new ArrayList<>(ingredientsJson.size());
+            List<SizedIngredient> ingredients = new ArrayList<>(ingredientsJson.size());
             for (JsonElement element : ingredientsJson) {
                 if (!element.isJsonObject())
                     throw new JsonSyntaxException("Expected 'ingredients' elements to objects");
 
-                ingredients.add(Ingredient.deserialize(element.getAsJsonObject()));
+                ingredients.add(SizedIngredient.deserialize(element.getAsJsonObject()));
             }
 
             ItemStack result = ShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, "result"));
@@ -117,10 +138,10 @@ public class IndustrialSmeltingRecipe implements IRecipe<IInventory> {
         @Override
         public IndustrialSmeltingRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
             int size = buffer.readByte();
-            List<Ingredient> ingredients = new ArrayList<>(size);
+            List<SizedIngredient> ingredients = new ArrayList<>(size);
 
             for (int i = 0; i < size; i++) {
-                ingredients.add(Ingredient.read(buffer));
+                ingredients.add(SizedIngredient.read(buffer));
             }
 
             ItemStack result = buffer.readItemStack();
@@ -134,7 +155,7 @@ public class IndustrialSmeltingRecipe implements IRecipe<IInventory> {
         public void write(PacketBuffer buffer, IndustrialSmeltingRecipe recipe) {
             buffer.writeByte(recipe.ingredients.size());
 
-            for (Ingredient ingredient : recipe.ingredients) {
+            for (SizedIngredient ingredient : recipe.ingredients) {
                 ingredient.write(buffer);
             }
 

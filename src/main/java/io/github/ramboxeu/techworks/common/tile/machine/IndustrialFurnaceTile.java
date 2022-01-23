@@ -116,9 +116,6 @@ public class IndustrialFurnaceTile extends BaseMachineTile {
                     extractedHeat = 0;
                     working = false;
 
-                    for (int i = 0, size = cachedRecipe.getIngredientsCount(); i < size; i++) {
-                        inv.extractItem(i, 1, false);
-                    }
                     outputInv.insertItem(0, cachedRecipe.getCraftingResult(recipeInv), false);
                 }
             }
