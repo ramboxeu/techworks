@@ -6,11 +6,13 @@ import io.github.ramboxeu.techworks.common.heat.IHeater;
 import io.github.ramboxeu.techworks.common.heat.SolidFuelHeater;
 import io.github.ramboxeu.techworks.common.lang.TranslationKeys;
 import io.github.ramboxeu.techworks.common.registration.TechworksTiles;
+import io.github.ramboxeu.techworks.common.util.ItemUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.capabilities.Capability;
@@ -20,6 +22,7 @@ import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collection;
 
 public class SolidFuelBurnerTile extends BaseTechworksTile implements INamedContainerProvider, IHeater {
     private static final int COOLING_RATE = 1;
@@ -116,5 +119,9 @@ public class SolidFuelBurnerTile extends BaseTechworksTile implements INamedCont
 
     public int getStoredHeat() {
         return heat;
+    }
+
+    public Collection<ItemStack> getDrops() {
+        return ItemUtils.collectContents(heater.getFuelInv());
     }
 }

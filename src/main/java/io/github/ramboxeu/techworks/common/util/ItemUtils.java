@@ -81,4 +81,45 @@ public class ItemUtils {
 
         return remainders == null ? Collections.emptyList() : remainders;
     }
+
+    public static List<ItemStack> collectContents(IItemHandler h1) {
+        return collectContents(Collections.emptyList(), h1);
+    }
+
+    public static List<ItemStack> collectContents(Collection<ItemStack> existing, IItemHandler h1) {
+        List<ItemStack> stacks = new ArrayList<>(h1.getSlots() + existing.size());
+
+        for (int i = 0, size = h1.getSlots(); i < size; i++) {
+            ItemStack stack = h1.getStackInSlot(i);
+
+            if (!stack.isEmpty())
+                stacks.add(stack);
+        }
+
+        stacks.addAll(existing);
+
+        return stacks;
+    }
+
+    public static List<ItemStack> collectContents(Collection<ItemStack> existing, IItemHandler h1, IItemHandler h2) {
+        List<ItemStack> stacks = new ArrayList<>(h1.getSlots() + h2.getSlots() + existing.size());
+
+        for (int i = 0, size = h1.getSlots(); i < size; i++) {
+            ItemStack stack = h1.getStackInSlot(i);
+
+            if (!stack.isEmpty())
+                stacks.add(stack);
+        }
+
+        for (int i = 0, size = h2.getSlots(); i < size; i++) {
+            ItemStack stack = h2.getStackInSlot(i);
+
+            if (!stack.isEmpty())
+                stacks.add(stack);
+        }
+
+        stacks.addAll(existing);
+
+        return stacks;
+    }
 }

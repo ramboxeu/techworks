@@ -19,7 +19,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
 
 import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
 
 import static net.minecraftforge.common.util.Constants.NBT.TAG_COMPOUND;
 
@@ -34,7 +33,6 @@ public abstract class BaseMachineBlock extends DirectionalProcessingBlock implem
     }
 
     @Override
-    @ParametersAreNonnullByDefault
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult rayTraceResult) {
         TileEntity tileEntity = worldIn.getTileEntity(pos);
 
@@ -50,14 +48,12 @@ public abstract class BaseMachineBlock extends DirectionalProcessingBlock implem
     }
 
     @Override
-    @ParametersAreNonnullByDefault
     public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.hasTileEntity() && (state.getBlock() != newState.getBlock() || !newState.hasTileEntity())) {
-            TileEntity te = world.getTileEntity(pos);
+            TileEntity tile = world.getTileEntity(pos);
 
-            if (te instanceof BaseMachineTile) {
-                BaseMachineTile machineTile = (BaseMachineTile) te;
-                for (ItemStack stack : machineTile.getDrops()) {
+            if (tile instanceof BaseMachineTile) {
+                for (ItemStack stack : ((BaseMachineTile) tile).getDrops()) {
                     spawnAsEntity(world, pos, stack);
                 }
             }
@@ -67,7 +63,6 @@ public abstract class BaseMachineBlock extends DirectionalProcessingBlock implem
     }
 
     @Override
-    @ParametersAreNonnullByDefault
     public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         TileEntity te = world.getTileEntity(pos);
         CompoundNBT stackTag = stack.getOrCreateTag();

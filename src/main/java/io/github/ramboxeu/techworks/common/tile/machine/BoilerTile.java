@@ -11,6 +11,7 @@ import io.github.ramboxeu.techworks.common.registration.TechworksFluids;
 import io.github.ramboxeu.techworks.common.registration.TechworksTiles;
 import io.github.ramboxeu.techworks.common.tag.TechworksFluidTags;
 import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
+import io.github.ramboxeu.techworks.common.util.ItemUtils;
 import io.github.ramboxeu.techworks.common.util.NBTUtils;
 import io.github.ramboxeu.techworks.common.util.Utils;
 import io.github.ramboxeu.techworks.common.util.machineio.data.GasHandlerData;
@@ -39,6 +40,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -225,12 +228,10 @@ public class BoilerTile extends BaseMachineTile {
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction face) {
-        if (heater instanceof ICapabilityProvider) {
-            LazyOptional<T> heaterCap = ((ICapabilityProvider) heater).getCapability(cap, face);
+        LazyOptional<T> heaterCap = getHeaterCap(cap);
 
-            if (heaterCap.isPresent())
-                return heaterCap;
-        }
+        if (heaterCap.isPresent())
+            return heaterCap;
 
         return super.getCapability(cap, face);
     }
@@ -245,6 +246,16 @@ public class BoilerTile extends BaseMachineTile {
     public void onChunkUnloaded() {
         super.onChunkUnloaded();
         steamEngines.forEach(SteamEngineTile::unlinkBoiler);
+    }
+
+    @Override
+    public Collection<ItemStack> getDrops() {
+        LazyOptional<IItemHandler> holder = getHeaterCap(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+
+        if (holder.isPresent())
+            return ItemUtils.collectContents(super.getDrops(), Utils.unpack(holder));
+
+        return super.getDrops();
     }
 
     public LiquidHandlerData getWaterTankData() {
@@ -297,5 +308,13 @@ public class BoilerTile extends BaseMachineTile {
 
     public Collection<SteamEngineTile> getLikedEngines() {
         return steamEngines;
+    }
+
+    private <T> LazyOptional<T> getHeaterCap(Capability<T> cap) {
+        if (heater instanceof ICapabilityProvider) {
+            return ((ICapabilityProvider) heater).getCapability(cap);
+        }
+
+        return LazyOptional.empty();
     }
 }

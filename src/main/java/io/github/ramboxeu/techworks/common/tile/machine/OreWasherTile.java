@@ -18,6 +18,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.text.ITextComponent;
@@ -27,6 +28,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
 import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.Optional;
 import java.util.Random;
 
@@ -197,6 +199,11 @@ public class OreWasherTile extends BaseMachineTile {
     @Override
     public Container createMenu(int id, PlayerInventory playerInv, PlayerEntity player) {
         return new OreWasherContainer(id, playerInv, this);
+    }
+
+    @Override
+    public Collection<ItemStack> getDrops() {
+        return ItemUtils.collectContents(super.getDrops(), inv, outputInv);
     }
 
     public LiquidHandlerData getWaterTankData() {

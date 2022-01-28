@@ -9,18 +9,21 @@ import io.github.ramboxeu.techworks.common.recipe.IGrinderRecipe;
 import io.github.ramboxeu.techworks.common.registration.TechworksComponents;
 import io.github.ramboxeu.techworks.common.registration.TechworksTiles;
 import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
+import io.github.ramboxeu.techworks.common.util.ItemUtils;
 import io.github.ramboxeu.techworks.common.util.machineio.data.EnergyHandlerData;
 import io.github.ramboxeu.techworks.common.util.machineio.data.ItemHandlerData;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
 import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.Optional;
 
 public class ElectricGrinderTile extends BaseMachineTile {
@@ -163,6 +166,11 @@ public class ElectricGrinderTile extends BaseMachineTile {
     @Override
     public Container createMenu(int id, PlayerInventory inventory, PlayerEntity entity) {
         return new ElectricGrinderContainer(id, inventory, this);
+    }
+
+    @Override
+    public Collection<ItemStack> getDrops() {
+        return ItemUtils.collectContents(super.getDrops(), inv, outputInv);
     }
 
     private boolean checkRecipe() {

@@ -5,6 +5,7 @@ import io.github.ramboxeu.techworks.common.util.Utils;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
@@ -34,5 +35,20 @@ public class SolidFuelBurnerBlock extends DirectionalProcessingBlock {
     @Override
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         return Utils.openTileContainer(world.getTileEntity(pos), player, world);
+    }
+
+    @Override
+    public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (state.hasTileEntity() && (state.getBlock() != newState.getBlock() || !newState.hasTileEntity())) {
+            TileEntity tile = world.getTileEntity(pos);
+
+            if (tile instanceof SolidFuelBurnerTile) {
+                for (ItemStack stack : ((SolidFuelBurnerTile) tile).getDrops()) {
+                    spawnAsEntity(world, pos, stack);
+                }
+            }
+
+            world.removeTileEntity(pos);
+        }
     }
 }

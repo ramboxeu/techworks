@@ -4,6 +4,7 @@ import io.github.ramboxeu.techworks.api.wrench.IWrenchable;
 import io.github.ramboxeu.techworks.common.component.ComponentStorage;
 import io.github.ramboxeu.techworks.common.network.TechworksPacketHandler;
 import io.github.ramboxeu.techworks.common.property.TechworksBlockStateProperties;
+import io.github.ramboxeu.techworks.common.util.ItemUtils;
 import io.github.ramboxeu.techworks.common.util.NBTUtils;
 import io.github.ramboxeu.techworks.common.util.RedstoneMode;
 import io.github.ramboxeu.techworks.common.util.StandbyMode;
@@ -22,8 +23,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collections;
-import java.util.List;
+import java.util.Collection;
 
 import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
@@ -45,8 +45,8 @@ public abstract class BaseMachineTile extends BaseIOTile implements INamedContai
 
     public void onLeftClick(BlockState state, World worldIn, BlockPos pos, PlayerEntity player) {}
 
-    public List<ItemStack> getDrops() {
-        return Collections.emptyList();
+    public Collection<ItemStack> getDrops() {
+        return ItemUtils.collectContents(components);
     }
 
     public ComponentStorage getComponentStorage() {
