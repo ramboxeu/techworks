@@ -111,6 +111,7 @@
   "status.techworks.installed_component": "Currently installed component: ",
   "status.techworks.linking_engines": "Linking to %d %d %d",
   "tooltip.techworks.bonus_energy_cap": "Energy Cap: %dFE/t (+%d Efficiency Bonus)",
+  "tooltip.techworks.configured": "Configured",
   "tooltip.techworks.energy_cap": "Energy Cap: %dFE/t",
   "tooltip.techworks.energy_modifier": "Energy Modifier: %dx",
   "tooltip.techworks.energy_storage_capacity": "Capacity: %dFE",

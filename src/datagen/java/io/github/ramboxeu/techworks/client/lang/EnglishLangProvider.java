@@ -114,6 +114,7 @@ public class EnglishLangProvider extends BaseLangProvider {
         add(TranslationKeys.FLUID_AMOUNT_STORED, "Amount Stored: %dmB");
         add(TranslationKeys.GAS_STORED, "Gas Stored: ");
         add(TranslationKeys.ENERGY_STORED, "Energy Stored: %dFE");
+        add(TranslationKeys.CONFIGURED, "Configured");
 
         // Widgets
         add(TranslationKeys.COMPONENTS, "Components");

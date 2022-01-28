@@ -1,11 +1,13 @@
 package io.github.ramboxeu.techworks.common.block;
 
 import io.github.ramboxeu.techworks.api.wrench.IWrenchable;
+import io.github.ramboxeu.techworks.common.lang.TranslationKeys;
 import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
 import io.github.ramboxeu.techworks.common.util.Utils;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -15,14 +17,23 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.Color;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
+import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 import static net.minecraftforge.common.util.Constants.NBT.TAG_COMPOUND;
 
 public abstract class BaseMachineBlock extends DirectionalProcessingBlock implements IWrenchable {
+    private static final Style CONFIGURED_STYLE = Style.EMPTY.setColor(Color.fromTextFormatting(TextFormatting.DARK_AQUA));
+
     public BaseMachineBlock() {
         super(Properties.create(Material.IRON).setRequiresTool().hardnessAndResistance(5, 6).sound(SoundType.METAL).harvestLevel(2).harvestTool(ToolType.PICKAXE));
     }
@@ -92,5 +103,15 @@ public abstract class BaseMachineBlock extends DirectionalProcessingBlock implem
         }
 
         return ItemStack.EMPTY;
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, @Nullable IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag flag) {
+        super.addInformation(stack, world, tooltip, flag);
+
+        CompoundNBT tag = stack.getTag();
+        if (tag != null && tag.contains("TileEntity", Constants.NBT.TAG_COMPOUND)) {
+            tooltip.add(TranslationKeys.CONFIGURED.styledText(CONFIGURED_STYLE));
+        }
     }
 }

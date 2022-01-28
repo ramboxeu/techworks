@@ -34,6 +34,7 @@ public class TranslationKeys {
     public static final TranslationKey FLUID_AMOUNT_STORED = TranslationKey.tooltip("fluid_amount_stored");
     public static final TranslationKey GAS_STORED = TranslationKey.tooltip("gas_stored");
     public static final TranslationKey ENERGY_STORED = TranslationKey.tooltip("energy_stored");
+    public static final TranslationKey CONFIGURED = TranslationKey.tooltip("configured");
 
     // Widgets
     public static final TranslationKey COMPONENTS = TranslationKey.widget("components");
