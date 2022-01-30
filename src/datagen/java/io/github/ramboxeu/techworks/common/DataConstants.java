@@ -39,7 +39,8 @@ public class DataConstants {
 
     public static class Blocks {
         public static final BlockRegistryObject<?, ?>[] MACHINES = new BlockRegistryObject[] {
-                BOILER, STEAM_ENGINE, ELECTRIC_FURNACE, ELECTRIC_GRINDER, ORE_WASHER, METAL_PRESS, INDUSTRIAL_FURNACE
+                BOILER, STEAM_ENGINE, ELECTRIC_FURNACE, ELECTRIC_GRINDER, ORE_WASHER, METAL_PRESS, INDUSTRIAL_FURNACE,
+                LIQUID_PUMP
         };
 
         public static final BlockRegistryObject<?, ?>[] DROPPING_SELF = new BlockRegistryObject[] {

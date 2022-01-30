@@ -35,6 +35,7 @@ public class EnglishLangProvider extends BaseLangProvider {
         add(TechworksBlocks.LIQUID_TANK, "Liquid Tank");
         add(TechworksBlocks.GAS_TANK, "Gas Tank");
         add(TechworksBlocks.ENERGY_STORAGE, "Energy Storage");
+        add(TechworksBlocks.LIQUID_PUMP, "Liquid Pump");
 
         // Items
         add(TechworksItems.WRENCH, "Wrench");
@@ -94,6 +95,7 @@ public class EnglishLangProvider extends BaseLangProvider {
         add(TranslationKeys.ORE_WASHER, "Ore Washer");
         add(TranslationKeys.METAL_PRESS, "Metal Press");
         add(TranslationKeys.INDUSTRIAL_FURNACE, "Industrial Furnace");
+        add(TranslationKeys.LIQUID_PUMP, "Liquid Pump");
 
         // Tooltips
         add(TranslationKeys.ENERGY_STORAGE_CAPACITY, "Capacity: %dFE");

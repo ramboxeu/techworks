@@ -14,6 +14,7 @@ public class TranslationKeys {
     public static final TranslationKey ORE_WASHER = TranslationKey.container(TechworksContainers.ORE_WASHER);
     public static final TranslationKey METAL_PRESS = TranslationKey.container(TechworksContainers.METAL_PRESS);
     public static final TranslationKey INDUSTRIAL_FURNACE = TranslationKey.container(TechworksContainers.INDUSTRIAL_FURNACE);
+    public static final TranslationKey LIQUID_PUMP = TranslationKey.container(TechworksContainers.LIQUID_PUMP);
 
     // Tooltips
     public static final TranslationKey ENERGY_STORAGE_CAPACITY = TranslationKey.tooltip("energy_storage_capacity");

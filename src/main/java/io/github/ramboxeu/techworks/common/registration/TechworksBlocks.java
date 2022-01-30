@@ -38,6 +38,7 @@ public class TechworksBlocks {
     public static final BlockRegistryObject<LiquidTankBlock, BlockItem> LIQUID_TANK = BLOCKS.register("liquid_tank", LiquidTankBlock::new, (block, props) -> new BlockItem(block, props.setISTER(() -> LiquidStorageRenderer::stackRenderer)));
     public static final BlockRegistryObject<GasTankBlock, BlockItem> GAS_TANK = BLOCKS.register("gas_tank", GasTankBlock::new, (block, props) -> new BlockItem(block, props.setISTER(() -> GasStorageRenderer::stackRenderer)));
     public static final BlockRegistryObject<EnergyStorageBlock, BlockItem> ENERGY_STORAGE = BLOCKS.register("energy_storage", EnergyStorageBlock::new, (block, props) -> new BlockItem(block, props.setISTER(() -> EnergyStorageRenderer::stackRenderer)));
+    public static final BlockRegistryObject<LiquidPumpBlock, BlockItem> LIQUID_PUMP = BLOCKS.register("liquid_pump", LiquidPumpBlock::new);
 
     // More testing
     public static final BlockRegistryObject<DevBlockBlock, BlockItem> DEV_BLOCK = BLOCKS.register("dev_block", DevBlockBlock::new, (block, props) -> new BlockItem(block, new Item.Properties()));

@@ -33,6 +33,7 @@ public class TechworksContainers {
     public static final ContainerRegistryObject<SolidFuelBurnerContainer> SOLID_FUEL_BURNER = CONTAINERS.registerTileContainer("solid_fuel_burner", (id, inv, tile) -> new SolidFuelBurnerContainer(id, inv, (SolidFuelBurnerTile) tile));
     public static final ContainerRegistryObject<MetalPressContainer> METAL_PRESS = CONTAINERS.registerMachineContainer("metal_press", MetalPressContainer::new);
     public static final ContainerRegistryObject<IndustrialFurnaceContainer> INDUSTRIAL_FURNACE = CONTAINERS.registerMachineContainer("industrial_furnace", IndustrialFurnaceContainer::new);
+    public static final ContainerRegistryObject<LiquidPumpContainer> LIQUID_PUMP = CONTAINERS.registerMachineContainer("liquid_pump", LiquidPumpContainer::new);
 
     public static void registerScreenFactories(){
         ScreenManager.registerFactory(BOILER.get(), BoilerScreen::new);
@@ -46,5 +47,6 @@ public class TechworksContainers {
         ScreenManager.registerFactory(ORE_WASHER.get(), OreWasherScreen::new);
         ScreenManager.registerFactory(METAL_PRESS.get(), MetalPressScreen::new);
         ScreenManager.registerFactory(INDUSTRIAL_FURNACE.get(), IndustrialFurnaceScreen::new);
+        ScreenManager.registerFactory(LIQUID_PUMP.get(), LiquidPumpScreen::new);
     }
 }

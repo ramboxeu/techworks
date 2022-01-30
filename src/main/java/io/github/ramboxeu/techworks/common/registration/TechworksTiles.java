@@ -35,6 +35,7 @@ public class TechworksTiles {
     public static final TileRegistryObject<LiquidTankTile> LIQUID_STORAGE = TILES.register(TechworksBlocks.LIQUID_TANK, LiquidTankTile::new);
     public static final TileRegistryObject<GasTankTile> GAS_STORAGE = TILES.register(TechworksBlocks.GAS_TANK, GasTankTile::new);
     public static final TileRegistryObject<EnergyStorageTile> ENERGY_STORAGE = TILES.register(TechworksBlocks.ENERGY_STORAGE, EnergyStorageTile::new);
+    public static final TileRegistryObject<LiquidPumpTile> LIQUID_PUMP = TILES.register(TechworksBlocks.LIQUID_PUMP, LiquidPumpTile::new);
 
     public static final TileRegistryObject<DevBlockTile> DEV_BLOCK = TILES.register(TechworksBlocks.DEV_BLOCK, DevBlockTile::new);
 
