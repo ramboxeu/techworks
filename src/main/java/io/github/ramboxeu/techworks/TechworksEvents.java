@@ -8,10 +8,13 @@ import io.github.ramboxeu.techworks.common.component.ComponentManager;
 import io.github.ramboxeu.techworks.common.item.WrenchItem;
 import io.github.ramboxeu.techworks.common.item.WrenchItem.Result;
 import io.github.ramboxeu.techworks.common.registration.TechworksItems;
+import io.github.ramboxeu.techworks.common.tile.OreMinerTile;
 import io.github.ramboxeu.techworks.common.util.cable.network.CableNetworkManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.integrated.IntegratedServer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
@@ -19,12 +22,15 @@ import net.minecraft.util.text.Color;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.Style;
+import net.minecraft.world.IWorld;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -126,6 +132,20 @@ public class TechworksEvents {
 
             for (ITextComponent line : component.getTooltipInfo(stack)) {
                 toolTip.add(new StringTextComponent(" - ").setStyle(COMPONENT_NAME).appendSibling(line));
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onWorldUnload(WorldEvent.Unload event) {
+        IWorld world = event.getWorld();
+        if (world instanceof ServerWorld) {
+            ServerWorld serverWorld = (ServerWorld) world;
+
+            if (serverWorld.getServer() instanceof IntegratedServer) {
+                serverWorld.loadedTileEntityList.stream()
+                        .filter(tile -> tile instanceof OreMinerTile)
+                        .forEach(TileEntity::onChunkUnloaded);
             }
         }
     }

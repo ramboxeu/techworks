@@ -15,13 +15,13 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class SlotGroupWidget extends PortContainerWidget implements IPortScreenWidgetProvider<SlotGroupWidget.ScreenWidget> {
-    private int x;
-    private int y;
-    private int rows;
-    private int cols;
-    private final IItemHandler handler;
+    protected int x;
+    protected int y;
+    protected int rows;
+    protected int cols;
+    protected final IItemHandler handler;
+    protected final SlotFactory factory;
     private ScreenWidget screenWidgetInstance;
-    private final SlotFactory factory;
 
     public SlotGroupWidget(BaseMachineContainer<?> container, int x, int y, int rows, int cols, ItemHandlerData data) {
         this(container, x, y, rows, cols, data, SlotItemHandler::new);
@@ -42,7 +42,9 @@ public class SlotGroupWidget extends PortContainerWidget implements IPortScreenW
     public void init(BaseContainer container, Builder builder) {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-//                builder.slot(factory.create(handler, i + j * cols, x + (i * 17 + (i == 0 ? 0 : 1)), y + (j * 17 + (j == 0 ? 0 : 1))));
+                int x = this.x + 1 + (j * 18);
+                int y = this.y + 1 + (i * 18);
+
                 builder.slot(factory.create(handler, i + j * cols, x + (18 * i), y + (18 * j)));
             }
         }
@@ -51,7 +53,7 @@ public class SlotGroupWidget extends PortContainerWidget implements IPortScreenW
     @Override
     public ScreenWidget getPortScreenWidget(BaseMachineScreen<?, ?> screen) {
         if (screenWidgetInstance == null) {
-            screenWidgetInstance = new ScreenWidget(screen, x - 1, y - 1, rows, cols, data);
+            screenWidgetInstance = new ScreenWidget(screen, x, y, rows, cols, data);
         }
 
         return screenWidgetInstance;

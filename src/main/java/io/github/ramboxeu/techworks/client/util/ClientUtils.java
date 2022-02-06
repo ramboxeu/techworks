@@ -1,10 +1,13 @@
 package io.github.ramboxeu.techworks.client.util;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import io.github.ramboxeu.techworks.Techworks;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IReorderingProcessor;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.ITextProperties;
 import net.minecraft.util.text.Style;
@@ -16,6 +19,11 @@ import java.util.stream.Collectors;
 public class ClientUtils {
     public static final int GUI_WIDTH = 176;
     public static final int GUI_HEIGHT = 166;
+
+    public static final int RMB = 1;
+    public static final int LMB = 0;
+
+    public static final ResourceLocation WIDGETS_TEX = new ResourceLocation(Techworks.MOD_ID, "textures/gui/widget/widgets.png");
 
     public static void drawString(MatrixStack stack, FontRenderer font, String text, float x, float y, int color, boolean shadow) {
         if (shadow) {
@@ -38,6 +46,14 @@ public class ClientUtils {
             font.drawTextWithShadow(stack, text, x, y, 0);
         } else {
             font.func_238422_b_(stack, text, x, y, 0);
+        }
+    }
+
+    public static void drawString(MatrixStack stack, FontRenderer font, ITextComponent text, float x, float y, int color, boolean shadow) {
+        if (shadow) {
+            font.drawTextWithShadow(stack, text, x, y, color);
+        } else {
+            font.drawText(stack, text, x, y, color);
         }
     }
 
@@ -74,5 +90,14 @@ public class ClientUtils {
 
     public static void renderTooltip(Screen screen, FontRenderer font, MatrixStack stack, List<?  extends ITextProperties> props, int mouseX, int mouseY) {
         GuiUtils.drawHoveringText(ItemStack.EMPTY, stack, props, mouseX, mouseY, screen.width, screen.height, -1, font);
+    }
+
+    public static void changeCurrentScreen(Screen current, Screen change, boolean closeCurrent) {
+        Minecraft mc = current.getMinecraft();
+
+        if (!closeCurrent)
+            mc.currentScreen = null;
+
+        mc.displayGuiScreen(change);
     }
 }

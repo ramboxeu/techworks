@@ -66,6 +66,7 @@ public class TechworksItems {
     public static final ItemRegistryObject<Item> MEDIUM_GAS_TANK = ITEMS.register("medium_gas_tank", props -> new Item(props.maxStackSize(1)));
     public static final ItemRegistryObject<Item> LARGE_GAS_TANK = ITEMS.register("large_gas_tank", props -> new Item(props.maxStackSize(1)));
     public static final ItemRegistryObject<Item> HICAP_GAS_TANK = ITEMS.register("hicap_gas_tank", props -> new Item(props.maxStackSize(1)));
+    public static final ItemRegistryObject<Item> ELECTRIC_DRILL = ITEMS.register("electric_drill", props -> new Item(props.maxStackSize(1)));
 
     public static final ItemRegistryObject<Item> MACHINE_CASING = ITEMS.register("machine_casing", Item::new);
 

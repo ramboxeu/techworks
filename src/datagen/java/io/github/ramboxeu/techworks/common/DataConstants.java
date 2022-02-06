@@ -29,7 +29,7 @@ public class DataConstants {
                 COPPER_DUST, LITHIUM_DUST, IRON_DUST, GOLD_DUST, CRUSHED_COPPER_ORE, CRUSHED_LITHIUM_ORE, CRUSHED_IRON_ORE,
                 CRUSHED_GOLD_ORE, IRON_GEAR, IRON_PLATE, STEAM_TURBINE_MK1, STEEL_INGOT, STEEL_HELMET, STEEL_CHESTPLATE,
                 STEEL_LEGGINGS, STEEL_BOOTS, MEDIUM_LIQUID_TANK, LARGE_LIQUID_TANK, HICAP_LIQUID_TANK, MEDIUM_GAS_TANK,
-                LARGE_GAS_TANK, HICAP_GAS_TANK
+                LARGE_GAS_TANK, HICAP_GAS_TANK, ELECTRIC_DRILL
         };
 
         public static final ItemRegistryObject<?>[] HANDHELD = new ItemRegistryObject[] {
@@ -40,7 +40,7 @@ public class DataConstants {
     public static class Blocks {
         public static final BlockRegistryObject<?, ?>[] MACHINES = new BlockRegistryObject[] {
                 BOILER, STEAM_ENGINE, ELECTRIC_FURNACE, ELECTRIC_GRINDER, ORE_WASHER, METAL_PRESS, INDUSTRIAL_FURNACE,
-                LIQUID_PUMP
+                LIQUID_PUMP, ORE_MINER
         };
 
         public static final BlockRegistryObject<?, ?>[] DROPPING_SELF = new BlockRegistryObject[] {

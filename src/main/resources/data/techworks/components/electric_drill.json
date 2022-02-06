@@ -1,0 +1,8 @@
+{
+  "type": "techworks:mining",
+  "item": "techworks:electric_drill",
+  "parameters": {
+    "energy": 10,
+    "time": 100
+  }
+}

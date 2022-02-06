@@ -36,6 +36,7 @@ public class EnglishLangProvider extends BaseLangProvider {
         add(TechworksBlocks.GAS_TANK, "Gas Tank");
         add(TechworksBlocks.ENERGY_STORAGE, "Energy Storage");
         add(TechworksBlocks.LIQUID_PUMP, "Liquid Pump");
+        add(TechworksBlocks.ORE_MINER, "Ore Miner");
 
         // Items
         add(TechworksItems.WRENCH, "Wrench");
@@ -83,6 +84,7 @@ public class EnglishLangProvider extends BaseLangProvider {
         add(TechworksItems.MEDIUM_GAS_TANK, "Medium Gas Tank");
         add(TechworksItems.LARGE_GAS_TANK, "Large Gas Tank");
         add(TechworksItems.HICAP_GAS_TANK, "HiCap\u2122 Gas Tank");
+        add(TechworksItems.ELECTRIC_DRILL, "Electric Drill");
 
         // Containers
         add(TranslationKeys.ASSEMBLY_TABLE, "Assembly Table");
@@ -96,6 +98,7 @@ public class EnglishLangProvider extends BaseLangProvider {
         add(TranslationKeys.METAL_PRESS, "Metal Press");
         add(TranslationKeys.INDUSTRIAL_FURNACE, "Industrial Furnace");
         add(TranslationKeys.LIQUID_PUMP, "Liquid Pump");
+        add(TranslationKeys.ORE_MINER, "Ore Miner");
 
         // Tooltips
         add(TranslationKeys.ENERGY_STORAGE_CAPACITY, "Capacity: %dFE");
@@ -117,6 +120,18 @@ public class EnglishLangProvider extends BaseLangProvider {
         add(TranslationKeys.GAS_STORED, "Gas Stored: ");
         add(TranslationKeys.ENERGY_STORED, "Energy Stored: %dFE");
         add(TranslationKeys.CONFIGURED, "Configured");
+        add(TranslationKeys.GO_BACK, "Go Back");
+        add(TranslationKeys.RIGHT_CLICK_TO_CLEAR, "Right click to clear");
+        add(TranslationKeys.PUT_STACK_TO_SET_FILTER, "Left click with an ItemStack to set");
+        add(TranslationKeys.LEFT_CLICK_TO_CONFIGURE, "Left click to configure");
+        add(TranslationKeys.SET_ORE_FILTER_STACK, "Set the ResourceFilter to an ItemStack");
+        add(TranslationKeys.SET_ORE_FILTER_TAG, "Set the ResourceFilter to a Tag");
+        add(TranslationKeys.CLEAR_ORE_FILTER, "Clear the ResourceFilter");
+        add(TranslationKeys.ENERGY_USAGE, "Energy Usage: %dFE/t");
+        add(TranslationKeys.NO_MATCHING_BLOCKS_FOUND, "Previous scan didn't found any matching blocks");
+        add(TranslationKeys.WAITING_TICKS, "Waiting %d ticks");
+        add(TranslationKeys.SCAN_NOW, "Click to scan now");
+        add(TranslationKeys.MINING_TIME, "Mining time: %d ticks");
 
         // Widgets
         add(TranslationKeys.COMPONENTS, "Components");
@@ -166,6 +181,7 @@ public class EnglishLangProvider extends BaseLangProvider {
         add(TranslationKeys.SMALL_GAS_TANK, "Small Gas Tank");
         add(TranslationKeys.SMALL_LIQUID_TANK, "Small Liquid Tank");
         add(TranslationKeys.STEAM_TURBINE_MK1, "Steam Turbine Mk1");
+        add(TranslationKeys.ELECTRIC_DRILL, "Electric Drill");
         add(TechworksComponents.ENERGY_STORAGE, "Energy Storage Component");
         add(TechworksComponents.GAS_STORAGE, "Gas Storage Component");
         add(TechworksComponents.LIQUID_STORAGE, "Liquid Storage Component");
@@ -173,6 +189,7 @@ public class EnglishLangProvider extends BaseLangProvider {
         add(TechworksComponents.HEATING, "Heating Component");
         add(TechworksComponents.SMELTING, "Smelting Component");
         add(TechworksComponents.STEAM_TURBINE, "Steam Turbine");
+        add(TechworksComponents.MINING, "Mining Component");
 
         // Statues
         add(TranslationKeys.ENGINE_ALREADY_LINKED, "Engine (%d %d %d) is already linked to boiler (%d %d %d)");
@@ -190,6 +207,25 @@ public class EnglishLangProvider extends BaseLangProvider {
         add(TranslationKeys.BASE_COMPONENT_INSTALLED, "Base component is installed");
         add(TranslationKeys.INSTALLED_COMPONENT, "Currently installed component: ");
         add(TranslationKeys.COMPONENT_UNINSTALLED, "Component uninstalled");
+
+        // Generic
+        add(TranslationKeys.STATUS_IDLE, "Idle");
+        add(TranslationKeys.STATUS_MINING, "Mining");
+        add(TranslationKeys.STATUS_SCANNING, "Scanning");
+        add(TranslationKeys.RESOURCE, "Resource Filter");
+        add(TranslationKeys.BLOCKS_TO_MINE, "Blocks to Mine");
+        add(TranslationKeys.BLOCKS_MINED, "Blocks Mined");
+        add(TranslationKeys.AREA, "Area");
+        add(TranslationKeys.CHUNKS, "chunks");
+        add(TranslationKeys.NOT_SET, "Not Set");
+        add(TranslationKeys.BLOCK, "Block");
+        add(TranslationKeys.CONFIGURE, "Configure");
+        add(TranslationKeys.ITEM_STACK, "ItemStack");
+        add(TranslationKeys.TAG, "Tag");
+        add(TranslationKeys.CLEAR, "Clear");
+        add(TranslationKeys.CONFIRM, "Confirm");
+        add(TranslationKeys.INVALID_TAG, "Invalid Tag name");
+        add(TranslationKeys.ENTER_TAG_NAME, "Enter Tag name");
 
         // Other
         add("itemGroup.techworks", "Techworks");

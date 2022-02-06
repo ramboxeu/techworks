@@ -7,6 +7,7 @@ import io.github.ramboxeu.techworks.common.network.dev.DevBlockGasSyncPacket;
 import io.github.ramboxeu.techworks.common.network.dev.DevBlockItemSyncPacket;
 import io.github.ramboxeu.techworks.common.network.dev.DevBlockLiquidSyncPacket;
 import io.github.ramboxeu.techworks.common.tile.DevBlockTile;
+import io.github.ramboxeu.techworks.common.tile.OreMinerTile;
 import io.github.ramboxeu.techworks.common.tile.machine.MetalPressTile;
 import io.github.ramboxeu.techworks.common.util.RedstoneMode;
 import io.github.ramboxeu.techworks.common.util.Side;
@@ -23,7 +24,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
@@ -65,6 +68,9 @@ public class TechworksPacketHandler {
         CHANNEL.registerMessage(id++, MachineWorkStateSyncPacket.class, MachineWorkStateSyncPacket::encode, MachineWorkStateSyncPacket::decode, MachineWorkStateSyncPacket::handle);
         CHANNEL.registerMessage(id++, FluidStorageSyncPacket.class, FluidStorageSyncPacket::encode, FluidStorageSyncPacket::decode, FluidStorageSyncPacket::handle);
         CHANNEL.registerMessage(id++, EnergyStorageSyncPacket.class, EnergyStorageSyncPacket::encode, EnergyStorageSyncPacket::decode, EnergyStorageSyncPacket::handle);
+        CHANNEL.registerMessage(id++, SyncOreMinerFilterPacket.class, SyncOreMinerFilterPacket::encode, SyncOreMinerFilterPacket::decode, SyncOreMinerFilterPacket::handle);
+        CHANNEL.registerMessage(id++, SyncOreMinerStatusPacket.class, SyncOreMinerStatusPacket::encode, SyncOreMinerStatusPacket::decode, SyncOreMinerStatusPacket::handle);
+        CHANNEL.registerMessage(id++, OreMinerMessagePacket.class, OreMinerMessagePacket::encode, OreMinerMessagePacket::decode, OreMinerMessagePacket::handle);
     }
 
     public static void sendMachinePortUpdatePacket(BlockPos pos, int index, MachinePort port, Chunk chunk) {
@@ -159,5 +165,25 @@ public class TechworksPacketHandler {
 
     public static void syncEnergyStorage(Chunk chunk, BlockPos pos, int energy) {
         CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> chunk), new EnergyStorageSyncPacket(pos, energy));
+    }
+
+    public static void syncOreFilter(Chunk chunk, BlockPos pos, SyncOreMinerFilterPacket.Type type, ResourceLocation id) {
+        if (FMLEnvironment.dist == Dist.CLIENT) {
+            CHANNEL.sendToServer(new SyncOreMinerFilterPacket(type, pos, id));
+        } else {
+            CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> chunk), new SyncOreMinerFilterPacket(type, pos, id));
+        }
+    }
+
+    public static void syncMinerStatus(Chunk chunk, BlockPos pos, OreMinerTile.Status status) {
+        CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> chunk), new SyncOreMinerStatusPacket(pos, status));
+    }
+
+    public static void minerRescan(BlockPos pos) {
+        CHANNEL.sendToServer(new OreMinerMessagePacket(pos, OreMinerMessagePacket.Type.RESCAN));
+    }
+
+    public static void syncMinerWorkingState(Chunk chunk, BlockPos pos, boolean working) {
+        CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> chunk), new OreMinerMessagePacket(pos, working ? OreMinerMessagePacket.Type.WORKING_ON : OreMinerMessagePacket.Type.WORKING_OFF));
     }
 }

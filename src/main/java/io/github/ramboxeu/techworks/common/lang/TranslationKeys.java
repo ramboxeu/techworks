@@ -15,6 +15,7 @@ public class TranslationKeys {
     public static final TranslationKey METAL_PRESS = TranslationKey.container(TechworksContainers.METAL_PRESS);
     public static final TranslationKey INDUSTRIAL_FURNACE = TranslationKey.container(TechworksContainers.INDUSTRIAL_FURNACE);
     public static final TranslationKey LIQUID_PUMP = TranslationKey.container(TechworksContainers.LIQUID_PUMP);
+    public static final TranslationKey ORE_MINER = TranslationKey.container(TechworksContainers.ORE_MINER);
 
     // Tooltips
     public static final TranslationKey ENERGY_STORAGE_CAPACITY = TranslationKey.tooltip("energy_storage_capacity");
@@ -36,6 +37,18 @@ public class TranslationKeys {
     public static final TranslationKey GAS_STORED = TranslationKey.tooltip("gas_stored");
     public static final TranslationKey ENERGY_STORED = TranslationKey.tooltip("energy_stored");
     public static final TranslationKey CONFIGURED = TranslationKey.tooltip("configured");
+    public static final TranslationKey GO_BACK = TranslationKey.tooltip("go_back");
+    public static final TranslationKey RIGHT_CLICK_TO_CLEAR = TranslationKey.tooltip("right_click_to_clear");
+    public static final TranslationKey PUT_STACK_TO_SET_FILTER = TranslationKey.tooltip("put_stack_to_set_filter");
+    public static final TranslationKey LEFT_CLICK_TO_CONFIGURE = TranslationKey.tooltip("left_click_to_configure");
+    public static final TranslationKey SET_ORE_FILTER_STACK = TranslationKey.tooltip("set_ore_filter_stack");
+    public static final TranslationKey SET_ORE_FILTER_TAG = TranslationKey.tooltip("set_ore_filter_tag");
+    public static final TranslationKey CLEAR_ORE_FILTER = TranslationKey.tooltip("clear_ore_filter");
+    public static final TranslationKey ENERGY_USAGE = TranslationKey.tooltip("energy_usage");
+    public static final TranslationKey NO_MATCHING_BLOCKS_FOUND = TranslationKey.tooltip("no_matching_blocks_found");
+    public static final TranslationKey WAITING_TICKS = TranslationKey.tooltip("waiting_ticks");
+    public static final TranslationKey SCAN_NOW = TranslationKey.tooltip("scan_now");
+    public static final TranslationKey MINING_TIME = TranslationKey.tooltip("mining_time");
 
     // Widgets
     public static final TranslationKey COMPONENTS = TranslationKey.widget("components");
@@ -84,6 +97,7 @@ public class TranslationKeys {
     public static final TranslationKey SMALL_GAS_TANK = TranslationKey.component("small_gas_tank");
     public static final TranslationKey SMALL_LIQUID_TANK = TranslationKey.component("small_liquid_tank");
     public static final TranslationKey STEAM_TURBINE_MK1 = TranslationKey.component("steam_turbine_mk1");
+    public static final TranslationKey ELECTRIC_DRILL = TranslationKey.component("electric_drill");
 
     // Statues
     public static final TranslationKey ENGINE_ALREADY_LINKED = TranslationKey.status("engine_already_linked");
@@ -101,4 +115,23 @@ public class TranslationKeys {
     public static final TranslationKey BASE_COMPONENT_INSTALLED = TranslationKey.status("base_component_installed");
     public static final TranslationKey INSTALLED_COMPONENT = TranslationKey.status("installed_component");
     public static final TranslationKey COMPONENT_UNINSTALLED = TranslationKey.status("component_uninstalled");
+
+    // Generic
+    public static final TranslationKey STATUS_IDLE = TranslationKey.generic("status_idle");
+    public static final TranslationKey STATUS_MINING = TranslationKey.generic("status_mining");
+    public static final TranslationKey STATUS_SCANNING = TranslationKey.generic("status_scanning");
+    public static final TranslationKey RESOURCE = TranslationKey.generic("resource");
+    public static final TranslationKey BLOCKS_TO_MINE = TranslationKey.generic("to_mine");
+    public static final TranslationKey BLOCKS_MINED = TranslationKey.generic("mined");
+    public static final TranslationKey AREA = TranslationKey.generic("area");
+    public static final TranslationKey CHUNKS = TranslationKey.generic("chunks");
+    public static final TranslationKey NOT_SET = TranslationKey.generic("not_set");
+    public static final TranslationKey BLOCK = TranslationKey.generic("block");
+    public static final TranslationKey CONFIGURE = TranslationKey.generic("configure");
+    public static final TranslationKey ITEM_STACK = TranslationKey.generic("item_stack");
+    public static final TranslationKey TAG = TranslationKey.generic("tag");
+    public static final TranslationKey CLEAR = TranslationKey.generic("clear");
+    public static final TranslationKey CONFIRM = TranslationKey.generic("confirm");
+    public static final TranslationKey INVALID_TAG = TranslationKey.generic("invalid_tag");
+    public static final TranslationKey ENTER_TAG_NAME = TranslationKey.generic("enter_tag_name");
 }

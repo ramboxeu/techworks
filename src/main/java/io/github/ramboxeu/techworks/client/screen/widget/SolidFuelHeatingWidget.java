@@ -1,12 +1,11 @@
 package io.github.ramboxeu.techworks.client.screen.widget;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.client.container.BaseContainer;
 import io.github.ramboxeu.techworks.client.screen.BaseScreen;
 import io.github.ramboxeu.techworks.client.screen.widget.progress.BurningProgressWidget;
+import io.github.ramboxeu.techworks.client.util.ClientUtils;
 import io.github.ramboxeu.techworks.common.heat.SolidFuelHeater;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.items.SlotItemHandler;
 
 import javax.annotation.Nonnull;
@@ -40,7 +39,6 @@ public class SolidFuelHeatingWidget extends BaseContainerWidget implements IScre
     }
 
     public static class ScreenWidget extends BaseScreenWidget {
-        private static final ResourceLocation TEX = new ResourceLocation(Techworks.MOD_ID, "textures/gui/widget/widgets.png");
 
         public ScreenWidget(BaseScreen<?> screen, int x, int y) {
             super(screen, x, y, 18, 34);
@@ -48,9 +46,9 @@ public class SolidFuelHeatingWidget extends BaseContainerWidget implements IScre
 
         @Override
         protected void renderBaseWidget(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
-            minecraft.textureManager.bindTexture(TEX);
-            blit(stack, x, y + 16, 18, 18, 0, 0, 18, 18, 32, 18);
-            blit(stack, x + 2, y + 1, 13, 13, 18, 0, 13, 13, 32, 18);
+            minecraft.textureManager.bindTexture(ClientUtils.WIDGETS_TEX);
+            blit(stack, x, y + 16, 18, 18, 0, 0, 18, 18, 32, 32);
+            blit(stack, x + 2, y + 1, 13, 13, 18, 0, 13, 13, 32, 32);
         }
     }
 }
