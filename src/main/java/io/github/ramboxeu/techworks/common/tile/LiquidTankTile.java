@@ -127,6 +127,12 @@ public class LiquidTankTile extends StorageTile<LiquidStorageComponent> {
         return super.onRightClick(stack, player);
     }
 
+    @Override
+    protected void invalidateCaps() {
+        super.invalidateCaps();
+        holder.invalidate();
+    }
+
     public FluidStack getTankContents() {
         return tank.getFluid();
     }

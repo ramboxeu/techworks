@@ -116,6 +116,14 @@ public class EnergyStorageTile extends StorageTile<EnergyStorageComponent> {
     }
 
     @Override
+    protected void invalidateCaps() {
+        super.invalidateCaps();
+
+        for (LazyOptional<IEnergyStorage> holder : holders)
+            holder.invalidate();
+    }
+
+    @Override
     protected void onComponentsChanged(EnergyStorageComponent component, ItemStack stack) {
         battery.onComponentsChanged(component, stack);
     }

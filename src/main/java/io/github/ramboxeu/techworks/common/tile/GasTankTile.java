@@ -77,6 +77,12 @@ public class GasTankTile extends StorageTile<GasStorageComponent> {
     }
 
     @Override
+    protected void invalidateCaps() {
+        super.invalidateCaps();
+        holder.invalidate();
+    }
+
+    @Override
     protected void onComponentsChanged(GasStorageComponent component, ItemStack stack) {
         tank.onComponentsChanged(component, stack);
     }
