@@ -2,7 +2,11 @@ package io.github.ramboxeu.techworks.common.util;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.item.BucketItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.MilkBucketItem;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
@@ -121,5 +125,10 @@ public class ItemUtils {
         stacks.addAll(existing);
 
         return stacks;
+    }
+
+    public static boolean isBucket(ItemStack stack) {
+        Item item = stack.getItem();
+        return item instanceof BucketItem || (ForgeMod.MILK.isPresent() && item instanceof MilkBucketItem);
     }
 }
