@@ -49,14 +49,7 @@ public abstract class StorageBlock extends Block implements IWrenchable {
         TileEntity tile = world.getTileEntity(pos);
 
         if (tile instanceof StorageTile) {
-            ItemStack result = ((StorageTile<?>) tile).onRightClick(player.getHeldItem(hand), player);
-
-            if (result != null) {
-                player.setHeldItem(hand, result);
-                return ActionResultType.SUCCESS;
-            } else {
-                return ActionResultType.FAIL;
-            }
+            return ((StorageTile<?>) tile).onRightClick(player, hand) ? ActionResultType.SUCCESS : ActionResultType.PASS;
         }
 
         return ActionResultType.PASS;

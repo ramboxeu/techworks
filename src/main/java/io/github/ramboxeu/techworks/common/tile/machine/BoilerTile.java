@@ -11,6 +11,7 @@ import io.github.ramboxeu.techworks.common.registration.TechworksFluids;
 import io.github.ramboxeu.techworks.common.registration.TechworksTiles;
 import io.github.ramboxeu.techworks.common.tag.TechworksFluidTags;
 import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
+import io.github.ramboxeu.techworks.common.util.FluidUtils;
 import io.github.ramboxeu.techworks.common.util.ItemUtils;
 import io.github.ramboxeu.techworks.common.util.NBTUtils;
 import io.github.ramboxeu.techworks.common.util.Utils;
@@ -158,29 +159,8 @@ public class BoilerTile extends BaseMachineTile {
     }
 
     @Override
-    public ActionResultType onRightClick(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if (!worldIn.isRemote) {
-            ItemStack handStack = player.getHeldItem(handIn);
-
-            LazyOptional<IFluidHandlerItem> bucket = handStack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
-
-            if (bucket.isPresent()) {
-                IFluidHandlerItem bucketTank = Utils.unpack(bucket);
-                int maxDrain = waterTank.getCapacity() - waterTank.getFluidAmount();
-
-                if (maxDrain >= 1000) {
-                    if (bucketTank.drain(maxDrain, IFluidHandler.FluidAction.SIMULATE).getFluid().isIn(FluidTags.WATER)) {
-                        waterTank.fill(bucketTank.drain(maxDrain, IFluidHandler.FluidAction.EXECUTE), IFluidHandler.FluidAction.EXECUTE, true);
-                        player.setHeldItem(handIn, bucketTank.getContainer());
-                        markDirty();
-
-                        return ActionResultType.SUCCESS;
-                    }
-                }
-            }
-        }
-
-        return ActionResultType.PASS;
+    public ActionResultType onRightClick(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+        return FluidUtils.onHandlerInteraction(player, hand, waterTank) ? ActionResultType.SUCCESS : ActionResultType.PASS;
     }
 
     @Override

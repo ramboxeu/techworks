@@ -6,19 +6,19 @@ import io.github.ramboxeu.techworks.common.fluid.handler.SingletonFluidContainer
 import io.github.ramboxeu.techworks.common.network.TechworksPacketHandler;
 import io.github.ramboxeu.techworks.common.registration.TechworksComponents;
 import io.github.ramboxeu.techworks.common.registration.TechworksTiles;
+import io.github.ramboxeu.techworks.common.util.FluidUtils;
 import io.github.ramboxeu.techworks.common.util.MathUtils;
-import io.github.ramboxeu.techworks.common.util.Utils;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -92,39 +92,11 @@ public class LiquidTankTile extends StorageTile<LiquidStorageComponent> {
     }
 
     @Override
-    public ItemStack onRightClick(ItemStack stack, PlayerEntity player) {
-        LazyOptional<IFluidHandlerItem> holder = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
-        if (holder.isPresent()) {
-            IFluidHandlerItem handler = Utils.unpack(holder);
+    public boolean onRightClick(PlayerEntity player, Hand hand) {
+        if (FluidUtils.onHandlerInteraction(player, hand, tank))
+            return true;
 
-            if (tank.getFluid().isEmpty()) {
-                FluidStack drained = handler.drain(tank.getCapacity(), IFluidHandler.FluidAction.EXECUTE);
-
-                if (!drained.isEmpty()) {
-                    tank.fill(drained, IFluidHandler.FluidAction.EXECUTE, true);
-                    return handler.getContainer();
-                }
-            } else {
-                FluidStack query = tank.getFluid().copy();
-                query.setAmount(tank.getCapacity() - tank.getFluidAmount());
-                FluidStack drained = handler.drain(query, IFluidHandler.FluidAction.EXECUTE);
-
-                if (!drained.isEmpty()) {
-                    tank.fill(drained, IFluidHandler.FluidAction.EXECUTE, true);
-                    return handler.getContainer();
-                }
-
-                query = tank.getFluid().copy();
-                int filled = handler.fill(query, IFluidHandler.FluidAction.EXECUTE);
-
-                if (filled > 0) {
-                    tank.drain(filled, IFluidHandler.FluidAction.EXECUTE, true);
-                    return handler.getContainer();
-                }
-            }
-        }
-
-        return super.onRightClick(stack, player);
+        return super.onRightClick(player, hand);
     }
 
     @Override

@@ -13,6 +13,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.Hand;
 
 public abstract class StorageTile<T extends BaseStorageComponent> extends BaseTechworksTile implements IWrenchable {
     private final ComponentType<T> componentType;
@@ -57,7 +58,9 @@ public abstract class StorageTile<T extends BaseStorageComponent> extends BaseTe
     }
 
     @SuppressWarnings("unchecked")
-    public ItemStack onRightClick(ItemStack stack, PlayerEntity player) {
+    public boolean onRightClick(PlayerEntity player, Hand hand) {
+        ItemStack stack = player.getHeldItem(hand);
+
         if (!stack.isEmpty()) {
             Item item = stack.getItem();
 
@@ -66,7 +69,7 @@ public abstract class StorageTile<T extends BaseStorageComponent> extends BaseTe
 
                 if (component == this.component) {
                     player.sendStatusMessage(TranslationKeys.COMPONENT_ALREADY_INSTALLED.text(), true);
-                    return null;
+                    return false;
                 }
 
                 if (component.getType() == componentType) {
@@ -74,7 +77,7 @@ public abstract class StorageTile<T extends BaseStorageComponent> extends BaseTe
 
                     if (storageComponent.getStorageCapacity() < getAmountStored()) {
                         player.sendStatusMessage(TranslationKeys.CANT_INSTALL_COMPONENT.text().appendSibling(TranslationKeys.COMPONENT_CAPACITY_TOO_SMALL.text()), true);
-                        return null;
+                        return false;
                     }
 
                     if (!this.component.isBase()) {
@@ -85,7 +88,8 @@ public abstract class StorageTile<T extends BaseStorageComponent> extends BaseTe
                     componentStack = stack.split(1);
                     onComponentsChanged(this.component, componentStack);
                     player.sendStatusMessage(TranslationKeys.COMPONENT_INSTALLED.text(), true);
-                    return stack;
+                    player.setHeldItem(hand, stack);
+                    return true;
                 }
             }
         } else {
@@ -95,7 +99,7 @@ public abstract class StorageTile<T extends BaseStorageComponent> extends BaseTe
 
                     if (baseComponent.getStorageCapacity() < getAmountStored()) {
                         player.sendStatusMessage(TranslationKeys.CANT_UNINSTALL_COMPONENT.text().appendSibling(TranslationKeys.COMPONENT_CAPACITY_TOO_SMALL.text()), true);
-                        return null;
+                        return false;
                     }
 
                     player.inventory.placeItemBackInInventory(world, componentStack);
@@ -103,13 +107,14 @@ public abstract class StorageTile<T extends BaseStorageComponent> extends BaseTe
                     componentStack = new ItemStack(component);
                     onComponentsChanged(component, componentStack);
                     player.sendStatusMessage(TranslationKeys.COMPONENT_UNINSTALLED.text(), true);
+                    return true;
                 } else {
                     player.sendStatusMessage(TranslationKeys.CANT_UNINSTALL_COMPONENT.text().appendSibling(TranslationKeys.BASE_COMPONENT_INSTALLED.text()), true);
                 }
             }
         }
 
-        return null;
+        return false;
     }
 
     protected abstract void onComponentsChanged(T component, ItemStack stack);
