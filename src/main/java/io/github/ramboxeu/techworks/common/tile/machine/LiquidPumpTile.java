@@ -1,6 +1,7 @@
 package io.github.ramboxeu.techworks.common.tile.machine;
 
 import io.github.ramboxeu.techworks.client.container.machine.LiquidPumpContainer;
+import io.github.ramboxeu.techworks.common.capability.HandlerStorage;
 import io.github.ramboxeu.techworks.common.component.ComponentStorage;
 import io.github.ramboxeu.techworks.common.energy.EnergyBattery;
 import io.github.ramboxeu.techworks.common.fluid.handler.LiquidTank;
@@ -8,6 +9,8 @@ import io.github.ramboxeu.techworks.common.lang.TranslationKeys;
 import io.github.ramboxeu.techworks.common.registration.TechworksComponents;
 import io.github.ramboxeu.techworks.common.registration.TechworksTiles;
 import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
+import io.github.ramboxeu.techworks.common.util.FluidUtils;
+import io.github.ramboxeu.techworks.common.util.machineio.MachineIO;
 import io.github.ramboxeu.techworks.common.util.machineio.data.EnergyHandlerData;
 import io.github.ramboxeu.techworks.common.util.machineio.data.LiquidHandlerData;
 import net.minecraft.block.BlockState;
@@ -19,8 +22,12 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -51,7 +58,7 @@ public class LiquidPumpTile extends BaseMachineTile {
                 shouldCheck = true;
             }
         };
-        tankData = machineIO.getHandlerData(tank);
+        tankData = machineIO.getHandlerData(tank, MachineIO.INPUT);
 
         battery = new EnergyBattery() {
             @Override
@@ -59,12 +66,13 @@ public class LiquidPumpTile extends BaseMachineTile {
                 shouldCheck = true;
             }
         };
-        batteryData = machineIO.getHandlerData(battery);
+        batteryData = machineIO.getHandlerData(battery, MachineIO.INPUT | MachineIO.ALL);
 
         components = new ComponentStorage.Builder()
                 .component(TechworksComponents.LIQUID_STORAGE.get(), tank)
                 .component(TechworksComponents.ENERGY_STORAGE.get(), battery)
                 .build();
+        handlers.enable(HandlerStorage.ENERGY | HandlerStorage.LIQUID);
 
         queue = new ArrayDeque<>();
     }
@@ -151,6 +159,11 @@ public class LiquidPumpTile extends BaseMachineTile {
                 }
             }
         }
+    }
+
+    @Override
+    public ActionResultType onRightClick(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+        return FluidUtils.onHandlerInteraction(player, hand, tank) ? ActionResultType.SUCCESS : ActionResultType.PASS;
     }
 
     @Override

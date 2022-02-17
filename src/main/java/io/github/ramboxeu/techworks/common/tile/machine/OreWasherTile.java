@@ -1,6 +1,7 @@
 package io.github.ramboxeu.techworks.common.tile.machine;
 
 import io.github.ramboxeu.techworks.client.container.machine.OreWasherContainer;
+import io.github.ramboxeu.techworks.common.capability.HandlerStorage;
 import io.github.ramboxeu.techworks.common.component.ComponentStorage;
 import io.github.ramboxeu.techworks.common.energy.EnergyBattery;
 import io.github.ramboxeu.techworks.common.fluid.handler.LiquidTank;
@@ -10,7 +11,9 @@ import io.github.ramboxeu.techworks.common.registration.TechworksComponents;
 import io.github.ramboxeu.techworks.common.registration.TechworksRecipes;
 import io.github.ramboxeu.techworks.common.registration.TechworksTiles;
 import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
+import io.github.ramboxeu.techworks.common.util.FluidUtils;
 import io.github.ramboxeu.techworks.common.util.ItemUtils;
+import io.github.ramboxeu.techworks.common.util.machineio.MachineIO;
 import io.github.ramboxeu.techworks.common.util.machineio.data.EnergyHandlerData;
 import io.github.ramboxeu.techworks.common.util.machineio.data.ItemHandlerData;
 import io.github.ramboxeu.techworks.common.util.machineio.data.LiquidHandlerData;
@@ -21,7 +24,12 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.ItemStackHandler;
@@ -69,7 +77,7 @@ public class OreWasherTile extends BaseMachineTile {
                 shouldCheck = true;
             }
         };
-        waterTankData = machineIO.getHandlerData(waterTank);
+        waterTankData = machineIO.getHandlerData(waterTank, MachineIO.INPUT);
 
         inv = new ItemStackHandler(1) {
             @Override
@@ -77,7 +85,7 @@ public class OreWasherTile extends BaseMachineTile {
                 shouldCheck = true;
             }
         };
-        invData = machineIO.getHandlerData(inv);
+        invData = machineIO.getHandlerData(inv, MachineIO.INPUT);
 
         outputInv = new ItemStackHandler(4) {
             @Override
@@ -85,7 +93,7 @@ public class OreWasherTile extends BaseMachineTile {
                 shouldCheck = true;
             }
         };
-        outputInvData = machineIO.getHandlerData(outputInv);
+        outputInvData = machineIO.getHandlerData(outputInv, MachineIO.OUTPUT);
 
         battery = new EnergyBattery() {
             @Override
@@ -93,12 +101,13 @@ public class OreWasherTile extends BaseMachineTile {
                 shouldCheck = true;
             }
         };
-        batteryData = machineIO.getHandlerData(battery);
+        batteryData = machineIO.getHandlerData(battery, MachineIO.INPUT | MachineIO.ALL);
 
         components = new ComponentStorage.Builder()
                 .component(TechworksComponents.LIQUID_STORAGE.get(), waterTank)
                 .component(TechworksComponents.ENERGY_STORAGE.get(), battery)
                 .build();
+        handlers.enable(HandlerStorage.ENERGY | HandlerStorage.ITEM | HandlerStorage.LIQUID);
 
         recipeInv = new RecipeWrapper(inv);
     }
@@ -165,6 +174,11 @@ public class OreWasherTile extends BaseMachineTile {
 
         cachedRecipe = null;
         return false;
+    }
+
+    @Override
+    public ActionResultType onRightClick(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+        return FluidUtils.onHandlerInteraction(player, hand, waterTank) ? ActionResultType.SUCCESS : ActionResultType.PASS;
     }
 
     @Override

@@ -9,6 +9,7 @@ import io.github.ramboxeu.techworks.common.registration.TechworksRecipes;
 import io.github.ramboxeu.techworks.common.registration.TechworksTiles;
 import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
 import io.github.ramboxeu.techworks.common.util.ItemUtils;
+import io.github.ramboxeu.techworks.common.util.machineio.MachineIO;
 import io.github.ramboxeu.techworks.common.util.machineio.data.ItemHandlerData;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -58,8 +59,8 @@ public class IndustrialFurnaceTile extends BaseMachineTile {
                 shouldCheck = true;
             }
         };
-        invPrimaryData = machineIO.getHandlerData(inv, 0, 1);
-        invSecondaryData = machineIO.getHandlerData(inv, 1, 2);
+        invPrimaryData = machineIO.getHandlerData(inv, 0, 1, MachineIO.INPUT);
+        invSecondaryData = machineIO.getHandlerData(inv, 1, 2, MachineIO.INPUT);
         recipeInv = new RecipeWrapper(inv);
 
         outputInv = new ItemStackHandler(){
@@ -68,7 +69,7 @@ public class IndustrialFurnaceTile extends BaseMachineTile {
                 shouldCheck = true;
             }
         };
-        outputInvData = machineIO.getHandlerData(outputInv);
+        outputInvData = machineIO.getHandlerData(outputInv, MachineIO.OUTPUT);
 
         components = new ComponentStorage.Builder().build();
     }

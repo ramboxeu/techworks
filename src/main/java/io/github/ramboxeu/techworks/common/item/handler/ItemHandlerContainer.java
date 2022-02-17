@@ -1,6 +1,7 @@
 package io.github.ramboxeu.techworks.common.item.handler;
 
 import io.github.ramboxeu.techworks.common.util.Utils;
+import io.github.ramboxeu.techworks.common.util.machineio.AutoMode;
 import io.github.ramboxeu.techworks.common.util.machineio.StorageMode;
 import io.github.ramboxeu.techworks.common.util.machineio.config.HandlerConfig;
 import io.github.ramboxeu.techworks.common.util.machineio.config.ItemHandlerConfig;
@@ -68,8 +69,11 @@ public class ItemHandlerContainer implements IItemHandler, IHandlerContainer {
     }
 
     @Override
-    public void setStorageMode(HandlerData data, StorageMode mode) {
-        ranges.stream().filter(config -> config.getBaseData() == data).findFirst().ifPresent(config -> config.setMode(mode));
+    public void setStorageMode(HandlerData data, StorageMode mode, AutoMode autoMode) {
+        ranges.stream().filter(config -> config.getBaseData() == data).findFirst().ifPresent(config -> {
+            config.setMode(mode);
+            config.setAutoMode(autoMode);
+        });
     }
 
     @Override

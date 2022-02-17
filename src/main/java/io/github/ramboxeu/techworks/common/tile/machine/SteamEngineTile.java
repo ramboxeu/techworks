@@ -1,6 +1,7 @@
 package io.github.ramboxeu.techworks.common.tile.machine;
 
 import io.github.ramboxeu.techworks.client.container.machine.SteamEngineContainer;
+import io.github.ramboxeu.techworks.common.capability.HandlerStorage;
 import io.github.ramboxeu.techworks.common.component.ComponentStorage;
 import io.github.ramboxeu.techworks.common.energy.EnergyBattery;
 import io.github.ramboxeu.techworks.common.lang.TranslationKeys;
@@ -9,6 +10,7 @@ import io.github.ramboxeu.techworks.common.registration.TechworksFluids;
 import io.github.ramboxeu.techworks.common.registration.TechworksTiles;
 import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
 import io.github.ramboxeu.techworks.common.util.NBTUtils;
+import io.github.ramboxeu.techworks.common.util.machineio.MachineIO;
 import io.github.ramboxeu.techworks.common.util.machineio.data.EnergyHandlerData;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -48,7 +50,7 @@ public class SteamEngineTile extends BaseMachineTile {
         super(TechworksTiles.STEAM_ENGINE.get());
 
         battery = new EnergyBattery(0, 100, 100);
-        batteryData = machineIO.getHandlerData(battery);
+        batteryData = machineIO.getHandlerData(battery, MachineIO.INPUT | MachineIO.ALL);
 
         components = new ComponentStorage.Builder()
                 .component(TechworksComponents.STEAM_TURBINE.get(), (component, stack) -> {
@@ -57,6 +59,8 @@ public class SteamEngineTile extends BaseMachineTile {
                 })
                 .component(TechworksComponents.ENERGY_STORAGE.get(), battery)
                 .build();
+        handlers.enable(HandlerStorage.ENERGY);
+
         steam = FluidStack.EMPTY;
     }
 

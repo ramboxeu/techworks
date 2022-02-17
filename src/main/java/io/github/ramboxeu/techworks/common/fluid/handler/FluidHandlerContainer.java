@@ -1,6 +1,7 @@
 package io.github.ramboxeu.techworks.common.fluid.handler;
 
 import io.github.ramboxeu.techworks.common.util.Utils;
+import io.github.ramboxeu.techworks.common.util.machineio.AutoMode;
 import io.github.ramboxeu.techworks.common.util.machineio.StorageMode;
 import io.github.ramboxeu.techworks.common.util.machineio.config.FluidHandlerConfig;
 import io.github.ramboxeu.techworks.common.util.machineio.config.HandlerConfig;
@@ -53,8 +54,11 @@ public class FluidHandlerContainer implements IFluidHandler, IHandlerContainer {
     }
 
     @Override
-    public void setStorageMode(HandlerData data, StorageMode mode) {
-        tanks.stream().filter(config -> config.getBaseData() == data).findFirst().ifPresent(config -> config.setMode(mode));
+    public void setStorageMode(HandlerData data, StorageMode mode, AutoMode autoMode) {
+        tanks.stream().filter(config -> config.getBaseData() == data).findFirst().ifPresent(config -> {
+            config.setMode(mode);
+            config.setAutoMode(autoMode);
+        });
     }
 
     @Override

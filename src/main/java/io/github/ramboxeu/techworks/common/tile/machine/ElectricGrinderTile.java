@@ -1,6 +1,7 @@
 package io.github.ramboxeu.techworks.common.tile.machine;
 
 import io.github.ramboxeu.techworks.client.container.machine.ElectricGrinderContainer;
+import io.github.ramboxeu.techworks.common.capability.HandlerStorage;
 import io.github.ramboxeu.techworks.common.component.ComponentStorage;
 import io.github.ramboxeu.techworks.common.energy.EnergyBattery;
 import io.github.ramboxeu.techworks.common.lang.TranslationKeys;
@@ -10,6 +11,7 @@ import io.github.ramboxeu.techworks.common.registration.TechworksComponents;
 import io.github.ramboxeu.techworks.common.registration.TechworksTiles;
 import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
 import io.github.ramboxeu.techworks.common.util.ItemUtils;
+import io.github.ramboxeu.techworks.common.util.machineio.MachineIO;
 import io.github.ramboxeu.techworks.common.util.machineio.data.EnergyHandlerData;
 import io.github.ramboxeu.techworks.common.util.machineio.data.ItemHandlerData;
 import net.minecraft.block.BlockState;
@@ -61,7 +63,7 @@ public class ElectricGrinderTile extends BaseMachineTile {
                 }
             }
         };
-        batteryData = machineIO.getHandlerData(battery);
+        batteryData = machineIO.getHandlerData(battery, MachineIO.INPUT | MachineIO.ALL);
 
         inv = new ItemStackHandler(1) {
             @Override
@@ -70,7 +72,7 @@ public class ElectricGrinderTile extends BaseMachineTile {
                 shouldCheck = true;
             }
         };
-        invData = machineIO.getHandlerData(inv);
+        invData = machineIO.getHandlerData(inv, MachineIO.INPUT);
 
         outputInv = new ItemStackHandler(1) {
             @Override
@@ -79,7 +81,7 @@ public class ElectricGrinderTile extends BaseMachineTile {
                 shouldCheck = true;
             }
         };
-        outputInvData = machineIO.getHandlerData(outputInv);
+        outputInvData = machineIO.getHandlerData(outputInv, MachineIO.OUTPUT);
 
         recipeInv = new RecipeWrapper(inv);
 
@@ -100,6 +102,7 @@ public class ElectricGrinderTile extends BaseMachineTile {
                     this.type = type;
                 })
                 .build();
+        handlers.enable(HandlerStorage.ENERGY | HandlerStorage.ITEM);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package io.github.ramboxeu.techworks.common.util.machineio.handler;
 
+import io.github.ramboxeu.techworks.common.util.machineio.AutoMode;
 import io.github.ramboxeu.techworks.common.util.machineio.StorageMode;
 import io.github.ramboxeu.techworks.common.util.machineio.config.HandlerConfig;
 import io.github.ramboxeu.techworks.common.util.machineio.data.HandlerData;
@@ -11,6 +12,6 @@ import java.util.List;
  */
 public interface IHandlerContainer {
     HandlerConfig remove(HandlerData data);
-    void setStorageMode(HandlerData data, StorageMode mode);
+    void setStorageMode(HandlerData data, StorageMode mode, AutoMode autoMode);
     List<HandlerConfig> getConfigs();
 }

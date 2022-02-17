@@ -1,6 +1,7 @@
 package io.github.ramboxeu.techworks.common.util.machineio.config;
 
 import io.github.ramboxeu.techworks.Techworks;
+import io.github.ramboxeu.techworks.common.util.machineio.AutoMode;
 import io.github.ramboxeu.techworks.common.util.machineio.StorageMode;
 import io.github.ramboxeu.techworks.common.util.machineio.data.ItemHandlerData;
 import net.minecraftforge.items.IItemHandler;
@@ -18,7 +19,11 @@ public class ItemHandlerConfig extends HandlerConfig {
     }
 
     public ItemHandlerConfig(StorageMode mode, ItemHandlerData data) {
-        super(mode, data);
+        this(mode, AutoMode.OFF, data);
+    }
+
+    public ItemHandlerConfig(StorageMode mode, AutoMode autoMode, ItemHandlerData data) {
+        super(mode, autoMode, data);
         this.data = data;
 
         int maxSlot = data.getMaxSlot();

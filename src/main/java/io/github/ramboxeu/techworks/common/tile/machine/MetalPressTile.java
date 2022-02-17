@@ -1,6 +1,7 @@
 package io.github.ramboxeu.techworks.common.tile.machine;
 
 import io.github.ramboxeu.techworks.client.container.machine.MetalPressContainer;
+import io.github.ramboxeu.techworks.common.capability.HandlerStorage;
 import io.github.ramboxeu.techworks.common.component.ComponentStorage;
 import io.github.ramboxeu.techworks.common.energy.EnergyBattery;
 import io.github.ramboxeu.techworks.common.lang.TranslationKey;
@@ -13,6 +14,7 @@ import io.github.ramboxeu.techworks.common.registration.TechworksTiles;
 import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
 import io.github.ramboxeu.techworks.common.util.ItemUtils;
 import io.github.ramboxeu.techworks.common.util.NBTUtils;
+import io.github.ramboxeu.techworks.common.util.machineio.MachineIO;
 import io.github.ramboxeu.techworks.common.util.machineio.data.EnergyHandlerData;
 import io.github.ramboxeu.techworks.common.util.machineio.data.ItemHandlerData;
 import net.minecraft.block.BlockState;
@@ -55,7 +57,7 @@ public class MetalPressTile extends BaseMachineTile {
                 shouldCheck = true;
             }
         };
-        batteryData = machineIO.getHandlerData(battery);
+        batteryData = machineIO.getHandlerData(battery, MachineIO.INPUT | MachineIO.ALL);
 
         inv = new ItemStackHandler() {
             @Override
@@ -63,7 +65,7 @@ public class MetalPressTile extends BaseMachineTile {
                 shouldCheck = true;
             }
         };
-        invData = machineIO.getHandlerData(inv);
+        invData = machineIO.getHandlerData(inv, MachineIO.INPUT);
 
         outputInv = new ItemStackHandler() {
             @Override
@@ -71,11 +73,12 @@ public class MetalPressTile extends BaseMachineTile {
                 shouldCheck = true;
             }
         };
-        outputInvData = machineIO.getHandlerData(outputInv);
+        outputInvData = machineIO.getHandlerData(outputInv, MachineIO.OUTPUT);
 
         components = new ComponentStorage.Builder()
                 .component(TechworksComponents.ENERGY_STORAGE.get(), battery)
                 .build();
+        handlers.enable(HandlerStorage.ENERGY | HandlerStorage.ITEM);
 
         mode = Mode.GEAR;
         recipeInv = new RecipeWrapper(inv);

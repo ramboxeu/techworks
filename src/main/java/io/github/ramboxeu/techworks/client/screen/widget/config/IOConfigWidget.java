@@ -8,7 +8,7 @@ import io.github.ramboxeu.techworks.client.util.ClientUtils;
 import io.github.ramboxeu.techworks.client.util.RenderUtils;
 import io.github.ramboxeu.techworks.common.lang.TranslationKeys;
 import io.github.ramboxeu.techworks.common.util.Side;
-import io.github.ramboxeu.techworks.common.util.machineio.InputType;
+import io.github.ramboxeu.techworks.common.util.machineio.AutoMode;
 import io.github.ramboxeu.techworks.common.util.machineio.MachineIO;
 import io.github.ramboxeu.techworks.common.util.machineio.StorageMode;
 import io.github.ramboxeu.techworks.common.util.machineio.config.HandlerConfig;
@@ -17,10 +17,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.IReorderingProcessor;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.Color;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.util.text.*;
 
 import java.util.List;
 import java.util.function.Function;
@@ -67,9 +64,12 @@ public class IOConfigWidget extends BaseConfigWidget {
     private int modeIconOffset;
     private Side side;
     private boolean enabled;
+    private boolean autoPull;
+    private boolean autoPush;
     private ITextComponent info;
     private ITextComponent type;
     private StorageMode mode;
+    private AutoMode autoMode;
     private HandlerData selectedData;
     private HandlerConfig selectedConfig;
 
@@ -105,8 +105,21 @@ public class IOConfigWidget extends BaseConfigWidget {
             blit(stack, 7, 90, 185, 0, 9, 9);
         }
 
-        blit(stack, modeTextWidth + 13, 109, 203, 0, 53, 17);
-        blit(stack, modeTextWidth + 51, 113, 155 + modeIconOffset, 0, 10, 9);
+        if (!autoPull) {
+            blit(stack, 7, 102, 194, 0, 9, 9);
+        } else {
+            blit(stack, 7, 102, 185, 0, 9, 9);
+        }
+
+        if (!autoPush) {
+            blit(stack, 7, 114, 194, 0, 9, 9);
+        } else {
+            blit(stack, 7, 114, 185, 0, 9, 9);
+        }
+//        blit(stack, 7, 128, 194, 0, 9, 9);
+
+        blit(stack, modeTextWidth + 13, 109 + 19, 203, 0, 53, 17);
+        blit(stack, modeTextWidth + 51, 113 + 19, 155 + modeIconOffset, 0, 10, 9);
 
         int colorBoxRow = 0;
         for (int i = 0; i < colors.length; i++) {
@@ -144,8 +157,10 @@ public class IOConfigWidget extends BaseConfigWidget {
 
         ClientUtils.drawString(stack, minecraft.fontRenderer, info, 7, 76, false);
         ClientUtils.drawString(stack, minecraft.fontRenderer, TranslationKeys.ENABLED.styledText(DEFAULT_STYLE), 20, 91, false);
-        ClientUtils.drawString(stack, minecraft.fontRenderer, TranslationKeys.MODE.styledText(DEFAULT_STYLE).appendString(": "), 7, 113, false);
-        ClientUtils.drawString(stack, minecraft.fontRenderer, type, 18 + modeTextWidth, 114, false);
+        ClientUtils.drawString(stack, minecraft.fontRenderer, new StringTextComponent("Auto Pull").setStyle(DEFAULT_STYLE), 20, 103, false);
+        ClientUtils.drawString(stack, minecraft.fontRenderer, new StringTextComponent("Auto Push").setStyle(DEFAULT_STYLE), 20, 115, false);
+        ClientUtils.drawString(stack, minecraft.fontRenderer, TranslationKeys.MODE.styledText(DEFAULT_STYLE).appendString(": "), 7, 113 + 19, false);
+        ClientUtils.drawString(stack, minecraft.fontRenderer, type, 18 + modeTextWidth, 114 + 19, false);
     }
 
     @Override
@@ -159,7 +174,8 @@ public class IOConfigWidget extends BaseConfigWidget {
             int y = (int) (mouseY - guiTop);
 
             if (x >= 5 && y >= 31 && x <= 21 && y <= 47) {
-                updateSide(Side.LEFT, 4, 30);
+                // left
+                updateSide(Side.RIGHT, 4, 30);
 
                 return true;
             } else if (x >= 26 && y >= 31 && x <= 42 && y <= 47) {
@@ -167,7 +183,8 @@ public class IOConfigWidget extends BaseConfigWidget {
 
                 return true;
             } else if (x >= 47 && y >= 31 && x <= 63 && y <= 47) {
-                updateSide(Side.RIGHT, 46, 30);
+                // right
+                updateSide(Side.LEFT, 46, 30);
 
                 return true;
             } else if (x >= 47 && y >= 52 && x <= 63 && y <= 68) {
@@ -185,17 +202,34 @@ public class IOConfigWidget extends BaseConfigWidget {
             } else if (x >= 7 && y >= 90 && x <= 16 && y <= 99) {
                 enabled = !enabled;
                 playDownSound(Minecraft.getInstance().getSoundHandler());
-                container.changeStatus(side, selectedData, mode, enabled);
+                container.changeStatus(side, selectedData, mode, autoMode, enabled);
+                updateInfo();
 
                 return true;
-            } else if (x >= modeTextWidth + 13 && y >= 109 && x <= modeTextWidth + 66 && y <= 127) {
-                mode = mode.nextNonNone();
-                type = getModeText(mode);
-                modeIconOffset = nextModeOffset(mode);
-                playDownSound(Minecraft.getInstance().getSoundHandler());
+            } else if (x >= 7 && y >= 102 && x <= 16 && y <= 111) {
+                if (selectedConfig != null && selectedConfig.getBaseData().canAutoPull()) {
+                    autoPull = !autoPull;
+                    container.changeMode(side, selectedConfig, mode, autoMode.togglePull(autoPull));
+                    playDownSound(Minecraft.getInstance().getSoundHandler());
+                }
 
+                return true;
+            } else if (x >= 7 && y >= 114 && x <= 16 && y <= 123) {
+                if (selectedConfig != null && selectedConfig.getBaseData().canAutoPush()) {
+                    autoPush = !autoPush;
+                    container.changeMode(side, selectedConfig, mode, autoMode.togglePush(autoPush));
+                    playDownSound(Minecraft.getInstance().getSoundHandler());
+                }
+
+                return true;
+            } else if (x >= modeTextWidth + 13 && y >= 109 + 19 && x <= modeTextWidth + 66 && y <= 127 + 19) {
                 if (selectedConfig != null) {
-                    container.changeMode(side, selectedConfig, mode);
+                    mode = selectedConfig.nextMode();
+                    type = getModeText(mode);
+                    modeIconOffset = nextModeOffset(mode);
+                    playDownSound(Minecraft.getInstance().getSoundHandler());
+
+                    container.changeMode(side, selectedConfig, mode, autoMode);
                 }
 
                 return true;
@@ -246,18 +280,24 @@ public class IOConfigWidget extends BaseConfigWidget {
         if (selectedConfig != null) {
             enabled = true;
             mode = selectedConfig.getMode();
+            autoMode = selectedConfig.getAutoMode();
             modeIconOffset = nextModeOffset(mode);
+            autoPush = autoMode.isPush();
+            autoPull = autoMode.isPull();
         } else {
             enabled = false;
-            mode = StorageMode.BOTH;
-            modeIconOffset = 20;
+            mode = selectedData.getSupportedMode();
+            autoMode = AutoMode.OFF;
+            modeIconOffset = nextModeOffset(mode);
+            autoPush = false;
+            autoPull = false;
         }
 
         info = TranslationKeys.INFO.styledText(DEFAULT_STYLE)
                 .appendString(": ")
                 .appendSibling(getSideText(side))
                 .appendString(" ")
-                .appendSibling(getInputTypeText(selectedData.getType()));
+                .appendSibling(getInputTypeText(selectedData));
 
         type = getModeText(mode);
     }
@@ -266,8 +306,11 @@ public class IOConfigWidget extends BaseConfigWidget {
         return IReorderingProcessor.fromString(text, DEFAULT_STYLE);
     }
 
-    private static TranslationTextComponent getInputTypeText(InputType type) {
-        switch (type) {
+    private static TranslationTextComponent getInputTypeText(HandlerData data) {
+        if (data == null)
+            return NONE_TEXT;
+
+        switch (data.getType()) {
             case ITEM:
                 return ITEMS_TEXT;
             case LIQUID:

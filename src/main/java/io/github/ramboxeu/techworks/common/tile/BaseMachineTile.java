@@ -1,6 +1,8 @@
 package io.github.ramboxeu.techworks.common.tile;
 
+import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.api.wrench.IWrenchable;
+import io.github.ramboxeu.techworks.common.capability.HandlerStorage;
 import io.github.ramboxeu.techworks.common.component.ComponentStorage;
 import io.github.ramboxeu.techworks.common.network.TechworksPacketHandler;
 import io.github.ramboxeu.techworks.common.property.TechworksBlockStateProperties;
@@ -8,11 +10,14 @@ import io.github.ramboxeu.techworks.common.util.ItemUtils;
 import io.github.ramboxeu.techworks.common.util.NBTUtils;
 import io.github.ramboxeu.techworks.common.util.RedstoneMode;
 import io.github.ramboxeu.techworks.common.util.StandbyMode;
+import io.github.ramboxeu.techworks.common.util.machineio.MachinePort;
+import io.github.ramboxeu.techworks.common.util.machineio.config.HandlerConfig;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
@@ -20,6 +25,14 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,11 +44,13 @@ public abstract class BaseMachineTile extends BaseIOTile implements INamedContai
     protected ComponentStorage components;
     protected RedstoneMode redstoneMode;
     protected StandbyMode standbyMode;
+    protected HandlerStorage handlers;
 
     public BaseMachineTile(TileEntityType<?> tileEntityType) {
         super(tileEntityType);
         redstoneMode = RedstoneMode.IGNORE;
         standbyMode = StandbyMode.OFF;
+        handlers = new HandlerStorage();
     }
 
     // PASS continues the execution on the block side
@@ -44,6 +59,22 @@ public abstract class BaseMachineTile extends BaseIOTile implements INamedContai
     }
 
     public void onLeftClick(BlockState state, World worldIn, BlockPos pos, PlayerEntity player) {}
+
+    public void onNeighborChange(BlockState neighborState, BlockPos neighborPos, Direction side) {
+        Techworks.LOGGER.debug("onNeighborChange: neighborState = {}, neighborPos = {}, side = {}", neighborState, neighborPos, side);
+
+        TileEntity tile = world.getTileEntity(neighborPos);
+        if (tile != null) {
+            if (handlers.isEnabled(HandlerStorage.ITEM))
+                handlers.store(side, CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side.getOpposite()));
+
+            if (handlers.isEnabled(HandlerStorage.LIQUID) || handlers.isEnabled(HandlerStorage.GAS))
+                handlers.store(side, CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side.getOpposite()));
+
+            if (handlers.isEnabled(HandlerStorage.ENERGY))
+                handlers.store(side, CapabilityEnergy.ENERGY, tile.getCapability(CapabilityEnergy.ENERGY, side.getOpposite()));
+        }
+    }
 
     public Collection<ItemStack> getDrops() {
         return ItemUtils.collectContents(components);
@@ -57,6 +88,29 @@ public abstract class BaseMachineTile extends BaseIOTile implements INamedContai
         world.setBlockState(pos, getBlockState().with(TechworksBlockStateProperties.RUNNING, isWorking));
     }
 
+    protected void discoverHandlers() {
+        for (Direction side : Direction.values()) {
+            TileEntity tile = world.getTileEntity(pos.offset(side));
+
+            if (tile != null) {
+                if (handlers.isEnabled(HandlerStorage.ITEM))
+                    handlers.store(side, CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side.getOpposite()));
+
+                if (handlers.isEnabled(HandlerStorage.LIQUID) || handlers.isEnabled(HandlerStorage.GAS))
+                    handlers.store(side, CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side.getOpposite()));
+
+                if (handlers.isEnabled(HandlerStorage.ENERGY))
+                    handlers.store(side, CapabilityEnergy.ENERGY, tile.getCapability(CapabilityEnergy.ENERGY, side.getOpposite()));
+            }
+        }
+    }
+
+    @Override
+    protected void onFirstTick() {
+        super.onFirstTick();
+        discoverHandlers();
+    }
+
     @Override
     public void tick() {
         super.tick();
@@ -65,6 +119,152 @@ public abstract class BaseMachineTile extends BaseIOTile implements INamedContai
 
     @Override
     protected void serverTick() {
+        for (Direction side : Direction.values()) {
+            MachinePort port = machineIO.getPort(side);
+
+            for (HandlerConfig config : port.getItemConfigs()) {
+                if (handlers.getItem(side).isEmpty())
+                    break;
+
+                IItemHandler self = (IItemHandler) config.getBaseData().getObject();
+                IItemHandler handler = handlers.getItem(side).get(0);
+
+                if (config.getAutoMode().isPull() && config.getMode().canInput() && config.getBaseData().canAutoPull()) {
+                    for (int i = 0, size = handler.getSlots(); i < size; i++) {
+                        ItemStack stack = handler.extractItem(i, handler.getSlotLimit(i), true);
+                        ItemStack remainder = ItemUtils.insertItem(self, stack, false);
+
+                        if (!remainder.isEmpty()) {
+                            stack.shrink(remainder.getCount());
+                        }
+
+                        handler.extractItem(i, stack.getCount(), false);
+                    }
+                }
+
+                if (config.getAutoMode().isPush() && config.getMode().canOutput() && config.getBaseData().canAutoPush()) {
+                    for (int i = 0, size = self.getSlots(); i < size; i++) {
+                        ItemStack stack = self.extractItem(i, handler.getSlotLimit(i), true);
+                        ItemStack remainder = ItemUtils.insertItem(handler, stack, false);
+
+                        if (!remainder.isEmpty()) {
+                            stack.shrink(remainder.getCount());
+                        }
+
+                        self.extractItem(i, stack.getCount(), false);
+                    }
+                }
+            }
+
+            for (HandlerConfig config : port.getEnergyConfigs()) {
+                if (handlers.getEnergy(side).isEmpty())
+                    break;
+
+                IEnergyStorage storage = handlers.getEnergy(side).get(0);
+                IEnergyStorage self = (IEnergyStorage) config.getBaseData().getObject();
+
+                if (config.getAutoMode().isPull() && config.getMode().canInput() && config.getBaseData().canAutoPull()) {
+                    int energy = storage.extractEnergy(Integer.MAX_VALUE, true);
+                    int consumed = self.receiveEnergy(energy, false);
+
+                    storage.extractEnergy(consumed, false);
+                }
+
+                if (config.getAutoMode().isPush() && config.getMode().canOutput() && config.getBaseData().canAutoPush()) {
+                    int energy = self.extractEnergy(Integer.MAX_VALUE, true);
+                    int consumed = storage.receiveEnergy(energy, false);
+
+                    self.extractEnergy(consumed, false);
+                }
+            }
+
+            for (HandlerConfig config : port.getGasConfigs()) {
+                if (handlers.getGas(side).isEmpty())
+                    break;
+
+                IFluidTank self = (IFluidTank) config.getBaseData().getObject();
+                IFluidHandler handler = handlers.getGas(side).get(0);
+
+                if (config.getAutoMode().isPull() && config.getMode().canInput() && config.getBaseData().canAutoPull()) {
+                    FluidStack fluid = self.getFluid();
+
+                    if (fluid.isEmpty()) {
+                        for (int i = 0, size = handler.getTanks(); i < size; i++) {
+                            FluidStack stored = handler.getFluidInTank(i);
+
+                            if (!stored.isEmpty()) {
+                                fluid = stored.copy();
+                                break;
+                            }
+                        }
+                    } else {
+                        fluid = fluid.copy();
+                    }
+
+                    fluid.setAmount(Integer.MAX_VALUE);
+
+                    FluidStack drained = handler.drain(fluid, IFluidHandler.FluidAction.SIMULATE);
+
+                    if (!drained.isEmpty()) {
+                        int filled = self.fill(drained, IFluidHandler.FluidAction.EXECUTE);
+                        drained.setAmount(filled);
+                        handler.drain(drained, IFluidHandler.FluidAction.EXECUTE);
+                    }
+                }
+
+                if (config.getAutoMode().isPush() && config.getMode().canOutput() && config.getBaseData().canAutoPush()) {
+                    if (!self.getFluid().isEmpty()) {
+                        FluidStack fluid = self.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.SIMULATE);
+                        int filled = handler.fill(fluid, IFluidHandler.FluidAction.EXECUTE);
+                        self.drain(filled, IFluidHandler.FluidAction.EXECUTE);
+                    }
+                }
+            }
+
+            for (HandlerConfig config : port.getLiquidConfigs()) {
+                if (handlers.getLiquid(side).isEmpty())
+                    break;
+
+                IFluidTank self = (IFluidTank) config.getBaseData().getObject();
+                IFluidHandler handler = handlers.getLiquid(side).get(0);
+
+                if (config.getAutoMode().isPull() && config.getMode().canInput() && config.getBaseData().canAutoPull()) {
+                    FluidStack fluid = self.getFluid();
+
+                    if (fluid.isEmpty()) {
+                        for (int i = 0, size = handler.getTanks(); i < size; i++) {
+                            FluidStack stored = handler.getFluidInTank(i);
+
+                            if (!stored.isEmpty()) {
+                                fluid = stored.copy();
+                                break;
+                            }
+                        }
+                    } else {
+                        fluid = fluid.copy();
+                    }
+
+                    fluid.setAmount(Integer.MAX_VALUE);
+
+                    FluidStack drained = handler.drain(fluid, IFluidHandler.FluidAction.SIMULATE);
+
+                    if (!drained.isEmpty()) {
+                        int filled = self.fill(drained, IFluidHandler.FluidAction.EXECUTE);
+                        drained.setAmount(filled);
+                        handler.drain(drained, IFluidHandler.FluidAction.EXECUTE);
+                    }
+                }
+
+                if (config.getAutoMode().isPush() && config.getMode().canOutput() && config.getBaseData().canAutoPush()) {
+                    if (!self.getFluid().isEmpty()) {
+                        FluidStack fluid = self.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.SIMULATE);
+                        int filled = handler.fill(fluid, IFluidHandler.FluidAction.EXECUTE);
+                        self.drain(filled, IFluidHandler.FluidAction.EXECUTE);
+                    }
+                }
+            }
+        }
+
         if (standbyMode.canWork() && redstoneMode.canWork(world.isBlockPowered(pos))) {
             workTick();
         }

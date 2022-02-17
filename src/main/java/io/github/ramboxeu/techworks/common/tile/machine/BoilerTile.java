@@ -1,6 +1,7 @@
 package io.github.ramboxeu.techworks.common.tile.machine;
 
 import io.github.ramboxeu.techworks.client.container.machine.BoilerContainer;
+import io.github.ramboxeu.techworks.common.capability.HandlerStorage;
 import io.github.ramboxeu.techworks.common.component.ComponentStorage;
 import io.github.ramboxeu.techworks.common.fluid.handler.GasTank;
 import io.github.ramboxeu.techworks.common.fluid.handler.LiquidTank;
@@ -15,6 +16,7 @@ import io.github.ramboxeu.techworks.common.util.FluidUtils;
 import io.github.ramboxeu.techworks.common.util.ItemUtils;
 import io.github.ramboxeu.techworks.common.util.NBTUtils;
 import io.github.ramboxeu.techworks.common.util.Utils;
+import io.github.ramboxeu.techworks.common.util.machineio.MachineIO;
 import io.github.ramboxeu.techworks.common.util.machineio.data.GasHandlerData;
 import io.github.ramboxeu.techworks.common.util.machineio.data.LiquidHandlerData;
 import net.minecraft.block.BlockState;
@@ -38,9 +40,7 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
@@ -75,7 +75,7 @@ public class BoilerTile extends BaseMachineTile {
                 return stack.getFluid().isIn(FluidTags.WATER);
             }
         };
-        waterTankData = machineIO.getHandlerData(waterTank);
+        waterTankData = machineIO.getHandlerData(waterTank, MachineIO.INPUT);
 
         steamTank = new GasTank(){
             @Override
@@ -83,13 +83,14 @@ public class BoilerTile extends BaseMachineTile {
                 return stack.getFluid().isIn(TechworksFluidTags.STEAM);
             }
         };
-        steamTankData = machineIO.getHandlerData(steamTank);
+        steamTankData = machineIO.getHandlerData(steamTank, MachineIO.OUTPUT);
 
         components = new ComponentStorage.Builder()
                 .component(TechworksComponents.LIQUID_STORAGE.get(), waterTank)
                 .component(TechworksComponents.GAS_STORAGE.get(), steamTank)
                 .component(TechworksComponents.HEATING.get(), (component, stack) -> heater = component.getHeaterType().createHeater())
                 .build();
+        handlers.enable(HandlerStorage.LIQUID | HandlerStorage.GAS);
 
         steamEngines = new ArrayList<>(4);
     }

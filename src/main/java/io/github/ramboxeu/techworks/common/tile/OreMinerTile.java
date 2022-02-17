@@ -3,6 +3,7 @@ package io.github.ramboxeu.techworks.common.tile;
 import com.mojang.authlib.GameProfile;
 import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.client.container.machine.OreMinerContainer;
+import io.github.ramboxeu.techworks.common.capability.HandlerStorage;
 import io.github.ramboxeu.techworks.common.component.ComponentStorage;
 import io.github.ramboxeu.techworks.common.energy.EnergyBattery;
 import io.github.ramboxeu.techworks.common.lang.TranslationKeys;
@@ -11,6 +12,7 @@ import io.github.ramboxeu.techworks.common.network.TechworksPacketHandler;
 import io.github.ramboxeu.techworks.common.registration.TechworksComponents;
 import io.github.ramboxeu.techworks.common.registration.TechworksTiles;
 import io.github.ramboxeu.techworks.common.util.ItemUtils;
+import io.github.ramboxeu.techworks.common.util.machineio.MachineIO;
 import io.github.ramboxeu.techworks.common.util.machineio.data.EnergyHandlerData;
 import io.github.ramboxeu.techworks.common.util.machineio.data.ItemHandlerData;
 import net.minecraft.block.Block;
@@ -78,7 +80,7 @@ public class OreMinerTile extends BaseMachineTile {
                 check = true;
             }
         };
-        batteryData = machineIO.getHandlerData(battery);
+        batteryData = machineIO.getHandlerData(battery, MachineIO.INPUT | MachineIO.ALL);
 
         inv = new ItemStackHandler(12) {
             @Override
@@ -86,7 +88,7 @@ public class OreMinerTile extends BaseMachineTile {
                 check = true;
             }
         };
-        invData = machineIO.getHandlerData(inv);
+        invData = machineIO.getHandlerData(inv, MachineIO.INPUT);
 
         components = new ComponentStorage.Builder()
                 .component(TechworksComponents.ENERGY_STORAGE.get(), battery)
@@ -95,6 +97,7 @@ public class OreMinerTile extends BaseMachineTile {
                     miningTime = component.getMiningTime();
                 })
                 .build();
+        handlers.enable(HandlerStorage.ENERGY | HandlerStorage.ITEM);
     }
 
     @Override

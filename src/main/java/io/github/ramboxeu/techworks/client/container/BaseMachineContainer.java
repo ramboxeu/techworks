@@ -5,6 +5,7 @@ import io.github.ramboxeu.techworks.common.network.TechworksPacketHandler;
 import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
 import io.github.ramboxeu.techworks.common.util.Side;
 import io.github.ramboxeu.techworks.common.util.inventory.SlotBuilder;
+import io.github.ramboxeu.techworks.common.util.machineio.AutoMode;
 import io.github.ramboxeu.techworks.common.util.machineio.StorageMode;
 import io.github.ramboxeu.techworks.common.util.machineio.config.HandlerConfig;
 import io.github.ramboxeu.techworks.common.util.machineio.data.HandlerData;
@@ -42,25 +43,14 @@ public abstract class BaseMachineContainer<T extends BaseMachineTile> extends Ba
         return addSlot(slotBuilder.build());
     }
 
-    public void changeStatus(Side side, HandlerData data, StorageMode mode, boolean enabled) {
-        TechworksPacketHandler.syncHandlerStatus(machineTile.getPos(), data, side, mode, enabled);
-//        List<HandlerConfig> list = dataMap.computeIfAbsent(side, s -> new ArrayList<>());
-        HandlerConfig config = machineTile.getMachineIO().setConfigStatus(data.getIdentity(), side, data.getType(), mode, enabled);
-
-//        if (config != null) {
-//            if (enabled) {
-//                list.add(config);
-//            } else {
-//                list.remove(config);
-//            }
-//        }
+    public void changeStatus(Side side, HandlerData data, StorageMode mode, AutoMode autoMode, boolean enabled) {
+        TechworksPacketHandler.syncHandlerStatus(machineTile.getPos(), data, side, mode, autoMode, enabled);
+        machineTile.getMachineIO().setConfigStatus(data.getIdentity(), side, data.getType(), mode, autoMode, enabled);
     }
 
-    public void changeMode(Side side, HandlerConfig config, StorageMode mode) {
-        TechworksPacketHandler.syncHandlerConfigMode(machineTile.getPos(), mode, config, side);
-
-        machineTile.getMachineIO().setHandlerConfigMode(config.getBaseData().getIdentity(), side, mode, config.getBaseData().getType());
-//        dataMap.computeIfAbsent(side, s -> new ArrayList<>()).stream().filter(c -> c.getBaseData() == data).findFirst().ifPresent(c -> c.setMode(mode));
+    public void changeMode(Side side, HandlerConfig config, StorageMode mode, AutoMode autoMode) {
+        TechworksPacketHandler.syncHandlerConfigMode(machineTile.getPos(), mode, autoMode, config, side);
+        machineTile.getMachineIO().setHandlerConfigMode(config.getBaseData().getIdentity(), side, mode, config.getBaseData().getType(), autoMode);
     }
 
     public void addData(HandlerData data) {

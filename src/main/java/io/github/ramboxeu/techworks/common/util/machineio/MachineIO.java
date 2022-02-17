@@ -8,7 +8,6 @@ import io.github.ramboxeu.techworks.common.fluid.handler.IGasTank;
 import io.github.ramboxeu.techworks.common.fluid.handler.ILiquidTank;
 import io.github.ramboxeu.techworks.common.item.handler.ItemHandlerContainer;
 import io.github.ramboxeu.techworks.common.util.Side;
-import io.github.ramboxeu.techworks.common.util.function.TriConsumer;
 import io.github.ramboxeu.techworks.common.util.machineio.config.EnergyHandlerConfig;
 import io.github.ramboxeu.techworks.common.util.machineio.config.FluidHandlerConfig;
 import io.github.ramboxeu.techworks.common.util.machineio.config.HandlerConfig;
@@ -36,6 +35,16 @@ import java.util.stream.Stream;
 
 public class MachineIO implements ICapabilityProvider, INBTSerializable<CompoundNBT> {
     public static final MachineIO DISABLED = new MachineIO();
+
+    public static final int INPUT = 1;
+    public static final int OUTPUT = 2;
+    public static final int BOTTOM = 4;
+    public static final int TOP = 8;
+    public static final int FRONT = 16;
+    public static final int RIGHT = 32;
+    public static final int BACK = 64;
+    public static final int LEFT = 128;
+    public static final int ALL = 256;
 
     private final Supplier<Direction> facing;
     private final MainMapper mainMapper;
@@ -158,6 +167,7 @@ public class MachineIO implements ICapabilityProvider, INBTSerializable<Compound
                     CompoundNBT configTag = new CompoundNBT();
                     configTag.putInt("Id", config.getBaseData().getIdentity());
                     configTag.putString("Mode", config.getMode().name());
+                    configTag.putString("Auto", config.getAutoMode().name());
                     configTag.putString("Type", config.getBaseData().getType().name());
 
                     listTag.add(i, configTag);
@@ -183,21 +193,24 @@ public class MachineIO implements ICapabilityProvider, INBTSerializable<Compound
                 CompoundNBT configTag = listTag.getCompound(i);
                 int id = configTag.getInt("Id");
                 StorageMode mode = StorageMode.valueOf(configTag.getString("Mode"));
+                AutoMode autoMode;
+                if (configTag.contains("Auto")) autoMode = AutoMode.valueOf(configTag.getString("Auto"));
+                else autoMode = AutoMode.OFF;
                 InputType type = InputType.valueOf(configTag.getString("Type"));
 
                 // Prevent duplicate configs caused by adding data before deserialization
                 switch (type) {
                     case ITEM:
-                        addHandlerData(side, itemHandlerPool.get(id), mode);
+                        addHandlerData(side, itemHandlerPool.get(id), mode, autoMode);
                         break;
                     case LIQUID:
-                        addHandlerData(side, liquidTankPool.get(id), mode);
+                        addHandlerData(side, liquidTankPool.get(id), mode, autoMode);
                         break;
                     case GAS:
-                        addHandlerData(side, gasTankPool.get(id), mode);
+                        addHandlerData(side, gasTankPool.get(id), mode, autoMode);
                         break;
                     case ENERGY:
-                        addHandlerData(side, energyStoragePool.get(id), mode);
+                        addHandlerData(side, energyStoragePool.get(id), mode, autoMode);
                         break;
                 }
             }
@@ -212,7 +225,7 @@ public class MachineIO implements ICapabilityProvider, INBTSerializable<Compound
         List<ItemHandlerData> list = new ArrayList<>(handlers.length);
 
         for (IItemHandler handler : handlers) {
-            ItemHandlerData data = new ItemHandlerData(null, InputType.ITEM, getColor(), itemHandlerPool.size(), handler, 0, handler.getSlots() - 1);
+            ItemHandlerData data = new ItemHandlerData(InputType.ITEM, getColor(), itemHandlerPool.size(), handler, 0, handler.getSlots() - 1, StorageMode.BOTH);
             list.add(data);
             itemHandlerPool.add(data);
         }
@@ -221,16 +234,35 @@ public class MachineIO implements ICapabilityProvider, INBTSerializable<Compound
     }
 
     public ItemHandlerData getHandlerData(IItemHandler handler) {
-        ItemHandlerData data = new ItemHandlerData(null, InputType.ITEM, getColor(), itemHandlerPool.size(), handler, 0, handler.getSlots() - 1);
+        ItemHandlerData data = new ItemHandlerData(InputType.ITEM, getColor(), itemHandlerPool.size(), handler, 0, handler.getSlots() - 1, StorageMode.BOTH);
 
         itemHandlerPool.add(data);
         return data;
     }
 
+    public ItemHandlerData getHandlerData(IItemHandler handler, int flags) {
+        StorageMode supportedMode = getSupportedMode(flags);
+        ItemHandlerData data = new ItemHandlerData(InputType.ITEM, getColor(), itemHandlerPool.size(), handler, 0, handler.getSlots() - 1, supportedMode);
+        itemHandlerPool.add(data);
+        createConfigs(flags, data, supportedMode, AutoMode.OFF, this::addHandlerData);
+
+        return data;
+    }
+
+
     public ItemHandlerData getHandlerData(IItemHandler handler, int minSlot, int maxSlot) {
-        ItemHandlerData data = new ItemHandlerData(null, InputType.ITEM, getColor(), itemHandlerPool.size(), handler, minSlot, maxSlot);
+        ItemHandlerData data = new ItemHandlerData(InputType.ITEM, getColor(), itemHandlerPool.size(), handler, minSlot, maxSlot, StorageMode.BOTH);
 
         itemHandlerPool.add(data);
+        return data;
+    }
+
+    public ItemHandlerData getHandlerData(IItemHandler handler, int minSlot, int maxSlot, int flags) {
+        StorageMode supportedMode = getSupportedMode(flags);
+        ItemHandlerData data = new ItemHandlerData(InputType.ITEM, getColor(), itemHandlerPool.size(), handler, minSlot, maxSlot, supportedMode);
+        itemHandlerPool.add(data);
+        createConfigs(flags, data, supportedMode, AutoMode.OFF, this::addHandlerData);
+
         return data;
     }
 
@@ -238,7 +270,7 @@ public class MachineIO implements ICapabilityProvider, INBTSerializable<Compound
         List<LiquidHandlerData> list = new ArrayList<>(tanks.length);
 
         for (ILiquidTank tank : tanks) {
-            LiquidHandlerData data = new LiquidHandlerData(InputType.LIQUID, getColor(), liquidTankPool.size(), tank);
+            LiquidHandlerData data = new LiquidHandlerData(InputType.LIQUID, getColor(), liquidTankPool.size(), tank, StorageMode.BOTH);
             list.add(data);
             liquidTankPool.add(data);
         }
@@ -247,9 +279,18 @@ public class MachineIO implements ICapabilityProvider, INBTSerializable<Compound
     }
 
     public LiquidHandlerData getHandlerData(ILiquidTank tank) {
-        LiquidHandlerData data = new LiquidHandlerData(InputType.LIQUID, getColor(), liquidTankPool.size(), tank);
+        LiquidHandlerData data = new LiquidHandlerData(InputType.LIQUID, getColor(), liquidTankPool.size(), tank, StorageMode.BOTH);
 
         liquidTankPool.add(data);
+        return data;
+    }
+
+    public LiquidHandlerData getHandlerData(ILiquidTank tank, int flags) {
+        StorageMode supportedMode = getSupportedMode(flags);
+        LiquidHandlerData data = new LiquidHandlerData(InputType.LIQUID, getColor(), liquidTankPool.size(), tank, supportedMode);
+        liquidTankPool.add(data);
+        createConfigs(flags, data, supportedMode, AutoMode.OFF, this::addHandlerData);
+
         return data;
     }
 
@@ -257,7 +298,7 @@ public class MachineIO implements ICapabilityProvider, INBTSerializable<Compound
         List<GasHandlerData> list = new ArrayList<>(tanks.length);
 
         for (IGasTank tank : tanks) {
-            GasHandlerData data = new GasHandlerData(InputType.GAS, getColor(), -1, tank);
+            GasHandlerData data = new GasHandlerData(InputType.GAS, getColor(), -1, tank, StorageMode.BOTH);
             list.add(data);
             gasTankPool.add(data);
         }
@@ -266,9 +307,18 @@ public class MachineIO implements ICapabilityProvider, INBTSerializable<Compound
     }
 
     public GasHandlerData getHandlerData(IGasTank tank) {
-        GasHandlerData data = new GasHandlerData(InputType.GAS, getColor(), gasTankPool.size(), tank);
+        GasHandlerData data = new GasHandlerData(InputType.GAS, getColor(), gasTankPool.size(), tank, StorageMode.BOTH);
 
         gasTankPool.add(data);
+        return data;
+    }
+
+    public GasHandlerData getHandlerData(IGasTank tank, int flags) {
+        StorageMode supportedMode = getSupportedMode(flags);
+        GasHandlerData data = new GasHandlerData(InputType.GAS, getColor(), gasTankPool.size(), tank, supportedMode);
+        gasTankPool.add(data);
+        createConfigs(flags, data, supportedMode, AutoMode.OFF, this::addHandlerData);
+
         return data;
     }
 
@@ -276,7 +326,7 @@ public class MachineIO implements ICapabilityProvider, INBTSerializable<Compound
         List<EnergyHandlerData> list = new ArrayList<>(storages.length);
 
         for (IEnergyStorage storage : storages) {
-            EnergyHandlerData data = new EnergyHandlerData(InputType.ENERGY, getColor(), energyStoragePool.size(), storage);
+            EnergyHandlerData data = new EnergyHandlerData(InputType.ENERGY, getColor(), energyStoragePool.size(), storage, StorageMode.BOTH);
             list.add(data);
             energyStoragePool.add(data);
         }
@@ -285,10 +335,47 @@ public class MachineIO implements ICapabilityProvider, INBTSerializable<Compound
     }
 
     public EnergyHandlerData getHandlerData(IEnergyStorage storage) {
-        EnergyHandlerData data = new EnergyHandlerData(InputType.ENERGY, getColor(), energyStoragePool.size(), storage);
+        EnergyHandlerData data = new EnergyHandlerData(InputType.ENERGY, getColor(), energyStoragePool.size(), storage, StorageMode.BOTH);
 
         energyStoragePool.add(data);
         return data;
+    }
+
+    public EnergyHandlerData getHandlerData(IEnergyStorage storage, int flags) {
+        StorageMode supportedMode = getSupportedMode(flags);
+        EnergyHandlerData data = new EnergyHandlerData(InputType.ENERGY, getColor(), energyStoragePool.size(), storage, supportedMode);
+        energyStoragePool.add(data);
+        createConfigs(flags, data, supportedMode, AutoMode.OFF, this::addHandlerData);
+
+        return data;
+    }
+
+    private StorageMode getSupportedMode(int flags) {
+        if ((flags & INPUT) != 0) {
+            if ((flags & OUTPUT) != 0)
+                return StorageMode.BOTH;
+
+            return StorageMode.INPUT;
+        }
+
+        if ((flags & OUTPUT) != 0)
+            return StorageMode.OUTPUT;
+
+        return StorageMode.NONE;
+    }
+
+    private <T extends HandlerData> void createConfigs(int flags, T data, StorageMode mode, AutoMode autoMode, IDataAdder<T> dataAdder) {
+        if ((flags & ALL) != 0) {
+            for (Side side : Side.external())
+                dataAdder.add(side, data, mode, AutoMode.OFF);
+        } else {
+            for (int i = 0; i < 6; i++) {
+                int mask = BOTTOM << i;
+
+                if ((flags & mask) != 0)
+                    dataAdder.add(Side.external()[i + 1], data, mode, autoMode);
+            }
+        }
     }
 
     private MachinePort getPortInternal(Side side) {
@@ -356,105 +443,110 @@ public class MachineIO implements ICapabilityProvider, INBTSerializable<Compound
         container.addHandlers(configs);
     }
 
-    public EnergyHandlerConfig addHandlerData(Side side, EnergyHandlerData data, StorageMode mode) {
+    public EnergyHandlerConfig addHandlerData(Side side, EnergyHandlerData data, StorageMode mode, AutoMode autoMode) {
         MachinePort port = getPortInternal(side);
         EnergyHandlerContainer container = getContainer(EnergyHandlerContainer.class, port, InputType.ENERGY, EnergyHandlerContainer::new);
 
-        return container.addHandler(new EnergyHandlerConfig(mode, data));
+        return container.addHandler(new EnergyHandlerConfig(mode, autoMode, data));
     }
 
-    public ItemHandlerConfig addHandlerData(Side side, ItemHandlerData data, StorageMode mode) {
+    public ItemHandlerConfig addHandlerData(Side side, ItemHandlerData data, StorageMode mode, AutoMode autoMode) {
         MachinePort port = getPortInternal(side);
         ItemHandlerContainer container = getContainer(ItemHandlerContainer.class, port, InputType.ITEM, ItemHandlerContainer::new);
 
-        return container.addHandler(new ItemHandlerConfig(mode, data));
+        return container.addHandler(new ItemHandlerConfig(mode, autoMode, data));
     }
 
-    public FluidHandlerConfig addHandlerData(Side side, LiquidHandlerData data, StorageMode mode) {
+    public FluidHandlerConfig addHandlerData(Side side, LiquidHandlerData data, StorageMode mode, AutoMode autoMode) {
         MachinePort port = getPortInternal(side);
         FluidHandlerContainer container = getContainer(FluidHandlerContainer.class, port, InputType.LIQUID, FluidHandlerContainer::new);
 
-        return container.addHandler(new FluidHandlerConfig(mode, data));
+        return container.addHandler(new FluidHandlerConfig(mode, autoMode, data));
     }
 
-    public FluidHandlerConfig addHandlerData(Side side, GasHandlerData data, StorageMode mode) {
+    public FluidHandlerConfig addHandlerData(Side side, GasHandlerData data, StorageMode mode, AutoMode autoMode) {
         MachinePort port = getPortInternal(side);
         FluidHandlerContainer container = getContainer(FluidHandlerContainer.class, port, InputType.GAS, FluidHandlerContainer::new);
 
-        return container.addHandler(new FluidHandlerConfig(mode, data));
+        return container.addHandler(new FluidHandlerConfig(mode, autoMode, data));
     }
 
     /*
      * public void addHandlerData(EnergyHandlerData data, Side ...sides)
      */
 
-    private <T extends HandlerData, U extends IHandlerContainer> void addOrModifyConfig(Side side, InputType type, StorageMode mode, T data, TriConsumer<Side, T, StorageMode> dataAdder, Class<U> clazz) {
+    private <T extends HandlerData, U extends IHandlerContainer> void addOrModifyConfig(Side side, InputType type, StorageMode mode, AutoMode autoMode, T data, IDataAdder<T> dataAdder, Class<U> clazz) {
         MachinePort port = getPort(side);
         LazyOptional<?> holder = port.getHolder(type);
 
         if (holder == null || !holder.isPresent()) {
-            dataAdder.accept(side, data, mode);
+            dataAdder.add(side, data, mode, autoMode);
         } else {
             Object held = holder.orElse(null);
 
             if (held.getClass() == clazz) {
-                clazz.cast(held).setStorageMode(data, mode);
+                clazz.cast(held).setStorageMode(data, mode, autoMode);
             } else {
-                dataAdder.accept(side, data, mode);
+                dataAdder.add(side, data, mode, autoMode);
             }
         }
     }
 
-    public void setHandlerConfigMode(int poolIndex, Side side, StorageMode mode, InputType type) {
+    public void setHandlerConfigMode(int poolIndex, Side side, StorageMode mode, InputType type, AutoMode autoMode) {
         switch (type) {
             case ITEM: {
                 if (itemHandlerPool.size() <= poolIndex) return;
                 ItemHandlerData data = itemHandlerPool.get(poolIndex);
-                addOrModifyConfig(side, type, mode, data, this::addHandlerData, ItemHandlerContainer.class);
+                addOrModifyConfig(side, type, mode, autoMode, data, this::addHandlerData, ItemHandlerContainer.class);
                 break;
             }
             case LIQUID: {
                 if (liquidTankPool.size() <= poolIndex) return;
                 LiquidHandlerData data = liquidTankPool.get(poolIndex);
-                addOrModifyConfig(side, type, mode, data, this::addHandlerData, FluidHandlerContainer.class);
+                addOrModifyConfig(side, type, mode, autoMode, data, this::addHandlerData, FluidHandlerContainer.class);
                 break;
             }
             case GAS: {
                 if (gasTankPool.size() <= poolIndex) return;
                 GasHandlerData data = gasTankPool.get(poolIndex);
-                addOrModifyConfig(side, type, mode, data, this::addHandlerData, FluidHandlerContainer.class);
+                addOrModifyConfig(side, type, mode, autoMode, data, this::addHandlerData, FluidHandlerContainer.class);
                 break;
             }
             case ENERGY: {
                 if (energyStoragePool.size() <= poolIndex) return;
                 EnergyHandlerData data = energyStoragePool.get(poolIndex);
-                addOrModifyConfig(side, type, mode, data, this::addHandlerData, EnergyHandlerContainer.class);
+                addOrModifyConfig(side, type, mode, autoMode, data, this::addHandlerData, EnergyHandlerContainer.class);
                 break;
             }
         }
     }
-
-    public HandlerConfig setConfigStatus(int poolIndex, Side side, InputType type, StorageMode mode, boolean enabled) {
+    public void setConfigStatus(int poolIndex, Side side, InputType type, StorageMode mode, AutoMode autoMode, boolean enabled) {
         switch (type) {
             case ITEM: {
                 ItemHandlerData data = itemHandlerPool.get(poolIndex);
-                return enabled ? addHandlerData(side, data, mode) : removeHandler(side, data);
+                if (enabled) addHandlerData(side, data, mode, autoMode);
+                else removeHandler(side, data);
+                break;
             }
             case LIQUID: {
                 LiquidHandlerData data = liquidTankPool.get(poolIndex);
-                return enabled ? addHandlerData(side, data, mode) : removeHandler(side, data);
+                if (enabled) addHandlerData(side, data, mode, autoMode);
+                else removeHandler(side, data);
+                break;
             }
             case GAS: {
                 GasHandlerData data = gasTankPool.get(poolIndex);
-                return enabled ? addHandlerData(side, data, mode) : removeHandler(side, data);
+                if (enabled) addHandlerData(side, data, mode, autoMode);
+                else removeHandler(side, data);
+                break;
             }
             case ENERGY: {
                 EnergyHandlerData data = energyStoragePool.get(poolIndex);
-                return enabled ? addHandlerData(side, data, mode) : removeHandler(side, data);
+                if (enabled) addHandlerData(side, data, mode, autoMode);
+                else removeHandler(side, data);
+                break;
             }
         }
-
-        return null;
     }
 
     private IHandlerContainer getContainerForRemoval(Side side, InputType type) {

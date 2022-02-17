@@ -1,5 +1,6 @@
 package io.github.ramboxeu.techworks.common.util.machineio.config;
 
+import io.github.ramboxeu.techworks.common.util.machineio.AutoMode;
 import io.github.ramboxeu.techworks.common.util.machineio.StorageMode;
 import io.github.ramboxeu.techworks.common.util.machineio.data.GasHandlerData;
 import io.github.ramboxeu.techworks.common.util.machineio.data.LiquidHandlerData;
@@ -17,12 +18,20 @@ public class FluidHandlerConfig extends HandlerConfig {
     }
 
     public FluidHandlerConfig(StorageMode mode, LiquidHandlerData data) {
-        super(mode, data);
+        this(mode, AutoMode.OFF, data);
+    }
+
+    public FluidHandlerConfig(StorageMode mode, AutoMode autoMode, LiquidHandlerData data) {
+        super(mode, autoMode, data);
         tank = data.getHandler();
     }
 
     public FluidHandlerConfig(StorageMode mode, GasHandlerData data) {
-        super(mode, data);
+        this(mode, AutoMode.OFF, data);
+    }
+
+    public FluidHandlerConfig(StorageMode mode, AutoMode autoMode, GasHandlerData data) {
+        super(mode, autoMode, data);
         tank = data.getHandler();
     }
 

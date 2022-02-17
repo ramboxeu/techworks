@@ -1,6 +1,7 @@
 package io.github.ramboxeu.techworks.common.tile.machine;
 
 import io.github.ramboxeu.techworks.client.container.machine.ElectricFurnaceContainer;
+import io.github.ramboxeu.techworks.common.capability.HandlerStorage;
 import io.github.ramboxeu.techworks.common.component.ComponentStorage;
 import io.github.ramboxeu.techworks.common.energy.EnergyBattery;
 import io.github.ramboxeu.techworks.common.lang.TranslationKeys;
@@ -12,6 +13,7 @@ import io.github.ramboxeu.techworks.common.registration.TechworksRecipes;
 import io.github.ramboxeu.techworks.common.registration.TechworksTiles;
 import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
 import io.github.ramboxeu.techworks.common.util.ItemUtils;
+import io.github.ramboxeu.techworks.common.util.machineio.MachineIO;
 import io.github.ramboxeu.techworks.common.util.machineio.data.EnergyHandlerData;
 import io.github.ramboxeu.techworks.common.util.machineio.data.ItemHandlerData;
 import net.minecraft.block.BlockState;
@@ -62,7 +64,7 @@ public class ElectricFurnaceTile extends BaseMachineTile {
                 shouldCheck = true;
             }
         };
-        invData = machineIO.getHandlerData(inv);
+        invData = machineIO.getHandlerData(inv, MachineIO.INPUT);
 
         outputInv = new ItemStackHandler(1) {
             @Override
@@ -71,7 +73,7 @@ public class ElectricFurnaceTile extends BaseMachineTile {
                 shouldCheck = true;
             }
         };
-        outputInvData = machineIO.getHandlerData(outputInv);
+        outputInvData = machineIO.getHandlerData(outputInv, MachineIO.OUTPUT);
 
         recipeInv = new RecipeWrapper(inv);
 
@@ -84,7 +86,7 @@ public class ElectricFurnaceTile extends BaseMachineTile {
                 }
             }
         };
-        batteryData = machineIO.getHandlerData(battery);
+        batteryData = machineIO.getHandlerData(battery, MachineIO.INPUT | MachineIO.ALL);
 
         components = new ComponentStorage.Builder()
                 .component(TechworksComponents.SMELTING.get(), (smelting, stack) -> {
@@ -94,6 +96,7 @@ public class ElectricFurnaceTile extends BaseMachineTile {
                 })
                 .component(TechworksComponents.ENERGY_STORAGE.get(), battery)
                 .build();
+        handlers.enable(HandlerStorage.ENERGY | HandlerStorage.ITEM);
     }
 
     private boolean checkRecipe() {

@@ -14,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -22,6 +23,8 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorld;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.common.util.Constants;
@@ -113,5 +116,25 @@ public abstract class BaseMachineBlock extends DirectionalProcessingBlock implem
         if (tag != null && tag.contains("TileEntity", Constants.NBT.TAG_COMPOUND)) {
             tooltip.add(TranslationKeys.CONFIGURED.styledText(CONFIGURED_STYLE));
         }
+    }
+
+    @Override
+    public void onNeighborChange(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
+        TileEntity tile = world.getTileEntity(pos);
+
+        if (tile instanceof BaseMachineTile) {
+//            ((BaseMachineTile) tile).onNeighborChange(neighbor, MathUtils.getDirectionFromPos(pos, neighbor));
+        }
+    }
+
+    @Override
+    public BlockState updatePostPlacement(BlockState state, Direction side, BlockState neighborState, IWorld world, BlockPos pos, BlockPos neighborPos) {
+        TileEntity tile = world.getTileEntity(pos);
+
+        if (tile instanceof BaseMachineTile) {
+            ((BaseMachineTile) tile).onNeighborChange(neighborState, neighborPos, side);
+        }
+
+        return super.updatePostPlacement(state, side, neighborState, world, pos, neighborPos);
     }
 }
