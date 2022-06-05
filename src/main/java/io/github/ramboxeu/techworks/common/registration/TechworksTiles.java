@@ -1,9 +1,6 @@
 package io.github.ramboxeu.techworks.common.registration;
 
-import io.github.ramboxeu.techworks.client.render.CableTileEntityRenderer;
-import io.github.ramboxeu.techworks.client.render.EnergyStorageRenderer;
-import io.github.ramboxeu.techworks.client.render.GasStorageRenderer;
-import io.github.ramboxeu.techworks.client.render.LiquidStorageRenderer;
+import io.github.ramboxeu.techworks.client.render.*;
 import io.github.ramboxeu.techworks.common.registry.TileDeferredRegister;
 import io.github.ramboxeu.techworks.common.registry.TileRegistryObject;
 import io.github.ramboxeu.techworks.common.tile.*;
@@ -37,6 +34,7 @@ public class TechworksTiles {
     public static final TileRegistryObject<EnergyStorageTile> ENERGY_STORAGE = TILES.register(TechworksBlocks.ENERGY_STORAGE, EnergyStorageTile::new);
     public static final TileRegistryObject<LiquidPumpTile> LIQUID_PUMP = TILES.register(TechworksBlocks.LIQUID_PUMP, LiquidPumpTile::new);
     public static final TileRegistryObject<OreMinerTile> ORE_MINER_TILE = TILES.register(TechworksBlocks.ORE_MINER, OreMinerTile::new);
+    public static final TileRegistryObject<AnvilIngotHolderTile> ANVIL_INGOT_HOLDER = TILES.register(TechworksBlocks.ANVIL_INGOT_HOLDER, AnvilIngotHolderTile::new);
 
     public static final TileRegistryObject<DevBlockTile> DEV_BLOCK = TILES.register(TechworksBlocks.DEV_BLOCK, DevBlockTile::new);
 
@@ -50,5 +48,6 @@ public class TechworksTiles {
         ClientRegistry.bindTileEntityRenderer(GAS_STORAGE.get(), GasStorageRenderer.tileRenderer());
         ClientRegistry.bindTileEntityRenderer(ENERGY_STORAGE.get(), EnergyStorageRenderer.tileRenderer());
 //        ClientRegistry.bindTileEntityRenderer(CREATIVE_ENERGY_BATTERY.getTileType(), MachineIOTileEntityRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(ANVIL_INGOT_HOLDER.get(), AnvilIngotHolderTileRenderer::new);
     }
 }

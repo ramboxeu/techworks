@@ -79,6 +79,9 @@ public class TechworksRecipeProvider extends RecipeProvider {
         quadIngotFromOre(consumer, Tags.Items.ORES_GOLD, Items.GOLD_INGOT);
         quadIngotFromOre(consumer, TechworksItemTags.COPPER_ORES, TechworksItems.COPPER_INGOT);
         quadIngotFromOre(consumer, TechworksItemTags.LITHIUM_ORES, TechworksItems.LITHIUM_INGOT);
+
+        // Hammering
+        hammeringPlate(consumer, Tags.Items.INGOTS_IRON, TechworksItems.IRON_PLATE);
     }
 
     @Override
@@ -155,6 +158,10 @@ public class TechworksRecipeProvider extends RecipeProvider {
 
     public static void quadIngotFromOre(Consumer<IFinishedRecipe> consumer, ITag.INamedTag<Item> oreTag, ItemRegistryObject<?> ingot) {
         IndustrialSmeltingRecipeBuilder.smelting(Ingredient.fromTag(oreTag), result(ingot, 4), 450, 360000).build(consumer, "furnace/industrial/" + ingot.getId().getPath());
+    }
+
+    private static void hammeringPlate(Consumer<IFinishedRecipe> consumer, ITag.INamedTag<Item> ingotTag, ItemRegistryObject<?> plate) {
+        HammeringRecipeBuilder.hammering(SizedIngredient.fromTag(ingotTag, 2, true), result(plate), 10).build(consumer, "hammering/" + plate.getId().getPath());
     }
 
     private static Ingredient ingredient(ITag.INamedTag<Item> tag) {

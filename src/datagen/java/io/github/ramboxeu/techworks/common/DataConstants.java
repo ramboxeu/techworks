@@ -33,7 +33,7 @@ public class DataConstants {
         };
 
         public static final ItemRegistryObject<?>[] HANDHELD = new ItemRegistryObject[] {
-                STEEL_PICKAXE, STEEL_AXE, STEEL_SHOVEL, STEEL_HOE, STEEL_SWORD
+                STEEL_PICKAXE, STEEL_AXE, STEEL_SHOVEL, STEEL_HOE, STEEL_SWORD, HAMMER
         };
     }
 

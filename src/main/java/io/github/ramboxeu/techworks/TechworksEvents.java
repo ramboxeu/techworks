@@ -1,6 +1,7 @@
 package io.github.ramboxeu.techworks;
 
 import io.github.ramboxeu.techworks.api.wrench.IWrench;
+import io.github.ramboxeu.techworks.common.block.AnvilIngotHolderBlock;
 import io.github.ramboxeu.techworks.common.command.CablesCommand;
 import io.github.ramboxeu.techworks.common.command.CapabilitiesCommand;
 import io.github.ramboxeu.techworks.common.component.Component;
@@ -15,6 +16,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
@@ -79,6 +81,12 @@ public class TechworksEvents {
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void onRightClick(PlayerInteractEvent.RightClickBlock event) {
         PlayerEntity player = event.getPlayer();
+
+        if (AnvilIngotHolderBlock.onRightClick(event.getWorld(), event.getPos(), player)) {
+            event.setCanceled(true);
+            event.setCancellationResult(ActionResultType.SUCCESS);
+            return;
+        }
 
         double reach = player.getAttribute(ForgeMod.REACH_DISTANCE.get()).getValue();
         RayTraceResult traceResult = player.pick(reach, 1.0f, false);

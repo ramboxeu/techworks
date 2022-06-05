@@ -2,6 +2,10 @@ package io.github.ramboxeu.techworks.common.registration;
 
 import io.github.ramboxeu.techworks.common.debug.DebuggerItem;
 import io.github.ramboxeu.techworks.common.item.*;
+import io.github.ramboxeu.techworks.common.item.BlueprintItem;
+import io.github.ramboxeu.techworks.common.item.PowerAxeItem;
+import io.github.ramboxeu.techworks.common.item.SmeltingComponentItem;
+import io.github.ramboxeu.techworks.common.item.WrenchItem;
 import io.github.ramboxeu.techworks.common.registry.BlockRegistryObject;
 import io.github.ramboxeu.techworks.common.registry.ItemDeferredRegister;
 import io.github.ramboxeu.techworks.common.registry.ItemRegistryObject;
@@ -67,6 +71,7 @@ public class TechworksItems {
     public static final ItemRegistryObject<Item> LARGE_GAS_TANK = ITEMS.register("large_gas_tank", props -> new Item(props.maxStackSize(1)));
     public static final ItemRegistryObject<Item> HICAP_GAS_TANK = ITEMS.register("hicap_gas_tank", props -> new Item(props.maxStackSize(1)));
     public static final ItemRegistryObject<Item> ELECTRIC_DRILL = ITEMS.register("electric_drill", props -> new Item(props.maxStackSize(1)));
+    public static final ItemRegistryObject<HammerItem> HAMMER = ITEMS.register("hammer", HammerItem::new);
 
     public static final ItemRegistryObject<Item> MACHINE_CASING = ITEMS.register("machine_casing", Item::new);
 

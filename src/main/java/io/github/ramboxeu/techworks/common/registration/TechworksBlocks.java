@@ -40,6 +40,7 @@ public class TechworksBlocks {
     public static final BlockRegistryObject<EnergyStorageBlock, BlockItem> ENERGY_STORAGE = BLOCKS.register("energy_storage", EnergyStorageBlock::new, (block, props) -> new BlockItem(block, props.setISTER(() -> EnergyStorageRenderer::stackRenderer)));
     public static final BlockRegistryObject<LiquidPumpBlock, BlockItem> LIQUID_PUMP = BLOCKS.register("liquid_pump", LiquidPumpBlock::new);
     public static final BlockRegistryObject<OreMinerBlock, BlockItem> ORE_MINER = BLOCKS.register("ore_miner", OreMinerBlock::new);
+    public static final BlockRegistryObject<AnvilIngotHolderBlock, BlockItem> ANVIL_INGOT_HOLDER = BLOCKS.register("anvil_ingot_holder", AnvilIngotHolderBlock::new, (block, props) -> new BlockItem(block, new Item.Properties()));
 
     // More testing
     public static final BlockRegistryObject<DevBlockBlock, BlockItem> DEV_BLOCK = BLOCKS.register("dev_block", DevBlockBlock::new, (block, props) -> new BlockItem(block, new Item.Properties()));

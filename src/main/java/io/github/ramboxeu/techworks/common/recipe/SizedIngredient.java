@@ -28,22 +28,26 @@ import java.util.stream.Stream;
 
 public class SizedIngredient extends Ingredient {
     private final IItemList[] acceptedItems;
+    private final boolean exact;
     private ItemStack[] matchingStacks;
     private IntList packedStacks;
 
     protected SizedIngredient(Stream<? extends IItemList> acceptedItems) {
         super(Stream.empty());
         this.acceptedItems = acceptedItems.toArray(IItemList[]::new);
+        this.exact = false;
     }
 
-    private SizedIngredient(IItemList[] acceptedItems) {
+    private SizedIngredient(IItemList[] acceptedItems, boolean exact) {
         super(Stream.empty());
         this.acceptedItems = acceptedItems;
+        this.exact = exact;
     }
 
-    private SizedIngredient(IItemList acceptedItem) {
+    private SizedIngredient(IItemList acceptedItem, boolean exact) {
         super(Stream.empty());
         this.acceptedItems = new  IItemList[] { acceptedItem };
+        this.exact = exact;
     }
 
     @Override
@@ -57,7 +61,7 @@ public class SizedIngredient extends Ingredient {
             return stack.isEmpty();
 
         for (ItemStack example : matchingStacks) {
-            if (example.getItem() == stack.getItem() && example.getCount() <= stack.getCount())
+            if (example.getItem() == stack.getItem() && sizeMatches(stack, example))
                 return true;
         }
 
@@ -77,7 +81,9 @@ public class SizedIngredient extends Ingredient {
     @Override
     public JsonElement serialize() {
         if (acceptedItems.length == 1) {
-            return acceptedItems[0].serialize();
+            JsonObject obj = acceptedItems[0].serialize();
+            if (exact) obj.addProperty("exact", exact);
+            return obj;
         }
 
         JsonArray array = new JsonArray();
@@ -136,6 +142,10 @@ public class SizedIngredient extends Ingredient {
         }
     }
 
+    private boolean sizeMatches(ItemStack stack, ItemStack example) {
+        return stack.getCount() == example.getCount() || (!exact && stack.getCount() >= example.getCount());
+    }
+
     public static SizedIngredient deserialize(@Nullable JsonElement element) {
         if (element == null || element.isJsonNull()) {
             throw new NullPointerException("SizedIngredient cannot be null");
@@ -143,7 +153,8 @@ public class SizedIngredient extends Ingredient {
 
         if (element.isJsonObject()) {
             JsonObject obj = element.getAsJsonObject();
-            return new SizedIngredient(deserializeSizedItemList(obj));
+            boolean exact = JSONUtils.getBoolean(obj, "exact", false);
+            return new SizedIngredient(deserializeSizedItemList(obj), exact);
         } else if (element.isJsonArray()) {
             JsonArray array = element.getAsJsonArray();
             int size = array.size();
@@ -158,13 +169,14 @@ public class SizedIngredient extends Ingredient {
                 lists[i] = deserializeSizedItemList(arrElem.getAsJsonObject());
             }
 
-            return new SizedIngredient(lists);
+            return new SizedIngredient(lists, false);
         } else {
             throw new JsonSyntaxException("Expected SizedIngredient to be an object or an array of objects");
         }
     }
 
     public static SizedIngredient read(PacketBuffer buf) {
+        boolean exact = buf.readBoolean();
         int size = buf.readVarInt();
         SizedSingleItemList[] lists = new SizedSingleItemList[size];
 
@@ -172,7 +184,7 @@ public class SizedIngredient extends Ingredient {
             lists[i] = new SizedSingleItemList(buf.readItemStack());
         }
 
-        return new SizedIngredient(lists);
+        return new SizedIngredient(lists, exact);
     }
 
     private static Ingredient.IItemList deserializeSizedItemList(JsonObject obj) {
@@ -205,6 +217,10 @@ public class SizedIngredient extends Ingredient {
         } else {
             throw new JsonSyntaxException("Expected SizedIngredient entry to have either a tag or item");
         }
+    }
+
+    public static SizedIngredient fromTag(ITag<Item> tag, int count, boolean exact) {
+        return new SizedIngredient(new SizedTagItemList(tag, count), exact);
     }
 
     public static class SizedSingleItemList implements IItemList {
@@ -261,7 +277,7 @@ public class SizedIngredient extends Ingredient {
             obj.addProperty("tag", TagCollectionManager.getManager().getItemTags().getValidatedIdFromTag(tag).toString());
             obj.addProperty("count", count);
 
-            return null;
+            return obj;
         }
     }
 
@@ -275,12 +291,13 @@ public class SizedIngredient extends Ingredient {
 
         @Override
         public SizedIngredient parse(JsonObject json) {
-            return new SizedIngredient(deserializeSizedItemList(json));
+            return SizedIngredient.deserialize(json);
         }
 
         @Override
         public void write(PacketBuffer buf, SizedIngredient ingredient) {
             ingredient.computeMatchingStacks();
+            buf.writeBoolean(ingredient.exact);
             buf.writeVarInt(ingredient.matchingStacks.length);
 
             for (int i = 0, size = ingredient.matchingStacks.length; i < size; i++) {

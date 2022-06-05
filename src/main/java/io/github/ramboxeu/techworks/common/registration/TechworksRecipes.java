@@ -14,4 +14,5 @@ public class TechworksRecipes {
     public static final RecipeRegistryObject<OreWashingRecipe, OreWashingRecipe.Serializer> ORE_WASHING = RECIPES.register("ore_washing", OreWashingRecipe.Serializer::new);
     public static final RecipeRegistryObject<MetalPressingRecipe, MetalPressingRecipe.Serializer> METAL_PRESSING = RECIPES.register("metal_pressing", MetalPressingRecipe.Serializer::new);
     public static final RecipeRegistryObject<IndustrialSmeltingRecipe, IndustrialSmeltingRecipe.Serializer> INDUSTRIAL_SMELTING = RECIPES.register("industrial_smelting", IndustrialSmeltingRecipe.Serializer::new);
+    public static final RecipeRegistryObject<HammeringRecipe, HammeringRecipe.Serializer> HAMMERING = RECIPES.register("hammering", HammeringRecipe.Serializer::new);
 }
