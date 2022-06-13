@@ -16,6 +16,7 @@ public class TechworksItemTags {
     public static final ITag.INamedTag<Item> IRON_DUSTS = forgeTag("dusts/iron");
     public static final ITag.INamedTag<Item> GOLD_DUSTS = forgeTag("dusts/gold");
     public static final ITag.INamedTag<Item> STEEL_INGOTS = forgeTag("ingots/steel");
+    public static final ITag.INamedTag<Item> COPPER_PLATES = forgeTag("plates/copper");
 
     public static ITag.INamedTag<Item> tag(String name) {
         return ItemTags.makeWrapperTag("techworks:" + name);

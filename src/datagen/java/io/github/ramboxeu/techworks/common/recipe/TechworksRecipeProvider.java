@@ -82,6 +82,10 @@ public class TechworksRecipeProvider extends RecipeProvider {
 
         // Hammering
         hammeringPlate(consumer, Tags.Items.INGOTS_IRON, TechworksItems.IRON_PLATE);
+        hammeringPlate(consumer, TechworksItemTags.COPPER_INGOTS, TechworksItems.COPPER_PLATE);
+
+        // Wire Cutting
+        wireCutting(consumer, TechworksItemTags.COPPER_PLATES, TechworksItems.COPPER_WIRE);
     }
 
     @Override
@@ -162,6 +166,10 @@ public class TechworksRecipeProvider extends RecipeProvider {
 
     private static void hammeringPlate(Consumer<IFinishedRecipe> consumer, ITag.INamedTag<Item> ingotTag, ItemRegistryObject<?> plate) {
         HammeringRecipeBuilder.hammering(SizedIngredient.fromTag(ingotTag, 2, true), result(plate), 10).build(consumer, "hammering/" + plate.getId().getPath());
+    }
+
+    private static void wireCutting(Consumer<IFinishedRecipe> consumer, ITag.INamedTag<Item> tag, ItemRegistryObject<Item> wire) {
+        WireCuttingRecipeBuilder.wireCutting(SizedIngredient.fromTag(tag, 2, false), result(wire)).build(consumer, "wire_cutting/" + wire.getId().getPath());
     }
 
     private static Ingredient ingredient(ITag.INamedTag<Item> tag) {

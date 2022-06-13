@@ -86,6 +86,9 @@ public class EnglishLangProvider extends BaseLangProvider {
         add(TechworksItems.HICAP_GAS_TANK, "HiCap\u2122 Gas Tank");
         add(TechworksItems.ELECTRIC_DRILL, "Electric Drill");
         add(TechworksItems.HAMMER, "Hammer");
+        add(TechworksItems.WIRE_CUTTERS, "Wire Cutters");
+        add(TechworksItems.COPPER_WIRE, "Copper Wire");
+        add(TechworksItems.COPPER_PLATE, "Copper Plate");
 
         // Containers
         add(TranslationKeys.ASSEMBLY_TABLE, "Assembly Table");

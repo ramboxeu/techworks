@@ -1,0 +1,10 @@
+{
+  "type": "techworks:wire_cutting",
+  "ingredient": {
+    "tag": "forge:plates/copper",
+    "count": 2
+  },
+  "result": {
+    "item": "techworks:copper_wire"
+  }
+}

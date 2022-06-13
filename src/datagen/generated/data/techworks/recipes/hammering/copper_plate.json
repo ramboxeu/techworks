@@ -1,0 +1,12 @@
+{
+  "type": "techworks:hammering",
+  "ingredient": {
+    "tag": "forge:ingots/copper",
+    "count": 2,
+    "exact": true
+  },
+  "result": {
+    "item": "techworks:copper_plate"
+  },
+  "hits": 10
+}

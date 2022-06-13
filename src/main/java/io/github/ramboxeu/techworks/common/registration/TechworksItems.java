@@ -72,6 +72,9 @@ public class TechworksItems {
     public static final ItemRegistryObject<Item> HICAP_GAS_TANK = ITEMS.register("hicap_gas_tank", props -> new Item(props.maxStackSize(1)));
     public static final ItemRegistryObject<Item> ELECTRIC_DRILL = ITEMS.register("electric_drill", props -> new Item(props.maxStackSize(1)));
     public static final ItemRegistryObject<HammerItem> HAMMER = ITEMS.register("hammer", HammerItem::new);
+    public static final ItemRegistryObject<WireCuttersItem> WIRE_CUTTERS = ITEMS.register("wire_cutters", WireCuttersItem::new);
+    public static final ItemRegistryObject<Item> COPPER_WIRE = ITEMS.register("copper_wire", Item::new);
+    public static final ItemRegistryObject<Item> COPPER_PLATE = ITEMS.register("copper_plate", Item::new);
 
     public static final ItemRegistryObject<Item> MACHINE_CASING = ITEMS.register("machine_casing", Item::new);
 
