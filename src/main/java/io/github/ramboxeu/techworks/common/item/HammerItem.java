@@ -36,7 +36,7 @@ public class HammerItem extends Item {
 
             world.playSound(player, pos, SoundEvents.BLOCK_ANVIL_PLACE, SoundCategory.BLOCKS, 1.0f, 1.0f);
             ((AnvilIngotHolderTile) tile).onHammerHit(player);
-            stack.damageItem(1, player, p -> {});
+            stack.damageItem(1, player, p -> p.sendBreakAnimation(Hand.MAIN_HAND));
             player.getCooldownTracker().setCooldown(this, 16);
             return true;
         }

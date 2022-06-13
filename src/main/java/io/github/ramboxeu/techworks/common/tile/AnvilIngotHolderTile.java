@@ -77,7 +77,7 @@ public class AnvilIngotHolderTile extends BaseTechworksTile {
 
         if (cachedRecipe != null && hits == cachedRecipe.getHits()) {
             Item item = storage.getStack().getItem();
-            storage.setStack(new ItemStack(TechworksItems.IRON_PLATE.get()));
+            storage.setStack(cachedRecipe.getCraftingResult(recipeInv));
             hits = 0;
 
             ItemStack offhandItem = player.getHeldItemOffhand();

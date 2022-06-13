@@ -53,6 +53,8 @@ public class TechworksBlockStateProvider extends BlockStateProvider {
         storageBlock(TechworksBlocks.LIQUID_TANK);
         storageBlock(TechworksBlocks.GAS_TANK);
         storageBlock(TechworksBlocks.ENERGY_STORAGE);
+
+        noModel(TechworksBlocks.ANVIL_INGOT_HOLDER);
     }
 
     private void cableBlockAndItem(BlockRegistryObject<?, ?> cable) {
@@ -145,5 +147,11 @@ public class TechworksBlockStateProvider extends BlockStateProvider {
             default:
                 return 0;
         }
+    }
+
+    private void noModel(BlockRegistryObject<?, ?> block) {
+        getVariantBuilder(block.get())
+                .partialState()
+                .addModels(new ConfiguredModel(models().getBuilder("block/" + block.getId().getPath())));
     }
 }
