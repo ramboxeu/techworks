@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "techworks:medium_battery"
+    ]
+  },
+  "criteria": {
+    "has_small_battery": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "techworks:small_battery"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "techworks:medium_battery"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_small_battery",
+      "has_the_recipe"
+    ]
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "techworks:small_battery"
+    ]
+  },
+  "criteria": {
+    "has_copper_wire": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "techworks:copper_wire"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "techworks:small_battery"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_copper_wire",
+      "has_the_recipe"
+    ]
+  ]
+}

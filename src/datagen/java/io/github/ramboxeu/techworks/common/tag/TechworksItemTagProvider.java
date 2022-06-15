@@ -41,6 +41,7 @@ public class TechworksItemTagProvider extends BaseTagsProvider<Item> {
         makeTag(Tags.Items.INGOTS, TechworksItems.LITHIUM_INGOT, TechworksItems.COPPER_INGOT);
 
         makeTag(TechworksItemTags.COPPER_PLATES, TechworksItems.COPPER_PLATE);
+        makeTag(TechworksItemTags.IRON_PLATES, TechworksItems.IRON_PLATE);
     }
 
     private Builder<Item> makeTag(ITag.INamedTag<Item> tag, IItemSupplier... items) {

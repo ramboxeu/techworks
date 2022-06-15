@@ -89,6 +89,7 @@ public class EnglishLangProvider extends BaseLangProvider {
         add(TechworksItems.WIRE_CUTTERS, "Wire Cutters");
         add(TechworksItems.COPPER_WIRE, "Copper Wire");
         add(TechworksItems.COPPER_PLATE, "Copper Plate");
+        add(TechworksItems.IRON_DOUBLE_PLATE, "Iron Double Plate");
 
         // Containers
         add(TranslationKeys.ASSEMBLY_TABLE, "Assembly Table");

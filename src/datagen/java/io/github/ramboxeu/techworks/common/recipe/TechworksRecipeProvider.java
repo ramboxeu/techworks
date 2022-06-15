@@ -1,6 +1,7 @@
 package io.github.ramboxeu.techworks.common.recipe;
 
 import io.github.ramboxeu.techworks.Techworks;
+import io.github.ramboxeu.techworks.common.registration.TechworksBlocks;
 import io.github.ramboxeu.techworks.common.registration.TechworksItems;
 import io.github.ramboxeu.techworks.common.registry.IItemSupplier;
 import io.github.ramboxeu.techworks.common.registry.ItemRegistryObject;
@@ -10,13 +11,12 @@ import net.minecraft.advancements.criterion.EntityPredicate;
 import net.minecraft.advancements.criterion.InventoryChangeTrigger;
 import net.minecraft.advancements.criterion.ItemPredicate;
 import net.minecraft.advancements.criterion.MinMaxBounds;
-import net.minecraft.data.CookingRecipeBuilder;
-import net.minecraft.data.DataGenerator;
-import net.minecraft.data.IFinishedRecipe;
-import net.minecraft.data.RecipeProvider;
+import net.minecraft.block.Blocks;
+import net.minecraft.data.*;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ITag;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
@@ -83,9 +83,18 @@ public class TechworksRecipeProvider extends RecipeProvider {
         // Hammering
         hammeringPlate(consumer, Tags.Items.INGOTS_IRON, TechworksItems.IRON_PLATE);
         hammeringPlate(consumer, TechworksItemTags.COPPER_INGOTS, TechworksItems.COPPER_PLATE);
+        hammeringDoublePlate(consumer, Tags.Items.INGOTS_IRON, TechworksItems.IRON_DOUBLE_PLATE);
 
         // Wire Cutting
         wireCutting(consumer, TechworksItemTags.COPPER_PLATES, TechworksItems.COPPER_WIRE);
+
+        // Crafting
+        shapedRecipe(result(TechworksBlocks.SOLID_FUEL_BURNER)).addCriterion("has_furnace", hasItem(Items.FURNACE)).patternLine("PPP").patternLine("PFP").patternLine("BBB").key('P', TechworksItemTags.IRON_PLATES).key('F', Items.FURNACE).key('B', Items.BRICKS).build(consumer, modLoc(name(TechworksBlocks.SOLID_FUEL_BURNER.getItem())));
+        shapedRecipe(result(TechworksItems.ELECTRIFIED_FURNACE)).addCriterion("has_furnace", hasItem(Items.FURNACE)).patternLine("RPR").patternLine("PFP").patternLine("WPW").key('R', Items.REDSTONE).key('P', TechworksItemTags.IRON_PLATES).key('F', Items.FURNACE).key('W', TechworksItems.COPPER_WIRE.get()).build(consumer, modLoc(name(TechworksBlocks.ELECTRIC_FURNACE.getItem())));
+        shapedRecipe(result(TechworksItems.SMALL_LIQUID_TANK)).addCriterion("has_bucket", hasItem(Items.BUCKET)).patternLine("BPB").patternLine("PGP").patternLine("BPB").key('B', Items.BUCKET).key('P', TechworksItemTags.IRON_PLATES).key('G', Tags.Items.GLASS).build(consumer, modLoc(name(TechworksItems.SMALL_LIQUID_TANK.get())));
+        shapedRecipe(result(TechworksItems.MEDIUM_LIQUID_TANK)).addCriterion("has_small_liquid_tank", hasItem(TechworksItems.SMALL_LIQUID_TANK)).patternLine("PGP").patternLine("BTB").patternLine("PGP").key('P', TechworksItems.IRON_DOUBLE_PLATE.getAsItem()).key('G', Tags.Items.GLASS).key('B', Items.BUCKET).key('T', TechworksItems.SMALL_LIQUID_TANK.get()).build(consumer, modLoc(name(TechworksItems.MEDIUM_LIQUID_TANK.get())));
+        shapedRecipe(result(TechworksItems.SMALL_BATTERY)).addCriterion("has_copper_wire", hasItem(TechworksItems.COPPER_WIRE)).patternLine("PWP").patternLine("WRW").patternLine("PWP").key('P', TechworksItemTags.IRON_PLATES).key('W', TechworksItems.COPPER_WIRE.get()).key('R', Blocks.REDSTONE_BLOCK).build(consumer, modLoc(name(TechworksItems.SMALL_BATTERY.get())));
+        shapedRecipe(result(TechworksItems.MEDIUM_BATTERY)).addCriterion("has_small_battery", hasItem(TechworksItems.SMALL_BATTERY)).patternLine("PWP").patternLine("RBR").patternLine("PWP").key('P', TechworksItems.IRON_DOUBLE_PLATE.get()).key('W', TechworksItems.COPPER_WIRE.get()).key('R', Blocks.REDSTONE_BLOCK).key('B', TechworksItems.SMALL_BATTERY.get()).build(consumer, modLoc(name(TechworksItems.MEDIUM_BATTERY.get())));
     }
 
     @Override
@@ -172,6 +181,14 @@ public class TechworksRecipeProvider extends RecipeProvider {
         WireCuttingRecipeBuilder.wireCutting(SizedIngredient.fromTag(tag, 2, false), result(wire)).build(consumer, "wire_cutting/" + wire.getId().getPath());
     }
 
+    private static void hammeringDoublePlate(Consumer<IFinishedRecipe> consumer, Tags.IOptionalNamedTag<Item> ingotTag, ItemRegistryObject<Item> doublePlate) {
+        HammeringRecipeBuilder.hammering(SizedIngredient.fromTag(ingotTag, 4, true), result(doublePlate), 15).build(consumer, "hammering/" + doublePlate.getId().getPath());
+    }
+
+    private static ShapedRecipeBuilder shapedRecipe(IRecipeResult result) {
+        return ShapedRecipeBuilder.shapedRecipe(result.getItem(), result.getCount());
+    }
+
     private static Ingredient ingredient(ITag.INamedTag<Item> tag) {
         return Ingredient.fromTag(tag);
     }
@@ -194,6 +211,16 @@ public class TechworksRecipeProvider extends RecipeProvider {
 
     private static ICriterionInstance hasItem(ITag.INamedTag<Item> tag) {
         ItemPredicate[] predicates = new ItemPredicate[] { ItemPredicate.Builder.create().tag(tag).build() };
+        return new InventoryChangeTrigger.Instance(EntityPredicate.AndPredicate.ANY_AND, MinMaxBounds.IntBound.UNBOUNDED, MinMaxBounds.IntBound.UNBOUNDED, MinMaxBounds.IntBound.UNBOUNDED, predicates);
+    }
+
+    private static ICriterionInstance hasItem(Item item) {
+        ItemPredicate[] predicates = new ItemPredicate[] { ItemPredicate.Builder.create().item(item).build() };
+        return new InventoryChangeTrigger.Instance(EntityPredicate.AndPredicate.ANY_AND, MinMaxBounds.IntBound.UNBOUNDED, MinMaxBounds.IntBound.UNBOUNDED, MinMaxBounds.IntBound.UNBOUNDED, predicates);
+    }
+
+    private static ICriterionInstance hasItem(ItemRegistryObject<?> item) {
+        ItemPredicate[] predicates = new ItemPredicate[] { ItemPredicate.Builder.create().item(item.get()).build() };
         return new InventoryChangeTrigger.Instance(EntityPredicate.AndPredicate.ANY_AND, MinMaxBounds.IntBound.UNBOUNDED, MinMaxBounds.IntBound.UNBOUNDED, MinMaxBounds.IntBound.UNBOUNDED, predicates);
     }
 
