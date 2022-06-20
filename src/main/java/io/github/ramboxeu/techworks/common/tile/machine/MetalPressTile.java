@@ -179,8 +179,8 @@ public class MetalPressTile extends BaseMachineTile {
         return ItemUtils.collectContents(super.getDrops(), inv, outputInv);
     }
 
-    public void cycleMode() {
-        setMode(mode.next());
+    public void cycleMode(boolean backwards) {
+        setMode(backwards ? mode.previous() : mode.next());
         TechworksPacketHandler.syncMetalPressMode(pos, mode);
     }
 
@@ -211,7 +211,9 @@ public class MetalPressTile extends BaseMachineTile {
 
     public enum Mode {
         GEAR(0, TranslationKeys.GEAR),
-        PLATE(16, TranslationKeys.PLATE);
+        PLATE(16, TranslationKeys.PLATE),
+        WIRE(32, TranslationKeys.WIRE),
+        DOUBLE_PLATE(48, TranslationKeys.DOUBLE_PLATE);
 
         private final int iconOffset;
         private final TranslationKey name;
@@ -234,7 +236,26 @@ public class MetalPressTile extends BaseMachineTile {
                 case GEAR:
                     return PLATE;
                 case PLATE:
+                    return WIRE;
+                case WIRE:
+                    return DOUBLE_PLATE;
+                case DOUBLE_PLATE:
                     return GEAR;
+            }
+
+            throw new AssertionError();
+        }
+
+        public Mode previous() {
+            switch (this) {
+                case GEAR:
+                    return DOUBLE_PLATE;
+                case PLATE:
+                    return GEAR;
+                case WIRE:
+                    return PLATE;
+                case DOUBLE_PLATE:
+                    return WIRE;
             }
 
             throw new AssertionError();

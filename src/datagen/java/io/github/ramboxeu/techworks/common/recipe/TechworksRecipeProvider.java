@@ -16,7 +16,6 @@ import net.minecraft.data.*;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ITag;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
@@ -72,7 +71,10 @@ public class TechworksRecipeProvider extends RecipeProvider {
 
         // Metal Pressing
         plate(consumer, Tags.Items.INGOTS_IRON, TechworksItems.IRON_PLATE);
+        plate(consumer, TechworksItemTags.COPPER_INGOTS, TechworksItems.COPPER_PLATE);
         gear(consumer, Tags.Items.INGOTS_IRON, TechworksItems.IRON_GEAR);
+        wire(consumer, TechworksItemTags.COPPER_PLATES, TechworksItems.COPPER_WIRE);
+        doublePlate(consumer, Tags.Items.INGOTS_IRON, TechworksItems.IRON_DOUBLE_PLATE);
 
         // Industrial Smelting
         quadIngotFromOre(consumer, Tags.Items.ORES_IRON, Items.IRON_INGOT);
@@ -165,6 +167,14 @@ public class TechworksRecipeProvider extends RecipeProvider {
         MetalPressingRecipeBuilder.gear(ingredient(ingotTag), result(plate)).build(consumer, plate.getId().getPath());
     }
 
+    private static void wire(Consumer<IFinishedRecipe> consumer, ITag.INamedTag<Item> ingotTag, ItemRegistryObject<Item> wire) {
+        MetalPressingRecipeBuilder.wire(ingredient(ingotTag), result(wire, 2)).build(consumer, wire.getId().getPath());
+    }
+
+    private static void doublePlate(Consumer<IFinishedRecipe> consumer, ITag.INamedTag<Item> ingotTag, ItemRegistryObject<Item> plate) {
+        MetalPressingRecipeBuilder.doublePlate(ingredient(ingotTag, 2), result(plate)).build(consumer, plate.getId().getPath());
+    }
+
     public static void quadIngotFromOre(Consumer<IFinishedRecipe> consumer, ITag.INamedTag<Item> oreTag, Item ingot) {
         IndustrialSmeltingRecipeBuilder.smelting(Ingredient.fromTag(oreTag), result(ingot, 4), 450, 360000).build(consumer, "furnace/industrial/" + name(ingot));
     }
@@ -174,11 +184,11 @@ public class TechworksRecipeProvider extends RecipeProvider {
     }
 
     private static void hammeringPlate(Consumer<IFinishedRecipe> consumer, ITag.INamedTag<Item> ingotTag, ItemRegistryObject<?> plate) {
-        HammeringRecipeBuilder.hammering(SizedIngredient.fromTag(ingotTag, 2, true), result(plate), 10).build(consumer, "hammering/" + plate.getId().getPath());
+        HammeringRecipeBuilder.hammering(exactIngredient(ingotTag, 2), result(plate), 10).build(consumer, "hammering/" + plate.getId().getPath());
     }
 
     private static void wireCutting(Consumer<IFinishedRecipe> consumer, ITag.INamedTag<Item> tag, ItemRegistryObject<Item> wire) {
-        WireCuttingRecipeBuilder.wireCutting(SizedIngredient.fromTag(tag, 2, false), result(wire)).build(consumer, "wire_cutting/" + wire.getId().getPath());
+        WireCuttingRecipeBuilder.wireCutting(ingredient(tag, 2), result(wire)).build(consumer, "wire_cutting/" + wire.getId().getPath());
     }
 
     private static void hammeringDoublePlate(Consumer<IFinishedRecipe> consumer, Tags.IOptionalNamedTag<Item> ingotTag, ItemRegistryObject<Item> doublePlate) {
@@ -195,6 +205,14 @@ public class TechworksRecipeProvider extends RecipeProvider {
 
     private static Ingredient ingredient(IItemSupplier tag) {
         return Ingredient.fromItems(tag.getAsItem());
+    }
+
+    private static SizedIngredient ingredient(ITag.INamedTag<Item> tag, int count) {
+        return SizedIngredient.fromTag(tag, count, false);
+    }
+
+    private static SizedIngredient exactIngredient(ITag.INamedTag<Item> tag, int count) {
+        return SizedIngredient.fromTag(tag, count, true);
     }
 
     private static IRecipeResult result(IItemSupplier item) {

@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "PGP",
+    "BTB",
+    "PGP"
+  ],
+  "key": {
+    "P": {
+      "item": "techworks:iron_double_plate"
+    },
+    "G": {
+      "tag": "forge:glass"
+    },
+    "B": {
+      "item": "minecraft:bucket"
+    },
+    "T": {
+      "item": "techworks:small_liquid_tank"
+    }
+  },
+  "result": {
+    "item": "techworks:medium_liquid_tank"
+  }
+}

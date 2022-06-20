@@ -49,6 +49,8 @@ public class TranslationKeys {
     public static final TranslationKey WAITING_TICKS = TranslationKey.tooltip("waiting_ticks");
     public static final TranslationKey SCAN_NOW = TranslationKey.tooltip("scan_now");
     public static final TranslationKey MINING_TIME = TranslationKey.tooltip("mining_time");
+    public static final TranslationKey WIRE = TranslationKey.tooltip("wire");
+    public static final TranslationKey DOUBLE_PLATE = TranslationKey.tooltip("double_plate");
 
     // Widgets
     public static final TranslationKey COMPONENTS = TranslationKey.widget("components");

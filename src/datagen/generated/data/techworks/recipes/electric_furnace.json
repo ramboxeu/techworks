@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "RPR",
+    "PFP",
+    "WPW"
+  ],
+  "key": {
+    "R": {
+      "item": "minecraft:redstone"
+    },
+    "P": {
+      "tag": "forge:plates/iron"
+    },
+    "F": {
+      "item": "minecraft:furnace"
+    },
+    "W": {
+      "item": "techworks:copper_wire"
+    }
+  },
+  "result": {
+    "item": "techworks:electrified_furnace"
+  }
+}

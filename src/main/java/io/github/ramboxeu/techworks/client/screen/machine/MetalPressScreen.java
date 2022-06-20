@@ -4,6 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.client.container.machine.MetalPressContainer;
 import io.github.ramboxeu.techworks.client.screen.BaseMachineScreen;
+import io.github.ramboxeu.techworks.client.util.ClientUtils;
 import io.github.ramboxeu.techworks.common.lang.TranslationKeys;
 import io.github.ramboxeu.techworks.common.tile.machine.MetalPressTile;
 import net.minecraft.client.audio.SimpleSound;
@@ -26,7 +27,7 @@ public class MetalPressScreen extends BaseMachineScreen<MetalPressTile, MetalPre
         super.drawGuiContainerForegroundLayer(stack, x, y);
 
         minecraft.textureManager.bindTexture(ICONS);
-        blit(stack, 83, 56, 16, 16, container.getMachineTile().getMode().getIconOffset(), 0, 16, 16, 32, 16);
+        blit(stack, 83, 56, 16, 16, container.getMachineTile().getMode().getIconOffset(), 0, 16, 16, 64, 16);
     }
 
     @Override
@@ -48,7 +49,7 @@ public class MetalPressScreen extends BaseMachineScreen<MetalPressTile, MetalPre
 
         if (x >= 83 && y >= 56 && x <= 99 && y <= 72) {
             minecraft.getSoundHandler().play(SimpleSound.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-            container.getMachineTile().cycleMode();
+            container.getMachineTile().cycleMode(button == ClientUtils.RMB);
             return true;
         }
 

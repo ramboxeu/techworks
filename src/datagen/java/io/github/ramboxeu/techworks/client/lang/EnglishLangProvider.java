@@ -137,6 +137,8 @@ public class EnglishLangProvider extends BaseLangProvider {
         add(TranslationKeys.WAITING_TICKS, "Waiting %d ticks");
         add(TranslationKeys.SCAN_NOW, "Click to scan now");
         add(TranslationKeys.MINING_TIME, "Mining time: %d ticks");
+        add(TranslationKeys.WIRE, "Wire");
+        add(TranslationKeys.DOUBLE_PLATE, "Double Plate");
 
         // Widgets
         add(TranslationKeys.COMPONENTS, "Components");

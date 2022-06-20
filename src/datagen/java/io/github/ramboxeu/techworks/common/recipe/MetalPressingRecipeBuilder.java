@@ -30,6 +30,14 @@ public class MetalPressingRecipeBuilder {
         return new MetalPressingRecipeBuilder(ingredient, result, MetalPressTile.Mode.GEAR);
     }
 
+    public static MetalPressingRecipeBuilder wire(Ingredient ingredient, IRecipeResult result) {
+        return new MetalPressingRecipeBuilder(ingredient, result, MetalPressTile.Mode.WIRE);
+    }
+
+    public static MetalPressingRecipeBuilder doublePlate(SizedIngredient ingredient, IRecipeResult result) {
+        return new MetalPressingRecipeBuilder(ingredient, result, MetalPressTile.Mode.DOUBLE_PLATE);
+    }
+
     public void build(Consumer<IFinishedRecipe> consumer, String name) {
         consumer.accept(new Result(TechworksRecipes.METAL_PRESSING.getSerializer(), ingredient, result, new ResourceLocation(Techworks.MOD_ID, name), mode));
     }

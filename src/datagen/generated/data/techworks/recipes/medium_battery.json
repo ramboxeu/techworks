@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "PWP",
+    "RBR",
+    "PWP"
+  ],
+  "key": {
+    "P": {
+      "item": "techworks:iron_double_plate"
+    },
+    "W": {
+      "item": "techworks:copper_wire"
+    },
+    "R": {
+      "item": "minecraft:redstone_block"
+    },
+    "B": {
+      "item": "techworks:small_battery"
+    }
+  },
+  "result": {
+    "item": "techworks:medium_battery"
+  }
+}
