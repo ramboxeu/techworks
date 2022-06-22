@@ -563,6 +563,18 @@ public class MachineIO implements ICapabilityProvider, INBTSerializable<Compound
         return null;
     }
 
+    public void removeHandlers(List<HandlerData> handlers) {
+        for (Side side : Side.external()) {
+            for (HandlerData data : handlers) {
+                IHandlerContainer container = getContainerForRemoval(side, data.getType());
+
+                if (container != null) {
+                    container.remove(data);
+                }
+            }
+        }
+    }
+
     public void removeHandlers(Side side, HandlerData...metadata) {
         for (HandlerData data : metadata) {
             IHandlerContainer container = getContainerForRemoval(side, data.getType());

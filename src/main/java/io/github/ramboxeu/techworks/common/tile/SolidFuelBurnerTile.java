@@ -18,6 +18,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
@@ -29,12 +30,14 @@ public class SolidFuelBurnerTile extends BaseTechworksTile implements INamedCont
     private static final int HEATING_RATE = 10;
 
     private final SolidFuelHeater heater;
+    private final LazyOptional<IItemHandler> fuelInvHolder;
     private int heat;
 
     public SolidFuelBurnerTile() {
         super(TechworksTiles.SOLID_FUEL_BURNER.get());
 
         heater = new SolidFuelHeater();
+        fuelInvHolder = LazyOptional.of(heater::getFuelInv);
     }
 
     @Override
@@ -60,7 +63,7 @@ public class SolidFuelBurnerTile extends BaseTechworksTile implements INamedCont
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap) {
         if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-            return heater.getCapability(cap);
+            return fuelInvHolder.cast();
 
         return super.getCapability(cap);
     }

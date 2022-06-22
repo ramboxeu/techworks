@@ -1,5 +1,9 @@
 package io.github.ramboxeu.techworks.common.heat;
 
+import io.github.ramboxeu.techworks.common.capability.HandlerStorage;
+import io.github.ramboxeu.techworks.common.util.ItemUtils;
+import io.github.ramboxeu.techworks.common.util.machineio.MachineIO;
+import io.github.ramboxeu.techworks.common.util.machineio.data.ItemHandlerData;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
@@ -15,9 +19,9 @@ import net.minecraftforge.items.ItemStackHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class SolidFuelHeater implements IHeater, ICapabilityProvider, INBTSerializable<CompoundNBT> {
+public class SolidFuelHeater implements IConfiguringHeater, INBTSerializable<CompoundNBT> {
     private final ItemStackHandler fuelInv;
-    private final LazyOptional<IItemHandler> fuelInvHolder;
+    private ItemHandlerData fuelInvData;
 
     private int heat;
     private boolean shouldCheck;
@@ -38,8 +42,6 @@ public class SolidFuelHeater implements IHeater, ICapabilityProvider, INBTSerial
                 shouldCheck = true;
             }
         };
-
-        fuelInvHolder = LazyOptional.of(() -> fuelInv);
     }
 
     @Override
@@ -88,15 +90,6 @@ public class SolidFuelHeater implements IHeater, ICapabilityProvider, INBTSerial
         return HeaterType.SOLID_FUEL;
     }
 
-    @Nonnull
-    @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-            return fuelInvHolder.cast();
-
-        return LazyOptional.empty();
-    }
-
     @Override
     public CompoundNBT serializeNBT() {
         CompoundNBT tag = new CompoundNBT();
@@ -124,6 +117,13 @@ public class SolidFuelHeater implements IHeater, ICapabilityProvider, INBTSerial
         }
     }
 
+    @Override
+    public void configure(IHeaterConfigurationStore config) {
+        fuelInvData = config.getHandlerData(fuelInv, MachineIO.INPUT);
+        config.setHandlerStorageFlags(HandlerStorage.ITEM);
+        config.setDropsSupplier(() -> ItemUtils.collectContents(fuelInv));
+    }
+
     public int getElapsedTime() {
         return elapsedTime;
     }
@@ -134,5 +134,9 @@ public class SolidFuelHeater implements IHeater, ICapabilityProvider, INBTSerial
 
     public ItemStackHandler getFuelInv() {
         return fuelInv;
+    }
+
+    public ItemHandlerData getFuelInvData() {
+        return fuelInvData;
     }
 }

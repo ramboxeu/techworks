@@ -5,6 +5,8 @@ import io.github.ramboxeu.techworks.common.capability.HandlerStorage;
 import io.github.ramboxeu.techworks.common.component.ComponentStorage;
 import io.github.ramboxeu.techworks.common.fluid.handler.GasTank;
 import io.github.ramboxeu.techworks.common.fluid.handler.LiquidTank;
+import io.github.ramboxeu.techworks.common.heat.HeaterConfigurationStore;
+import io.github.ramboxeu.techworks.common.heat.IConfiguringHeater;
 import io.github.ramboxeu.techworks.common.heat.IHeater;
 import io.github.ramboxeu.techworks.common.lang.TranslationKeys;
 import io.github.ramboxeu.techworks.common.registration.TechworksComponents;
@@ -13,9 +15,7 @@ import io.github.ramboxeu.techworks.common.registration.TechworksTiles;
 import io.github.ramboxeu.techworks.common.tag.TechworksFluidTags;
 import io.github.ramboxeu.techworks.common.tile.BaseMachineTile;
 import io.github.ramboxeu.techworks.common.util.FluidUtils;
-import io.github.ramboxeu.techworks.common.util.ItemUtils;
 import io.github.ramboxeu.techworks.common.util.NBTUtils;
-import io.github.ramboxeu.techworks.common.util.Utils;
 import io.github.ramboxeu.techworks.common.util.machineio.MachineIO;
 import io.github.ramboxeu.techworks.common.util.machineio.data.GasHandlerData;
 import io.github.ramboxeu.techworks.common.util.machineio.data.LiquidHandlerData;
@@ -34,17 +34,11 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -58,6 +52,7 @@ public class BoilerTile extends BaseMachineTile {
     private final GasTank steamTank;
     private final GasHandlerData steamTankData;
     private final Collection<SteamEngineTile> steamEngines;
+    private final HeaterConfigurationStore heaterConfig;
     private IHeater heater;
 
     private int fuelBurnTime = 0;
@@ -85,10 +80,22 @@ public class BoilerTile extends BaseMachineTile {
         };
         steamTankData = machineIO.getHandlerData(steamTank, MachineIO.OUTPUT);
 
+        heaterConfig = new HeaterConfigurationStore(machineIO);
+
         components = new ComponentStorage.Builder()
                 .component(TechworksComponents.LIQUID_STORAGE.get(), waterTank)
                 .component(TechworksComponents.GAS_STORAGE.get(), steamTank)
-                .component(TechworksComponents.HEATING.get(), (component, stack) -> heater = component.getHeaterType().createHeater())
+                .component(TechworksComponents.HEATING.get(), (component, stack) -> {
+                    heater = component.getHeaterType().createHeater();
+
+                    handlers.disable(heaterConfig.getHandlerStorageFlags());
+
+                    heaterConfig.clear();
+                    if (heater instanceof IConfiguringHeater)
+                        ((IConfiguringHeater) heater).configure(heaterConfig);
+
+                    handlers.enable(heaterConfig.getHandlerStorageFlags());
+                })
                 .build();
         handlers.enable(HandlerStorage.LIQUID | HandlerStorage.GAS);
 
@@ -206,17 +213,6 @@ public class BoilerTile extends BaseMachineTile {
         return new BoilerContainer(id, playerInventory, this);
     }
 
-    @Nonnull
-    @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction face) {
-        LazyOptional<T> heaterCap = getHeaterCap(cap);
-
-        if (heaterCap.isPresent())
-            return heaterCap;
-
-        return super.getCapability(cap, face);
-    }
-
     @Override
     public void remove() {
         super.remove();
@@ -231,12 +227,9 @@ public class BoilerTile extends BaseMachineTile {
 
     @Override
     public Collection<ItemStack> getDrops() {
-        LazyOptional<IItemHandler> holder = getHeaterCap(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
-
-        if (holder.isPresent())
-            return ItemUtils.collectContents(super.getDrops(), Utils.unpack(holder));
-
-        return super.getDrops();
+        Collection<ItemStack> drops = super.getDrops();
+        drops.addAll(heaterConfig.getDrops());
+        return drops;
     }
 
     public LiquidHandlerData getWaterTankData() {
@@ -289,13 +282,5 @@ public class BoilerTile extends BaseMachineTile {
 
     public Collection<SteamEngineTile> getLikedEngines() {
         return steamEngines;
-    }
-
-    private <T> LazyOptional<T> getHeaterCap(Capability<T> cap) {
-        if (heater instanceof ICapabilityProvider) {
-            return ((ICapabilityProvider) heater).getCapability(cap);
-        }
-
-        return LazyOptional.empty();
     }
 }
