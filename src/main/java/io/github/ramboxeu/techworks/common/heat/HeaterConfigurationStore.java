@@ -26,13 +26,8 @@ public class HeaterConfigurationStore implements IHeaterConfigurationStore {
         handlerStorageFlags = flags;
     }
 
-    // TODO: The same handler can be added multiple times (do not do this)
     @Override
     public ItemHandlerData getHandlerData(IItemHandler handler) {
-        Optional<HandlerData> optional = dataList.stream().filter(data -> data.getObject() == handler).findAny();
-        if (optional.isPresent())
-            return (ItemHandlerData) optional.get();
-
         ItemHandlerData data = machineIO.getHandlerData(handler);
         dataList.add(data);
         return data;
@@ -40,11 +35,6 @@ public class HeaterConfigurationStore implements IHeaterConfigurationStore {
 
     @Override
     public ItemHandlerData getHandlerData(IItemHandler handler, int flags) {
-        Optional<HandlerData> optional = dataList.stream().filter(data -> data.getObject() == handler).findAny();
-        if (optional.isPresent()) {
-            return (ItemHandlerData) optional.get();
-        }
-
         ItemHandlerData data = machineIO.getHandlerData(handler, flags);
         dataList.add(data);
         return data;
@@ -52,10 +42,6 @@ public class HeaterConfigurationStore implements IHeaterConfigurationStore {
 
     @Override
     public LiquidHandlerData getHandlerData(ILiquidTank tank) {
-        Optional<HandlerData> optional = dataList.stream().filter(data -> data.getObject() == tank).findAny();
-        if (optional.isPresent())
-            return (LiquidHandlerData) optional.get();
-
         LiquidHandlerData data = machineIO.getHandlerData(tank);
         dataList.add(data);
         return data;
@@ -70,10 +56,6 @@ public class HeaterConfigurationStore implements IHeaterConfigurationStore {
 
     @Override
     public GasHandlerData getHandlerData(IGasTank tank) {
-        Optional<HandlerData> optional = dataList.stream().filter(data -> data.getObject() == tank).findAny();
-        if (optional.isPresent())
-            return (GasHandlerData) optional.get();
-
         GasHandlerData data = machineIO.getHandlerData(tank);
         dataList.add(data);
         return data;
@@ -88,10 +70,6 @@ public class HeaterConfigurationStore implements IHeaterConfigurationStore {
 
     @Override
     public EnergyHandlerData getHandlerData(IEnergyStorage storage) {
-        Optional<HandlerData> optional = dataList.stream().filter(data -> data.getObject() == storage).findAny();
-        if (optional.isPresent())
-            return (EnergyHandlerData) optional.get();
-
         EnergyHandlerData data = machineIO.getHandlerData(storage);
         dataList.add(data);
         return data;
@@ -113,6 +91,7 @@ public class HeaterConfigurationStore implements IHeaterConfigurationStore {
         handlerStorageFlags = 0;
         drops = Collections::emptyList;
         machineIO.removeHandlers(dataList);
+        dataList.clear();
     }
 
     public Collection<ItemStack> getDrops() {

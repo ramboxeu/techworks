@@ -373,6 +373,9 @@ public class ComponentStorage implements IItemHandler, INBTSerializable<Compound
         }
 
         private void update(Component component, ItemStack stack) {
+            if (this.component == component && ((stack.isEmpty() && component.isBase()) || ItemStack.areItemStacksEqual(stack, this.stack)))
+                return;
+
             this.component = component;
             this.stack = stack == null || stack.isEmpty() ? createItemStack() : stack;
 
