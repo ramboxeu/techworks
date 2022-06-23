@@ -29,7 +29,7 @@ public class ItemHandlerConfig extends HandlerConfig {
         int maxSlot = data.getMaxSlot();
         handler = data.getHandler();
         minSlot = data.getMinSlot();
-        slots = (maxSlot - minSlot) - 1;
+        slots = (maxSlot - minSlot) + 1;
     }
 
     public void setSlots(int firstSlot, int lastSlot) {

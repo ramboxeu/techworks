@@ -1,6 +1,7 @@
 package io.github.ramboxeu.techworks.common.tile.machine;
 
 import io.github.ramboxeu.techworks.client.container.machine.IndustrialFurnaceContainer;
+import io.github.ramboxeu.techworks.common.capability.HandlerStorage;
 import io.github.ramboxeu.techworks.common.component.ComponentStorage;
 import io.github.ramboxeu.techworks.common.heat.IHeater;
 import io.github.ramboxeu.techworks.common.lang.TranslationKeys;
@@ -72,6 +73,7 @@ public class IndustrialFurnaceTile extends BaseMachineTile {
         outputInvData = machineIO.getHandlerData(outputInv, MachineIO.OUTPUT);
 
         components = new ComponentStorage.Builder().build();
+        handlers.enable(HandlerStorage.ITEM);
     }
 
     @Override
@@ -88,6 +90,8 @@ public class IndustrialFurnaceTile extends BaseMachineTile {
 
     @Override
     protected void serverTick() {
+        super.serverTick();
+
         if (shouldCheck) {
             if (checkRecipe() && outputInv.insertItem(0, cachedRecipe.getRecipeOutput(), true).isEmpty()) {
                 working = true;
