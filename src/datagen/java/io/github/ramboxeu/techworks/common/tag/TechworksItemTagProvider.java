@@ -34,7 +34,8 @@ public class TechworksItemTagProvider extends BaseTagsProvider<Item> {
         makeTag(TechworksItemTags.COPPER_DUSTS, TechworksItems.COPPER_DUST);
         makeTag(TechworksItemTags.IRON_DUSTS, TechworksItems.IRON_DUST);
         makeTag(TechworksItemTags.GOLD_DUSTS, TechworksItems.GOLD_DUST);
-        makeTag(Tags.Items.DUSTS, TechworksItems.LITHIUM_DUST, TechworksItems.COPPER_DUST, TechworksItems.IRON_DUST, TechworksItems.GOLD_DUST);
+        makeTag(TechworksItemTags.COAL_DUSTS, TechworksItems.COAL_DUST);
+        makeTag(Tags.Items.DUSTS, TechworksItems.LITHIUM_DUST, TechworksItems.COPPER_DUST, TechworksItems.IRON_DUST, TechworksItems.GOLD_DUST, TechworksItems.COAL_DUST);
 
         makeTag(TechworksItemTags.LITHIUM_INGOTS, TechworksItems.LITHIUM_INGOT);
         makeTag(TechworksItemTags.COPPER_INGOTS, TechworksItems.COPPER_INGOT);

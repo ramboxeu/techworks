@@ -2,7 +2,9 @@ package io.github.ramboxeu.techworks.client.screen.widget;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import io.github.ramboxeu.techworks.client.container.BaseContainer;
+import io.github.ramboxeu.techworks.client.container.BaseMachineContainer;
 import io.github.ramboxeu.techworks.client.screen.BaseScreen;
+import io.github.ramboxeu.techworks.client.screen.widget.inventory.SlotWidget;
 import io.github.ramboxeu.techworks.client.screen.widget.progress.BurningProgressWidget;
 import io.github.ramboxeu.techworks.client.util.ClientUtils;
 import io.github.ramboxeu.techworks.common.heat.SolidFuelHeater;
@@ -26,7 +28,12 @@ public class SolidFuelHeatingWidget extends BaseContainerWidget implements IScre
     @Override
     public void init(BaseContainer container, Builder builder) {
         builder.subWidget(new BurningProgressWidget(x + 2, y + 1, true, heater::getBurnTime, heater::getElapsedTime));
-        builder.slot(new SlotItemHandler(heater.getFuelInv(), 0, x + 1, y + 17));
+
+        if (heater.getFuelInvData() == null || !(container instanceof BaseMachineContainer)) {
+            builder.slot(new SlotItemHandler(heater.getFuelInv(), 0, x + 1, y + 17));
+        } else {
+            builder.subWidget(new SlotWidget((BaseMachineContainer<?>) container, x, y + 16, 0, false, heater.getFuelInvData()));
+        }
     }
 
     @Nonnull

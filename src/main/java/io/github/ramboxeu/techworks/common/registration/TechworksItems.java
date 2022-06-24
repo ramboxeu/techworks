@@ -76,6 +76,7 @@ public class TechworksItems {
     public static final ItemRegistryObject<Item> COPPER_WIRE = ITEMS.register("copper_wire", Item::new);
     public static final ItemRegistryObject<Item> COPPER_PLATE = ITEMS.register("copper_plate", Item::new);
     public static final ItemRegistryObject<Item> IRON_DOUBLE_PLATE = ITEMS.register("iron_double_plate", Item::new);
+    public static final ItemRegistryObject<Item> COAL_DUST = ITEMS.register("coal_dust", Item::new);
 
     public static final ItemRegistryObject<Item> MACHINE_CASING = ITEMS.register("machine_casing", Item::new);
 

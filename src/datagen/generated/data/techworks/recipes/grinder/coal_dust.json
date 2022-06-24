@@ -1,0 +1,11 @@
+{
+  "type": "techworks:grinding",
+  "ingredient": {
+    "tag": "minecraft:coals"
+  },
+  "result": {
+    "item": "techworks:coal_dust",
+    "count": 2
+  },
+  "energy": 1500
+}

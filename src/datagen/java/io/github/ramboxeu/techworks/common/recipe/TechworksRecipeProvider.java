@@ -17,6 +17,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.tags.ITag;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.Tags;
@@ -48,6 +49,10 @@ public class TechworksRecipeProvider extends RecipeProvider {
         crushedOre(consumer, TechworksItemTags.LITHIUM_ORES, TechworksItems.CRUSHED_LITHIUM_ORE);
         crushedOre(consumer, Tags.Items.ORES_IRON, TechworksItems.CRUSHED_IRON_ORE);
         crushedOre(consumer, Tags.Items.ORES_GOLD, TechworksItems.CRUSHED_GOLD_ORE);
+
+        oreDouble(consumer, Tags.Items.ORES_COAL, Items.COAL);
+
+        itemDouble(consumer, ItemTags.COALS, TechworksItems.COAL_DUST);
 
         // Smelting
         ingotFromOre(consumer, TechworksItemTags.COPPER_ORES, TechworksItems.COPPER_INGOT, "copper_ore");
@@ -81,6 +86,7 @@ public class TechworksRecipeProvider extends RecipeProvider {
         quadIngotFromOre(consumer, Tags.Items.ORES_GOLD, Items.GOLD_INGOT);
         quadIngotFromOre(consumer, TechworksItemTags.COPPER_ORES, TechworksItems.COPPER_INGOT);
         quadIngotFromOre(consumer, TechworksItemTags.LITHIUM_ORES, TechworksItems.LITHIUM_INGOT);
+        alloy2Dusts1Ingot(consumer, TechworksItemTags.COAL_DUSTS, Tags.Items.INGOTS_IRON, TechworksItems.STEEL_INGOT);
 
         // Hammering
         hammeringPlate(consumer, Tags.Items.INGOTS_IRON, TechworksItems.IRON_PLATE);
@@ -97,6 +103,15 @@ public class TechworksRecipeProvider extends RecipeProvider {
         shapedRecipe(result(TechworksItems.MEDIUM_LIQUID_TANK)).addCriterion("has_small_liquid_tank", hasItem(TechworksItems.SMALL_LIQUID_TANK)).patternLine("PGP").patternLine("BTB").patternLine("PGP").key('P', TechworksItems.IRON_DOUBLE_PLATE.getAsItem()).key('G', Tags.Items.GLASS).key('B', Items.BUCKET).key('T', TechworksItems.SMALL_LIQUID_TANK.get()).build(consumer, modLoc(name(TechworksItems.MEDIUM_LIQUID_TANK.get())));
         shapedRecipe(result(TechworksItems.SMALL_BATTERY)).addCriterion("has_copper_wire", hasItem(TechworksItems.COPPER_WIRE)).patternLine("PWP").patternLine("WRW").patternLine("PWP").key('P', TechworksItemTags.IRON_PLATES).key('W', TechworksItems.COPPER_WIRE.get()).key('R', Blocks.REDSTONE_BLOCK).build(consumer, modLoc(name(TechworksItems.SMALL_BATTERY.get())));
         shapedRecipe(result(TechworksItems.MEDIUM_BATTERY)).addCriterion("has_small_battery", hasItem(TechworksItems.SMALL_BATTERY)).patternLine("PWP").patternLine("RBR").patternLine("PWP").key('P', TechworksItems.IRON_DOUBLE_PLATE.get()).key('W', TechworksItems.COPPER_WIRE.get()).key('R', Blocks.REDSTONE_BLOCK).key('B', TechworksItems.SMALL_BATTERY.get()).build(consumer, modLoc(name(TechworksItems.MEDIUM_BATTERY.get())));
+        shapedRecipe(result(TechworksItems.STEEL_HELMET)).addCriterion("has_steel_ingot", hasItem(TechworksItems.STEEL_INGOT)).patternLine("###").patternLine("# #").key('#', TechworksItems.STEEL_INGOT.get()).build(consumer, modLoc(name(TechworksItems.STEEL_HELMET.get())));
+        shapedRecipe(result(TechworksItems.STEEL_CHESTPLATE)).addCriterion("has_steel_ingot", hasItem(TechworksItems.STEEL_INGOT)).patternLine("# #").patternLine("###").patternLine("###").key('#', TechworksItems.STEEL_INGOT.get()).build(consumer, modLoc(name(TechworksItems.STEEL_CHESTPLATE.get())));
+        shapedRecipe(result(TechworksItems.STEEL_LEGGINGS)).addCriterion("has_steel_ingot", hasItem(TechworksItems.STEEL_INGOT)).patternLine("###").patternLine("# #").patternLine("# #").key('#', TechworksItems.STEEL_INGOT.get()).build(consumer, modLoc(name(TechworksItems.STEEL_LEGGINGS.get())));
+        shapedRecipe(result(TechworksItems.STEEL_BOOTS)).addCriterion("has_steel_ingot", hasItem(TechworksItems.STEEL_INGOT)).patternLine("# #").patternLine("# #").key('#', TechworksItems.STEEL_INGOT.get()).build(consumer, modLoc(name(TechworksItems.STEEL_BOOTS.get())));
+        shapedRecipe(result(TechworksItems.STEEL_PICKAXE)).addCriterion("has_steel_ingot", hasItem(TechworksItems.STEEL_INGOT)).patternLine("###").patternLine(" X ").patternLine(" X ").key('#', TechworksItems.STEEL_INGOT.get()).key('X', Items.STICK).build(consumer, modLoc(name(TechworksItems.STEEL_PICKAXE.get())));
+        shapedRecipe(result(TechworksItems.STEEL_AXE)).addCriterion("has_steel_ingot", hasItem(TechworksItems.STEEL_INGOT)).patternLine("##").patternLine("#X").patternLine(" X").key('#', TechworksItems.STEEL_INGOT.get()).key('X', Items.STICK).build(consumer, modLoc(name(TechworksItems.STEEL_AXE.get())));
+        shapedRecipe(result(TechworksItems.STEEL_SHOVEL)).addCriterion("has_steel_ingot", hasItem(TechworksItems.STEEL_INGOT)).patternLine("#").patternLine("X").patternLine("X").key('#', TechworksItems.STEEL_INGOT.get()).key('X', Items.STICK).build(consumer, modLoc(name(TechworksItems.STEEL_SHOVEL.get())));
+        shapedRecipe(result(TechworksItems.STEEL_HOE)).addCriterion("has_steel_ingot", hasItem(TechworksItems.STEEL_INGOT)).patternLine("##").patternLine(" X").patternLine(" X").key('#', TechworksItems.STEEL_INGOT.get()).key('X', Items.STICK).build(consumer, modLoc(name(TechworksItems.STEEL_HOE.get())));
+        shapedRecipe(result(TechworksItems.STEEL_SWORD)).addCriterion("has_steel_ingot", hasItem(TechworksItems.STEEL_INGOT)).patternLine("#").patternLine("#").patternLine("X").key('#', TechworksItems.STEEL_INGOT.get()).key('X', Items.STICK).build(consumer, modLoc(name(TechworksItems.STEEL_SWORD.get())));
     }
 
     @Override
@@ -114,6 +129,14 @@ public class TechworksRecipeProvider extends RecipeProvider {
 
     public static void crushedOre(Consumer<IFinishedRecipe> consumer, ITag.INamedTag<Item> oreTag, ItemRegistryObject<?> crushedOre) {
         GrinderRecipeBuilder.oreCrushing(ingredient(oreTag), result(crushedOre, 2), 2000).build(consumer, "grinder/" + crushedOre.getId().getPath());
+    }
+
+    private static void oreDouble(Consumer<IFinishedRecipe> consumer, ITag.INamedTag<Item> tag, Item dust) {
+        GrinderRecipeBuilder.grinding(ingredient(tag), result(dust, 2), 1500).build(consumer, "grinder/" + name(dust) + "_from_ore");
+    }
+
+    private static void itemDouble(Consumer<IFinishedRecipe> consumer, ITag.INamedTag<Item> tag, ItemRegistryObject<Item> dust) {
+        GrinderRecipeBuilder.grinding(ingredient(tag), result(dust, 2), 1500).build(consumer, "grinder/" + dust.getId().getPath());
     }
 
     public static void ingotFromDust(Consumer<IFinishedRecipe> consumer, ITag.INamedTag<Item> dustTag, ItemRegistryObject<?> ingot, String criterionItemName) {
@@ -181,6 +204,10 @@ public class TechworksRecipeProvider extends RecipeProvider {
 
     public static void quadIngotFromOre(Consumer<IFinishedRecipe> consumer, ITag.INamedTag<Item> oreTag, ItemRegistryObject<?> ingot) {
         IndustrialSmeltingRecipeBuilder.smelting(Ingredient.fromTag(oreTag), result(ingot, 4), 450, 360000).build(consumer, "furnace/industrial/" + ingot.getId().getPath());
+    }
+
+    private static void alloy2Dusts1Ingot(Consumer<IFinishedRecipe> consumer, ITag.INamedTag<Item> dustTag, ITag.INamedTag<Item> ingotTag, ItemRegistryObject<Item> ingot) {
+        IndustrialSmeltingRecipeBuilder.smelting(ingredient(dustTag, 2), ingredient(ingotTag), result(ingot), 450, 360000).build(consumer, "furnace/industrial/" + ingot.getId().getPath());
     }
 
     private static void hammeringPlate(Consumer<IFinishedRecipe> consumer, ITag.INamedTag<Item> ingotTag, ItemRegistryObject<?> plate) {
