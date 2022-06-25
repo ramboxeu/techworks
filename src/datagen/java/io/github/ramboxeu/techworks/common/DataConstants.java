@@ -45,7 +45,9 @@ public class DataConstants {
 
         public static final BlockRegistryObject<?, ?>[] DROPPING_SELF = new BlockRegistryObject[] {
                 BOILER, STEAM_ENGINE, ELECTRIC_FURNACE, ELECTRIC_GRINDER, BLUEPRINT_TABLE, ASSEMBLY_TABLE,
-                ENERGY_CABLE, LIQUID_PIPE, GAS_PIPE, ITEM_TRANSPORTER, LITHIUM_ORE, ORE_WASHER
+                ENERGY_CABLE, LIQUID_PIPE, GAS_PIPE, ITEM_TRANSPORTER, LITHIUM_ORE, ORE_WASHER, COPPER_ORE,
+                ORE_WASHER, METAL_PRESS, INDUSTRIAL_FURNACE, LIQUID_TANK, LIQUID_PUMP, ORE_MINER, GAS_TANK,
+                ENERGY_STORAGE, SOLID_FUEL_BURNER
         };
 
         public static final BlockRegistryObject<?, ?>[] CABLES = new BlockRegistryObject[] {

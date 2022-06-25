@@ -330,6 +330,11 @@ public class OreMinerTile extends BaseMachineTile {
         return TranslationKeys.ORE_MINER.text();
     }
 
+    @Override
+    public Collection<ItemStack> getDrops() {
+        return ItemUtils.collectContents(super.getDrops(), inv);
+    }
+
     @Nullable
     @Override
     public Container createMenu(int id, PlayerInventory playerInv, PlayerEntity player) {

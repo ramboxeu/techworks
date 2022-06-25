@@ -6,6 +6,7 @@ import io.github.ramboxeu.techworks.common.component.Component;
 import io.github.ramboxeu.techworks.common.component.ComponentManager;
 import io.github.ramboxeu.techworks.common.component.ComponentType;
 import io.github.ramboxeu.techworks.common.lang.TranslationKeys;
+import io.github.ramboxeu.techworks.common.util.ItemUtils;
 import io.github.ramboxeu.techworks.common.util.NBTUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -14,6 +15,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Hand;
+
+import java.util.Collection;
+import java.util.Collections;
 
 public abstract class StorageTile<T extends BaseStorageComponent> extends BaseTechworksTile implements IWrenchable {
     private final ComponentType<T> componentType;
@@ -55,6 +59,13 @@ public abstract class StorageTile<T extends BaseStorageComponent> extends BaseTe
         tag.put("ComponentStack", componentStack.serializeNBT());
         NBTUtils.serializeComponent(tag, "Component", component);
         return super.write(tag);
+    }
+
+    public Collection<ItemStack> getDrops() {
+        if (component.isBase() && ItemStack.areItemStacksEqual(componentStack, new ItemStack(component)))
+            return Collections.emptyList();
+
+        return Collections.singletonList(componentStack);
     }
 
     @SuppressWarnings("unchecked")

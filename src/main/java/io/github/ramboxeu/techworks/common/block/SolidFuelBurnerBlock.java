@@ -3,6 +3,7 @@ package io.github.ramboxeu.techworks.common.block;
 import io.github.ramboxeu.techworks.common.tile.SolidFuelBurnerTile;
 import io.github.ramboxeu.techworks.common.util.Utils;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -13,12 +14,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ToolType;
 
 import javax.annotation.Nullable;
 
 public class SolidFuelBurnerBlock extends DirectionalProcessingBlock {
     public SolidFuelBurnerBlock() {
-        super(Properties.create(Material.IRON));
+        super(Properties.create(Material.IRON).setRequiresTool().hardnessAndResistance(5, 6).sound(SoundType.METAL).harvestLevel(2).harvestTool(ToolType.PICKAXE));
     }
 
     @Override

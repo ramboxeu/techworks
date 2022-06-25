@@ -56,6 +56,21 @@ public abstract class StorageBlock extends Block implements IWrenchable {
     }
 
     @Override
+    public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (state.hasTileEntity() && (state.getBlock() != newState.getBlock() || !newState.hasTileEntity())) {
+            TileEntity tile = world.getTileEntity(pos);
+
+            if (tile instanceof StorageTile) {
+                for (ItemStack stack : ((StorageTile<?>) tile).getDrops()) {
+                    spawnAsEntity(world, pos, stack);
+                }
+            }
+
+            world.removeTileEntity(pos);
+        }
+    }
+
+    @Override
     public ItemStack dismantle(BlockState state, BlockPos pos, World world) {
         TileEntity tile = world.getTileEntity(pos);
         ItemStack stack = new ItemStack(this);

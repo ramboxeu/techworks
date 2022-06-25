@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 public class ComponentStorage implements IItemHandler, INBTSerializable<CompoundNBT>, Iterable<ComponentStorage.Entry> {
 
     private final Map<ComponentType<?>, Entry> storage;
+    private final Entry[] entries;
     private ComponentType<?> pendingComponent;
     private ItemStack pendingStack = ItemStack.EMPTY;
     private Operation operation = Operation.NONE;
@@ -26,6 +27,7 @@ public class ComponentStorage implements IItemHandler, INBTSerializable<Compound
 
     private ComponentStorage(Map<ComponentType<?>, Entry> storage) {
         this.storage = storage;
+        this.entries = storage.values().toArray(new Entry[0]);
 
         storage.forEach((t, e) -> e.init());
     }
@@ -86,13 +88,17 @@ public class ComponentStorage implements IItemHandler, INBTSerializable<Compound
 
     @Override
     public int getSlots() {
-        return 1;
+        return entries.length + 1;
     }
 
     @Nonnull
     @Override
     public ItemStack getStackInSlot(int slot) {
-        return pendingStack;
+        if (slot == 0)
+            return pendingStack;
+
+        Entry entry = entries[slot - 1];
+        return entry.isBase() ? ItemStack.EMPTY : entry.getItemStack();
     }
 
     @Nonnull
