@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "PIP",
+    "IGI",
+    "WIW"
+  ],
+  "key": {
+    "P": {
+      "item": "techworks:iron_plate"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "W": {
+      "item": "techworks:copper_wire"
+    },
+    "G": {
+      "item": "techworks:iron_gear"
+    }
+  },
+  "result": {
+    "item": "techworks:rock_crusher"
+  }
+}

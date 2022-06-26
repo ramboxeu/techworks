@@ -1,0 +1,11 @@
+{
+  "type": "techworks:metal_pressing",
+  "ingredient": {
+    "tag": "forge:ingots/iron",
+    "count": 2
+  },
+  "result": {
+    "item": "techworks:iron_double_plate"
+  },
+  "recipe": "double_plate"
+}

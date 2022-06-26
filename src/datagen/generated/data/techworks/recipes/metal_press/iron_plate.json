@@ -1,0 +1,10 @@
+{
+  "type": "techworks:metal_pressing",
+  "ingredient": {
+    "tag": "forge:ingots/iron"
+  },
+  "result": {
+    "item": "techworks:iron_plate"
+  },
+  "recipe": "plate"
+}

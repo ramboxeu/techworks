@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "PWP",
-    "WRW",
+    "LRL",
     "PWP"
   ],
   "key": {
@@ -14,6 +14,9 @@
     },
     "R": {
       "item": "minecraft:redstone_block"
+    },
+    "L": {
+      "item": "techworks:lithium_plate"
     }
   },
   "result": {

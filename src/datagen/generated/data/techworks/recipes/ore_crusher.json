@@ -1,28 +1,25 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "PWP",
-    "LBL",
-    "RWR"
+    "PSP",
+    "SCS",
+    "RSR"
   ],
   "key": {
     "P": {
       "item": "techworks:iron_double_plate"
     },
-    "W": {
-      "item": "techworks:copper_wire"
+    "S": {
+      "item": "techworks:steel_ingot"
     },
     "R": {
       "item": "minecraft:redstone_block"
     },
-    "B": {
-      "item": "techworks:small_battery"
-    },
-    "L": {
-      "item": "techworks:lithium_plate"
+    "C": {
+      "item": "techworks:rock_crusher"
     }
   },
   "result": {
-    "item": "techworks:medium_battery"
+    "item": "techworks:ore_crusher"
   }
 }

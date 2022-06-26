@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "DRD",
+    "GPG",
+    "WSW"
+  ],
+  "key": {
+    "D": {
+      "item": "techworks:iron_double_plate"
+    },
+    "R": {
+      "item": "minecraft:redstone_block"
+    },
+    "G": {
+      "item": "techworks:iron_gear"
+    },
+    "P": {
+      "item": "techworks:steel_pickaxe"
+    },
+    "W": {
+      "item": "techworks:copper_wire"
+    },
+    "S": {
+      "item": "techworks:steel_ingot"
+    }
+  },
+  "result": {
+    "item": "techworks:electric_drill"
+  }
+}

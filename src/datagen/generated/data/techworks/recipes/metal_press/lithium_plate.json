@@ -1,0 +1,10 @@
+{
+  "type": "techworks:metal_pressing",
+  "ingredient": {
+    "tag": "forge:ingots/lithium"
+  },
+  "result": {
+    "item": "techworks:lithium_plate"
+  },
+  "recipe": "plate"
+}

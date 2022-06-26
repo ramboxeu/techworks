@@ -77,6 +77,7 @@ public class TechworksRecipeProvider extends RecipeProvider {
         // Metal Pressing
         plate(consumer, Tags.Items.INGOTS_IRON, TechworksItems.IRON_PLATE);
         plate(consumer, TechworksItemTags.COPPER_INGOTS, TechworksItems.COPPER_PLATE);
+        plate(consumer, TechworksItemTags.LITHIUM_INGOTS, TechworksItems.LITHIUM_PLATE);
         gear(consumer, Tags.Items.INGOTS_IRON, TechworksItems.IRON_GEAR);
         wire(consumer, TechworksItemTags.COPPER_PLATES, TechworksItems.COPPER_WIRE);
         doublePlate(consumer, Tags.Items.INGOTS_IRON, TechworksItems.IRON_DOUBLE_PLATE);
@@ -91,6 +92,7 @@ public class TechworksRecipeProvider extends RecipeProvider {
         // Hammering
         hammeringPlate(consumer, Tags.Items.INGOTS_IRON, TechworksItems.IRON_PLATE);
         hammeringPlate(consumer, TechworksItemTags.COPPER_INGOTS, TechworksItems.COPPER_PLATE);
+        hammeringPlate(consumer, TechworksItemTags.LITHIUM_INGOTS, TechworksItems.LITHIUM_PLATE);
         hammeringDoublePlate(consumer, Tags.Items.INGOTS_IRON, TechworksItems.IRON_DOUBLE_PLATE);
 
         // Wire Cutting
@@ -101,8 +103,8 @@ public class TechworksRecipeProvider extends RecipeProvider {
         shapedRecipe(result(TechworksItems.ELECTRIFIED_FURNACE)).addCriterion("has_furnace", hasItem(Items.FURNACE)).patternLine("RPR").patternLine("PFP").patternLine("WPW").key('R', Items.REDSTONE).key('P', TechworksItemTags.IRON_PLATES).key('F', Items.FURNACE).key('W', TechworksItems.COPPER_WIRE.get()).build(consumer, modLoc(name(TechworksBlocks.ELECTRIC_FURNACE.getItem())));
         shapedRecipe(result(TechworksItems.SMALL_LIQUID_TANK)).addCriterion("has_bucket", hasItem(Items.BUCKET)).patternLine("BPB").patternLine("PGP").patternLine("BPB").key('B', Items.BUCKET).key('P', TechworksItemTags.IRON_PLATES).key('G', Tags.Items.GLASS).build(consumer, modLoc(name(TechworksItems.SMALL_LIQUID_TANK.get())));
         shapedRecipe(result(TechworksItems.MEDIUM_LIQUID_TANK)).addCriterion("has_small_liquid_tank", hasItem(TechworksItems.SMALL_LIQUID_TANK)).patternLine("PGP").patternLine("BTB").patternLine("PGP").key('P', TechworksItems.IRON_DOUBLE_PLATE.getAsItem()).key('G', Tags.Items.GLASS).key('B', Items.BUCKET).key('T', TechworksItems.SMALL_LIQUID_TANK.get()).build(consumer, modLoc(name(TechworksItems.MEDIUM_LIQUID_TANK.get())));
-        shapedRecipe(result(TechworksItems.SMALL_BATTERY)).addCriterion("has_copper_wire", hasItem(TechworksItems.COPPER_WIRE)).patternLine("PWP").patternLine("WRW").patternLine("PWP").key('P', TechworksItemTags.IRON_PLATES).key('W', TechworksItems.COPPER_WIRE.get()).key('R', Blocks.REDSTONE_BLOCK).build(consumer, modLoc(name(TechworksItems.SMALL_BATTERY.get())));
-        shapedRecipe(result(TechworksItems.MEDIUM_BATTERY)).addCriterion("has_small_battery", hasItem(TechworksItems.SMALL_BATTERY)).patternLine("PWP").patternLine("RBR").patternLine("PWP").key('P', TechworksItems.IRON_DOUBLE_PLATE.get()).key('W', TechworksItems.COPPER_WIRE.get()).key('R', Blocks.REDSTONE_BLOCK).key('B', TechworksItems.SMALL_BATTERY.get()).build(consumer, modLoc(name(TechworksItems.MEDIUM_BATTERY.get())));
+        shapedRecipe(result(TechworksItems.SMALL_BATTERY)).addCriterion("has_litium_plate", hasItem(TechworksItems.LITHIUM_PLATE)).patternLine("PWP").patternLine("LRL").patternLine("PWP").key('P', TechworksItemTags.IRON_PLATES).key('W', TechworksItems.COPPER_WIRE.get()).key('R', Blocks.REDSTONE_BLOCK).key('L', TechworksItems.LITHIUM_PLATE.get()).build(consumer, modLoc(name(TechworksItems.SMALL_BATTERY.get())));
+        shapedRecipe(result(TechworksItems.MEDIUM_BATTERY)).addCriterion("has_small_battery", hasItem(TechworksItems.SMALL_BATTERY)).patternLine("PWP").patternLine("LBL").patternLine("RWR").key('P', TechworksItems.IRON_DOUBLE_PLATE.get()).key('W', TechworksItems.COPPER_WIRE.get()).key('R', Blocks.REDSTONE_BLOCK).key('B', TechworksItems.SMALL_BATTERY.get()).key('L', TechworksItems.LITHIUM_PLATE.get()).build(consumer, modLoc(name(TechworksItems.MEDIUM_BATTERY.get())));
         shapedRecipe(result(TechworksItems.STEEL_HELMET)).addCriterion("has_steel_ingot", hasItem(TechworksItems.STEEL_INGOT)).patternLine("###").patternLine("# #").key('#', TechworksItems.STEEL_INGOT.get()).build(consumer, modLoc(name(TechworksItems.STEEL_HELMET.get())));
         shapedRecipe(result(TechworksItems.STEEL_CHESTPLATE)).addCriterion("has_steel_ingot", hasItem(TechworksItems.STEEL_INGOT)).patternLine("# #").patternLine("###").patternLine("###").key('#', TechworksItems.STEEL_INGOT.get()).build(consumer, modLoc(name(TechworksItems.STEEL_CHESTPLATE.get())));
         shapedRecipe(result(TechworksItems.STEEL_LEGGINGS)).addCriterion("has_steel_ingot", hasItem(TechworksItems.STEEL_INGOT)).patternLine("###").patternLine("# #").patternLine("# #").key('#', TechworksItems.STEEL_INGOT.get()).build(consumer, modLoc(name(TechworksItems.STEEL_LEGGINGS.get())));
@@ -112,6 +114,11 @@ public class TechworksRecipeProvider extends RecipeProvider {
         shapedRecipe(result(TechworksItems.STEEL_SHOVEL)).addCriterion("has_steel_ingot", hasItem(TechworksItems.STEEL_INGOT)).patternLine("#").patternLine("X").patternLine("X").key('#', TechworksItems.STEEL_INGOT.get()).key('X', Items.STICK).build(consumer, modLoc(name(TechworksItems.STEEL_SHOVEL.get())));
         shapedRecipe(result(TechworksItems.STEEL_HOE)).addCriterion("has_steel_ingot", hasItem(TechworksItems.STEEL_INGOT)).patternLine("##").patternLine(" X").patternLine(" X").key('#', TechworksItems.STEEL_INGOT.get()).key('X', Items.STICK).build(consumer, modLoc(name(TechworksItems.STEEL_HOE.get())));
         shapedRecipe(result(TechworksItems.STEEL_SWORD)).addCriterion("has_steel_ingot", hasItem(TechworksItems.STEEL_INGOT)).patternLine("#").patternLine("#").patternLine("X").key('#', TechworksItems.STEEL_INGOT.get()).key('X', Items.STICK).build(consumer, modLoc(name(TechworksItems.STEEL_SWORD.get())));
+        shapedRecipe(result(TechworksItems.IRON_GEAR)).addCriterion("has_iron_ingot", hasItem(Items.IRON_INGOT)).patternLine(" # ").patternLine("#/#").patternLine(" # ").key('#', Tags.Items.INGOTS_IRON).key('/', Tags.Items.RODS_WOODEN).build(consumer, modLoc(name(TechworksItems.IRON_GEAR.get())));
+        shapedRecipe(result(TechworksItems.ROCK_CRUSHER)).addCriterion("has_iron_gear", hasItem(TechworksItems.IRON_GEAR)).patternLine("PIP").patternLine("IGI").patternLine("WIW").key('P', TechworksItems.IRON_PLATE.get()).key('I', Items.IRON_INGOT).key('W', TechworksItems.COPPER_WIRE.get()).key('G', TechworksItems.IRON_GEAR.get()).build(consumer, modLoc(name(TechworksItems.ROCK_CRUSHER.get())));
+        shapedRecipe(result(TechworksItems.ORE_CRUSHER)).addCriterion("has_rock_crusher", hasItem(TechworksItems.ROCK_CRUSHER)).patternLine("PSP").patternLine("SCS").patternLine("RSR").key('P', TechworksItems.IRON_DOUBLE_PLATE.get()).key('S', TechworksItems.STEEL_INGOT.get()).key('R', Blocks.REDSTONE_BLOCK).key('C', TechworksItems.ROCK_CRUSHER.get()).build(consumer, modLoc(name(TechworksItems.ORE_CRUSHER.get())));
+        shapedRecipe(result(TechworksItems.STEAM_TURBINE_MK1)).addCriterion("has_iron_gear", hasItem(TechworksItems.IRON_GEAR)).patternLine("PWP").patternLine("GIG").patternLine("CWC").key('P', TechworksItems.IRON_PLATE.get()).key('G', TechworksItems.IRON_GEAR.get()).key('W', TechworksItems.COPPER_WIRE.get()).key('I', Items.IRON_INGOT).key('C', TechworksItems.COPPER_PLATE.get()).build(consumer, modLoc(name(TechworksItems.STEAM_TURBINE_MK1.get())));
+        shapedRecipe(result(TechworksItems.ELECTRIC_DRILL)).addCriterion("has_steel_pickaxe", hasItem(TechworksItems.STEEL_PICKAXE)).patternLine("DRD").patternLine("GPG").patternLine("WSW").key('D', TechworksItems.IRON_DOUBLE_PLATE.get()).key('R', Blocks.REDSTONE_BLOCK).key('G', TechworksItems.IRON_GEAR.get()).key('P', TechworksItems.STEEL_PICKAXE.get()).key('W', TechworksItems.COPPER_WIRE.get()).key('S', TechworksItems.STEEL_INGOT.get()).build(consumer, modLoc(name(TechworksItems.ELECTRIC_DRILL.get())));
     }
 
     @Override
@@ -183,19 +190,19 @@ public class TechworksRecipeProvider extends RecipeProvider {
     }
 
     public static void plate(Consumer<IFinishedRecipe> consumer, ITag.INamedTag<Item> ingotTag, ItemRegistryObject<?> plate) {
-        MetalPressingRecipeBuilder.plate(ingredient(ingotTag), result(plate)).build(consumer, plate.getId().getPath());
+        MetalPressingRecipeBuilder.plate(ingredient(ingotTag), result(plate)).build(consumer, "metal_press/" + plate.getId().getPath());
     }
 
     public static void gear(Consumer<IFinishedRecipe> consumer, ITag.INamedTag<Item> ingotTag, ItemRegistryObject<?> plate) {
-        MetalPressingRecipeBuilder.gear(ingredient(ingotTag), result(plate)).build(consumer, plate.getId().getPath());
+        MetalPressingRecipeBuilder.gear(ingredient(ingotTag), result(plate)).build(consumer, "metal_press/" + plate.getId().getPath());
     }
 
     private static void wire(Consumer<IFinishedRecipe> consumer, ITag.INamedTag<Item> ingotTag, ItemRegistryObject<Item> wire) {
-        MetalPressingRecipeBuilder.wire(ingredient(ingotTag), result(wire, 2)).build(consumer, wire.getId().getPath());
+        MetalPressingRecipeBuilder.wire(ingredient(ingotTag), result(wire, 2)).build(consumer, "metal_press/" + wire.getId().getPath());
     }
 
     private static void doublePlate(Consumer<IFinishedRecipe> consumer, ITag.INamedTag<Item> ingotTag, ItemRegistryObject<Item> plate) {
-        MetalPressingRecipeBuilder.doublePlate(ingredient(ingotTag, 2), result(plate)).build(consumer, plate.getId().getPath());
+        MetalPressingRecipeBuilder.doublePlate(ingredient(ingotTag, 2), result(plate)).build(consumer, "metal_press/" + plate.getId().getPath());
     }
 
     public static void quadIngotFromOre(Consumer<IFinishedRecipe> consumer, ITag.INamedTag<Item> oreTag, Item ingot) {

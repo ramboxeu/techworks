@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "PWP",
+    "GIG",
+    "CWC"
+  ],
+  "key": {
+    "P": {
+      "item": "techworks:iron_plate"
+    },
+    "G": {
+      "item": "techworks:iron_gear"
+    },
+    "W": {
+      "item": "techworks:copper_wire"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "C": {
+      "item": "techworks:copper_plate"
+    }
+  },
+  "result": {
+    "item": "techworks:steam_turbine_mk1"
+  }
+}

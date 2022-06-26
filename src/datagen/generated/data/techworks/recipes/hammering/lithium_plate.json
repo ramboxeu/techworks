@@ -1,0 +1,12 @@
+{
+  "type": "techworks:hammering",
+  "ingredient": {
+    "tag": "forge:ingots/lithium",
+    "count": 2,
+    "exact": true
+  },
+  "result": {
+    "item": "techworks:lithium_plate"
+  },
+  "hits": 10
+}
