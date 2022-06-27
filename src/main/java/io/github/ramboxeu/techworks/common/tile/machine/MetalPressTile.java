@@ -109,7 +109,7 @@ public class MetalPressTile extends BaseMachineTile {
                 shouldCheck = true;
                 extractedEnergy = 0;
 
-                inv.extractItem(0, 1, false);
+                inv.extractItem(0, cachedRecipe.getCount(inv.getStackInSlot(0)), false);
                 outputInv.insertItem(0, cachedRecipe.getCraftingResult(recipeInv), false);
                 markDirty();
             }

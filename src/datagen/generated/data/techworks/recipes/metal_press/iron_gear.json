@@ -1,7 +1,8 @@
 {
   "type": "techworks:metal_pressing",
   "ingredient": {
-    "tag": "forge:ingots/iron"
+    "tag": "forge:ingots/iron",
+    "count": 2
   },
   "result": {
     "item": "techworks:iron_gear"

@@ -194,7 +194,7 @@ public class TechworksRecipeProvider extends RecipeProvider {
     }
 
     public static void gear(Consumer<IFinishedRecipe> consumer, ITag.INamedTag<Item> ingotTag, ItemRegistryObject<?> plate) {
-        MetalPressingRecipeBuilder.gear(ingredient(ingotTag), result(plate)).build(consumer, "metal_press/" + plate.getId().getPath());
+        MetalPressingRecipeBuilder.gear(ingredient(ingotTag, 2), result(plate)).build(consumer, "metal_press/" + plate.getId().getPath());
     }
 
     private static void wire(Consumer<IFinishedRecipe> consumer, ITag.INamedTag<Item> ingotTag, ItemRegistryObject<Item> wire) {
