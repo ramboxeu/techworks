@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "techworks:rock_crusher"
+    ]
+  },
+  "criteria": {
+    "has_iron_gear": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "techworks:iron_gear"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "techworks:rock_crusher"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_iron_gear",
+      "has_the_recipe"
+    ]
+  ]
+}

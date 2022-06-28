@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "techworks:liquid_tank"
+    ]
+  },
+  "criteria": {
+    "has_small_liquid_tank": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "techworks:small_liquid_tank"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "techworks:liquid_tank"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_small_liquid_tank",
+      "has_the_recipe"
+    ]
+  ]
+}

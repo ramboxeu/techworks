@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "techworks:steam_turbine_mk1"
+    ]
+  },
+  "criteria": {
+    "has_iron_gear": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "techworks:iron_gear"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "techworks:steam_turbine_mk1"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_iron_gear",
+      "has_the_recipe"
+    ]
+  ]
+}

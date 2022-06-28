@@ -3,6 +3,7 @@ package io.github.ramboxeu.techworks.common.recipe;
 import io.github.ramboxeu.techworks.Techworks;
 import io.github.ramboxeu.techworks.common.registration.TechworksBlocks;
 import io.github.ramboxeu.techworks.common.registration.TechworksItems;
+import io.github.ramboxeu.techworks.common.registry.BlockRegistryObject;
 import io.github.ramboxeu.techworks.common.registry.IItemSupplier;
 import io.github.ramboxeu.techworks.common.registry.ItemRegistryObject;
 import io.github.ramboxeu.techworks.common.tag.TechworksItemTags;
@@ -16,6 +17,7 @@ import net.minecraft.data.*;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.IItemProvider;
@@ -114,11 +116,13 @@ public class TechworksRecipeProvider extends RecipeProvider {
         shapedRecipe(result(TechworksItems.STEEL_SHOVEL)).addCriterion("has_steel_ingot", hasItem(TechworksItems.STEEL_INGOT)).patternLine("#").patternLine("X").patternLine("X").key('#', TechworksItems.STEEL_INGOT.get()).key('X', Items.STICK).build(consumer, modLoc(name(TechworksItems.STEEL_SHOVEL.get())));
         shapedRecipe(result(TechworksItems.STEEL_HOE)).addCriterion("has_steel_ingot", hasItem(TechworksItems.STEEL_INGOT)).patternLine("##").patternLine(" X").patternLine(" X").key('#', TechworksItems.STEEL_INGOT.get()).key('X', Items.STICK).build(consumer, modLoc(name(TechworksItems.STEEL_HOE.get())));
         shapedRecipe(result(TechworksItems.STEEL_SWORD)).addCriterion("has_steel_ingot", hasItem(TechworksItems.STEEL_INGOT)).patternLine("#").patternLine("#").patternLine("X").key('#', TechworksItems.STEEL_INGOT.get()).key('X', Items.STICK).build(consumer, modLoc(name(TechworksItems.STEEL_SWORD.get())));
-        shapedRecipe(result(TechworksItems.IRON_GEAR)).addCriterion("has_iron_ingot", hasItem(Items.IRON_INGOT)).patternLine(" # ").patternLine("#/#").patternLine(" # ").key('#', Tags.Items.INGOTS_IRON).key('/', Tags.Items.RODS_WOODEN).build(consumer, modLoc(name(TechworksItems.IRON_GEAR.get())));
-        shapedRecipe(result(TechworksItems.ROCK_CRUSHER)).addCriterion("has_iron_gear", hasItem(TechworksItems.IRON_GEAR)).patternLine("PIP").patternLine("IGI").patternLine("WIW").key('P', TechworksItems.IRON_PLATE.get()).key('I', Items.IRON_INGOT).key('W', TechworksItems.COPPER_WIRE.get()).key('G', TechworksItems.IRON_GEAR.get()).build(consumer, modLoc(name(TechworksItems.ROCK_CRUSHER.get())));
+        shapedRecipe(result(TechworksItems.IRON_GEAR)).addCriterion("has_iron_ingot", hasItem(Tags.Items.INGOTS_IRON)).patternLine(" # ").patternLine("#/#").patternLine(" # ").key('#', Tags.Items.INGOTS_IRON).key('/', Tags.Items.RODS_WOODEN).build(consumer, modLoc(name(TechworksItems.IRON_GEAR.get())));
+        shapedRecipe(result(TechworksItems.ROCK_CRUSHER)).addCriterion("has_iron_gear", hasItem(TechworksItems.IRON_GEAR)).patternLine("PIP").patternLine("IGI").patternLine("WIW").key('P', TechworksItems.IRON_PLATE.get()).key('I', Tags.Items.INGOTS_IRON).key('W', TechworksItems.COPPER_WIRE.get()).key('G', TechworksItems.IRON_GEAR.get()).build(consumer, modLoc(name(TechworksItems.ROCK_CRUSHER.get())));
         shapedRecipe(result(TechworksItems.ORE_CRUSHER)).addCriterion("has_rock_crusher", hasItem(TechworksItems.ROCK_CRUSHER)).patternLine("PSP").patternLine("SCS").patternLine("RSR").key('P', TechworksItems.IRON_DOUBLE_PLATE.get()).key('S', TechworksItems.STEEL_INGOT.get()).key('R', Blocks.REDSTONE_BLOCK).key('C', TechworksItems.ROCK_CRUSHER.get()).build(consumer, modLoc(name(TechworksItems.ORE_CRUSHER.get())));
-        shapedRecipe(result(TechworksItems.STEAM_TURBINE_MK1)).addCriterion("has_iron_gear", hasItem(TechworksItems.IRON_GEAR)).patternLine("PWP").patternLine("GIG").patternLine("CWC").key('P', TechworksItems.IRON_PLATE.get()).key('G', TechworksItems.IRON_GEAR.get()).key('W', TechworksItems.COPPER_WIRE.get()).key('I', Items.IRON_INGOT).key('C', TechworksItems.COPPER_PLATE.get()).build(consumer, modLoc(name(TechworksItems.STEAM_TURBINE_MK1.get())));
+        shapedRecipe(result(TechworksItems.STEAM_TURBINE_MK1)).addCriterion("has_iron_gear", hasItem(TechworksItems.IRON_GEAR)).patternLine("PWP").patternLine("GIG").patternLine("CWC").key('P', TechworksItems.IRON_PLATE.get()).key('G', TechworksItems.IRON_GEAR.get()).key('W', TechworksItems.COPPER_WIRE.get()).key('I', Tags.Items.INGOTS_IRON).key('C', TechworksItems.COPPER_PLATE.get()).build(consumer, modLoc(name(TechworksItems.STEAM_TURBINE_MK1.get())));
         shapedRecipe(result(TechworksItems.ELECTRIC_DRILL)).addCriterion("has_steel_pickaxe", hasItem(TechworksItems.STEEL_PICKAXE)).patternLine("DRD").patternLine("GPG").patternLine("WSW").key('D', TechworksItems.IRON_DOUBLE_PLATE.get()).key('R', Blocks.REDSTONE_BLOCK).key('G', TechworksItems.IRON_GEAR.get()).key('P', TechworksItems.STEEL_PICKAXE.get()).key('W', TechworksItems.COPPER_WIRE.get()).key('S', TechworksItems.STEEL_INGOT.get()).build(consumer, modLoc(name(TechworksItems.ELECTRIC_DRILL.get())));
+        storageBlock(consumer, TechworksItems.SMALL_LIQUID_TANK, TechworksBlocks.LIQUID_TANK);
+        storageBlock(consumer, TechworksItems.SMALL_BATTERY, TechworksBlocks.ENERGY_STORAGE);
     }
 
     @Override
@@ -231,6 +235,10 @@ public class TechworksRecipeProvider extends RecipeProvider {
 
     private static ShapedRecipeBuilder shapedRecipe(IRecipeResult result) {
         return ShapedRecipeBuilder.shapedRecipe(result.getItem(), result.getCount());
+    }
+
+    private static void storageBlock(Consumer<IFinishedRecipe> consumer, ItemRegistryObject<Item> component, BlockRegistryObject<?, ?> result) {
+        shapedRecipe(result(result)).addCriterion("has_" + component.getId().getPath(), hasItem(component)).patternLine("PIP").patternLine("GCG").patternLine("PIP").key('P', TechworksItemTags.IRON_PLATES).key('I', Tags.Items.INGOTS_IRON).key('G', Tags.Items.GLASS).key('C', component.get()).build(consumer, modLoc(result.getId().getPath()));
     }
 
     private static Ingredient ingredient(ITag.INamedTag<Item> tag) {
